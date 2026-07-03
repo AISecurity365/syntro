@@ -1,0 +1,271 @@
+---
+import WazuhLayout from "../layouts/WazuhLayout.astro";
+import PartnerForm from "../components/meeting/PartnerForm.astro";
+export const prerender = false;
+
+const title = "Programa de Partners Wazuh en Latinoamérica | AI Security";
+const description = "Representa Wazuh (SIEM/XDR) en tu país. Tú prescribes y presentas el proyecto; nosotros lo implementamos. Comisión del 30% de la implantación + 10% recurrente del servicio gestionado. Para consultores y profesionales de ciberseguridad en LATAM.";
+const canonical = "https://aisecurity.es/partners-latam";
+---
+
+<WazuhLayout title={title} description={description} canonical={canonical}>
+
+  <!-- FAQ Schema JSON-LD para GEO -->
+  <script type="application/ld+json" is:inline>
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Cómo funciona el programa de partners de Wazuh?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tú, como profesional del sector de la ciberseguridad en tu país de Latinoamérica, detectas y presentas una oportunidad de implementación de Wazuh. AI Security realiza toda la implementación técnica en remoto (instalación, configuración ENS, reglas, formación). Tú cobras una comisión del 30% del proyecto de implantación más un 10% recurrente del servicio gestionado mensual mientras el cliente siga con nosotros."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuánto puede ganar un partner de Wazuh en LATAM?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "La comisión es del 30% del proyecto de implantación (que suele ir de 1.000€ a 4.000€, es decir 300€ a 1.200€ por proyecto) más un 10% del servicio gestionado recurrente (unos 20€/mes por cliente mientras siga activo). No hay límite de proyectos ni de clientes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Necesito saber implementar Wazuh para ser partner?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. El partner es un rol comercial y de prescripción: aporta la relación y el conocimiento del mercado local. Toda la implementación técnica la ejecuta el equipo de AI Security. Ayuda tener perfil de ciberseguridad o TI para hablar con propiedad, pero no implementas tú."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuánto cuesta unirse al programa de partners?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nada. Unirse es gratuito. Solo pedimos que seas un profesional real del sector con acceso a empresas u organismos que necesiten un SIEM. No hay cuota ni objetivos mínimos obligatorios."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="relative overflow-hidden" style="background-color:#020817;">
+    <div class="absolute inset-0" style="background-image:linear-gradient(rgba(59,130,246,0.12) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.12) 1px,transparent 1px);background-size:40px 40px;opacity:0.6;"></div>
+    <div class="absolute rounded-full blur-3xl" style="width:700px;height:700px;top:-220px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(59,130,246,0.14),transparent 70%);"></div>
+
+    <div class="relative z-10 w-full max-w-5xl mx-auto px-4 md:px-8 pt-16 pb-20 text-center">
+      <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full border text-sm font-medium" style="background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.25);color:#93c5fd;">
+        🌎 Programa de Partners · Latinoamérica
+      </div>
+
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6" style="color:#f0f6ff;line-height:1.1;">
+        Representa <span style="color:#60a5fa;">Wazuh</span> en tu país.<br class="hidden md:block" />
+        Tú abres la puerta, nosotros implementamos.
+      </h1>
+
+      <p class="text-lg md:text-xl max-w-2xl mx-auto mb-8" style="color:rgba(240,246,255,0.7);line-height:1.6;">
+        Si ya estás dentro del sector de la ciberseguridad en Latinoamérica, conviertes tu red de contactos en ingresos: presentas proyectos de SIEM, nosotros los ejecutamos y tú te llevas el <strong style="color:#93c5fd;">30% de cada implantación + 10% recurrente</strong>.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#candidatura" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-sm transition-all" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#ffffff;box-shadow:0 6px 20px rgba(37,99,235,0.4);">
+          Quiero ser partner
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#como-funciona" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-sm transition-all" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.18);color:#ffffff;">
+          Cómo funciona
+        </a>
+      </div>
+
+      <p class="mt-6 text-sm" style="color:rgba(240,246,255,0.45);">
+        Gratis · Sin cuotas · Sin objetivos mínimos obligatorios
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ CÓMO FUNCIONA ═══ -->
+  <section id="como-funciona" class="relative py-20 overflow-hidden" style="background-color:#040b1c;">
+    <div class="relative z-10 max-w-6xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-14">
+        <p class="text-xs font-bold uppercase tracking-widest mb-3" style="color:#60a5fa;">El modelo en 3 pasos</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" style="color:#f0f6ff;">Tú prescribes. Nosotros ejecutamos. Los dos cobramos.</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Paso 1 -->
+        <div class="rounded-2xl p-7" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.2);">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-5 font-bold text-lg" style="background:rgba(59,130,246,0.15);color:#60a5fa;">1</div>
+          <h3 class="text-lg font-bold mb-2" style="color:#f0f6ff;">Detectas la oportunidad</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.65);line-height:1.6;">Una empresa u organismo de tu red necesita un SIEM, cumplir normativa o monitorizar su seguridad. Lo presentas y nos lo registras.</p>
+        </div>
+        <!-- Paso 2 -->
+        <div class="rounded-2xl p-7" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.2);">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-5 font-bold text-lg" style="background:rgba(59,130,246,0.15);color:#60a5fa;">2</div>
+          <h3 class="text-lg font-bold mb-2" style="color:#f0f6ff;">Implementamos nosotros</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.65);line-height:1.6;">Nuestro equipo hace toda la parte técnica en remoto: instalación, configuración, reglas, integración y formación. Tu marca queda respaldada por especialistas.</p>
+        </div>
+        <!-- Paso 3 -->
+        <div class="rounded-2xl p-7" style="background:rgba(255,255,255,0.03);border:1px solid rgba(74,222,128,0.25);">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-5 font-bold text-lg" style="background:rgba(74,222,128,0.15);color:#4ade80;">3</div>
+          <h3 class="text-lg font-bold mb-2" style="color:#f0f6ff;">Cobras tu comisión</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.65);line-height:1.6;">30% del proyecto de implantación al cerrarlo, más un 10% del servicio gestionado cada mes mientras el cliente siga activo. Ingreso puntual + ingreso recurrente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ COMISIONES / EJEMPLO ═══ -->
+  <section id="comisiones" class="relative py-20 overflow-hidden" style="background-color:#020817;">
+    <div class="absolute inset-0" style="background-image:linear-gradient(rgba(59,130,246,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.1) 1px,transparent 1px);background-size:40px 40px;opacity:0.5;"></div>
+
+    <div class="relative z-10 max-w-5xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-14">
+        <p class="text-xs font-bold uppercase tracking-widest mb-3" style="color:#60a5fa;">Lo que ganas</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-4" style="color:#f0f6ff;">Comisión clara, sin letra pequeña</h2>
+        <p class="text-base max-w-2xl mx-auto" style="color:rgba(240,246,255,0.6);">Dos fuentes de ingreso por cada cliente que traigas.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        <div class="rounded-2xl p-8 text-center" style="background:rgba(37,99,235,0.12);border:1px solid rgba(59,130,246,0.3);">
+          <div class="text-5xl font-extrabold mb-2" style="color:#60a5fa;">30%</div>
+          <h3 class="text-lg font-bold mb-2" style="color:#f0f6ff;">del proyecto de implantación</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.65);line-height:1.6;">Pago único al cerrar el proyecto. Las implantaciones van de 1.000€ a 4.000€ → entre <strong style="color:#93c5fd;">300€ y 1.200€</strong> por proyecto.</p>
+        </div>
+        <div class="rounded-2xl p-8 text-center" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);">
+          <div class="text-5xl font-extrabold mb-2" style="color:#4ade80;">10%</div>
+          <h3 class="text-lg font-bold mb-2" style="color:#f0f6ff;">del servicio gestionado recurrente</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.65);line-height:1.6;">Cada mes que el cliente siga con el servicio gestionado, tú cobras un 10%. Ingreso pasivo que se acumula cliente tras cliente.</p>
+        </div>
+      </div>
+
+      <!-- Ejemplo numérico -->
+      <div class="rounded-2xl p-8 md:p-10" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.2);">
+        <p class="text-xs font-bold uppercase tracking-widest mb-5" style="color:#a5b4fc;">Ejemplo real</p>
+        <p class="text-base mb-6" style="color:rgba(240,246,255,0.8);line-height:1.7;">
+          Presentas <strong style="color:#f0f6ff;">3 clientes</strong> en un año, con implantación media de 2.500€ y servicio gestionado:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+          <div class="rounded-xl p-5" style="background:rgba(37,99,235,0.1);">
+            <p class="text-2xl font-extrabold mb-1" style="color:#60a5fa;">2.250€</p>
+            <p class="text-xs" style="color:rgba(240,246,255,0.6);">comisión implantación (30% × 3)</p>
+          </div>
+          <div class="rounded-xl p-5" style="background:rgba(74,222,128,0.08);">
+            <p class="text-2xl font-extrabold mb-1" style="color:#4ade80;">~720€/año</p>
+            <p class="text-xs" style="color:rgba(240,246,255,0.6);">recurrente (10% × 3 clientes activos)</p>
+          </div>
+          <div class="rounded-xl p-5" style="background:rgba(165,180,252,0.1);">
+            <p class="text-2xl font-extrabold mb-1" style="color:#a5b4fc;">y creciendo</p>
+            <p class="text-xs" style="color:rgba(240,246,255,0.6);">el recurrente se acumula cada año</p>
+          </div>
+        </div>
+        <p class="mt-6 text-xs" style="color:rgba(240,246,255,0.4);">Cifras orientativas en euros. El importe exacto se confirma por proyecto según alcance y número de agentes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PARA QUIÉN ES ═══ -->
+  <section id="perfil" class="relative py-20 overflow-hidden" style="background-color:#040b1c;">
+    <div class="relative z-10 max-w-5xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-14">
+        <p class="text-xs font-bold uppercase tracking-widest mb-3" style="color:#60a5fa;">¿Es para ti?</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" style="color:#f0f6ff;">Buscamos gente que ya esté dentro del sector</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Encaja -->
+        <div class="rounded-2xl p-8" style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.22);">
+          <h3 class="text-lg font-bold mb-5 flex items-center gap-2" style="color:#4ade80;">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            Encajas si eres…
+          </h3>
+          <ul class="space-y-3 text-sm" style="color:rgba(240,246,255,0.75);">
+            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Consultor/a de ciberseguridad o TI con cartera de clientes</li>
+            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Freelance o integrador que ya vende servicios a PyMEs u organismos</li>
+            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Profesional con red de contactos en el sector en tu país</li>
+            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Alguien que conoce Wazuh, SIEM o cumplimiento normativo</li>
+            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Comercial técnico que sabe abrir puertas donde una web extranjera no llega</li>
+          </ul>
+        </div>
+        <!-- No encaja -->
+        <div class="rounded-2xl p-8" style="background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);">
+          <h3 class="text-lg font-bold mb-5 flex items-center gap-2" style="color:#f87171;">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            No es para ti si…
+          </h3>
+          <ul class="space-y-3 text-sm" style="color:rgba(240,246,255,0.7);">
+            <li class="flex gap-2"><span style="color:#f87171;">▸</span> Buscas ingresos rápidos sin relación real con el sector</li>
+            <li class="flex gap-2"><span style="color:#f87171;">▸</span> No tienes contactos ni acceso a empresas que necesiten un SIEM</li>
+            <li class="flex gap-2"><span style="color:#f87171;">▸</span> Esperas que nosotros te consigamos los clientes</li>
+            <li class="flex gap-2"><span style="color:#f87171;">▸</span> Quieres implementar tú y no delegar la parte técnica</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ QUÉ PONE CADA UNO ═══ -->
+  <section class="relative py-20 overflow-hidden" style="background-color:#020817;">
+    <div class="relative z-10 max-w-4xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-14">
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" style="color:#f0f6ff;">Un reparto de roles honesto</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="rounded-2xl p-7" style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.25);">
+          <h3 class="text-base font-bold uppercase tracking-wide mb-4" style="color:#60a5fa;">Tú pones</h3>
+          <ul class="space-y-2.5 text-sm" style="color:rgba(240,246,255,0.75);">
+            <li class="flex gap-2"><span style="color:#60a5fa;">·</span> La relación y confianza con el cliente local</li>
+            <li class="flex gap-2"><span style="color:#60a5fa;">·</span> El conocimiento del mercado y la normativa de tu país</li>
+            <li class="flex gap-2"><span style="color:#60a5fa;">·</span> La presentación y el seguimiento comercial</li>
+          </ul>
+        </div>
+        <div class="rounded-2xl p-7" style="background:rgba(165,180,252,0.08);border:1px solid rgba(165,180,252,0.25);">
+          <h3 class="text-base font-bold uppercase tracking-wide mb-4" style="color:#a5b4fc;">Nosotros ponemos</h3>
+          <ul class="space-y-2.5 text-sm" style="color:rgba(240,246,255,0.75);">
+            <li class="flex gap-2"><span style="color:#a5b4fc;">·</span> Toda la implementación técnica de Wazuh (en remoto)</li>
+            <li class="flex gap-2"><span style="color:#a5b4fc;">·</span> Soporte, mantenimiento y servicio gestionado continuo</li>
+            <li class="flex gap-2"><span style="color:#a5b4fc;">·</span> Materiales, demos y respaldo técnico para tus reuniones</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FORMULARIO ═══ -->
+  <PartnerForm />
+
+  <!-- ═══ FAQ ═══ -->
+  <section id="faq" class="relative py-20 overflow-hidden" style="background-color:#040b1c;">
+    <div class="relative z-10 max-w-3xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" style="color:#f0f6ff;">Preguntas frecuentes</h2>
+      </div>
+      <div class="space-y-4">
+        <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.18);">
+          <h3 class="text-base font-bold mb-2" style="color:#f0f6ff;">¿Tengo que pagar algo para unirme?</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;">No. El programa es gratuito, sin cuotas ni objetivos mínimos obligatorios. Solo pedimos que seas un profesional real del sector.</p>
+        </div>
+        <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.18);">
+          <h3 class="text-base font-bold mb-2" style="color:#f0f6ff;">¿Necesito saber implementar Wazuh?</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;">No. Tú aportas la relación comercial y el conocimiento del mercado local; la parte técnica la hacemos nosotros al 100%. Tener perfil de ciberseguridad ayuda a hablar con propiedad, pero no implementas tú.</p>
+        </div>
+        <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.18);">
+          <h3 class="text-base font-bold mb-2" style="color:#f0f6ff;">¿Cómo se registra un cliente para proteger mi comisión?</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;">Al aceptarte en el programa te damos un canal para registrar cada oportunidad con su nombre. Ese registro te asigna la comisión de ese cliente. Así ninguno de los dos pisa el trabajo del otro.</p>
+        </div>
+        <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.18);">
+          <h3 class="text-base font-bold mb-2" style="color:#f0f6ff;">¿Cómo y cuándo cobro?</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;">La comisión de implantación se paga al cobrar el proyecto; la recurrente, mensualmente mientras el cliente siga activo. La forma de pago (transferencia internacional u otra) se acuerda contigo según tu país.</p>
+        </div>
+        <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.18);">
+          <h3 class="text-base font-bold mb-2" style="color:#f0f6ff;">¿En qué países operáis?</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;">Como la implementación es 100% remota, podemos trabajar en cualquier país de Latinoamérica. Empezamos con los partners que demuestren red y oportunidades reales en su mercado.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</WazuhLayout>
