@@ -1934,6 +1934,221 @@
           "isNew": true
         }
       ]
+    },
+    {
+      "date": "2026-07-06T06:06:34.326Z",
+      "totals": {
+        "current": {
+          "clicks": 15,
+          "impressions": 1065
+        },
+        "previous": {
+          "clicks": 29,
+          "impressions": 1812
+        }
+      },
+      "topKeywords": [
+        {
+          "keyword": "wazuh mcp server",
+          "clicks": 3,
+          "impressions": 45,
+          "ctr": 0.06666666666666667,
+          "position": 8.577777777777778,
+          "prevClicks": 1,
+          "prevPosition": 9.090909090909092,
+          "isNew": false
+        },
+        {
+          "keyword": "wazuh llm integration",
+          "clicks": 2,
+          "impressions": 12,
+          "ctr": 0.16666666666666666,
+          "position": 7.5,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "ai security",
+          "clicks": 1,
+          "impressions": 11,
+          "ctr": 0.09090909090909091,
+          "position": 9.454545454545455,
+          "prevClicks": 0,
+          "prevPosition": 11,
+          "isNew": false
+        },
+        {
+          "keyword": "como instalar wazuh en ubuntu server",
+          "clicks": 1,
+          "impressions": 5,
+          "ctr": 0.2,
+          "position": 2.6,
+          "prevClicks": 2,
+          "prevPosition": 3.2,
+          "isNew": false
+        },
+        {
+          "keyword": "instalar wazuh",
+          "clicks": 1,
+          "impressions": 22,
+          "ctr": 0.045454545454545456,
+          "position": 5.818181818181818,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "outlook entrar",
+          "clicks": 1,
+          "impressions": 1,
+          "ctr": 1,
+          "position": 6,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "wazuh",
+          "clicks": 1,
+          "impressions": 595,
+          "ctr": 0.0016806722689075631,
+          "position": 7.401680672268908,
+          "prevClicks": 8,
+          "prevPosition": 7.08580106302202,
+          "isNew": false
+        },
+        {
+          "keyword": "wazuh como funciona",
+          "clicks": 1,
+          "impressions": 1,
+          "ctr": 1,
+          "position": 1,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "wazuh como instalar",
+          "clicks": 1,
+          "impressions": 5,
+          "ctr": 0.2,
+          "position": 2.6,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "wazuh curso",
+          "clicks": 1,
+          "impressions": 5,
+          "ctr": 0.2,
+          "position": 8.6,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "wazuh debian",
+          "clicks": 1,
+          "impressions": 1,
+          "ctr": 1,
+          "position": 2,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "wazuh mcp",
+          "clicks": 1,
+          "impressions": 55,
+          "ctr": 0.01818181818181818,
+          "position": 8.781818181818181,
+          "prevClicks": 1,
+          "prevPosition": 9.36111111111111,
+          "isNew": false
+        },
+        {
+          "keyword": "\"ley de coordinación y gobernanza de la ciberseguridad\" \"boe\" \"2026\"",
+          "clicks": 0,
+          "impressions": 5,
+          "ctr": 0,
+          "position": 2.8,
+          "prevClicks": 0,
+          "prevPosition": 3.5,
+          "isNew": false
+        },
+        {
+          "keyword": "\"ley de coordinación y gobernanza de la ciberseguridad\" boe 2026",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 2.5,
+          "prevClicks": 0,
+          "prevPosition": 2.666666666666667,
+          "isNew": false
+        },
+        {
+          "keyword": "\"real decreto-ley 7/2025\" \"nis2\"",
+          "clicks": 0,
+          "impressions": 7,
+          "ctr": 0,
+          "position": 6.571428571428571,
+          "prevClicks": 0,
+          "prevPosition": 6.333333333333333,
+          "isNew": false
+        },
+        {
+          "keyword": "a secur",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 12,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "abrir correo corporativo",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 29,
+          "prevClicks": 0,
+          "prevPosition": 29,
+          "isNew": false
+        },
+        {
+          "keyword": "acceso correo sergas desde móvil",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 3,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "administrador de wazuh",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 14.5,
+          "prevClicks": 0,
+          "prevPosition": 12,
+          "isNew": false
+        },
+        {
+          "keyword": "agencia ia alicante",
+          "clicks": 0,
+          "impressions": 7,
+          "ctr": 0,
+          "position": 29.285714285714285,
+          "prevClicks": 0,
+          "prevPosition": 29.8,
+          "isNew": false
+        }
+      ]
     }
   ]
 }
