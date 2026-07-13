@@ -1,0 +1,152 @@
+{
+  "runs": [
+    {
+      "date": "2026-07-13T11:35:25.661Z",
+      "results": [
+        {
+          "provider": "deepseek",
+          "id": "u-es-1",
+          "type": "unbranded",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-es-2",
+          "type": "unbranded",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-es-3",
+          "type": "unbranded",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-es-4",
+          "type": "unbranded",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-es-5",
+          "type": "unbranded",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-es-6",
+          "type": "unbranded",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-en-1",
+          "type": "unbranded",
+          "lang": "en",
+          "mentioned": false,
+          "recommended": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-en-2",
+          "type": "unbranded",
+          "lang": "en",
+          "mentioned": false,
+          "recommended": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-en-3",
+          "type": "unbranded",
+          "lang": "en",
+          "mentioned": false,
+          "recommended": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "b-es-1",
+          "type": "branded",
+          "lang": "es",
+          "mentioned": true,
+          "recommended": false,
+          "snippet": "información específica sobre el sitio web **aisecurity.es** ni sobre una entidad llamada \"AI Security\" que ofrezca servicios de Wazuh. No puedo confirmar si ese sitio es legítimo,"
+        },
+        {
+          "provider": "deepseek",
+          "id": "b-es-2",
+          "type": "branded",
+          "lang": "es",
+          "mentioned": true,
+          "recommended": false,
+          "snippet": "Para una pyme española, evaluar si **AI Security** es una buena opción para implantar **Wazuh gestionado** depende de varios fa"
+        },
+        {
+          "provider": "deepseek",
+          "id": "b-en-1",
+          "type": "branded",
+          "lang": "en",
+          "mentioned": true,
+          "recommended": false,
+          "snippet": "I am sorry, but I cannot provide specific information about the services or offerings of \"AI Security (aisecurity.es)\" as it pertains to Wazuh deployment and management. My knowled"
+        },
+        {
+          "provider": "deepseek",
+          "id": "c-es-1",
+          "type": "comparative",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "c-es-2",
+          "type": "comparative",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "c-en-1",
+          "type": "comparative",
+          "lang": "en",
+          "mentioned": false,
+          "recommended": false,
+          "snippet": null
+        }
+      ],
+      "summary": [
+        {
+          "provider": "deepseek",
+          "total": 15,
+          "mentioned": 3,
+          "recommended": 0
+        }
+      ]
+    }
+  ]
+}
