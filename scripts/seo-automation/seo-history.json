@@ -2149,6 +2149,221 @@
           "isNew": false
         }
       ]
+    },
+    {
+      "date": "2026-07-13T06:08:24.858Z",
+      "totals": {
+        "current": {
+          "clicks": 11,
+          "impressions": 1439
+        },
+        "previous": {
+          "clicks": 15,
+          "impressions": 1065
+        }
+      },
+      "topKeywords": [
+        {
+          "keyword": "instalar wazuh en ubuntu 24.04",
+          "clicks": 3,
+          "impressions": 3,
+          "ctr": 1,
+          "position": 1,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "wazuh",
+          "clicks": 2,
+          "impressions": 1075,
+          "ctr": 0.0018604651162790699,
+          "position": 6.77953488372093,
+          "prevClicks": 1,
+          "prevPosition": 7.401680672268908,
+          "isNew": false
+        },
+        {
+          "keyword": "aisecurity",
+          "clicks": 1,
+          "impressions": 1,
+          "ctr": 1,
+          "position": 1,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "correo corporativo salud aragón outlook",
+          "clicks": 1,
+          "impressions": 1,
+          "ctr": 1,
+          "position": 5,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "instalar agente wazuh en windows",
+          "clicks": 1,
+          "impressions": 3,
+          "ctr": 0.3333333333333333,
+          "position": 2.333333333333333,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "wazuh linux",
+          "clicks": 1,
+          "impressions": 4,
+          "ctr": 0.25,
+          "position": 3.5,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "wazuh mcp",
+          "clicks": 1,
+          "impressions": 65,
+          "ctr": 0.015384615384615385,
+          "position": 7.7846153846153845,
+          "prevClicks": 1,
+          "prevPosition": 8.781818181818181,
+          "isNew": false
+        },
+        {
+          "keyword": "wazuh ollama integration",
+          "clicks": 1,
+          "impressions": 1,
+          "ctr": 1,
+          "position": 5,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "\"ley de coordinación y gobernanza de la ciberseguridad\" \"boe\" \"2026\"",
+          "clicks": 0,
+          "impressions": 5,
+          "ctr": 0,
+          "position": 2.8,
+          "prevClicks": 0,
+          "prevPosition": 2.8,
+          "isNew": false
+        },
+        {
+          "keyword": "\"real decreto-ley 7/2025\" \"nis2\"",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 10,
+          "prevClicks": 0,
+          "prevPosition": 6.571428571428571,
+          "isNew": false
+        },
+        {
+          "keyword": "\"wazuh-install.sh -a\"",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 4,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "a security",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 9,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "abrir correo corporativo",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 27,
+          "prevClicks": 0,
+          "prevPosition": 29,
+          "isNew": false
+        },
+        {
+          "keyword": "abrir correo corporativo en outlook",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 18.5,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "abrir correo corporativo outlook",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 17,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "acceso correo sergas desde móvil",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 3,
+          "prevClicks": 0,
+          "prevPosition": 3,
+          "isNew": false
+        },
+        {
+          "keyword": "administrador de wazuh",
+          "clicks": 0,
+          "impressions": 5,
+          "ctr": 0,
+          "position": 14.2,
+          "prevClicks": 0,
+          "prevPosition": 14.5,
+          "isNew": false
+        },
+        {
+          "keyword": "agencia ia alicante",
+          "clicks": 0,
+          "impressions": 9,
+          "ctr": 0,
+          "position": 31.11111111111111,
+          "prevClicks": 0,
+          "prevPosition": 29.285714285714285,
+          "isNew": false
+        },
+        {
+          "keyword": "agencia inteligencia artificial alicante",
+          "clicks": 0,
+          "impressions": 7,
+          "ctr": 0,
+          "position": 55.57142857142857,
+          "prevClicks": 0,
+          "prevPosition": 48.5,
+          "isNew": false
+        },
+        {
+          "keyword": "agendación de citas con asistentes virtuales",
+          "clicks": 0,
+          "impressions": 5,
+          "ctr": 0,
+          "position": 89,
+          "prevClicks": 0,
+          "prevPosition": 91.16666666666667,
+          "isNew": false
+        }
+      ]
     }
   ]
 }
