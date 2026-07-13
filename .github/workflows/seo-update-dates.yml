@@ -1,10 +1,13 @@
 name: SEO - Actualizar fechas artículos
 
 on:
-  schedule:
-    # Cada lunes a las 08:00 UTC (09:00 hora España)
-    - cron: '0 8 * * 1'
-  workflow_dispatch: # Permite ejecutar manualmente desde GitHub
+  # Cron DESACTIVADO (jul 2026) — subir modifiedDate cada semana sin cambio real
+  # de contenido es "frescura falsa", una señal que penaliza el June 2026 Spam
+  # Update. Actualizar la fecha solo cuando el artículo cambie de verdad. Se
+  # mantiene el disparo manual.
+  # schedule:
+  #   - cron: '0 8 * * 1'
+  workflow_dispatch: # Ejecución manual desde GitHub
 
 jobs:
   update-dates:

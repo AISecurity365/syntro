@@ -1,10 +1,13 @@
 name: SEO - Rotación A/B títulos y descripciones
 
 on:
-  schedule:
-    # Cada 2 semanas, el lunes a las 09:00 UTC (día 1 y 15 de cada mes)
-    - cron: '0 9 1,15 * *'
-  workflow_dispatch: # Permite ejecutar manualmente desde GitHub
+  # Cron DESACTIVADO (jul 2026) — evitar señal de "scaled content abuse" tras el
+  # June 2026 Spam Update. La rotación automática de títulos/descripciones sin
+  # revisión humana es el perfil que penalizan los spam updates. Se mantiene el
+  # disparo manual; reactivar el cron solo con criterio editorial humano.
+  # schedule:
+  #   - cron: '0 9 1,15 * *'
+  workflow_dispatch: # Ejecución manual desde GitHub
 
 jobs:
   ab-rotation:

@@ -267,12 +267,7 @@ const canonical = `https://aisecurity.es/consultoria-ia/${ciudad.slug}`;
       "@type": "Service",
       "name": `Consultoría de Inteligencia Artificial para Empresas en ${ciudad.nombre}`,
       "description": `Servicio de análisis, implementación y formación de herramientas de IA adaptadas a empresas de ${ciudad.nombre} y la ${ciudad.region}. Cubre todos los departamentos: administración, comercial, atención al cliente, comunicación, desarrollo y sistemas.`,
-      "provider": {
-        "@type": "Organization",
-        "name": "AI Security",
-        "url": "https://aisecurity.es",
-        "areaServed": "ES"
-      },
+      "provider": { "@id": "https://aisecurity.es/#organization" },
       "areaServed": {
         "@type": "City",
         "name": ciudad.nombre,

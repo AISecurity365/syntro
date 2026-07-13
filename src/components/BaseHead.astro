@@ -25,6 +25,10 @@ const keywords = isEn
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  // @id estable: nodo canónico de la entidad. Todas las páginas (Service, FAQ…)
+  // deben referenciarlo con {"@id": "https://aisecurity.es/#organization"} para
+  // que Google/LLMs consoliden todo en UNA sola entidad. Ver CLAUDE.md → GEO.
+  "@id": "https://aisecurity.es/#organization",
   "name": "AI Security",
   "url": "https://aisecurity.es",
   "logo": "https://aisecurity.es/favicon.png",

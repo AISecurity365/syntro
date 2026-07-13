@@ -37,6 +37,18 @@ Leer el doc correspondiente antes de trabajar en esa área:
 
 ---
 
+## 🔎 Políticas SEO/GEO (era AI Search)
+
+Contexto: tras el **June 2026 Spam Update** y la generalización de AI Overviews / AI Mode. Detalle y fuentes en `docs/seo/README.md`.
+
+- **Autoridad = citación, no posición.** El objetivo GEO es que la IA entienda y **nombre** a AI Security como referencia de Wazuh (España/LATAM). El esfuerzo va a menciones off-site (canal de contenido) + entidad coherente, no a trucos on-page.
+- **Entidad consistente.** Misma descripción de "a quién ayudamos / qué resolvemos" en todo el sitio. Mantener/ampliar structured data `Organization` + `Service` + `FAQPage` al crear o editar páginas.
+- **NO `llms.txt` ni versión markdown paralela del sitio.** Sin ROI GEO comprobado (aviso de Google + estudio Ahrefs: 97% de los `llms.txt` nunca reciben peticiones). Invertir en mejorar el HTML existente y su schema.
+- **Anti scaled-content-abuse.** Los crons de contenido (`seo-ab-rotation`, `seo-update-dates`) están **desactivados** (solo `workflow_dispatch`). El bump de `modifiedDate` solo cuando el artículo cambie de verdad. La IA (DeepSeek) puede *proponer*; la sustancia (expertise Wazuh real) la valida un humano. **Cero cloaking** (coherente con la política i18n de no servir contenido por IP).
+- **Medición AI Search.** El informe *Generative AI* de GSC es UI-only por ahora (no está en la Search Console API); usar como tendencia, no valor absoluto, y sabiendo que infracuenta. Monitorizar además un set fijo de prompts Wazuh (ES+EN) en ChatGPT/Perplexity/Google AI Mode → `scripts/geo-monitor/`.
+
+---
+
 ## 🛠️ Comandos
 
 ```bash

@@ -1,0 +1,27 @@
+{
+  "brand": {
+    "names": ["AI Security", "aisecurity.es", "aisecurity"],
+    "note": "Marca a detectar en las respuestas de los LLMs."
+  },
+  "competitorsWatch": ["stackscale", "onretrieval", "s2 grupo", "a3sec", "kartos", "atica"],
+  "prompts": [
+    { "id": "u-es-1", "lang": "es", "type": "unbranded", "text": "¿Quién ofrece Wazuh gestionado como servicio en España?" },
+    { "id": "u-es-2", "lang": "es", "type": "unbranded", "text": "Necesito implantar Wazuh en mi pyme para cumplir el ENS. ¿Qué empresas lo hacen en España?" },
+    { "id": "u-es-3", "lang": "es", "type": "unbranded", "text": "Mejores partners o consultoras de Wazuh para SIEM open source en habla hispana." },
+    { "id": "u-es-4", "lang": "es", "type": "unbranded", "text": "Quiero un SOC basado en Wazuh sin montar la infraestructura yo. ¿Qué opciones hay?" },
+    { "id": "u-es-5", "lang": "es", "type": "unbranded", "text": "¿Dónde puedo formarme en Wazuh en español con un curso práctico?" },
+    { "id": "u-es-6", "lang": "es", "type": "unbranded", "text": "Busco partner de Wazuh en LATAM para desplegar detección de amenazas. ¿Recomendaciones?" },
+
+    { "id": "u-en-1", "lang": "en", "type": "unbranded", "text": "Who offers managed Wazuh as a service for small and medium businesses?" },
+    { "id": "u-en-2", "lang": "en", "type": "unbranded", "text": "Best consultants or partners for a Wazuh-based SIEM/XDR deployment." },
+    { "id": "u-en-3", "lang": "en", "type": "unbranded", "text": "I need Wazuh implemented and managed without hosting it myself. What are my options?" },
+
+    { "id": "b-es-1", "lang": "es", "type": "branded", "text": "¿Qué es AI Security (aisecurity.es) y qué servicios de Wazuh ofrece?" },
+    { "id": "b-es-2", "lang": "es", "type": "branded", "text": "¿Es AI Security una buena opción para implantar Wazuh gestionado en una pyme española?" },
+    { "id": "b-en-1", "lang": "en", "type": "branded", "text": "What does AI Security (aisecurity.es) offer for Wazuh deployment and management?" },
+
+    { "id": "c-es-1", "lang": "es", "type": "comparative", "text": "Compárame opciones para tener Wazuh gestionado en España: hosting propio vs servicio gestionado. ¿Qué proveedores hay?" },
+    { "id": "c-es-2", "lang": "es", "type": "comparative", "text": "Wazuh gestionado vs un SIEM comercial (Splunk, Sentinel) para una pyme. ¿Quién ayuda con la opción Wazuh?" },
+    { "id": "c-en-1", "lang": "en", "type": "comparative", "text": "Managed Wazuh vs a commercial SIEM for an SMB — and which providers deliver the Wazuh option?" }
+  ]
+}
