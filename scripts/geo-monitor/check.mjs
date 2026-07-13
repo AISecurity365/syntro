@@ -52,15 +52,30 @@ async function ask(provider, prompt) {
   return json.choices?.[0]?.message?.content || '';
 }
 
-// Detecta marca y una posible recomendación (nombre cerca de "recomiend"/"best"/"top").
+// Frases de "no te conozco" — en prompts marcados el modelo repite el nombre de
+// la marca (viene en la pregunta) solo para decir que no tiene datos. Ese eco NO
+// es una cita real, así que lo marcamos como "disclaimed" y no cuenta.
+const IGNORANCE = /(no tengo|no dispongo|no puedo (confirmar|proporcionar|verificar|dar)|no encontr|no hay información|no existe información|desconozco|no me consta|información específica sobre|not familiar|i (don'?t|do not) have|cannot (provide|confirm|verify)|no data|couldn'?t find|i'?m not aware|no specific information|no verifiable)/i;
+
+// Detecta marca, si la respuesta la desconoce (eco vacío) y una posible recomendación.
 function detect(answer, names) {
   const low = answer.toLowerCase();
   const hit = names.find(n => low.includes(n.toLowerCase()));
-  if (!hit) return { mentioned: false, recommended: false, snippet: null };
+  if (!hit) return { mentioned: false, recommended: false, disclaimed: false, snippet: null };
   const idx = low.indexOf(hit.toLowerCase());
   const snippet = answer.slice(Math.max(0, idx - 90), idx + 90).replace(/\s+/g, ' ').trim();
-  const recommended = /(recomiend|recommend|mejor|best|top|ideal|opción sólida|great option)/i.test(snippet);
-  return { mentioned: true, recommended, snippet };
+  const disclaimed = IGNORANCE.test(answer);
+  const recommended = !disclaimed && /(recomiend|recommend|mejor opción|best (option|choice)|top choice|ideal para|great option|opción sólida)/i.test(snippet);
+  return { mentioned: true, recommended, disclaimed, snippet };
+}
+
+// Etiqueta de estado consistente (consola y report).
+function statusLabel(r) {
+  if (r.error) return `⚠️ ${r.error}`;
+  if (r.recommended) return '⭐ recomendado';
+  if (r.mentioned && r.disclaimed) return '🚫 no nos conoce';
+  if (r.mentioned) return '✅ mencionado';
+  return '— ausente';
 }
 
 async function main() {
@@ -82,17 +97,20 @@ async function main() {
         out = { provider: provider.id, id: p.id, type: p.type, lang: p.lang, error: e.message };
       }
       run.results.push(out);
-      const tag = out.error ? `⚠️ ${out.error}` : out.recommended ? '⭐ recomendado' : out.mentioned ? '✅ mencionado' : '— ausente';
-      console.log(`  [${provider.id}] ${p.id.padEnd(7)} ${tag}`);
+      console.log(`  [${provider.id}] ${p.id.padEnd(7)} ${statusLabel(out)}`);
     }
   }
 
   // Resumen de tasas de citación por proveedor.
   const summary = PROVIDERS.map(pr => {
     const rows = run.results.filter(r => r.provider === pr.id && !r.error);
-    const mentioned = rows.filter(r => r.mentioned).length;
+    // "Mención real" = aparece Y no es un eco de desconocimiento.
+    const mentioned = rows.filter(r => r.mentioned && !r.disclaimed).length;
     const recommended = rows.filter(r => r.recommended).length;
-    return { provider: pr.id, total: rows.length, mentioned, recommended };
+    // Descubrimiento = citas reales en prompts NO marcados (los que de verdad importan).
+    const discovery = rows.filter(r => r.type !== 'branded' && r.mentioned && !r.disclaimed).length;
+    const discoveryTotal = rows.filter(r => r.type !== 'branded').length;
+    return { provider: pr.id, total: rows.length, mentioned, recommended, discovery, discoveryTotal };
   });
   run.summary = summary;
 
@@ -105,22 +123,25 @@ async function main() {
     `# GEO Monitor — citación de marca en IA`,
     `**Fecha:** ${new Date(run.date).toLocaleString('es-ES')}`,
     '',
+    `> **Descubrimiento** = citas reales en prompts NO marcados (la métrica que importa).`,
+    `> Los prompts marcados que solo repiten el nombre para decir que no nos conocen se marcan 🚫 y no cuentan.`,
+    '',
     `## Tasa de citación por proveedor`,
-    `| Proveedor | Menciones | Recomendaciones | Total prompts |`,
-    `|-----------|-----------|-----------------|---------------|`,
-    ...summary.map(s => `| ${s.provider} | ${s.mentioned} | ${s.recommended} | ${s.total} |`),
+    `| Proveedor | Descubrimiento | Menciones reales | Recomendaciones |`,
+    `|-----------|----------------|------------------|-----------------|`,
+    ...summary.map(s => `| ${s.provider} | ${s.discovery}/${s.discoveryTotal} | ${s.mentioned} | ${s.recommended} |`),
     '',
     `## Detalle`,
     `| Proveedor | Prompt | Tipo | Estado | Contexto |`,
     `|-----------|--------|------|--------|----------|`,
     ...run.results.map(r =>
-      `| ${r.provider} | ${r.id} | ${r.type} | ${r.error ? '⚠️ error' : r.recommended ? '⭐ recomendado' : r.mentioned ? '✅ mencionado' : '— ausente'} | ${r.snippet ? '…' + r.snippet.replace(/\|/g, '\\|') + '…' : (r.error || '')} |`
+      `| ${r.provider} | ${r.id} | ${r.type} | ${statusLabel(r)} | ${r.snippet ? '…' + r.snippet.replace(/\|/g, '\\|') + '…' : (r.error || '')} |`
     ),
   ].join('\n');
   fs.writeFileSync(REPORT, md);
 
   console.log('\n📊 Resumen:');
-  summary.forEach(s => console.log(`  ${s.provider}: ${s.mentioned}/${s.total} menciones, ${s.recommended} recomendaciones`));
+  summary.forEach(s => console.log(`  ${s.provider}: descubrimiento ${s.discovery}/${s.discoveryTotal} · ${s.mentioned} menciones reales · ${s.recommended} recomendaciones`));
   console.log(`\n✅ history.json y last-report.md actualizados`);
 }
 

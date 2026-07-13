@@ -2,9 +2,9 @@ name: GEO Monitor - citación Wazuh en IA
 
 on:
   workflow_dispatch: # Ejecución manual desde GitHub / gh CLI
-  # Opcional a futuro: descomentar para snapshot mensual (no muta contenido del sitio).
-  # schedule:
-  #   - cron: '0 7 1 * *'
+  schedule:
+    # Snapshot mensual (día 1, 07:00 UTC). Solo escribe el informe, no muta el sitio.
+    - cron: '0 7 1 * *'
 
 jobs:
   monitor:
