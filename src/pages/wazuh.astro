@@ -1211,6 +1211,45 @@ const canonical = "https://aisecurity.es/wazuh";
     ]
   }</script>
 
+  <!-- Service Schema JSON-LD — entidad Wazuh (provider enlazado a #organization) -->
+  <script is:inline type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": "https://aisecurity.es/wazuh#service",
+    "name": "Implementación y Wazuh Gestionado (SIEM/XDR)",
+    "serviceType": "Implementación y servicio gestionado de Wazuh (SIEM/XDR open source)",
+    "description": "Implementación profesional de Wazuh para SIEM, detección de amenazas y cumplimiento ENS, y servicio gestionado con soporte y mantenimiento continuo. Servicio prestado en remoto para toda España.",
+    "provider": { "@id": "https://aisecurity.es/#organization" },
+    "areaServed": { "@type": "Country", "name": "España" },
+    "url": "https://aisecurity.es/wazuh",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Wazuh Básico",
+        "description": "Implementación para entornos básicos (hasta 10 agentes), incluye 2 días de formación.",
+        "priceCurrency": "EUR",
+        "priceSpecification": { "@type": "PriceSpecification", "minPrice": 999, "maxPrice": 1499, "priceCurrency": "EUR" },
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "@type": "Offer",
+        "name": "Wazuh Completo",
+        "description": "Implementación completa con configuración ENS certificada y 5 días de formación.",
+        "priceCurrency": "EUR",
+        "priceSpecification": { "@type": "PriceSpecification", "minPrice": 1999, "maxPrice": 3999, "priceCurrency": "EUR" },
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "@type": "Offer",
+        "name": "Wazuh Gestionado",
+        "description": "Servicio gestionado con hosting propio, soporte y mantenimiento continuo.",
+        "priceCurrency": "EUR",
+        "priceSpecification": { "@type": "UnitPriceSpecification", "price": 200, "priceCurrency": "EUR", "unitCode": "MON", "unitText": "por mes" },
+        "availability": "https://schema.org/InStock"
+      }
+    ]
+  }</script>
+
   <!-- ══ MODAL: solicitar demo de Wazuh ══ -->
   <div id="wazuh-demo-modal" class="fixed inset-0 z-[9998] hidden items-center justify-center p-4" style="background:rgba(2,6,16,0.78);backdrop-filter:blur(4px);">
     <div id="wazuh-demo-card" role="dialog" aria-modal="true" aria-label="Solicitar demo de Wazuh" style="width:min(460px,calc(100vw - 2rem));background:linear-gradient(155deg,#0b1020 0%,#111a33 60%,#0b1020 100%);border:1px solid rgba(99,102,241,0.35);border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,0.7),0 0 60px -20px rgba(99,102,241,0.5);overflow:hidden;">

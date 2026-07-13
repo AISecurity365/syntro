@@ -1120,6 +1120,45 @@ const canonical = "https://aisecurity.es/en/wazuh";
     ]
   }</script>
 
+  <!-- Service Schema JSON-LD — Wazuh entity (provider linked to #organization) -->
+  <script is:inline type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": "https://aisecurity.es/en/wazuh#service",
+    "name": "Wazuh Implementation & Managed Wazuh (SIEM/XDR)",
+    "serviceType": "Wazuh (open source SIEM/XDR) implementation and managed service",
+    "description": "Professional Wazuh implementation for SIEM, threat detection and security compliance, plus a fully managed service with ongoing support and maintenance. Delivered remotely worldwide.",
+    "provider": { "@id": "https://aisecurity.es/#organization" },
+    "areaServed": "Worldwide",
+    "url": "https://aisecurity.es/en/wazuh",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Wazuh Basic",
+        "description": "Implementation for basic environments (up to 10 agents), includes training.",
+        "priceCurrency": "EUR",
+        "priceSpecification": { "@type": "PriceSpecification", "minPrice": 999, "maxPrice": 1499, "priceCurrency": "EUR" },
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "@type": "Offer",
+        "name": "Wazuh Complete",
+        "description": "Full implementation with certified compliance configuration and extended training.",
+        "priceCurrency": "EUR",
+        "priceSpecification": { "@type": "PriceSpecification", "minPrice": 1999, "maxPrice": 3999, "priceCurrency": "EUR" },
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "@type": "Offer",
+        "name": "Managed Wazuh",
+        "description": "Fully managed service with hosting, ongoing support and maintenance.",
+        "priceCurrency": "EUR",
+        "priceSpecification": { "@type": "UnitPriceSpecification", "price": 200, "priceCurrency": "EUR", "unitCode": "MON", "unitText": "per month" },
+        "availability": "https://schema.org/InStock"
+      }
+    ]
+  }</script>
+
   <!-- ══ MODAL: request a Wazuh demo ══ -->
   <div id="wazuh-demo-modal" class="fixed inset-0 z-[9998] hidden items-center justify-center p-4" style="background:rgba(2,6,16,0.78);backdrop-filter:blur(4px);">
     <div id="wazuh-demo-card" role="dialog" aria-modal="true" aria-label="Request a Wazuh demo" style="width:min(460px,calc(100vw - 2rem));background:linear-gradient(155deg,#0b1020 0%,#111a33 60%,#0b1020 100%);border:1px solid rgba(99,102,241,0.35);border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,0.7),0 0 60px -20px rgba(99,102,241,0.5);overflow:hidden;">
