@@ -74,10 +74,8 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
     En el servidor Linux que actuará como collector, instala rsyslog y habilita la recepción de logs remotos.
   </p>
 
-  <!-- Bloque de codigo bloqueado -->
-  <div class="locked-code-block relative my-6">
-    <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;filter:blur(3px);user-select:none;pointer-events:none;">
-      <pre style="margin:0;"><code style="color: #e5e7eb;"># Instalar rsyslog
+  <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;margin:1.5rem 0;">
+    <pre style="margin:0;"><code style="color: #e5e7eb;"># Instalar rsyslog
 apt update && apt install rsyslog -y
 
 # Editar /etc/rsyslog.conf y descomentar:
@@ -88,15 +86,6 @@ input(type="imtcp" port="514")
 
 # Reiniciar servicio
 systemctl restart rsyslog && systemctl enable rsyslog</code></pre>
-    </div>
-    <div class="absolute inset-0 flex items-center justify-center" style="background: rgba(0,0,0,0.6); border-radius: 8px;">
-      <a href="/curso-wazuh" class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition-all hover:scale-105" style="background: linear-gradient(135deg, #0065ff 0%, #0052cc 100%); color: #ffffff;">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-        </svg>
-        Ver comandos en el Curso
-      </a>
-    </div>
   </div>
 
   <h2>¿Cómo configurar el firewall con iptables?</h2>
@@ -105,10 +94,8 @@ systemctl restart rsyslog && systemctl enable rsyslog</code></pre>
     Permite conexiones al puerto 514 solo desde los equipos autorizados para mayor seguridad.
   </p>
 
-  <!-- Bloque de codigo bloqueado -->
-  <div class="locked-code-block relative my-6">
-    <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;filter:blur(3px);user-select:none;pointer-events:none;">
-      <pre style="margin:0;"><code style="color: #e5e7eb;"># Permitir desde equipos específicos
+  <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;margin:1.5rem 0;">
+    <pre style="margin:0;"><code style="color: #e5e7eb;"># Permitir desde equipos específicos
 iptables -A INPUT -p udp -s 192.168.1.1 --dport 514 -j ACCEPT
 iptables -A INPUT -p tcp -s 192.168.1.1 --dport 514 -j ACCEPT
 
@@ -118,15 +105,6 @@ iptables -A INPUT -p tcp --dport 514 -j DROP
 
 # Guardar reglas
 apt install iptables-persistent -y && netfilter-persistent save</code></pre>
-    </div>
-    <div class="absolute inset-0 flex items-center justify-center" style="background: rgba(0,0,0,0.6); border-radius: 8px;">
-      <a href="/curso-wazuh" class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition-all hover:scale-105" style="background: linear-gradient(135deg, #0065ff 0%, #0052cc 100%); color: #ffffff;">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-        </svg>
-        Ver comandos en el Curso
-      </a>
-    </div>
   </div>
 
   <h2>¿Cómo organizar logs con templates y filtros?</h2>
@@ -135,10 +113,8 @@ apt install iptables-persistent -y && netfilter-persistent save</code></pre>
     Configura rsyslog para guardar los logs en ficheros separados según el origen (NAS, router, switch, etc.) usando templates y filtros IF.
   </p>
 
-  <!-- Bloque de codigo bloqueado -->
-  <div class="locked-code-block relative my-6">
-    <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;filter:blur(3px);user-select:none;pointer-events:none;">
-      <pre style="margin:0;"><code style="color: #e5e7eb;"># Templates para logs organizados
+  <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;margin:1.5rem 0;">
+    <pre style="margin:0;"><code style="color: #e5e7eb;"># Templates para logs organizados
 $template NASLogs,"/var/log/remote/nas.log"
 $template RouterLogs,"/var/log/remote/router.log"
 $template LogFormat,"%TIMESTAMP% %HOSTNAME% %msg%\n"
@@ -154,15 +130,6 @@ if $fromhost-ip != '127.0.0.1' then {'{'}
         stop
     {'}'}
 {'}'}</code></pre>
-    </div>
-    <div class="absolute inset-0 flex items-center justify-center" style="background: rgba(0,0,0,0.6); border-radius: 8px;">
-      <a href="/curso-wazuh" class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition-all hover:scale-105" style="background: linear-gradient(135deg, #0065ff 0%, #0052cc 100%); color: #ffffff;">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-        </svg>
-        Ver comandos en el Curso
-      </a>
-    </div>
   </div>
 
   <h2>¿Cómo integrar los logs de syslog con Wazuh?</h2>
@@ -171,10 +138,8 @@ if $fromhost-ip != '127.0.0.1' then {'{'}
     Añade los nuevos ficheros de log al agente Wazuh para que los monitorice y envíe al servidor SIEM.
   </p>
 
-  <!-- Bloque de codigo bloqueado -->
-  <div class="locked-code-block relative my-6">
-    <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;filter:blur(3px);user-select:none;pointer-events:none;">
-      <pre style="margin:0;"><code style="color: #e5e7eb;"># Editar /var/ossec/etc/ossec.conf
+  <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;margin:1.5rem 0;">
+    <pre style="margin:0;"><code style="color: #e5e7eb;"># Editar /var/ossec/etc/ossec.conf
 # Añadir dentro de &lt;ossec_config&gt;:
 
 &lt;localfile&gt;
@@ -189,21 +154,12 @@ if $fromhost-ip != '127.0.0.1' then {'{'}
 
 # Reiniciar agente
 systemctl restart wazuh-agent</code></pre>
-    </div>
-    <div class="absolute inset-0 flex items-center justify-center" style="background: rgba(0,0,0,0.6); border-radius: 8px;">
-      <a href="/curso-wazuh" class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition-all hover:scale-105" style="background: linear-gradient(135deg, #0065ff 0%, #0052cc 100%); color: #ffffff;">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-        </svg>
-        Ver comandos en el Curso
-      </a>
-    </div>
   </div>
 
   <h2>¿Cómo es el flujo completo de logs?</h2>
 
   <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
-    <ol style="color: #000000; margin: 0;">
+    <ol style="color: rgba(255,255,255,0.85); margin: 0;">
       <li>El dispositivo (NAS, router, etc.) envía logs al puerto 514</li>
       <li>rsyslog los recibe y filtra según las reglas configuradas</li>
       <li>Los logs se escriben en ficheros separados</li>
@@ -254,8 +210,3 @@ systemctl restart wazuh-agent</code></pre>
 
 </BlogLayout>
 
-<style>
-  .locked-code-block {
-    position: relative;
-  }
-</style>
