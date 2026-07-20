@@ -1,67 +1,66 @@
 # Google Analytics 4 — aisecurity.es
-**Generado:** 13/7/2026, 6:08:33
-**Período:** 2026-07-05 → 2026-07-12 (3 días)
+**Generado:** 20/7/2026, 6:10:53
+**Período:** 2026-07-12 → 2026-07-19 (3 días)
 
 ## Resumen
-- Sesiones totales: **280**
-- Sesiones orgánicas: **135** (48.2% del total)
+- Sesiones totales: **227**
+- Sesiones orgánicas: **150** (66.1% del total)
 
 ## Canales de tráfico
 | Canal | Sesiones | Usuarios | Bounce | Conversiones |
 |-------|----------|----------|--------|--------------|
-| Organic Search | 135 | 105 | 1.5% | 535 |
-| Direct | 121 | 110 | 0.0% | 420 |
-| Unassigned | 14 | 12 | 92.9% | 31 |
-| AI Assistant | 4 | 3 | 0.0% | 21 |
-| Organic Video | 3 | 2 | 0.0% | 13 |
-| Referral | 2 | 2 | 0.0% | 6 |
-| Organic Social | 1 | 1 | 0.0% | 3 |
+| Organic Search | 150 | 108 | 0.0% | 670 |
+| Direct | 58 | 45 | 1.7% | 228 |
+| Unassigned | 10 | 9 | 100.0% | 20 |
+| AI Assistant | 4 | 2 | 50.0% | 8 |
+| Organic Video | 3 | 2 | 0.0% | 9 |
+| Referral | 2 | 2 | 0.0% | 9 |
 
 ## Top Páginas (3 días)
 | Página | Sesiones | Usuarios | Bounce | Duración media | vs anterior |
 |--------|----------|----------|--------|----------------|-------------|
-| / | 46 | 42 | 2.2% | 0m 22s | 📈 +30 |
-| /curso-wazuh | 20 | 15 | 0.0% | 3m 56s | 📉 -3 |
-| /blog/como-instalar-agente-wazuh-en-windows | 19 | 12 | 15.8% | 4m 55s | 📈 +14 |
-| /en/blog/wazuh-mcp-server-claude-ia | 18 | 16 | 0.0% | 2m 30s | 📈 +8 |
-| /blog/como-instalar-wazuh-en-linux | 16 | 12 | 0.0% | 5m 35s | 📈 +1 |
-| /blog/como-instalar-wazuh-en-linux/ | 13 | 8 | 7.7% | 2m 59s | 📈 +2 |
-| /blog/wazuh-elastic-security-configuracion-de-siem-completo | 10 | 6 | 0.0% | 2m 2s | 📈 +1 |
-| /blog/ia-threat-hunting-wazuh | 9 | 8 | 0.0% | 2m 8s | 📈 +5 |
-| /blog/que-es-wazuh-para-que-sirve | 9 | 8 | 0.0% | 2m 8s | 📉 -1 |
-| /blog/detectar-phishing-outlook-microsoft-guia-empleados | 8 | 6 | 0.0% | 5m 36s | 📈 +8 |
-| /blog/que-es-wazuh-para-que-sirve/ | 8 | 7 | 0.0% | 3m 11s | 📉 -6 |
-| /en/blog/configurar-alertas-correo-wazuh-postfix-gmail | 7 | 6 | 0.0% | 4m 30s | 📈 +2 |
-| /servicios/gestor-citas | 7 | 7 | 0.0% | 0m 13s | 📈 +2 |
-| /blog/configurar-correo-corporativo-outlook-movil | 6 | 6 | 0.0% | 1m 5s | 📉 -2 |
-| /blog/configurar-correo-corporativo-outlook-movil/ | 6 | 4 | 0.0% | 7m 3s | ➡️ |
+| / | 37 | 25 | 2.7% | 2m 16s | 📉 -9 |
+| /curso-wazuh | 29 | 18 | 0.0% | 2m 40s | 📈 +9 |
+| /blog/que-es-wazuh-para-que-sirve | 18 | 16 | 5.6% | 3m 45s | 📈 +9 |
+| /blog/como-instalar-wazuh-en-linux | 17 | 14 | 0.0% | 6m 49s | 📈 +1 |
+| /blog/configurar-correo-corporativo-outlook-movil | 11 | 10 | 0.0% | 1m 37s | 📈 +5 |
+| /blog/como-instalar-agente-wazuh-en-windows | 9 | 8 | 0.0% | 4m 1s | 📉 -10 |
+| /blog/configurar-correo-corporativo-outlook-movil/ | 8 | 7 | 0.0% | 6m 11s | 📈 +2 |
+| /blog/que-es-wazuh-para-que-sirve/ | 8 | 5 | 0.0% | 8m 38s | ➡️ |
+| /en/blog/como-instalar-wazuh-en-linux | 8 | 5 | 25.0% | 4m 2s | 📈 +4 |
+| /blog/wazuh-elastic-security-configuracion-de-siem-completo | 7 | 1 | 28.6% | 5m 42s | 📉 -3 |
+| /blog/wazuh-mcp-server-claude-ia | 7 | 2 | 14.3% | 3m 2s | 📈 +1 |
+| /consultoria-ia | 7 | 4 | 0.0% | 3m 55s | 📈 +7 |
+| /blog/como-instalar-wazuh-en-linux/ | 6 | 4 | 0.0% | 3m 52s | 📉 -7 |
+| /blog/directiva-nis2-que-es-empresas-espana | 6 | 4 | 0.0% | 2m 33s | 📈 +6 |
+| /curso-wazuh-avanzado | 6 | 5 | 16.7% | 5m 48s | 📈 +6 |
 
 ## Eventos y conversiones
 | Evento | Disparos | Usuarios |
 |--------|----------|----------|
-| time_on_page | 407 | 95 |
-| scroll_depth | 339 | 104 |
-| page_view | 290 | 226 |
-| session_start | 268 | 227 |
-| first_visit | 213 | 213 |
-| user_engagement | 118 | 98 |
-| click_button | 73 | 58 |
-| popup_shown | 61 | 61 |
-| scroll | 55 | 48 |
-| popup_closed | 47 | 47 |
-| click_link | 27 | 18 |
-| click | 3 | 2 |
+| time_on_page | 501 | 104 |
+| scroll_depth | 463 | 109 |
+| page_view | 274 | 159 |
+| session_start | 218 | 159 |
+| first_visit | 147 | 146 |
+| user_engagement | 124 | 97 |
+| click_button | 95 | 65 |
+| scroll | 75 | 45 |
+| click_link | 73 | 24 |
+| popup_shown | 55 | 53 |
+| popup_closed | 50 | 49 |
+| section_view | 12 | 8 |
 
 ## Países
-- **Spain**: 70 sesiones
-- **United States**: 59 sesiones
-- **Mexico**: 15 sesiones
-- **China**: 11 sesiones
-- **Colombia**: 10 sesiones
-- **Netherlands**: 10 sesiones
-- **Panama**: 9 sesiones
-- **Peru**: 7 sesiones
+- **Spain**: 107 sesiones
+- **Singapore**: 11 sesiones
+- **United States**: 11 sesiones
+- **Peru**: 10 sesiones
+- **China**: 8 sesiones
+- **Mexico**: 8 sesiones
+- **Chile**: 7 sesiones
+- **Bolivia**: 6 sesiones
 
 ## Dispositivos
-- **desktop**: 236 sesiones, bounce 1.3%
-- **mobile**: 34 sesiones, bounce 5.9%
+- **desktop**: 190 sesiones, bounce 4.7%
+- **mobile**: 33 sesiones, bounce 0.0%
