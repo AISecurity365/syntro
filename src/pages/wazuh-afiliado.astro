@@ -207,40 +207,12 @@ const canonical = "https://aisecurity.es/wazuh-afiliado";
     </div>
   </section>
 
-  <!-- ═══ CÓMO FUNCIONA ═══ -->
-  <section id="como-funciona" class="relative py-20 overflow-hidden" style="background-color:#040b1c;">
-    <div class="relative z-10 max-w-6xl mx-auto px-4 md:px-8">
-      <div class="text-center mb-14">
-        <p class="text-xs font-bold uppercase tracking-widest mb-3" style="color:#60a5fa;">El modelo en 3 pasos</p>
-        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" style="color:#f0f6ff;">¿Tú prescribes, nosotros ejecutamos y los dos cobramos?</h2>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="rounded-2xl p-7" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.2);">
-          <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-5 font-bold text-lg" style="background:rgba(59,130,246,0.15);color:#60a5fa;">1</div>
-          <h3 class="text-lg font-bold mb-2" style="color:#f0f6ff;">¿Detectas la oportunidad?</h3>
-          <p class="text-sm" style="color:rgba(240,246,255,0.65);line-height:1.6;">Una empresa u organismo de tu red necesita un SIEM, cumplir normativa o monitorizar su seguridad. Lo presentas y nos lo registras.</p>
-        </div>
-        <div class="rounded-2xl p-7" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.2);">
-          <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-5 font-bold text-lg" style="background:rgba(59,130,246,0.15);color:#60a5fa;">2</div>
-          <h3 class="text-lg font-bold mb-2" style="color:#f0f6ff;">¿Implementamos nosotros?</h3>
-          <p class="text-sm" style="color:rgba(240,246,255,0.65);line-height:1.6;">Nuestro equipo hace toda la parte técnica en remoto: instalación, configuración, reglas, integración y formación. Tu marca queda respaldada por especialistas.</p>
-        </div>
-        <div class="rounded-2xl p-7" style="background:rgba(255,255,255,0.03);border:1px solid rgba(74,222,128,0.25);">
-          <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-5 font-bold text-lg" style="background:rgba(74,222,128,0.15);color:#4ade80;">3</div>
-          <h3 class="text-lg font-bold mb-2" style="color:#f0f6ff;">¿Cobras tu comisión?</h3>
-          <p class="text-sm" style="color:rgba(240,246,255,0.65);line-height:1.6;">20% del proyecto de implementación al cerrarlo, más un 10% del servicio gestionado cada mes mientras el cliente siga activo. Ingreso puntual + ingreso recurrente.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ═══ CALCULADORA ═══ -->
   <section id="calculadora" class="relative py-20 overflow-hidden" style="background-color:#020817;">
     <div class="absolute inset-0" style="background-image:linear-gradient(rgba(59,130,246,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.1) 1px,transparent 1px);background-size:40px 40px;opacity:0.5;"></div>
 
     <div class="relative z-10 max-w-4xl mx-auto px-4 md:px-8">
       <div class="text-center mb-12">
-        <p class="text-xs font-bold uppercase tracking-widest mb-3" style="color:#60a5fa;">Haz números</p>
         <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-4" style="color:#f0f6ff;">¿Cuánto podrías ganar?</h2>
         <p class="text-base max-w-2xl mx-auto" style="color:rgba(240,246,255,0.6);">Mueve los controles según los clientes que crees que puedes traer. Las cifras son orientativas.</p>
       </div>
@@ -251,9 +223,9 @@ const canonical = "https://aisecurity.es/wazuh-afiliado";
           <div>
             <div class="flex justify-between items-baseline mb-3">
               <label class="text-sm font-semibold uppercase tracking-wider" style="color:rgba(240,246,255,0.6);">Clientes al año</label>
-              <span id="calc-clientes-val" class="text-2xl font-extrabold" style="color:#60a5fa;">3</span>
+              <span id="calc-clientes-val" class="text-2xl font-extrabold" style="color:#60a5fa;">10</span>
             </div>
-            <input type="range" id="calc-clientes" min="1" max="20" step="1" value="3" class="calc-range w-full" />
+            <input type="range" id="calc-clientes" min="1" max="20" step="1" value="10" class="calc-range w-full" />
             <div class="flex justify-between mt-1 text-xs" style="color:rgba(240,246,255,0.35);"><span>1</span><span>20</span></div>
           </div>
           <div>
@@ -270,17 +242,17 @@ const canonical = "https://aisecurity.es/wazuh-afiliado";
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div class="rounded-xl p-5 text-center" style="background:rgba(37,99,235,0.12);border:1px solid rgba(59,130,246,0.3);">
             <p class="text-xs uppercase tracking-wider mb-2" style="color:rgba(240,246,255,0.55);">Comisión implementaciones</p>
-            <p id="calc-impl" class="text-2xl font-extrabold" style="color:#60a5fa;">1.500 €</p>
+            <p id="calc-impl" class="text-2xl font-extrabold" style="color:#60a5fa;">5.000 €</p>
             <p class="text-xs mt-1" style="color:rgba(240,246,255,0.4);">20% · pago único</p>
           </div>
           <div class="rounded-xl p-5 text-center" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);">
             <p class="text-xs uppercase tracking-wider mb-2" style="color:rgba(240,246,255,0.55);">Recurrente / año</p>
-            <p id="calc-recu" class="text-2xl font-extrabold" style="color:#4ade80;">720 €</p>
+            <p id="calc-recu" class="text-2xl font-extrabold" style="color:#4ade80;">2.400 €/año</p>
             <p class="text-xs mt-1" style="color:rgba(240,246,255,0.4);">10% del gestionado</p>
           </div>
           <div class="rounded-xl p-5 text-center" style="background:rgba(165,180,252,0.12);border:1px solid rgba(165,180,252,0.3);">
             <p class="text-xs uppercase tracking-wider mb-2" style="color:rgba(240,246,255,0.55);">Total primer año</p>
-            <p id="calc-total" class="text-2xl font-extrabold" style="color:#a5b4fc;">2.220 €</p>
+            <p id="calc-total" class="text-2xl font-extrabold" style="color:#a5b4fc;">7.400 €</p>
             <p class="text-xs mt-1" style="color:rgba(240,246,255,0.4);">implementación + recurrente</p>
           </div>
         </div>
@@ -288,7 +260,7 @@ const canonical = "https://aisecurity.es/wazuh-afiliado";
         <div class="rounded-xl p-4 flex items-start gap-3" style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.2);">
           <span class="text-lg">📈</span>
           <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;">
-            Y esto es solo el primer año: el <strong style="color:#4ade80;">recurrente se acumula</strong>. En el año 2 cobras el recurrente de estos clientes <em>más</em> el de los nuevos que traigas. Al 5º año podrías tener <span id="calc-y5" style="color:#4ade80;font-weight:700;">3.600 €/año</span> solo de recurrente pasivo.
+            Y esto es solo el primer año: el <strong style="color:#4ade80;">recurrente se acumula</strong>. En el año 2 cobras el recurrente de estos clientes <em>más</em> el de los nuevos que traigas. Al 5º año podrías tener <span id="calc-y5" style="color:#4ade80;font-weight:700;">12.000 €/año</span> solo de recurrente pasivo.
           </p>
         </div>
 
@@ -303,7 +275,6 @@ const canonical = "https://aisecurity.es/wazuh-afiliado";
   <section id="perfil" class="relative py-20 overflow-hidden" style="background-color:#040b1c;">
     <div class="relative z-10 max-w-5xl mx-auto px-4 md:px-8">
       <div class="text-center mb-14">
-        <p class="text-xs font-bold uppercase tracking-widest mb-3" style="color:#60a5fa;">¿Es para ti?</p>
         <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" style="color:#f0f6ff;">¿Buscamos gente que ya esté dentro del sector?</h2>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
