@@ -418,6 +418,8 @@ const departamentos = [
         <!-- Diagram + descripción debajo -->
         <div id="diagram-container" style="width: 100%; max-width: 560px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px;">
           <svg id="diagram-svg" viewBox="0 0 560 560" style="display: block; margin: 0 auto; width: min(100%, 560px); height: auto;">
+            <!-- Anillo de cuenta atrás: se vacía en 10s durante auto-rotación -->
+            <circle id="cc-ring" cx="280" cy="280" r="72" fill="none" stroke="#4f7cff" stroke-width="3" stroke-dasharray="452 452" stroke-linecap="round" transform="rotate(-90 280 280)" style="opacity:0;"/>
             <g id="lines"></g>
             <g id="center-node">
               <circle cx="280" cy="280" r="62" fill="#1a1d27" stroke="#4f7cff" stroke-width="2"/>
@@ -700,6 +702,8 @@ const departamentos = [
     // Click: fijar departamento y detener auto-rotación
     g.addEventListener('click', () => {
       userSelected = true;
+      stopCountdown();
+      removePulse();
       if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
       selectDep(dep.id);
     });
@@ -713,18 +717,61 @@ const departamentos = [
     nodesGroup.appendChild(g);
   });
 
-  function setLineAnim(line, isAuto) {
-    // Reiniciar animación forzando reflow
-    line.style.animation = 'none';
-    void line.getBoundingClientRect();
-    line.style.strokeDasharray = '7 5';
-    if (isAuto) {
-      // Viaja + se enciende al inicio + se apaga como cuenta atrás en 10s
-      line.style.animation = 'ccDash .8s linear infinite, ccAutoSeq 10s linear forwards';
-    } else {
-      // Viaja + destello de encendido, sin cuenta atrás (fijado por el usuario)
-      line.style.animation = 'ccDash .8s linear infinite, ccLightUp .6s ease-out forwards';
+  // --- Anillo de cuenta atrás (círculo central) ---
+  function startCountdown() {
+    const ring = document.getElementById('cc-ring');
+    if (!ring) return;
+    ring.style.animation = 'none';
+    ring.style.opacity = '0';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      ring.style.animation = 'ccCountdown 10s linear forwards';
+    }));
+  }
+  function stopCountdown() {
+    const ring = document.getElementById('cc-ring');
+    if (!ring) return;
+    ring.style.animation = 'none';
+    ring.style.opacity = '0';
+  }
+
+  // --- Pulso expansivo alrededor del nodo activo (auto-modo) ---
+  let pulseCircle = null;
+  function addNodePulse(dep) {
+    removePulse();
+    const bg = document.getElementById(`bg-${dep.id}`);
+    if (!bg) return;
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', bg.getAttribute('cx'));
+    c.setAttribute('cy', bg.getAttribute('cy'));
+    c.setAttribute('r', '50');
+    c.setAttribute('fill', 'none');
+    c.setAttribute('stroke', dep.color);
+    c.setAttribute('stroke-width', '2.5');
+    c.setAttribute('pointer-events', 'none');
+    c.style.animation = 'ccNodePulse 1.8s ease-out infinite';
+    const ng = document.getElementById('nodes');
+    ng.insertBefore(c, ng.firstChild);
+    pulseCircle = c;
+  }
+  function removePulse() {
+    if (pulseCircle && pulseCircle.parentNode) {
+      pulseCircle.parentNode.removeChild(pulseCircle);
+      pulseCircle = null;
     }
+  }
+
+  function setLineAnim(line, isAuto) {
+    // Limpiar inline opacity + usar double rAF para reinicio fiable
+    line.style.animation = 'none';
+    line.style.opacity = '';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      line.style.strokeDasharray = '7 5';
+      if (isAuto) {
+        line.style.animation = 'ccDash .8s linear infinite, ccAutoSeq 10s linear forwards';
+      } else {
+        line.style.animation = 'ccDash .8s linear infinite, ccLightUp .6s ease-out forwards';
+      }
+    }));
   }
 
   function selectDep(id) {
@@ -789,6 +836,14 @@ const departamentos = [
       `;
       panelTools.appendChild(item);
     });
+
+    // Efectos de auto-rotación: anillo + pulso en nodo activo
+    if (!userSelected) {
+      addNodePulse(dep);
+      startCountdown();
+    } else {
+      removePulse();
+    }
   }
 
   // Inicio + auto-rotación cada 10 s
@@ -819,24 +874,40 @@ const departamentos = [
 
   @keyframes ccDash { to { stroke-dashoffset: -22; } }
 
-  /* Enciende al inicio y se va apagando a lo largo de 10 s (cuenta atrás visual) */
+  /* Flash instantáneo al seleccionar en auto-modo, se atenúa los últimos 2s */
   @keyframes ccAutoSeq {
-    0%   { opacity: 0.15; }
-    5%   { opacity: 1;    }
-    60%  { opacity: 1;    }
-    88%  { opacity: 0.45; }
-    100% { opacity: 0.1;  }
+    0%   { opacity: 0;    }
+    3%   { opacity: 1;    }
+    12%  { opacity: 0.85; }
+    78%  { opacity: 0.8;  }
+    94%  { opacity: 0.15; }
+    100% { opacity: 0;    }
   }
 
-  /* Destello de encendido para departamento fijado por clic */
+  /* Flash de encendido para departamento fijado por clic — permanece brillante */
   @keyframes ccLightUp {
-    0%   { opacity: 0.15; }
-    35%  { opacity: 1;    }
-    100% { opacity: 1;    }
+    0%   { opacity: 0; }
+    20%  { opacity: 1; }
+    100% { opacity: 1; }
+  }
+
+  /* Anillo de cuenta atrás: azul → morado → rojo en 10s */
+  @keyframes ccCountdown {
+    0%   { stroke-dashoffset: 0;   stroke: #4f7cff; opacity: 0.9; }
+    60%  { stroke: #a78bfa; }
+    88%  { stroke: #f97316; }
+    100% { stroke-dashoffset: 452; stroke: #ef4444; opacity: 0.5; }
+  }
+
+  /* Pulso expansivo en nodo activo (auto-modo) */
+  @keyframes ccNodePulse {
+    0%   { r: 50;  opacity: 0.85; }
+    100% { r: 96;  opacity: 0;    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     #nodes g { transition: none; }
     #lines line { animation: none !important; }
+    #cc-ring { animation: none !important; opacity: 0 !important; }
   }
 </style>
