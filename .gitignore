@@ -44,3 +44,4 @@ scripts/seo-automation/indexnow-key.txt
 
 # Chrome browser for Playwright
 chrome/
+page_dbg.html

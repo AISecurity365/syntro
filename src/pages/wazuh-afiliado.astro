@@ -113,67 +113,71 @@ const canonical = "https://aisecurity.es/wazuh-afiliado";
 
             <circle r="95" fill="none" stroke="rgba(59,130,246,0.4)" stroke-width="1.2"/>
 
-            <use href="#p-ru" fill="none" stroke="rgba(239,68,68,0.18)" stroke-width="0.8" stroke-dasharray="3,5"/>
-            <use href="#p-cn" fill="none" stroke="rgba(239,68,68,0.18)" stroke-width="0.8" stroke-dasharray="3,5"/>
-            <use href="#p-us" fill="none" stroke="rgba(245,158,11,0.18)" stroke-width="0.8" stroke-dasharray="3,5"/>
-            <use href="#p-br" fill="none" stroke="rgba(239,68,68,0.18)" stroke-width="0.8" stroke-dasharray="3,5"/>
+            <use href="#p-ru" fill="none" stroke="rgba(251,191,36,0.20)" stroke-width="0.8" stroke-dasharray="3,5"/>
+            <use href="#p-cn" fill="none" stroke="rgba(251,191,36,0.20)" stroke-width="0.8" stroke-dasharray="3,5"/>
+            <use href="#p-us" fill="none" stroke="rgba(52,211,153,0.20)" stroke-width="0.8" stroke-dasharray="3,5"/>
+            <use href="#p-br" fill="none" stroke="rgba(251,191,36,0.20)" stroke-width="0.8" stroke-dasharray="3,5"/>
 
-            <circle r="4" fill="#ef4444" opacity="0">
+            <!-- Monedas de comisión viajando de cada lead hacia TÚ -->
+            <circle r="4" fill="#fbbf24" opacity="0">
               <animateMotion id="ru-m" dur="2.8s" begin="0s;ru-m.end+4.2s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#p-ru"/></animateMotion>
               <animate attributeName="opacity" dur="2.8s" begin="0s;ru-m.end+4.2s" values="0;1;1;0" keyTimes="0;0.04;0.88;1"/>
               <animate attributeName="r" dur="2.8s" begin="0s;ru-m.end+4.2s" values="3;4;3" keyTimes="0;0.5;1"/>
             </circle>
-            <circle cx="-8" cy="-16" fill="none" stroke="#4ade80" stroke-width="2" opacity="0">
+            <circle cx="-8" cy="-16" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0">
               <animate attributeName="r" from="6" to="26" dur="0.7s" begin="ru-m.end;ru-m.end+7s;ru-m.end+14s;ru-m.end+21s"/>
               <animate attributeName="opacity" from="1" to="0" dur="0.7s" begin="ru-m.end;ru-m.end+7s;ru-m.end+14s;ru-m.end+21s"/>
             </circle>
 
-            <circle r="3.5" fill="#ef4444" opacity="0">
+            <circle r="3.5" fill="#fbbf24" opacity="0">
               <animateMotion id="cn-m" dur="2.8s" begin="1.75s;cn-m.end+4.2s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#p-cn"/></animateMotion>
               <animate attributeName="opacity" dur="2.8s" begin="1.75s;cn-m.end+4.2s" values="0;1;1;0" keyTimes="0;0.04;0.88;1"/>
             </circle>
-            <circle cx="-8" cy="-16" fill="none" stroke="#4ade80" stroke-width="2" opacity="0">
+            <circle cx="-8" cy="-16" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0">
               <animate attributeName="r" from="6" to="26" dur="0.7s" begin="cn-m.end;cn-m.end+7s;cn-m.end+14s"/>
               <animate attributeName="opacity" from="1" to="0" dur="0.7s" begin="cn-m.end;cn-m.end+7s;cn-m.end+14s"/>
             </circle>
 
-            <circle r="3.5" fill="#f59e0b" opacity="0">
+            <circle r="3.5" fill="#34d399" opacity="0">
               <animateMotion id="us-m" dur="2.8s" begin="3.5s;us-m.end+4.2s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#p-us"/></animateMotion>
               <animate attributeName="opacity" dur="2.8s" begin="3.5s;us-m.end+4.2s" values="0;1;1;0" keyTimes="0;0.04;0.88;1"/>
             </circle>
-            <circle cx="-8" cy="-16" fill="none" stroke="#4ade80" stroke-width="2" opacity="0">
+            <circle cx="-8" cy="-16" fill="none" stroke="#34d399" stroke-width="2" opacity="0">
               <animate attributeName="r" from="6" to="26" dur="0.7s" begin="us-m.end;us-m.end+7s;us-m.end+14s"/>
               <animate attributeName="opacity" from="1" to="0" dur="0.7s" begin="us-m.end;us-m.end+7s;us-m.end+14s"/>
             </circle>
 
-            <circle r="3" fill="#ef4444" opacity="0">
+            <circle r="3" fill="#fbbf24" opacity="0">
               <animateMotion id="br-m" dur="2.8s" begin="5.25s;br-m.end+4.2s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#p-br"/></animateMotion>
               <animate attributeName="opacity" dur="2.8s" begin="5.25s;br-m.end+4.2s" values="0;1;1;0" keyTimes="0;0.04;0.88;1"/>
             </circle>
-            <circle cx="-8" cy="-16" fill="none" stroke="#4ade80" stroke-width="2" opacity="0">
+            <circle cx="-8" cy="-16" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0">
               <animate attributeName="r" from="6" to="26" dur="0.7s" begin="br-m.end;br-m.end+7s;br-m.end+14s"/>
               <animate attributeName="opacity" from="1" to="0" dur="0.7s" begin="br-m.end;br-m.end+7s;br-m.end+14s"/>
             </circle>
 
-            <circle cx="68"  cy="-54" r="3"   fill="rgba(239,68,68,0.7)"/>
-            <circle cx="82"  cy="-8"  r="2.5" fill="rgba(239,68,68,0.7)"/>
-            <circle cx="-84" cy="-20" r="2.5" fill="rgba(245,158,11,0.7)"/>
-            <circle cx="-32" cy="65"  r="2.5" fill="rgba(239,68,68,0.7)"/>
+            <!-- Leads / contactos (origen) -->
+            <circle cx="68"  cy="-54" r="3"   fill="rgba(251,191,36,0.75)"/>
+            <circle cx="82"  cy="-8"  r="2.5" fill="rgba(251,191,36,0.75)"/>
+            <circle cx="-84" cy="-20" r="2.5" fill="rgba(52,211,153,0.75)"/>
+            <circle cx="-32" cy="65"  r="2.5" fill="rgba(251,191,36,0.75)"/>
 
-            <text x="68"  y="-59" text-anchor="middle" font-size="5.5" fill="rgba(239,68,68,0.8)" font-family="monospace">RU</text>
-            <text x="85"  y="-13" text-anchor="middle" font-size="5.5" fill="rgba(239,68,68,0.8)" font-family="monospace">CN</text>
-            <text x="-84" y="-25" text-anchor="middle" font-size="5.5" fill="rgba(245,158,11,0.8)" font-family="monospace">US</text>
-            <text x="-32" y="73"  text-anchor="middle" font-size="5.5" fill="rgba(239,68,68,0.8)" font-family="monospace">BR</text>
+            <text x="68"  y="-59" text-anchor="middle" font-size="5.5" fill="rgba(251,191,36,0.85)" font-family="monospace">PYME</text>
+            <text x="88"  y="-13" text-anchor="middle" font-size="5.5" fill="rgba(251,191,36,0.85)" font-family="monospace">ORG.</text>
+            <text x="-84" y="-25" text-anchor="middle" font-size="5.5" fill="rgba(52,211,153,0.85)" font-family="monospace">GOB.</text>
+            <text x="-32" y="73"  text-anchor="middle" font-size="5.5" fill="rgba(251,191,36,0.85)" font-family="monospace">B2B</text>
 
-            <circle cx="-8" cy="-16" r="6" fill="#4ade80" opacity="0.9"/>
-            <circle cx="-8" cy="-16" r="10" fill="none" stroke="rgba(74,222,128,0.35)" stroke-width="1.2"/>
-            <text x="-8" y="-22" text-anchor="middle" font-size="5" fill="#4ade80" font-family="monospace" font-weight="bold" letter-spacing="0.5">WAZUH</text>
+            <!-- Centro: TÚ recibes la comisión -->
+            <circle cx="-8" cy="-16" r="9" fill="#fbbf24" opacity="0.95"/>
+            <circle cx="-8" cy="-16" r="13" fill="none" stroke="rgba(251,191,36,0.35)" stroke-width="1.2"/>
+            <text x="-8" y="-12.5" text-anchor="middle" font-size="10" fill="#3b2f00" font-family="monospace" font-weight="bold">€</text>
+            <text x="-8" y="-30" text-anchor="middle" font-size="5.5" fill="#fbbf24" font-family="monospace" font-weight="bold" letter-spacing="0.5">TÚ</text>
           </svg>
 
-          <div class="wg-notif wg-notif-ru absolute top-3 right-0 max-w-[160px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.4);color:#4ade80;">🛡️ BLOQUEADO · RU</div>
-          <div class="wg-notif wg-notif-cn absolute top-3 right-0 max-w-[160px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.4);color:#4ade80;">🛡️ BLOQUEADO · CN</div>
-          <div class="wg-notif wg-notif-us absolute bottom-12 right-0 max-w-[160px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.4);color:#fbbf24;">⚠️ INTERCEPTADO · US</div>
-          <div class="wg-notif wg-notif-br absolute bottom-4 left-0 max-w-[160px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.4);color:#4ade80;">🛡️ BLOQUEADO · BR</div>
+          <div class="wg-notif wg-notif-ru absolute top-3 right-0 max-w-[170px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.4);color:#fbbf24;">💰 +600 € · comisión</div>
+          <div class="wg-notif wg-notif-cn absolute top-3 right-0 max-w-[170px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.4);color:#34d399;">🔁 +20 €/mes · recurrente</div>
+          <div class="wg-notif wg-notif-us absolute bottom-12 right-0 max-w-[170px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.4);color:#34d399;">🤝 Nuevo cliente cerrado</div>
+          <div class="wg-notif wg-notif-br absolute bottom-4 left-0 max-w-[170px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.4);color:#fbbf24;">💰 +1.200 € · comisión</div>
         </div>
       </div><!-- fin globo -->
 
@@ -257,13 +261,13 @@ const canonical = "https://aisecurity.es/wazuh-afiliado";
           </div>
         </div>
 
-        <div class="rounded-xl p-4 text-center" style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.2);">
-          <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;">
+        <div class="rounded-xl p-4 max-w-2xl mx-auto" style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.2);">
+          <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;text-align:center;">
             📈 Y esto es solo el primer año: el <strong style="color:#4ade80;">recurrente se acumula</strong>. En el año 2 cobras el recurrente de estos clientes <em>más</em> el de los nuevos que traigas. Al 5º año podrías tener <span id="calc-y5" style="color:#4ade80;font-weight:700;">12.000 €/año</span> solo de recurrente pasivo.
           </p>
         </div>
 
-        <p class="mt-5 text-xs text-center" style="color:rgba(240,246,255,0.35);">
+        <p class="mt-5 text-xs max-w-2xl mx-auto" style="color:rgba(240,246,255,0.35);text-align:center;">
           Cálculo orientativo. Servicio gestionado estimado en 200 €/mes por cliente (10% = 20 €/mes). El importe exacto se confirma por proyecto según alcance y nº de agentes.
         </p>
       </div>
@@ -272,34 +276,72 @@ const canonical = "https://aisecurity.es/wazuh-afiliado";
 
   <!-- ═══ PARA QUIÉN ES ═══ -->
   <section id="perfil" class="relative py-20 overflow-hidden" style="background-color:#040b1c;">
+    <div class="absolute inset-0" style="background-image:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(59,130,246,0.10),transparent 70%);"></div>
     <div class="relative z-10 max-w-5xl mx-auto px-4 md:px-8">
-      <div class="text-center mb-14">
-        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" style="color:#f0f6ff;">¿Buscamos gente que ya esté dentro del sector?</h2>
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-3" style="color:#f0f6ff;">¿Es este programa para ti?</h2>
+        <p class="text-base max-w-xl mx-auto" style="color:rgba(240,246,255,0.55);">Funciona mejor si ya te mueves en el sector. Mira de qué lado estás.</p>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="rounded-2xl p-8" style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.22);">
-          <h3 class="text-lg font-bold mb-5 flex items-center gap-2" style="color:#4ade80;">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            Encajas si eres…
-          </h3>
-          <ul class="space-y-3 text-sm" style="color:rgba(240,246,255,0.75);">
-            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Consultor/a de ciberseguridad o TI con cartera de clientes</li>
-            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Freelance o integrador que ya vende servicios a PyMEs u organismos</li>
-            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Profesional con red de contactos en el sector en tu país</li>
-            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Alguien que conoce Wazuh, SIEM o cumplimiento normativo</li>
-            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Comercial técnico que sabe abrir puertas donde una web extranjera no llega</li>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 rounded-3xl overflow-hidden" style="background:rgba(255,255,255,0.025);border:1px solid rgba(96,165,250,0.18);backdrop-filter:blur(12px);">
+
+        <!-- Encajas -->
+        <div class="p-8 md:p-10" style="border-bottom:1px solid rgba(96,165,250,0.12);">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl flex-shrink-0" style="background:linear-gradient(135deg,#22d3ee,#3b82f6);box-shadow:0 4px 14px rgba(34,211,238,0.35);">
+              <svg class="w-5 h-5" fill="none" stroke="#ffffff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </span>
+            <h3 class="text-lg font-bold" style="color:#f0f6ff;">Encajas perfecto si…</h3>
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg flex-shrink-0 mt-0.5" style="background:rgba(34,211,238,0.12);border:1px solid rgba(34,211,238,0.3);"><svg class="w-3.5 h-3.5" fill="none" stroke="#22d3ee" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+              <span class="text-sm" style="color:rgba(240,246,255,0.85);line-height:1.5;">Eres consultor/a de ciberseguridad o TI con cartera de clientes</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg flex-shrink-0 mt-0.5" style="background:rgba(34,211,238,0.12);border:1px solid rgba(34,211,238,0.3);"><svg class="w-3.5 h-3.5" fill="none" stroke="#22d3ee" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+              <span class="text-sm" style="color:rgba(240,246,255,0.85);line-height:1.5;">Eres freelance o integrador y ya vendes a PyMEs u organismos</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg flex-shrink-0 mt-0.5" style="background:rgba(34,211,238,0.12);border:1px solid rgba(34,211,238,0.3);"><svg class="w-3.5 h-3.5" fill="none" stroke="#22d3ee" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+              <span class="text-sm" style="color:rgba(240,246,255,0.85);line-height:1.5;">Tienes red de contactos en el sector en tu país</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg flex-shrink-0 mt-0.5" style="background:rgba(34,211,238,0.12);border:1px solid rgba(34,211,238,0.3);"><svg class="w-3.5 h-3.5" fill="none" stroke="#22d3ee" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+              <span class="text-sm" style="color:rgba(240,246,255,0.85);line-height:1.5;">Conoces Wazuh, SIEM o el cumplimiento normativo</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg flex-shrink-0 mt-0.5" style="background:rgba(34,211,238,0.12);border:1px solid rgba(34,211,238,0.3);"><svg class="w-3.5 h-3.5" fill="none" stroke="#22d3ee" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+              <span class="text-sm" style="color:rgba(240,246,255,0.85);line-height:1.5;">Sabes abrir puertas donde una web extranjera no llega</span>
+            </li>
           </ul>
         </div>
-        <div class="rounded-2xl p-8" style="background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);">
-          <h3 class="text-lg font-bold mb-5 flex items-center gap-2" style="color:#f87171;">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            No es para ti si…
-          </h3>
-          <ul class="space-y-3 text-sm" style="color:rgba(240,246,255,0.7);">
-            <li class="flex gap-2"><span style="color:#f87171;">▸</span> Buscas ingresos rápidos sin relación real con el sector</li>
-            <li class="flex gap-2"><span style="color:#f87171;">▸</span> No tienes contactos ni acceso a empresas que necesiten un SIEM</li>
-            <li class="flex gap-2"><span style="color:#f87171;">▸</span> Esperas que nosotros te consigamos los clientes</li>
-            <li class="flex gap-2"><span style="color:#f87171;">▸</span> Quieres implementar tú y no delegar la parte técnica</li>
+
+        <!-- No encaja -->
+        <div class="p-8 md:p-10" style="border-bottom:1px solid rgba(96,165,250,0.12);border-left:1px solid rgba(96,165,250,0.12);background:rgba(15,23,42,0.35);">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl flex-shrink-0" style="background:rgba(100,116,139,0.18);border:1px solid rgba(148,163,184,0.25);">
+              <svg class="w-5 h-5" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6"/></svg>
+            </span>
+            <h3 class="text-lg font-bold" style="color:rgba(240,246,255,0.75);">Probablemente no, si…</h3>
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg flex-shrink-0 mt-0.5" style="background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.2);"><svg class="w-3.5 h-3.5" fill="none" stroke="#64748b" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6"/></svg></span>
+              <span class="text-sm" style="color:rgba(240,246,255,0.5);line-height:1.5;">Buscas ingresos rápidos sin relación real con el sector</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg flex-shrink-0 mt-0.5" style="background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.2);"><svg class="w-3.5 h-3.5" fill="none" stroke="#64748b" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6"/></svg></span>
+              <span class="text-sm" style="color:rgba(240,246,255,0.5);line-height:1.5;">No tienes contactos ni acceso a empresas que necesiten un SIEM</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg flex-shrink-0 mt-0.5" style="background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.2);"><svg class="w-3.5 h-3.5" fill="none" stroke="#64748b" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6"/></svg></span>
+              <span class="text-sm" style="color:rgba(240,246,255,0.5);line-height:1.5;">Esperas que nosotros te consigamos los clientes</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg flex-shrink-0 mt-0.5" style="background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.2);"><svg class="w-3.5 h-3.5" fill="none" stroke="#64748b" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6"/></svg></span>
+              <span class="text-sm" style="color:rgba(240,246,255,0.5);line-height:1.5;">Quieres implementar tú y no delegar la parte técnica</span>
+            </li>
           </ul>
         </div>
       </div>
