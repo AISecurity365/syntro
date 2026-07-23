@@ -59,6 +59,13 @@ const locale = getLocaleFromPath(currentPath);
           Consultoría IA
         </a>
 
+        <!-- Atención Llamadas IA -->
+        <a
+          href="/servicios/atencion-llamadas"
+          class={`nav-link w-full lg:w-auto text-[11px] font-semibold tracking-wider uppercase transition-all duration-200 px-3 py-3${currentPath === '/servicios/atencion-llamadas' ? 'nav-link--active' : ''}`}>
+          Atención Llamadas IA
+        </a>
+
         <!-- Posicionamiento SEO -->
         <a
           href="/servicios/geo-posicionamiento"
@@ -215,7 +222,7 @@ const locale = getLocaleFromPath(currentPath);
                   <div class="space-y-0.5">
                     <a href="/wazuh" @click="dropdownOpen = false"
                       class="group block px-3 py-2.5 rounded-lg transition-all duration-150 hover:bg-white/5"
-                      style={currentPath === '/wazuh' ? 'background: rgba(239,68,68,0.12);' : ''}>
+                      style={currentPath === '/wazuh' ? 'background: rgba(239,68,68,0.12);' : 'background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.22);'}>
                       <div class="flex items-center gap-2">
                         <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Implementación Wazuh</p>
                         <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none flex-shrink-0" style="background: rgba(239,68,68,0.3); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4);">ENS</span>
@@ -256,8 +263,8 @@ const locale = getLocaleFromPath(currentPath);
                       <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Linux y Windows Server</p>
                     </a>
                     <a href="/servicios/desarrollo-web" @click="dropdownOpen = false"
-                      class="group block px-3 py-2.5 rounded-lg hover:bg-white/5 transition-all duration-150"
-                      style={currentPath === '/servicios/desarrollo-web' ? 'background: rgba(74,222,128,0.08);' : ''}>
+                      class="group block px-3 py-2.5 rounded-lg transition-all duration-150 hover:bg-white/5"
+                      style={currentPath === '/servicios/desarrollo-web' ? 'background: rgba(74,222,128,0.08);' : 'background: rgba(74,222,128,0.06); border: 1px solid rgba(74,222,128,0.16);'}>
                       <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Desarrollo Web</p>
                       <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Webs y microservicios</p>
                     </a>
