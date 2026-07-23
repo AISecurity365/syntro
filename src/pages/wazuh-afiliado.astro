@@ -1,0 +1,466 @@
+---
+import WazuhLayout from "../layouts/WazuhLayout.astro";
+import PartnerForm from "../components/meeting/PartnerForm.astro";
+export const prerender = false;
+
+const title = "Gana dinero como revendedor de Wazuh | Programa de Afiliados LATAM";
+const description = "¿Tienes contactos en el sector de la ciberseguridad? Preséntanos proyectos de Wazuh, nosotros los implementamos y tú ganas el 20% de la implementación + 10% recurrente. Programa de afiliados para Latinoamérica. WIN-WIN.";
+const canonical = "https://aisecurity.es/wazuh-afiliado";
+---
+
+<WazuhLayout title={title} description={description} canonical={canonical}>
+
+  <!-- FAQ Schema JSON-LD para GEO -->
+  <script type="application/ld+json" is:inline>
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Cómo funciona el programa de afiliados de Wazuh?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tú, como profesional con contactos en el sector, detectas y presentas una oportunidad de implementación de Wazuh. AI Security realiza toda la implementación técnica en remoto (instalación, configuración, reglas, formación). Tú cobras el 20% del proyecto de implementación más un 10% recurrente del servicio gestionado mensual mientras el cliente siga con nosotros."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuánto puede ganar un revendedor de Wazuh?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "La comisión es del 20% del proyecto de implementación (que para empresas medianas va de 1.500€ a 4.000€, es decir 300€ a 800€ por proyecto) más un 10% del servicio gestionado recurrente (unos 20€/mes por cliente mientras siga activo). No hay límite de proyectos ni de clientes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Necesito saber implementar Wazuh para ser afiliado?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. El afiliado es un rol comercial y de prescripción: aporta la relación y el conocimiento del mercado local. Toda la implementación técnica la ejecuta el equipo de AI Security. Ayuda tener perfil de ciberseguridad o TI para hablar con propiedad, pero no implementas tú."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuánto cuesta unirse al programa de afiliados?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nada. Unirse es gratuito. Solo pedimos que seas un profesional real del sector con acceso a empresas u organismos que necesiten un SIEM. No hay cuota ni objetivos mínimos obligatorios."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- ═══ HERO — dos columnas: globo · texto ═══ -->
+  <section class="relative overflow-hidden" data-page="wazuh-afiliado" style="background-color:#020817;">
+    <!-- Grid pattern -->
+    <div class="absolute inset-0" style="background-image:linear-gradient(rgba(59,130,246,0.12) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.12) 1px,transparent 1px);background-size:40px 40px;opacity:0.6;"></div>
+    <!-- Glow -->
+    <div class="absolute rounded-full blur-3xl" style="width:700px;height:700px;top:-200px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(59,130,246,0.14),transparent 70%);"></div>
+
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 pt-12 pb-10">
+      <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+
+      <!-- ─── GLOBO — izquierda ─── -->
+      <div class="flex-shrink-0 flex flex-col items-center">
+        <div class="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full border text-sm font-medium" style="background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.25);color:#93c5fd;">
+          <span class="w-2 h-2 rounded-full animate-pulse" style="background:#60a5fa;"></span>
+          Programa de Afiliados · Latinoamérica
+        </div>
+        <div class="relative" style="width:clamp(240px,80vw,460px);height:clamp(240px,80vw,460px);">
+          <!-- Glow -->
+          <div class="absolute inset-0 rounded-full blur-3xl opacity-30" style="background:radial-gradient(circle,#3b82f6,transparent 65%);transform:scale(1.1);"></div>
+
+          <!-- SVG Globe con animateMotion -->
+          <svg viewBox="-110 -110 220 220" style="width:100%;height:100%;overflow:visible;">
+            <defs>
+              <clipPath id="gc"><circle r="95"/></clipPath>
+              <radialGradient id="gf" cx="32%" cy="28%">
+                <stop offset="0%" stop-color="rgba(59,130,246,0.18)"/>
+                <stop offset="100%" stop-color="rgba(2,8,23,0.95)"/>
+              </radialGradient>
+              <path id="p-ru" d="M 68,-54 Q 30,-98 -8,-16"/>
+              <path id="p-cn" d="M 82,-8  Q 48,-90 -8,-16"/>
+              <path id="p-us" d="M -84,-20 Q -50,-92 -8,-16"/>
+              <path id="p-br" d="M -32,65  Q -52,18  -8,-16"/>
+            </defs>
+
+            <circle r="95" fill="url(#gf)"/>
+
+            <g clip-path="url(#gc)" stroke="rgba(59,130,246,0.12)" stroke-width="0.5" fill="none">
+              <ellipse rx="95" ry="20"/>
+              <ellipse rx="95" ry="48"/>
+              <ellipse rx="95" ry="72"/>
+              <ellipse rx="95" ry="88"/>
+            </g>
+
+            <g clip-path="url(#gc)" fill="none" stroke-width="0.5">
+              <ellipse class="wg-m1" ry="95" stroke="rgba(59,130,246,0.15)"/>
+              <ellipse class="wg-m2" ry="95" stroke="rgba(99,102,241,0.12)"/>
+              <ellipse class="wg-m3" ry="95" stroke="rgba(59,130,246,0.1)"/>
+              <ellipse class="wg-m4" ry="95" stroke="rgba(139,92,246,0.08)"/>
+            </g>
+
+            <g class="wg-continents" clip-path="url(#gc)" fill="rgba(20,50,110,0.82)" stroke="rgba(96,165,250,0.9)" stroke-width="1" stroke-linejoin="round">
+              <path d="M -15,-10 L -12,-8 L -10,-30 L -13,-37 L -4,-58 L 13,-75 L 13,-63 L 11,-50 L 6,-42 L 13,-24 L 9,-8 Z"/>
+              <path d="M -12,-7 L 16,-16 L 26,14 L 22,55 L 10,70 L -5,70 L -15,40 L -20,10 Z"/>
+              <path d="M 16,-10 L 25,-30 L 45,-62 L 88,-62 L 92,-35 L 88,14 L 68,22 L 42,20 L 35,8 L 28,-14 Z"/>
+              <path d="M -35,-70 L -50,-65 L -90,-55 L -92,-25 L -68,-2 L -50,-2 L -32,-25 L -40,-52 Z"/>
+              <path d="M -62,-2 L -33,-2 L -20,30 L -35,75 L -52,70 L -68,25 Z"/>
+              <path d="M 50,28 L 88,20 L 90,50 L 60,54 L 48,42 Z"/>
+            </g>
+
+            <circle r="95" fill="none" stroke="rgba(59,130,246,0.4)" stroke-width="1.2"/>
+
+            <use href="#p-ru" fill="none" stroke="rgba(239,68,68,0.18)" stroke-width="0.8" stroke-dasharray="3,5"/>
+            <use href="#p-cn" fill="none" stroke="rgba(239,68,68,0.18)" stroke-width="0.8" stroke-dasharray="3,5"/>
+            <use href="#p-us" fill="none" stroke="rgba(245,158,11,0.18)" stroke-width="0.8" stroke-dasharray="3,5"/>
+            <use href="#p-br" fill="none" stroke="rgba(239,68,68,0.18)" stroke-width="0.8" stroke-dasharray="3,5"/>
+
+            <circle r="4" fill="#ef4444" opacity="0">
+              <animateMotion id="ru-m" dur="2.8s" begin="0s;ru-m.end+4.2s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#p-ru"/></animateMotion>
+              <animate attributeName="opacity" dur="2.8s" begin="0s;ru-m.end+4.2s" values="0;1;1;0" keyTimes="0;0.04;0.88;1"/>
+              <animate attributeName="r" dur="2.8s" begin="0s;ru-m.end+4.2s" values="3;4;3" keyTimes="0;0.5;1"/>
+            </circle>
+            <circle cx="-8" cy="-16" fill="none" stroke="#4ade80" stroke-width="2" opacity="0">
+              <animate attributeName="r" from="6" to="26" dur="0.7s" begin="ru-m.end;ru-m.end+7s;ru-m.end+14s;ru-m.end+21s"/>
+              <animate attributeName="opacity" from="1" to="0" dur="0.7s" begin="ru-m.end;ru-m.end+7s;ru-m.end+14s;ru-m.end+21s"/>
+            </circle>
+
+            <circle r="3.5" fill="#ef4444" opacity="0">
+              <animateMotion id="cn-m" dur="2.8s" begin="1.75s;cn-m.end+4.2s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#p-cn"/></animateMotion>
+              <animate attributeName="opacity" dur="2.8s" begin="1.75s;cn-m.end+4.2s" values="0;1;1;0" keyTimes="0;0.04;0.88;1"/>
+            </circle>
+            <circle cx="-8" cy="-16" fill="none" stroke="#4ade80" stroke-width="2" opacity="0">
+              <animate attributeName="r" from="6" to="26" dur="0.7s" begin="cn-m.end;cn-m.end+7s;cn-m.end+14s"/>
+              <animate attributeName="opacity" from="1" to="0" dur="0.7s" begin="cn-m.end;cn-m.end+7s;cn-m.end+14s"/>
+            </circle>
+
+            <circle r="3.5" fill="#f59e0b" opacity="0">
+              <animateMotion id="us-m" dur="2.8s" begin="3.5s;us-m.end+4.2s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#p-us"/></animateMotion>
+              <animate attributeName="opacity" dur="2.8s" begin="3.5s;us-m.end+4.2s" values="0;1;1;0" keyTimes="0;0.04;0.88;1"/>
+            </circle>
+            <circle cx="-8" cy="-16" fill="none" stroke="#4ade80" stroke-width="2" opacity="0">
+              <animate attributeName="r" from="6" to="26" dur="0.7s" begin="us-m.end;us-m.end+7s;us-m.end+14s"/>
+              <animate attributeName="opacity" from="1" to="0" dur="0.7s" begin="us-m.end;us-m.end+7s;us-m.end+14s"/>
+            </circle>
+
+            <circle r="3" fill="#ef4444" opacity="0">
+              <animateMotion id="br-m" dur="2.8s" begin="5.25s;br-m.end+4.2s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#p-br"/></animateMotion>
+              <animate attributeName="opacity" dur="2.8s" begin="5.25s;br-m.end+4.2s" values="0;1;1;0" keyTimes="0;0.04;0.88;1"/>
+            </circle>
+            <circle cx="-8" cy="-16" fill="none" stroke="#4ade80" stroke-width="2" opacity="0">
+              <animate attributeName="r" from="6" to="26" dur="0.7s" begin="br-m.end;br-m.end+7s;br-m.end+14s"/>
+              <animate attributeName="opacity" from="1" to="0" dur="0.7s" begin="br-m.end;br-m.end+7s;br-m.end+14s"/>
+            </circle>
+
+            <circle cx="68"  cy="-54" r="3"   fill="rgba(239,68,68,0.7)"/>
+            <circle cx="82"  cy="-8"  r="2.5" fill="rgba(239,68,68,0.7)"/>
+            <circle cx="-84" cy="-20" r="2.5" fill="rgba(245,158,11,0.7)"/>
+            <circle cx="-32" cy="65"  r="2.5" fill="rgba(239,68,68,0.7)"/>
+
+            <text x="68"  y="-59" text-anchor="middle" font-size="5.5" fill="rgba(239,68,68,0.8)" font-family="monospace">RU</text>
+            <text x="85"  y="-13" text-anchor="middle" font-size="5.5" fill="rgba(239,68,68,0.8)" font-family="monospace">CN</text>
+            <text x="-84" y="-25" text-anchor="middle" font-size="5.5" fill="rgba(245,158,11,0.8)" font-family="monospace">US</text>
+            <text x="-32" y="73"  text-anchor="middle" font-size="5.5" fill="rgba(239,68,68,0.8)" font-family="monospace">BR</text>
+
+            <circle cx="-8" cy="-16" r="6" fill="#4ade80" opacity="0.9"/>
+            <circle cx="-8" cy="-16" r="10" fill="none" stroke="rgba(74,222,128,0.35)" stroke-width="1.2"/>
+            <text x="-8" y="-22" text-anchor="middle" font-size="5" fill="#4ade80" font-family="monospace" font-weight="bold" letter-spacing="0.5">WAZUH</text>
+          </svg>
+
+          <div class="wg-notif wg-notif-ru absolute top-3 right-0 max-w-[160px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.4);color:#4ade80;">🛡️ BLOQUEADO · RU</div>
+          <div class="wg-notif wg-notif-cn absolute top-3 right-0 max-w-[160px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.4);color:#4ade80;">🛡️ BLOQUEADO · CN</div>
+          <div class="wg-notif wg-notif-us absolute bottom-12 right-0 max-w-[160px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.4);color:#fbbf24;">⚠️ INTERCEPTADO · US</div>
+          <div class="wg-notif wg-notif-br absolute bottom-4 left-0 max-w-[160px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.4);color:#4ade80;">🛡️ BLOQUEADO · BR</div>
+        </div>
+      </div><!-- fin globo -->
+
+      <!-- ─── TEXTO — derecha ─── -->
+      <div class="flex-1 min-w-0">
+        <h1 class="font-bold text-white leading-tight mb-4" style="font-size:clamp(2rem,3.2vw,3.1rem);letter-spacing:-0.02em;">
+          ¿Quieres ganar dinero como <span style="background:linear-gradient(135deg,#60a5fa 0%,#818cf8 50%,#c084fc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">revendedor</span>?
+        </h1>
+        <p class="text-xl font-semibold mb-4" style="color:#93c5fd;">Si tienes los contactos, puede ser WIN-WIN.</p>
+        <p class="text-lg mb-6 leading-relaxed" style="color:#94a3b8;">
+          Tú conoces empresas que necesitan seguridad. Nosotros implementamos Wazuh de principio a fin. Presentas el proyecto, lo ejecutamos por ti y te llevas el <strong style="color:#e2e8f0;">20% de la implementación + 10% recurrente</strong> — sin tocar una sola línea de configuración.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+          <a href="#candidatura" class="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold rounded-xl transition-all duration-200 hover:-translate-y-1" style="background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;box-shadow:0 4px 32px rgba(99,102,241,0.4);">
+            Quiero ser afiliado
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+          <a href="#calculadora" class="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold rounded-xl border transition-all duration-200 hover:-translate-y-1" style="border-color:rgba(255,255,255,0.12);color:white;background:rgba(255,255,255,0.04);">
+            💰 Calcular cuánto ganaría
+          </a>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <span class="px-4 py-2 rounded-lg text-sm font-medium" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#e2e8f0;">💸 <strong>20%</strong> por implementación</span>
+          <span class="px-4 py-2 rounded-lg text-sm font-medium" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#e2e8f0;">🔁 <strong>10%</strong> recurrente</span>
+          <span class="px-4 py-2 rounded-lg text-sm font-medium" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#e2e8f0;">🧑‍💻 Tú <strong>no</strong> implementas</span>
+          <span class="px-4 py-2 rounded-lg text-sm font-medium" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#e2e8f0;">🆓 Sin cuotas</span>
+        </div>
+      </div><!-- fin texto -->
+
+      </div><!-- fin two-column -->
+    </div>
+  </section>
+
+  <!-- ═══ CÓMO FUNCIONA ═══ -->
+  <section id="como-funciona" class="relative py-20 overflow-hidden" style="background-color:#040b1c;">
+    <div class="relative z-10 max-w-6xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-14">
+        <p class="text-xs font-bold uppercase tracking-widest mb-3" style="color:#60a5fa;">El modelo en 3 pasos</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" style="color:#f0f6ff;">Tú prescribes. Nosotros ejecutamos. Los dos cobramos.</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="rounded-2xl p-7" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.2);">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-5 font-bold text-lg" style="background:rgba(59,130,246,0.15);color:#60a5fa;">1</div>
+          <h3 class="text-lg font-bold mb-2" style="color:#f0f6ff;">Detectas la oportunidad</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.65);line-height:1.6;">Una empresa u organismo de tu red necesita un SIEM, cumplir normativa o monitorizar su seguridad. Lo presentas y nos lo registras.</p>
+        </div>
+        <div class="rounded-2xl p-7" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.2);">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-5 font-bold text-lg" style="background:rgba(59,130,246,0.15);color:#60a5fa;">2</div>
+          <h3 class="text-lg font-bold mb-2" style="color:#f0f6ff;">Implementamos nosotros</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.65);line-height:1.6;">Nuestro equipo hace toda la parte técnica en remoto: instalación, configuración, reglas, integración y formación. Tu marca queda respaldada por especialistas.</p>
+        </div>
+        <div class="rounded-2xl p-7" style="background:rgba(255,255,255,0.03);border:1px solid rgba(74,222,128,0.25);">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-5 font-bold text-lg" style="background:rgba(74,222,128,0.15);color:#4ade80;">3</div>
+          <h3 class="text-lg font-bold mb-2" style="color:#f0f6ff;">Cobras tu comisión</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.65);line-height:1.6;">20% del proyecto de implementación al cerrarlo, más un 10% del servicio gestionado cada mes mientras el cliente siga activo. Ingreso puntual + ingreso recurrente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CALCULADORA ═══ -->
+  <section id="calculadora" class="relative py-20 overflow-hidden" style="background-color:#020817;">
+    <div class="absolute inset-0" style="background-image:linear-gradient(rgba(59,130,246,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.1) 1px,transparent 1px);background-size:40px 40px;opacity:0.5;"></div>
+
+    <div class="relative z-10 max-w-4xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-12">
+        <p class="text-xs font-bold uppercase tracking-widest mb-3" style="color:#60a5fa;">Haz números</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-4" style="color:#f0f6ff;">Calcula cuánto podrías ganar</h2>
+        <p class="text-base max-w-2xl mx-auto" style="color:rgba(240,246,255,0.6);">Mueve los controles según los clientes que crees que puedes traer. Las cifras son orientativas.</p>
+      </div>
+
+      <div class="rounded-2xl p-7 md:p-10" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.25);backdrop-filter:blur(12px);">
+        <!-- Controles -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+          <div>
+            <div class="flex justify-between items-baseline mb-3">
+              <label class="text-sm font-semibold uppercase tracking-wider" style="color:rgba(240,246,255,0.6);">Clientes al año</label>
+              <span id="calc-clientes-val" class="text-2xl font-extrabold" style="color:#60a5fa;">3</span>
+            </div>
+            <input type="range" id="calc-clientes" min="1" max="20" step="1" value="3" class="calc-range w-full" />
+            <div class="flex justify-between mt-1 text-xs" style="color:rgba(240,246,255,0.35);"><span>1</span><span>20</span></div>
+          </div>
+          <div>
+            <div class="flex justify-between items-baseline mb-3">
+              <label class="text-sm font-semibold uppercase tracking-wider" style="color:rgba(240,246,255,0.6);">Precio medio implementación</label>
+              <span id="calc-precio-val" class="text-2xl font-extrabold" style="color:#60a5fa;">2.500 €</span>
+            </div>
+            <input type="range" id="calc-precio" min="1500" max="4000" step="100" value="2500" class="calc-range w-full" />
+            <div class="flex justify-between mt-1 text-xs" style="color:rgba(240,246,255,0.35);"><span>1.500 €</span><span>4.000 €</span></div>
+          </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div class="rounded-xl p-5 text-center" style="background:rgba(37,99,235,0.12);border:1px solid rgba(59,130,246,0.3);">
+            <p class="text-xs uppercase tracking-wider mb-2" style="color:rgba(240,246,255,0.55);">Comisión implementaciones</p>
+            <p id="calc-impl" class="text-2xl font-extrabold" style="color:#60a5fa;">1.500 €</p>
+            <p class="text-xs mt-1" style="color:rgba(240,246,255,0.4);">20% · pago único</p>
+          </div>
+          <div class="rounded-xl p-5 text-center" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);">
+            <p class="text-xs uppercase tracking-wider mb-2" style="color:rgba(240,246,255,0.55);">Recurrente / año</p>
+            <p id="calc-recu" class="text-2xl font-extrabold" style="color:#4ade80;">720 €</p>
+            <p class="text-xs mt-1" style="color:rgba(240,246,255,0.4);">10% del gestionado</p>
+          </div>
+          <div class="rounded-xl p-5 text-center" style="background:rgba(165,180,252,0.12);border:1px solid rgba(165,180,252,0.3);">
+            <p class="text-xs uppercase tracking-wider mb-2" style="color:rgba(240,246,255,0.55);">Total primer año</p>
+            <p id="calc-total" class="text-2xl font-extrabold" style="color:#a5b4fc;">2.220 €</p>
+            <p class="text-xs mt-1" style="color:rgba(240,246,255,0.4);">implementación + recurrente</p>
+          </div>
+        </div>
+
+        <div class="rounded-xl p-4 flex items-start gap-3" style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.2);">
+          <span class="text-lg">📈</span>
+          <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;">
+            Y esto es solo el primer año: el <strong style="color:#4ade80;">recurrente se acumula</strong>. En el año 2 cobras el recurrente de estos clientes <em>más</em> el de los nuevos que traigas. Al 5º año podrías tener <span id="calc-y5" style="color:#4ade80;font-weight:700;">3.600 €/año</span> solo de recurrente pasivo.
+          </p>
+        </div>
+
+        <p class="mt-5 text-xs text-center" style="color:rgba(240,246,255,0.35);">
+          Cálculo orientativo. Servicio gestionado estimado en 200 €/mes por cliente (10% = 20 €/mes). El importe exacto se confirma por proyecto según alcance y nº de agentes.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PARA QUIÉN ES ═══ -->
+  <section id="perfil" class="relative py-20 overflow-hidden" style="background-color:#040b1c;">
+    <div class="relative z-10 max-w-5xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-14">
+        <p class="text-xs font-bold uppercase tracking-widest mb-3" style="color:#60a5fa;">¿Es para ti?</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" style="color:#f0f6ff;">Buscamos gente que ya esté dentro del sector</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="rounded-2xl p-8" style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.22);">
+          <h3 class="text-lg font-bold mb-5 flex items-center gap-2" style="color:#4ade80;">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            Encajas si eres…
+          </h3>
+          <ul class="space-y-3 text-sm" style="color:rgba(240,246,255,0.75);">
+            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Consultor/a de ciberseguridad o TI con cartera de clientes</li>
+            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Freelance o integrador que ya vende servicios a PyMEs u organismos</li>
+            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Profesional con red de contactos en el sector en tu país</li>
+            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Alguien que conoce Wazuh, SIEM o cumplimiento normativo</li>
+            <li class="flex gap-2"><span style="color:#4ade80;">▸</span> Comercial técnico que sabe abrir puertas donde una web extranjera no llega</li>
+          </ul>
+        </div>
+        <div class="rounded-2xl p-8" style="background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);">
+          <h3 class="text-lg font-bold mb-5 flex items-center gap-2" style="color:#f87171;">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            No es para ti si…
+          </h3>
+          <ul class="space-y-3 text-sm" style="color:rgba(240,246,255,0.7);">
+            <li class="flex gap-2"><span style="color:#f87171;">▸</span> Buscas ingresos rápidos sin relación real con el sector</li>
+            <li class="flex gap-2"><span style="color:#f87171;">▸</span> No tienes contactos ni acceso a empresas que necesiten un SIEM</li>
+            <li class="flex gap-2"><span style="color:#f87171;">▸</span> Esperas que nosotros te consigamos los clientes</li>
+            <li class="flex gap-2"><span style="color:#f87171;">▸</span> Quieres implementar tú y no delegar la parte técnica</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ QUÉ PONE CADA UNO ═══ -->
+  <section class="relative py-20 overflow-hidden" style="background-color:#020817;">
+    <div class="relative z-10 max-w-4xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-14">
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" style="color:#f0f6ff;">Un reparto de roles honesto</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="rounded-2xl p-7" style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.25);">
+          <h3 class="text-base font-bold uppercase tracking-wide mb-4" style="color:#60a5fa;">Tú pones</h3>
+          <ul class="space-y-2.5 text-sm" style="color:rgba(240,246,255,0.75);">
+            <li class="flex gap-2"><span style="color:#60a5fa;">·</span> La relación y confianza con el cliente local</li>
+            <li class="flex gap-2"><span style="color:#60a5fa;">·</span> El conocimiento del mercado y la normativa de tu país</li>
+            <li class="flex gap-2"><span style="color:#60a5fa;">·</span> La presentación y el seguimiento comercial</li>
+          </ul>
+        </div>
+        <div class="rounded-2xl p-7" style="background:rgba(165,180,252,0.08);border:1px solid rgba(165,180,252,0.25);">
+          <h3 class="text-base font-bold uppercase tracking-wide mb-4" style="color:#a5b4fc;">Nosotros ponemos</h3>
+          <ul class="space-y-2.5 text-sm" style="color:rgba(240,246,255,0.75);">
+            <li class="flex gap-2"><span style="color:#a5b4fc;">·</span> Toda la implementación técnica de Wazuh (en remoto)</li>
+            <li class="flex gap-2"><span style="color:#a5b4fc;">·</span> Soporte, mantenimiento y servicio gestionado continuo</li>
+            <li class="flex gap-2"><span style="color:#a5b4fc;">·</span> Materiales, demos y respaldo técnico para tus reuniones</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FORMULARIO ═══ -->
+  <PartnerForm />
+
+  <!-- ═══ FAQ ═══ -->
+  <section id="faq" class="relative py-20 overflow-hidden" style="background-color:#040b1c;">
+    <div class="relative z-10 max-w-3xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" style="color:#f0f6ff;">Preguntas frecuentes</h2>
+      </div>
+      <div class="space-y-4">
+        <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.18);">
+          <h3 class="text-base font-bold mb-2" style="color:#f0f6ff;">¿Tengo que pagar algo para unirme?</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;">No. El programa es gratuito, sin cuotas ni objetivos mínimos obligatorios. Solo pedimos que seas un profesional real del sector.</p>
+        </div>
+        <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.18);">
+          <h3 class="text-base font-bold mb-2" style="color:#f0f6ff;">¿Necesito saber implementar Wazuh?</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;">No. Tú aportas la relación comercial y el conocimiento del mercado local; la parte técnica la hacemos nosotros al 100%. Tener perfil de ciberseguridad ayuda a hablar con propiedad, pero no implementas tú.</p>
+        </div>
+        <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.18);">
+          <h3 class="text-base font-bold mb-2" style="color:#f0f6ff;">¿Cómo se registra un cliente para proteger mi comisión?</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;">Al aceptarte en el programa te damos un canal para registrar cada oportunidad con su nombre. Ese registro te asigna la comisión de ese cliente. Así ninguno de los dos pisa el trabajo del otro.</p>
+        </div>
+        <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.18);">
+          <h3 class="text-base font-bold mb-2" style="color:#f0f6ff;">¿Cómo y cuándo cobro?</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;">La comisión de implementación se paga al cobrar el proyecto; la recurrente, mensualmente mientras el cliente siga activo. La forma de pago (transferencia internacional u otra) se acuerda contigo según tu país.</p>
+        </div>
+        <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.03);border:1px solid rgba(59,130,246,0.18);">
+          <h3 class="text-base font-bold mb-2" style="color:#f0f6ff;">¿En qué países operáis?</h3>
+          <p class="text-sm" style="color:rgba(240,246,255,0.7);line-height:1.6;">Como la implementación es 100% remota, podemos trabajar en cualquier país de Latinoamérica. Empezamos con los afiliados que demuestren red y oportunidades reales en su mercado.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    /* ── Globo (mismo que /wazuh) ── */
+    @keyframes continent-pulse { 0%,100%{opacity:0.75;} 50%{opacity:1;} }
+    .wg-continents { animation: continent-pulse 4s ease-in-out infinite; }
+    @keyframes wg-spin { 0%{rx:1px;} 25%{rx:95px;} 50%{rx:1px;} 75%{rx:95px;} 100%{rx:1px;} }
+    .wg-m1 { animation: wg-spin 12s linear infinite; }
+    .wg-m2 { animation: wg-spin 12s linear infinite -3s; }
+    .wg-m3 { animation: wg-spin 12s linear infinite -6s; }
+    .wg-m4 { animation: wg-spin 12s linear infinite -9s; }
+    @keyframes notif-ru { 0%,38%,100%{opacity:0;transform:translateY(-6px) scale(0.95);} 40%{opacity:1;transform:translateY(0) scale(1);} 54%{opacity:1;transform:translateY(0) scale(1);} 56%{opacity:0;} }
+    .wg-notif-ru { animation: notif-ru 7s ease-in-out infinite; opacity:0; }
+    @keyframes notif-cn { 0%,63%,100%{opacity:0;transform:translateY(-6px) scale(0.95);} 65%{opacity:1;transform:translateY(0) scale(1);} 79%{opacity:1;transform:translateY(0) scale(1);} 81%{opacity:0;} }
+    .wg-notif-cn { animation: notif-cn 7s ease-in-out infinite; opacity:0; }
+    @keyframes notif-us { 0%,88%,100%{opacity:0;transform:translateY(-6px) scale(0.95);} 90%{opacity:1;transform:translateY(0) scale(1);} 98%{opacity:1;transform:translateY(0) scale(1);} 100%{opacity:0;} }
+    .wg-notif-us { animation: notif-us 7s ease-in-out infinite; opacity:0; }
+    @keyframes notif-br { 0%,13%,100%{opacity:0;transform:translateY(-6px) scale(0.95);} 15%{opacity:1;transform:translateY(0) scale(1);} 29%{opacity:1;transform:translateY(0) scale(1);} 31%{opacity:0;} }
+    .wg-notif-br { animation: notif-br 7s ease-in-out infinite; opacity:0; }
+
+    /* ── Sliders de la calculadora ── */
+    .calc-range { -webkit-appearance:none; appearance:none; height:6px; border-radius:999px; background:rgba(96,165,250,0.25); outline:none; }
+    .calc-range::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:22px; height:22px; border-radius:50%; background:#60a5fa; cursor:pointer; border:3px solid #0b1220; box-shadow:0 0 0 1px rgba(96,165,250,0.6),0 4px 12px rgba(37,99,235,0.5); }
+    .calc-range::-moz-range-thumb { width:22px; height:22px; border-radius:50%; background:#60a5fa; cursor:pointer; border:3px solid #0b1220; box-shadow:0 0 0 1px rgba(96,165,250,0.6); }
+  </style>
+
+  <script is:inline>
+    (function () {
+      const clientesEl = document.getElementById('calc-clientes');
+      const precioEl = document.getElementById('calc-precio');
+      const clientesVal = document.getElementById('calc-clientes-val');
+      const precioVal = document.getElementById('calc-precio-val');
+      const implEl = document.getElementById('calc-impl');
+      const recuEl = document.getElementById('calc-recu');
+      const totalEl = document.getElementById('calc-total');
+      const y5El = document.getElementById('calc-y5');
+      if (!clientesEl || !precioEl) return;
+
+      const COMISION_IMPL = 0.20;      // 20% de la implementación
+      const GESTIONADO_MES = 200;      // €/mes servicio gestionado
+      const COMISION_RECU = 0.10;      // 10% del gestionado
+      const RECU_ANUAL_CLIENTE = GESTIONADO_MES * COMISION_RECU * 12; // 240 €/año por cliente
+
+      const fmt = (n) => Math.round(n).toLocaleString('es-ES') + ' €';
+
+      function update() {
+        const clientes = parseInt(clientesEl.value, 10);
+        const precio = parseInt(precioEl.value, 10);
+
+        const impl = clientes * precio * COMISION_IMPL;
+        const recu = clientes * RECU_ANUAL_CLIENTE;
+        const total = impl + recu;
+        const y5 = clientes * 5 * RECU_ANUAL_CLIENTE; // recurrente acumulado si sostienes el ritmo 5 años
+
+        clientesVal.textContent = clientes;
+        precioVal.textContent = fmt(precio);
+        implEl.textContent = fmt(impl);
+        recuEl.textContent = fmt(recu) + '/año';
+        totalEl.textContent = fmt(total);
+        y5El.textContent = fmt(y5) + '/año';
+      }
+
+      clientesEl.addEventListener('input', update);
+      precioEl.addEventListener('input', update);
+      update();
+    })();
+  </script>
+
+</WazuhLayout>
