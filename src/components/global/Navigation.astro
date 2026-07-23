@@ -237,11 +237,8 @@ const locale = getLocaleFromPath(currentPath);
                     </a>
                     <a href="/servicios/concienciacion" @click="dropdownOpen = false"
                       class="group block px-3 py-2.5 rounded-lg transition-all duration-150 hover:bg-white/5"
-                      style={currentPath === '/servicios/concienciacion' ? 'background: rgba(239,68,68,0.12);' : 'background: rgba(251,146,60,0.06); border: 1px solid rgba(251,146,60,0.15);'}>
-                      <div class="flex items-center gap-2">
-                        <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Concienciación</p>
-                        <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none flex-shrink-0" style="background: rgba(251,146,60,0.25); color: #fb923c; border: 1px solid rgba(251,146,60,0.4);">TEST</span>
-                      </div>
+                      style={currentPath === '/servicios/concienciacion' ? 'background: rgba(239,68,68,0.12);' : ''}>
+                      <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Concienciación</p>
                       <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Simula phishing · Forma empleados</p>
                     </a>
                   </div>
@@ -263,13 +260,10 @@ const locale = getLocaleFromPath(currentPath);
                       <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Webs y microservicios</p>
                     </a>
                     <a href="/servicios/geo-posicionamiento" @click="dropdownOpen = false"
-                      class="group block px-3 py-2.5 rounded-lg transition-all duration-150"
-                      style="background: rgba(74,222,128,0.07); border: 1px solid rgba(74,222,128,0.18);">
-                      <div class="flex items-center gap-2">
-                        <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Posicionamiento GEO IA</p>
-                        <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none flex-shrink-0" style="background: rgba(74,222,128,0.2); color: #4ade80; border: 1px solid rgba(74,222,128,0.35);">NUEVO</span>
-                      </div>
-                      <p class="text-xs mt-0.5" style="color: rgba(74,222,128,0.65);">Visibilidad en búsquedas IA</p>
+                      class="group block px-3 py-2.5 rounded-lg transition-all duration-150 hover:bg-white/5"
+                      style={currentPath === '/servicios/geo-posicionamiento' ? 'background: rgba(74,222,128,0.08);' : ''}>
+                      <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Posicionamiento GEO IA</p>
+                      <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Visibilidad en búsquedas IA</p>
                     </a>
                   </div>
                 </div>
