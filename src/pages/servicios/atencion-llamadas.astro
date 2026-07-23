@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import VoiceAgent from "../../components/global/VoiceAgent.astro";
 
 const title = "Recepcionista Virtual con IA para Empresas - Atención Telefónica 24/7 | AI Security";
 const description = "Recepcionista virtual con IA y voz natural en español. Atiende llamadas 24/7, agenda citas, responde preguntas frecuentes y deriva a humanos cuando es necesario. Tres niveles: básico, integrado con CRM y avanzado con tickets y WhatsApp.";
@@ -288,6 +289,11 @@ const canonical = "https://aisecurity.es/servicios/atencion-llamadas";
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- Agente de voz ElevenLabs (aparece cuando se configura el AGENT_ID) -->
+  <section style="background:#020817;padding:20px 0 40px;">
+    <VoiceAgent />
   </section>
 
 
