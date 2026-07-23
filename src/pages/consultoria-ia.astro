@@ -618,27 +618,25 @@ const departamentos = [
   const panelTitle = document.getElementById('panel-title');
   const panelResumen = document.getElementById('panel-resumen');
   const panelTools = document.getElementById('panel-tools');
+
   let activeId = null;
+  let userSelected = false; // true = el usuario ha fijado un departamento
+  let autoTimer = null;
 
   function getPos(index, total) {
     const angle = (index / total) * 2 * Math.PI - Math.PI / 2;
-    return {
-      x: CENTER + ORBIT_RADIUS * Math.cos(angle),
-      y: CENTER + ORBIT_RADIUS * Math.sin(angle),
-    };
+    return { x: CENTER + ORBIT_RADIUS * Math.cos(angle), y: CENTER + ORBIT_RADIUS * Math.sin(angle) };
   }
 
   // Draw lines
   departamentos.forEach((dep, i) => {
     const pos = getPos(i, departamentos.length);
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', CENTER);
-    line.setAttribute('y1', CENTER);
-    line.setAttribute('x2', pos.x);
-    line.setAttribute('y2', pos.y);
+    line.setAttribute('x1', CENTER); line.setAttribute('y1', CENTER);
+    line.setAttribute('x2', pos.x); line.setAttribute('y2', pos.y);
     line.setAttribute('stroke', dep.color);
     line.setAttribute('stroke-width', '1.5');
-    line.setAttribute('opacity', '0.3');
+    line.style.opacity = '0.3';
     line.id = `line-${dep.id}`;
     linesGroup.appendChild(line);
   });
@@ -651,20 +649,14 @@ const departamentos = [
     g.id = `node-${dep.id}`;
 
     const bg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    bg.setAttribute('cx', pos.x);
-    bg.setAttribute('cy', pos.y);
-    bg.setAttribute('r', NODE_RADIUS);
-    bg.setAttribute('fill', '#1a1d27');
-    bg.setAttribute('stroke', dep.color);
-    bg.setAttribute('stroke-width', '1.5');
-    bg.setAttribute('opacity', '0.8');
+    bg.setAttribute('cx', pos.x); bg.setAttribute('cy', pos.y); bg.setAttribute('r', NODE_RADIUS);
+    bg.setAttribute('fill', '#1a1d27'); bg.setAttribute('stroke', dep.color);
+    bg.setAttribute('stroke-width', '1.5'); bg.setAttribute('opacity', '0.8');
     bg.id = `bg-${dep.id}`;
 
     const icon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    icon.setAttribute('x', pos.x);
-    icon.setAttribute('y', pos.y - 8);
-    icon.setAttribute('text-anchor', 'middle');
-    icon.setAttribute('dominant-baseline', 'middle');
+    icon.setAttribute('x', pos.x); icon.setAttribute('y', pos.y - 8);
+    icon.setAttribute('text-anchor', 'middle'); icon.setAttribute('dominant-baseline', 'middle');
     icon.setAttribute('font-size', '20');
     icon.textContent = dep.icon;
 
@@ -705,7 +697,12 @@ const departamentos = [
       }
     }
 
-    g.addEventListener('click', () => selectDep(dep.id));
+    // Click: fijar departamento y detener auto-rotación
+    g.addEventListener('click', () => {
+      userSelected = true;
+      if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+      selectDep(dep.id);
+    });
     g.addEventListener('mouseenter', () => {
       if (activeId !== dep.id) { g.style.opacity = '0.78'; bg.setAttribute('stroke-width', '2'); }
     });
@@ -716,19 +713,51 @@ const departamentos = [
     nodesGroup.appendChild(g);
   });
 
+  function setLineAnim(line, isAuto) {
+    // Reiniciar animación forzando reflow
+    line.style.animation = 'none';
+    void line.getBoundingClientRect();
+    line.style.strokeDasharray = '7 5';
+    if (isAuto) {
+      // Viaja + se enciende al inicio + se apaga como cuenta atrás en 10s
+      line.style.animation = 'ccDash .8s linear infinite, ccAutoSeq 10s linear forwards';
+    } else {
+      // Viaja + destello de encendido, sin cuenta atrás (fijado por el usuario)
+      line.style.animation = 'ccDash .8s linear infinite, ccLightUp .6s ease-out forwards';
+    }
+  }
+
   function selectDep(id) {
     activeId = id;
     const dep = departamentos.find(d => d.id === id);
     if (!dep) return;
 
     departamentos.forEach(d => {
-      const g = document.getElementById(`node-${d.id}`);
-      const bg = document.getElementById(`bg-${d.id}`);
+      const g   = document.getElementById(`node-${d.id}`);
+      const bg  = document.getElementById(`bg-${d.id}`);
       const line = document.getElementById(`line-${d.id}`);
-      const on = d.id === id;
-      if (g) { g.classList.toggle('cc-active', on); g.style.opacity = on ? '1' : '0.38'; g.style.filter = on ? `drop-shadow(0 0 12px ${dep.color})` : 'none'; }
-      if (bg) { bg.setAttribute('fill', on ? dep.color + '40' : '#1a1d27'); bg.setAttribute('stroke-width', on ? '3.5' : '1.5'); bg.setAttribute('opacity', '1'); }
-      if (line) { line.classList.toggle('cc-active', on); line.setAttribute('opacity', on ? '1' : '0.12'); line.setAttribute('stroke-width', on ? '3' : '1.5'); }
+      const on  = d.id === id;
+
+      if (g) {
+        g.classList.toggle('cc-active', on);
+        g.style.opacity = on ? '1' : '0.38';
+        g.style.filter  = on ? `drop-shadow(0 0 12px ${dep.color})` : 'none';
+      }
+      if (bg) {
+        bg.setAttribute('fill', on ? dep.color + '40' : '#1a1d27');
+        bg.setAttribute('stroke-width', on ? '3.5' : '1.5');
+        bg.setAttribute('opacity', '1');
+      }
+      if (line) {
+        line.setAttribute('stroke-width', on ? '3' : '1.5');
+        if (on) {
+          setLineAnim(line, !userSelected);
+        } else {
+          line.style.animation = '';
+          line.style.strokeDasharray = '';
+          line.style.opacity = '0.12';
+        }
+      }
     });
 
     panelDefault.style.display = 'none';
@@ -741,7 +770,6 @@ const departamentos = [
     panelTitle.style.color = dep.color;
     panelResumen.textContent = dep.resumen;
 
-    // Objetivos
     const panelObjetivos = document.getElementById('panel-objetivos');
     if (panelObjetivos) {
       panelObjetivos.innerHTML = dep.objetivos.map(o => `
@@ -761,35 +789,54 @@ const departamentos = [
       `;
       panelTools.appendChild(item);
     });
-
   }
 
-  // Activar "Desarrollo" por defecto + auto-rotación cada 10 s
+  // Inicio + auto-rotación cada 10 s
   let ccStarted = false;
   function ccInit() {
     if (ccStarted) return; ccStarted = true;
     selectDep('desarrollo');
+
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) return;
+
     const ids = departamentos.map(d => d.id);
-    function ccNext() { const i = ids.indexOf(activeId); selectDep(ids[(i + 1) % ids.length]); }
-    let autoTimer = setInterval(ccNext, 10000);
-    const parent = nodesGroup.closest('section') || document.getElementById('diagram-container');
-    if (parent) {
-      parent.addEventListener('mouseenter', () => { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } });
-      parent.addEventListener('mouseleave', () => { if (!autoTimer) autoTimer = setInterval(ccNext, 10000); });
+    function ccNext() {
+      if (userSelected) return; // fijado por el usuario, no rotar
+      const i = ids.indexOf(activeId);
+      selectDep(ids[(i + 1) % ids.length]);
     }
+    autoTimer = setInterval(ccNext, 10000);
   }
   document.addEventListener('DOMContentLoaded', ccInit);
   if (document.readyState === 'complete' || document.readyState === 'interactive') { ccInit(); }
 </script>
 
 <style is:global>
-  /* Animación del diagrama de departamentos (aplica a nodos SVG creados por JS) */
   #nodes g { transition: transform .35s cubic-bezier(0.34,1.56,0.64,1), opacity .25s ease, filter .25s ease; transform-box: fill-box; transform-origin: center; }
   #nodes g.cc-active { transform: scale(1.24); }
-  #lines line { transition: opacity .25s ease, stroke-width .25s ease; }
+  #lines line { transition: stroke-width .3s ease; }
+
   @keyframes ccDash { to { stroke-dashoffset: -22; } }
-  #lines line.cc-active { stroke-dasharray: 7 5; animation: ccDash .8s linear infinite; }
-  @media (prefers-reduced-motion: reduce){ #nodes g{ transition:none; } #lines line.cc-active{ animation:none; } }
+
+  /* Enciende al inicio y se va apagando a lo largo de 10 s (cuenta atrás visual) */
+  @keyframes ccAutoSeq {
+    0%   { opacity: 0.15; }
+    5%   { opacity: 1;    }
+    60%  { opacity: 1;    }
+    88%  { opacity: 0.45; }
+    100% { opacity: 0.1;  }
+  }
+
+  /* Destello de encendido para departamento fijado por clic */
+  @keyframes ccLightUp {
+    0%   { opacity: 0.15; }
+    35%  { opacity: 1;    }
+    100% { opacity: 1;    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #nodes g { transition: none; }
+    #lines line { animation: none !important; }
+  }
 </style>
