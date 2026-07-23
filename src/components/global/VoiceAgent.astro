@@ -1,0 +1,106 @@
+---
+// VoiceAgent — Demo del agente de voz de ElevenLabs (Conversational AI).
+// El visitante pulsa el botón y habla con la IA para preguntar por los servicios.
+//
+// ⚙️ CONFIGURACIÓN (2 pasos, sin tocar más nada):
+//   1) Crea el agente en https://elevenlabs.io/app/conversational-ai
+//      · Base de conocimiento: pega vuestros servicios o apunta a aisecurity.es
+//      · Prompt: "Responde SOLO sobre AI Security, en español, breve; si hay
+//        interés, dirige a https://aisecurity.es/reunion"
+//      · Idioma: Español · Allowlist de dominio: aisecurity.es
+//   2) Copia el Agent ID y pégalo abajo en AGENT_ID.
+//
+// Nota plan gratuito: ~15 min de conversación al mes en total. Los minutos solo
+// se consumen cuando alguien habla de verdad (no al cargar la página).
+
+interface Props {
+  label?: string;
+  compact?: boolean; // true = solo el botón (sin la tarjeta)
+}
+const { label = "🎙️ Habla con nuestra IA por voz", compact = false } = Astro.props;
+
+const AGENT_ID = ""; // 👈 PEGA AQUÍ TU AGENT ID DE ELEVENLABS
+---
+
+{AGENT_ID && (
+  <div class="va-wrap" data-agent-id={AGENT_ID}>
+    {!compact && (
+      <div class="va-card">
+        <div class="va-ic">🎙️</div>
+        <h3 class="va-title">Habla con nuestra recepcionista IA</h3>
+        <p class="va-text">Pulsa el botón y pregúntale por voz lo que quieras sobre nuestros servicios de IA. Es una demo real de nuestro servicio de <strong>Atención de Llamadas IA</strong>.</p>
+        <button type="button" class="va-btn" id="va-launch">{label}</button>
+        <p class="va-note">Necesita permiso de micrófono · conversación en español</p>
+      </div>
+    )}
+    {compact && <button type="button" class="va-btn" id="va-launch">{label}</button>}
+  </div>
+
+  <style>
+    .va-wrap { display:flex; justify-content:center; margin:2rem 0; }
+    .va-card {
+      max-width:520px; width:100%; text-align:center;
+      padding:2rem 1.75rem; border-radius:20px;
+      background:linear-gradient(155deg,#0b1120 0%,#141a33 60%,#0b1120 100%);
+      border:1px solid rgba(96,165,250,0.3);
+      box-shadow:0 24px 60px -28px rgba(59,130,246,0.6);
+    }
+    .va-ic { font-size:2.2rem; }
+    .va-title { font-size:1.3rem; font-weight:800; color:#f0f6ff; margin:0.5rem 0 0.5rem; }
+    .va-text { font-size:0.92rem; line-height:1.6; color:#94a3b8; margin:0 0 1.25rem; }
+    .va-btn {
+      display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;
+      padding:0.9rem 1.8rem; border-radius:0.8rem; border:none; cursor:pointer;
+      font-weight:800; font-size:0.98rem; color:#fff;
+      background:linear-gradient(135deg,#2563eb,#4f46e5);
+      box-shadow:0 12px 30px -10px rgba(37,99,235,0.7);
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .va-btn:hover { transform:translateY(-2px); box-shadow:0 16px 40px -10px rgba(79,70,229,0.85); }
+    .va-btn.loading { opacity:0.7; cursor:progress; }
+    .va-note { font-size:0.75rem; color:#64748b; margin:0.9rem 0 0; }
+  </style>
+
+  <script>
+    (function () {
+      const wrap = document.querySelector('.va-wrap');
+      const btn = document.getElementById('va-launch');
+      if (!wrap || !btn) return;
+      const agentId = wrap.getAttribute('data-agent-id');
+      let loaded = false;
+
+      function ga(name) {
+        try { (window).dataLayer = (window).dataLayer || []; (window).dataLayer.push(['event', name, { page_path: location.pathname }]); } catch (e) {}
+      }
+
+      btn.addEventListener('click', function () {
+        ga('voice_agent_launch');
+        if (loaded) return;
+        loaded = true;
+        btn.classList.add('loading');
+        btn.textContent = 'Cargando la IA de voz…';
+
+        // Inserta el widget oficial de ElevenLabs
+        const el = document.createElement('elevenlabs-convai');
+        el.setAttribute('agent-id', agentId);
+        document.body.appendChild(el);
+
+        // Carga el script del widget
+        const s = document.createElement('script');
+        s.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
+        s.async = true;
+        s.type = 'text/javascript';
+        s.onload = function () {
+          btn.classList.remove('loading');
+          btn.textContent = '✓ IA de voz lista — pulsa el botón de llamada';
+        };
+        s.onerror = function () {
+          btn.classList.remove('loading');
+          btn.textContent = 'No se pudo cargar. Reintenta';
+          loaded = false;
+        };
+        document.head.appendChild(s);
+      });
+    })();
+  </script>
+)}

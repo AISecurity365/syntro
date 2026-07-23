@@ -381,7 +381,8 @@ const canonical = "https://aisecurity.es/wazuh-afiliado";
       const COMISION_RECU = 0.10;      // 10% del gestionado
       const RECU_ANUAL_CLIENTE = GESTIONADO_MES * COMISION_RECU * 12; // 240 €/año por cliente
 
-      const fmt = (n) => Math.round(n).toLocaleString('es-ES') + ' €';
+      // Separador de miles manual: toLocaleString('es-ES') omite el punto en números de 4 cifras
+      const fmt = (n) => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
 
       function update() {
         const clientes = parseInt(clientesEl.value, 10);
