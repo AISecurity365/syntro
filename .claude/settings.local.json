@@ -18,6 +18,7 @@
       "Bash(pnpm dev)",
       "Bash(timeout /t 10 /nobreak)",
       "Skill(playwright-skill)",
+<<<<<<< Updated upstream
       "Bash(git rebase:*)",
       "Skill(playwright-skill:playwright-skill)",
       "Bash(find:*)",
@@ -73,6 +74,9 @@
       "WebFetch(domain:wazuh.com)",
       "WebFetch(domain:wazuh-documentation-49-master.readthedocs.io)",
       "WebFetch(domain:opennix.org)"
+=======
+      "Bash(git checkout:*)"
+>>>>>>> Stashed changes
     ],
     "deny": [],
     "ask": [],
