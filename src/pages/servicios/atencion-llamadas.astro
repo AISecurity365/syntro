@@ -855,6 +855,7 @@ const canonical = "https://aisecurity.es/servicios/atencion-llamadas";
     let currentAudio: HTMLAudioElement | null = null;
     let audioTimeouts: number[] = [];
     let selectedScenario: keyof typeof scenarios = 'reservar';
+    let lineIndex = 0;
 
     const scenarios = {
       reservar: [
@@ -918,14 +919,20 @@ const canonical = "https://aisecurity.es/servicios/atencion-llamadas";
       line.appendChild(bubble);
       conversationLog.appendChild(line);
       conversationLog.scrollTop = conversationLog.scrollHeight;
-
-      if (audioSrc) playAudio(audioSrc);
     }
 
-    function playAudio(src: string) {
+    // Reproduce el audio y llama a onDone cuando termina. Si el audio no existe
+    // o no se puede reproducir, espera fallbackMs (tiempo de lectura) y continúa.
+    function playAudioThen(src: string, fallbackMs: number, onDone: () => void) {
       if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
-      currentAudio = new Audio(src);
-      currentAudio.play().catch(() => {});
+      const audio = new Audio(src);
+      currentAudio = audio;
+      let advanced = false;
+      const finish = () => { if (advanced) return; advanced = true; onDone(); };
+      const fail = () => { if (advanced) return; advanced = true; const t = setTimeout(onDone, fallbackMs) as unknown as number; audioTimeouts.push(t); };
+      audio.addEventListener('ended', finish, { once: true });
+      audio.addEventListener('error', fail, { once: true });
+      audio.play().catch(fail);
     }
 
     function stopAllAudio() {
@@ -941,10 +948,34 @@ const canonical = "https://aisecurity.es/servicios/atencion-llamadas";
       if (durationText) durationText.textContent = `${m}:${s}`;
     }
 
+    function scheduleNext(gap: number) {
+      const t = setTimeout(playNextLine, gap) as unknown as number;
+      audioTimeouts.push(t);
+    }
+
+    // Muestra la siguiente línea y encadena la posterior cuando acaba su audio.
+    function playNextLine() {
+      if (!isInCall) return;
+      const conversation = scenarios[selectedScenario];
+      if (lineIndex >= conversation.length) return;
+      const line = conversation[lineIndex];
+      lineIndex++;
+
+      addConversationLine(line.speaker, line.text);
+
+      // Tiempo de lectura estimado si la línea no tiene audio (o falla).
+      const readMs = Math.min(5000, Math.max(1800, line.text.length * 55));
+      if (line.audio) {
+        playAudioThen(line.audio, readMs, () => scheduleNext(450));
+      } else {
+        scheduleNext(readMs);
+      }
+    }
+
     function startCall() {
       isInCall = true;
       callStartTime = Date.now();
-      const conversation = scenarios[selectedScenario];
+      lineIndex = 0;
 
       if (preCallScreen) preCallScreen.style.display = 'none';
       if (inCallScreen) inCallScreen.style.display = 'flex';
@@ -952,12 +983,8 @@ const canonical = "https://aisecurity.es/servicios/atencion-llamadas";
 
       durationInterval = setInterval(updateDuration, 1000) as unknown as number;
 
-      conversation.forEach(line => {
-        const t = setTimeout(() => {
-          if (isInCall) addConversationLine(line.speaker, line.text, line.audio);
-        }, line.delay) as unknown as number;
-        audioTimeouts.push(t);
-      });
+      const t = setTimeout(playNextLine, 800) as unknown as number;
+      audioTimeouts.push(t);
     }
 
     function endCall() {
