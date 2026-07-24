@@ -306,7 +306,7 @@ const canonical = "https://aisecurity.es/servicios/atencion-llamadas";
         </p>
       </div>
 
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:stretch;">
 
         <!-- NIVEL 1 — BÁSICO -->
         <div style="background:rgba(37,99,235,0.07);border:1px solid rgba(37,99,235,0.3);border-radius:1.25rem;padding:32px;display:flex;flex-direction:column;gap:20px;">
@@ -340,6 +340,7 @@ const canonical = "https://aisecurity.es/servicios/atencion-llamadas";
           <div style="color:#64748b;font-size:0.75rem;display:flex;align-items:center;gap:6px;">
             <span>⏱</span> Listo en <strong style="color:#94a3b8;">7-10 días hábiles</strong>
           </div>
+          <a href="/presupuesto?plan=atencion-llamadas-basico" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:auto;padding:13px 20px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;font-weight:700;font-size:0.9rem;border-radius:12px;text-decoration:none;box-shadow:0 10px 24px -8px rgba(37,99,235,0.5);">Elegir nivel básico →</a>
         </div>
 
         <!-- NIVEL 2 — MEDIO -->
@@ -374,6 +375,7 @@ const canonical = "https://aisecurity.es/servicios/atencion-llamadas";
           <div style="color:#64748b;font-size:0.75rem;display:flex;align-items:center;gap:6px;">
             <span>⏱</span> Listo en <strong style="color:#94a3b8;">3-4 semanas</strong>
           </div>
+          <a href="/presupuesto?plan=atencion-llamadas-medio" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:auto;padding:13px 20px;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;font-weight:700;font-size:0.9rem;border-radius:12px;text-decoration:none;box-shadow:0 10px 24px -8px rgba(124,58,237,0.5);">Elegir nivel medio →</a>
         </div>
 
         <!-- NIVEL 3 — AVANZADO -->
@@ -408,40 +410,19 @@ const canonical = "https://aisecurity.es/servicios/atencion-llamadas";
           <div style="color:#64748b;font-size:0.75rem;display:flex;align-items:center;gap:6px;">
             <span>⏱</span> Listo en <strong style="color:#94a3b8;">5-6 semanas</strong>
           </div>
+          <a href="/presupuesto?plan=atencion-llamadas-avanzado" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:auto;padding:13px 20px;background:linear-gradient(135deg,#0891b2,#22d3ee);color:#fff;font-weight:700;font-size:0.9rem;border-radius:12px;text-decoration:none;box-shadow:0 10px 24px -8px rgba(8,145,178,0.5);">Elegir nivel avanzado →</a>
         </div>
 
       </div>
 
-      <!-- Nota recomendación -->
-      <div style="margin-top:40px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:1rem;padding:24px;display:flex;align-items:flex-start;gap:14px;max-width:800px;margin-left:auto;margin-right:auto;margin-top:40px;">
-        <span style="font-size:1.5rem;flex-shrink:0;">💡</span>
-        <div>
-          <h4 style="color:#e2e8f0;font-weight:700;margin:0 0 6px;">Nuestra recomendación</h4>
-          <p style="color:#94a3b8;font-size:0.875rem;line-height:1.6;margin:0;">
-            Si partes de cero con IA conversacional, empieza por el <strong style="color:#60a5fa;">nivel básico durante 2-3 meses</strong>.
-            Es la forma de validar con datos reales el volumen, el tipo de llamadas y el porcentaje de resolución.
-            Con esos datos, la transición al nivel medio es muy informada. El nivel avanzado tiene sentido
-            cuando el equipo ya está cómodo y quiere automatizar la operativa completa.
-          </p>
-        </div>
-      </div>
-
-      <!-- CTA niveles -->
-      <div style="text-align:center;margin-top:48px;">
-        <a href="/presupuesto?plan=Atencion-Llamadas-IA"
-          style="display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 40px;background:linear-gradient(135deg,#2563eb,#0ea5e9);color:#fff;font-weight:700;font-size:1rem;border-radius:14px;text-decoration:none;box-shadow:0 16px 36px -8px rgba(37,99,235,0.4);">
-          Solicitar presupuesto sin compromiso →
-        </a>
+      <!-- Prueba la IA por voz (dentro de la misma sección, debajo de los planes) -->
+      <div style="margin-top:56px;text-align:center;">
+        <p style="color:#64748b;font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 2px;">Pruébala tú mismo</p>
+        <VoiceAgent />
       </div>
 
     </div>
   </section>
-
-  <!-- Agente de voz ElevenLabs (aparece cuando se configura el AGENT_ID) -->
-  <section style="background: linear-gradient(135deg, #0a0d1a 0%, #0f1628 50%, #0a0d1a 100%); padding:20px 0 40px;">
-    <VoiceAgent />
-  </section>
-
 
   <!-- ══════════════════════════════════════════════
        ¿PARA QUIÉN? — selector interactivo
