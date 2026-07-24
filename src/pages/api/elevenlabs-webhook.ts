@@ -7,12 +7,11 @@ export const prerender = false;
 // Webhook post-llamada de ElevenLabs Conversational AI.
 // Se configura en el panel de ElevenLabs (Conversational AI → Settings → Webhooks
 // → Post-call transcription) apuntando a:  https://aisecurity.es/api/elevenlabs-webhook
-// Al terminar una llamada, ElevenLabs hace POST aquí con la transcripción y el
-// resumen, y nosotros te lo reenviamos por correo (igual que el chat).
+// Al terminar una llamada, ElevenLabs hace POST aquí y nosotros te avisamos por
+// correo de que ha habido una llamada (el detalle lo revisas en ElevenLabs).
 //
-// Seguridad (opcional pero recomendada): copia el "Webhook secret" que te da
-// ElevenLabs y guárdalo en Vercel como ELEVENLABS_WEBHOOK_SECRET. Si está puesto,
-// verificamos la firma HMAC; si no, aceptamos igualmente para facilitar el arranque.
+// Seguridad (opcional): copia el "Webhook secret" de ElevenLabs y guárdalo en
+// Vercel como ELEVENLABS_WEBHOOK_SECRET. Si está, verificamos la firma HMAC.
 
 function fmtDuration(secs: number | null): string {
   if (secs == null || isNaN(secs)) return "—";
@@ -54,23 +53,14 @@ export const POST: APIRoute = async ({ request }) => {
 
     const data = body.data || body;
     const transcript: any[] = Array.isArray(data.transcript) ? data.transcript : [];
-    const summary: string = data.analysis?.transcript_summary || "";
     const durationSecs: number | null =
       data.metadata?.call_duration_secs ?? data.metadata?.call_duration ?? null;
     const conversationId: string = data.conversation_id || "";
     const startUnix: number | null = data.metadata?.start_time_unix_secs ?? null;
 
-    // Normaliza cada turno (ElevenLabs usa role "agent"/"user" y campo "message")
-    const turns = transcript
-      .map((m) => ({
-        role: m.role === "user" ? "user" : "agent",
-        text: (m.message ?? m.text ?? "").toString().trim(),
-      }))
-      .filter((m) => m.text.length > 0);
-
-    // Si el usuario no dijo nada, no molestamos con correo
-    const userTurns = turns.filter((m) => m.role === "user");
-    if (userTurns.length === 0) {
+    // Si no hubo ninguna intervención, no avisamos (widget abierto sin hablar)
+    const hasContent = transcript.some((m) => (m.message ?? m.text ?? "").toString().trim());
+    if (!hasContent) {
       return new Response(null, { status: 204 });
     }
 
@@ -84,44 +74,21 @@ export const POST: APIRoute = async ({ request }) => {
       },
     });
 
-    const lines = turns
-      .map(
-        (m) => `<tr>
-          <td style="padding:6px 10px;font-weight:bold;color:${m.role === "user" ? "#2563eb" : "#16a34a"};white-space:nowrap;vertical-align:top;">
-            ${m.role === "user" ? "👤 Cliente" : "🎙️ IA"}
-          </td>
-          <td style="padding:6px 10px;color:#1e293b;">${m.text}</td>
-        </tr>`
-      )
-      .join("");
-
     const fecha = startUnix
       ? new Date(startUnix * 1000).toLocaleString("es-ES", { timeZone: "Europe/Madrid" })
       : new Date().toLocaleString("es-ES", { timeZone: "Europe/Madrid" });
 
     const html = `
-      <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
-        <div style="background:linear-gradient(135deg,#4f46e5,#2563eb);padding:20px 24px;border-radius:8px 8px 0 0;">
-          <h2 style="color:white;margin:0;font-size:1.1rem;">🎙️ Llamada de voz con la IA</h2>
-          <p style="color:rgba(255,255,255,0.8);margin:6px 0 0;font-size:0.85rem;">
-            Duración: ${fmtDuration(durationSecs)} · ${fecha}
-          </p>
+      <div style="font-family:sans-serif;max-width:560px;margin:0 auto;">
+        <div style="background:linear-gradient(135deg,#4f46e5,#2563eb);padding:22px 24px;border-radius:8px 8px 0 0;">
+          <h2 style="color:white;margin:0;font-size:1.15rem;">🎙️ Ha habido una llamada de voz</h2>
         </div>
-        <div style="background:#f8fafc;padding:20px 24px;border-radius:0 0 8px 8px;border:1px solid #e2e8f0;">
-          ${
-            summary
-              ? `<div style="background:#eef2ff;border-left:4px solid #4f46e5;border-radius:6px;padding:12px 14px;margin-bottom:16px;">
-                   <p style="margin:0 0 4px;font-weight:bold;color:#3730a3;font-size:0.85rem;">Resumen</p>
-                   <p style="margin:0;color:#1e293b;font-size:0.9rem;line-height:1.5;">${summary}</p>
-                 </div>`
-              : ""
-          }
-          <table style="width:100%;border-collapse:collapse;">${lines}</table>
-          ${
-            conversationId
-              ? `<p style="margin:16px 0 0;color:#94a3b8;font-size:0.75rem;">ID conversación: ${conversationId}</p>`
-              : ""
-          }
+        <div style="background:#f8fafc;padding:20px 24px;border-radius:0 0 8px 8px;border:1px solid #e2e8f0;color:#1e293b;">
+          <p style="margin:0 0 10px;">Alguien acaba de hablar con la IA de voz en la web.</p>
+          <p style="margin:0 0 4px;"><strong>Fecha:</strong> ${fecha}</p>
+          <p style="margin:0 0 4px;"><strong>Duración:</strong> ${fmtDuration(durationSecs)}</p>
+          ${conversationId ? `<p style="margin:0 0 12px;"><strong>ID conversación:</strong> ${conversationId}</p>` : ""}
+          <p style="margin:14px 0 0;color:#64748b;font-size:0.85rem;">Puedes ver la transcripción completa en tu panel de ElevenLabs → Conversational AI.</p>
         </div>
       </div>
     `;
@@ -129,7 +96,7 @@ export const POST: APIRoute = async ({ request }) => {
     await transporter.sendMail({
       from: `"AI Security Web" <${import.meta.env.SMTP_FROM_EMAIL}>`,
       to: "info@aisecurity.es",
-      subject: `🎙️ Llamada de voz — ${userTurns.length} intervención${userTurns.length > 1 ? "es" : ""} del cliente`,
+      subject: `🎙️ Nueva llamada de voz en la web (${fmtDuration(durationSecs)})`,
       html,
     });
 
