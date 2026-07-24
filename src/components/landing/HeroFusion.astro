@@ -59,9 +59,9 @@
     </p>
 
     <div class="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3" style="pointer-events:auto;">
-      <a href="/reunion" id="fus-cta" style="display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,#2563eb 0%,#7c3aed 100%);color:#fff;font-weight:800;padding:0.95rem 2rem;border-radius:0.8rem;text-decoration:none;font-size:1rem;cursor:pointer;box-shadow:0 10px 36px -8px rgba(99,102,241,0.6);transition:transform .2s ease,box-shadow .2s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 14px 46px -8px rgba(124,58,237,0.7)'" onmouseout="this.style.transform='';this.style.boxShadow='0 10px 36px -8px rgba(99,102,241,0.6)'">
-        Solicitar consulta gratuita
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+      <a href="/reunion" id="fus-cta" data-talk-trigger style="display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,#2563eb 0%,#7c3aed 100%);color:#fff;font-weight:800;padding:0.95rem 2rem;border-radius:0.8rem;text-decoration:none;font-size:1rem;cursor:pointer;box-shadow:0 10px 36px -8px rgba(99,102,241,0.6);transition:transform .2s ease,box-shadow .2s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 14px 46px -8px rgba(124,58,237,0.7)'" onmouseout="this.style.transform='';this.style.boxShadow='0 10px 36px -8px rgba(99,102,241,0.6)'">
+        Habla con nuestra gente
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 10h8M8 14h5m7-2c0 4.418-4.03 8-9 8a9.9 9.9 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
       </a>
       <a href="#servicios" id="fus-ghost" style="display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,#2563eb 0%,#7c3aed 100%);color:#fff;font-weight:800;padding:0.95rem 2rem;border-radius:0.8rem;text-decoration:none;font-size:1rem;cursor:pointer;box-shadow:0 10px 36px -8px rgba(99,102,241,0.6);transition:transform .2s ease,box-shadow .2s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 14px 46px -8px rgba(124,58,237,0.7)'" onmouseout="this.style.transform='';this.style.boxShadow='0 10px 36px -8px rgba(99,102,241,0.6)'">Ver servicios
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
@@ -83,6 +83,80 @@
   </div>
 </section>
 
+<!-- Modal: Habla con nuestra gente (chat o voz) -->
+<div id="talk-modal" class="talk-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="talk-title">
+  <div class="talk-backdrop" data-talk-close></div>
+  <div class="talk-card">
+    <button type="button" class="talk-x" data-talk-close aria-label="Cerrar">✕</button>
+    <div class="talk-badge">🤝 Sin formularios · respuesta al momento</div>
+    <h3 id="talk-title" class="talk-title">¿Cómo prefieres hablar con nosotros?</h3>
+    <p class="talk-sub">Tú eliges el canal. Te atendemos ahora mismo.</p>
+    <div class="talk-opts">
+      <button type="button" class="talk-opt talk-opt--voice" id="talk-voice">
+        <span class="talk-opt-ic">🎙️</span>
+        <span class="talk-opt-t">Por voz</span>
+        <span class="talk-opt-d">Habla ahora, como una llamada</span>
+      </button>
+      <button type="button" class="talk-opt talk-opt--chat" id="talk-chat">
+        <span class="talk-opt-ic">💬</span>
+        <span class="talk-opt-t">Por chat</span>
+        <span class="talk-opt-d">Escríbenos y te respondemos ya</span>
+      </button>
+    </div>
+    <p class="talk-note">¿Prefieres agendar? <a href="/reunion">Reserva una reunión</a>.</p>
+  </div>
+</div>
+<div id="talk-toast" class="talk-toast">🎙️ Llamada lista — pulsa el botón redondo de abajo a la derecha para empezar a hablar</div>
+
+<script>
+  (function () {
+    const modal = document.getElementById('talk-modal') as HTMLElement | null;
+    if (!modal) return;
+
+    function ga(name: string) {
+      try { (window as any).dataLayer = (window as any).dataLayer || []; (window as any).dataLayer.push(['event', name, { page_path: location.pathname }]); } catch (e) {}
+    }
+    const openModal = () => { modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; };
+    const closeModal = () => { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; };
+
+    // Cualquier CTA con [data-talk-trigger] abre el modal (hero, servicios, …)
+    document.querySelectorAll('[data-talk-trigger]').forEach((t) => {
+      t.addEventListener('click', (e) => { e.preventDefault(); ga('talk_open'); openModal(); });
+    });
+    modal.querySelectorAll('[data-talk-close]').forEach((el) => el.addEventListener('click', closeModal));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+
+    // CHAT → abre el bot Mascot (abajo a la derecha)
+    document.getElementById('talk-chat')?.addEventListener('click', () => {
+      ga('talk_chat'); closeModal();
+      const w = document.getElementById('mascot-widget');
+      const popup = document.getElementById('mascot-popup');
+      if (w) { w.style.display = ''; if (!popup || !popup.classList.contains('open')) w.click(); }
+    });
+
+    // VOZ → carga el agente de voz de ElevenLabs y lo deja listo
+    let voiceLoaded = false;
+    const toast = document.getElementById('talk-toast');
+    document.getElementById('talk-voice')?.addEventListener('click', () => {
+      ga('talk_voice'); closeModal();
+      // Oculta el bot de chat para que no se solape con el widget de voz (ambos van abajo-derecha)
+      const mascot = document.getElementById('mascot-widget');
+      if (mascot) mascot.style.display = 'none';
+      if (!voiceLoaded) {
+        voiceLoaded = true;
+        const el = document.createElement('elevenlabs-convai');
+        el.setAttribute('agent-id', 'agent_4701ky8arw81f6bsdpm6ae7wg8cm');
+        document.body.appendChild(el);
+        const s = document.createElement('script');
+        s.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
+        s.async = true; s.type = 'text/javascript';
+        document.head.appendChild(s);
+      }
+      if (toast) { toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 8000); }
+    });
+  })();
+</script>
+
 <style>
   @keyframes fusBlink { 0%,100%{opacity:1;} 50%{opacity:0;} }
   @keyframes fusScan { 0%{top:0;opacity:0;} 8%{opacity:1;} 92%{opacity:1;} 100%{top:100%;opacity:0;} }
@@ -93,6 +167,32 @@
   #fus-cta:hover { transform:translateY(-2px);box-shadow:0 14px 46px -8px rgba(124,58,237,0.7); }
   #fus-ghost:hover { color:#fff;border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.04); }
   @media (max-width:640px){ #fus-hero{ cursor:auto; } #fus-cursor{ display:none; } }
+
+  /* ── Modal "Habla con nuestra gente" ── */
+  .talk-modal{ position:fixed; inset:0; z-index:1000; display:none; align-items:center; justify-content:center; padding:1rem; }
+  .talk-modal.open{ display:flex; }
+  .talk-backdrop{ position:absolute; inset:0; background:rgba(3,6,13,0.72); backdrop-filter:blur(6px); }
+  .talk-card{ position:relative; z-index:1; width:100%; max-width:520px; border-radius:22px; padding:2.2rem 1.8rem 1.6rem; text-align:center; background:linear-gradient(160deg,#0c1327 0%,#131b38 55%,#0c1327 100%); border:1px solid rgba(129,140,248,0.28); box-shadow:0 30px 80px -30px rgba(59,130,246,0.7); animation:talkIn .25s ease; }
+  @keyframes talkIn{ from{opacity:0;transform:translateY(12px) scale(.98);} to{opacity:1;transform:none;} }
+  .talk-x{ position:absolute; top:0.85rem; right:1rem; background:none; border:none; color:#64748b; font-size:1.05rem; cursor:pointer; line-height:1; }
+  .talk-x:hover{ color:#cbd5e1; }
+  .talk-badge{ display:inline-block; font-size:0.7rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#a5b4fc; background:rgba(129,140,248,0.12); border:1px solid rgba(129,140,248,0.25); padding:0.3rem 0.8rem; border-radius:999px; margin-bottom:0.9rem; }
+  .talk-title{ font-size:1.5rem; font-weight:800; color:#f0f6ff; margin:0 0 0.4rem; }
+  .talk-sub{ font-size:0.92rem; color:#94a3b8; margin:0 0 1.5rem; }
+  .talk-opts{ display:grid; grid-template-columns:1fr 1fr; gap:0.9rem; }
+  @media(max-width:460px){ .talk-opts{ grid-template-columns:1fr; } }
+  .talk-opt{ display:flex; flex-direction:column; align-items:center; gap:0.35rem; padding:1.5rem 1rem; border-radius:16px; cursor:pointer; background:rgba(255,255,255,0.03); border:1px solid rgba(129,140,248,0.22); transition:transform .18s ease, border-color .18s ease, background .18s ease; }
+  .talk-opt:hover{ transform:translateY(-3px); background:rgba(129,140,248,0.08); }
+  .talk-opt--voice:hover{ border-color:rgba(251,191,36,0.6); }
+  .talk-opt--chat:hover{ border-color:rgba(96,165,250,0.7); }
+  .talk-opt-ic{ font-size:1.9rem; }
+  .talk-opt-t{ font-size:1.05rem; font-weight:800; color:#f0f6ff; }
+  .talk-opt-d{ font-size:0.78rem; color:#94a3b8; line-height:1.4; }
+  .talk-note{ font-size:0.8rem; color:#64748b; margin:1.4rem 0 0; }
+  .talk-note a{ color:#a5b4fc; text-decoration:none; font-weight:600; }
+  .talk-note a:hover{ text-decoration:underline; }
+  .talk-toast{ position:fixed; bottom:6.5rem; right:1.5rem; left:auto; z-index:1001; max-width:260px; background:linear-gradient(135deg,#2563eb,#4f46e5); color:#fff; font-weight:700; font-size:0.82rem; line-height:1.4; padding:0.8rem 1.1rem; border-radius:0.9rem; box-shadow:0 14px 40px -10px rgba(37,99,235,0.7); opacity:0; transform:translateY(8px); pointer-events:none; transition:opacity .3s ease, transform .3s ease; }
+  .talk-toast.show{ opacity:1; transform:none; }
 </style>
 
 <script>
