@@ -1,71 +1,98 @@
 // Configuración i18n central de aisecurity.es
 //
-// Estrategia: español sin prefijo (raíz), inglés bajo /en/.
-// hreflang recíproco SOLO en páginas que existen en ambos idiomas.
-// El "detecta-y-muestra-en-inglés" lo resuelve Google con hreflang;
+// Estrategia: español sin prefijo (raíz), resto de idiomas bajo su prefijo
+// (/en, /fr, /nl). hreflang recíproco SOLO en páginas que existen en cada
+// idioma. El "detecta-y-muestra-en-tu-idioma" lo resuelve Google con hreflang;
 // nosotros nunca cambiamos el contenido de una misma URL por IP/idioma.
 
 export const DEFAULT_LOCALE = "es" as const;
-export const LOCALES = ["es", "en"] as const;
+export const LOCALES = ["es", "en", "fr", "nl"] as const;
 export type Locale = (typeof LOCALES)[number];
 
-/**
- * Rutas (sin prefijo de idioma, con barra inicial) que existen en AMBOS idiomas.
- * Cada vez que se traduce una página, su slug se añade aquí para activar el
- * hreflang recíproco y el selector de idioma. Si una ruta no está aquí, se
- * trata como monoidioma (solo español) y no emite hreflang.
- *
- * El homepage de la versión inglesa es "/" (sirve /en).
- */
-export const TRANSLATED_PATHS = new Set<string>([
-  "/wazuh",
-  "/blog",
-  // Embudo de conversión
-  "/reunion",
-  "/presupuesto",
-  // Clúster Wazuh del blog (mismo slug bajo /en)
-  "/blog/que-es-wazuh-para-que-sirve",
-  "/blog/como-instalar-wazuh-en-linux",
-  "/blog/como-instalar-wazuh-con-docker",
-  "/blog/como-instalar-agente-wazuh-en-windows",
-  "/blog/como-instalar-agente-wazuh-en-linux",
-  "/blog/configuracion-de-grupos-en-wazuh",
-  "/blog/configurar-equipos-sin-agente-wazuh-syslog",
-  "/blog/flujo-logs-wazuh-decoders-reglas-alertas",
-  "/blog/crear-reglas-personalizadas-wazuh",
-  "/blog/configurar-alertas-correo-wazuh-postfix-gmail",
-  "/blog/detectar-instalaciones-software-windows-wazuh",
-  "/blog/monitorizar-certificados-wazuh-fim",
-  "/blog/integracion-wazuh-virustotal",
-  "/blog/panel-vulnerability-detection-wazuh",
-  "/blog/investigar-ataque-ssh-wazuh-discover",
-  "/blog/monitorizacion-de-contenedores-docker-con-wazuh",
-  "/blog/wazuh-elastic-security-configuracion-de-siem-completo",
-  "/blog/como-monitorizar-tu-tenant-de-office365-registros-de-exchange-sharepoint",
-  "/blog/wazuh-mcp-server-claude-ia",
-  "/blog/ia-threat-hunting-wazuh",
-]);
+/** Prefijo de URL de cada idioma ("" = español en la raíz). */
+export const LOCALE_PREFIX: Record<Locale, string> = {
+  es: "",
+  en: "/en",
+  fr: "/fr",
+  nl: "/nl",
+};
 
-/** Detecta el locale a partir del pathname (/en o /en/... => en). */
+/** Etiqueta de cada idioma en su propio idioma (para el selector). */
+export const LOCALE_LABEL: Record<Locale, string> = {
+  es: "Español",
+  en: "English",
+  fr: "Français",
+  nl: "Nederlands",
+};
+
+/**
+ * Para cada ruta canónica (español, con barra inicial), los idiomas ADICIONALES
+ * (además de "es") en los que EXISTE una traducción publicada. Se rellena a
+ * medida que se crean los archivos: así el hreflang y el selector de idioma
+ * nunca apuntan a un 404. Si una ruta no está aquí, se trata como monoidioma.
+ *
+ * El homepage de cada idioma es "/" (sirve la raíz de ese prefijo).
+ */
+export const TRANSLATIONS: Record<string, Locale[]> = {
+  "/wazuh": ["en"],
+  "/blog": ["en"],
+  // Embudo de conversión
+  "/reunion": ["en"],
+  "/presupuesto": ["en"],
+  // Clúster Wazuh del blog (mismo slug bajo cada prefijo)
+  "/blog/que-es-wazuh-para-que-sirve": ["en"],
+  "/blog/como-instalar-wazuh-en-linux": ["en"],
+  "/blog/como-instalar-wazuh-con-docker": ["en"],
+  "/blog/como-instalar-agente-wazuh-en-windows": ["en"],
+  "/blog/como-instalar-agente-wazuh-en-linux": ["en"],
+  "/blog/configuracion-de-grupos-en-wazuh": ["en"],
+  "/blog/configurar-equipos-sin-agente-wazuh-syslog": ["en"],
+  "/blog/flujo-logs-wazuh-decoders-reglas-alertas": ["en"],
+  "/blog/crear-reglas-personalizadas-wazuh": ["en"],
+  "/blog/configurar-alertas-correo-wazuh-postfix-gmail": ["en"],
+  "/blog/detectar-instalaciones-software-windows-wazuh": ["en"],
+  "/blog/monitorizar-certificados-wazuh-fim": ["en"],
+  "/blog/integracion-wazuh-virustotal": ["en"],
+  "/blog/panel-vulnerability-detection-wazuh": ["en"],
+  "/blog/investigar-ataque-ssh-wazuh-discover": ["en"],
+  "/blog/monitorizacion-de-contenedores-docker-con-wazuh": ["en"],
+  "/blog/wazuh-elastic-security-configuracion-de-siem-completo": ["en"],
+  "/blog/como-monitorizar-tu-tenant-de-office365-registros-de-exchange-sharepoint": ["en"],
+  "/blog/wazuh-mcp-server-claude-ia": ["en"],
+  "/blog/ia-threat-hunting-wazuh": ["en"],
+};
+
+/** Detecta el locale a partir del pathname (/fr o /fr/... => fr). */
 export function getLocaleFromPath(pathname: string): Locale {
-  return pathname === "/en" || pathname.startsWith("/en/") ? "en" : "es";
+  for (const loc of LOCALES) {
+    if (loc === "es") continue;
+    const prefix = LOCALE_PREFIX[loc];
+    if (pathname === prefix || pathname.startsWith(prefix + "/")) return loc;
+  }
+  return "es";
 }
 
-/** Quita el prefijo /en y devuelve la ruta canónica española (con barra inicial). */
+/** Quita el prefijo de idioma y devuelve la ruta canónica española (con barra inicial). */
 export function stripLocale(pathname: string): string {
-  if (pathname === "/en" || pathname === "/en/") return "/";
-  if (pathname.startsWith("/en/")) return pathname.slice(3); // "/en/wazuh" -> "/wazuh"
-  return pathname;
+  const loc = getLocaleFromPath(pathname);
+  if (loc === "es") return pathname;
+  const rest = pathname.slice(LOCALE_PREFIX[loc].length); // "/fr/wazuh" -> "/wazuh"
+  return rest === "" ? "/" : rest;
 }
 
 /** Construye la URL de una ruta canónica en un locale concreto. */
 export function localizePath(canonicalPath: string, locale: Locale): string {
-  if (locale === "es") return canonicalPath;
-  if (canonicalPath === "/") return "/en";
-  return `/en${canonicalPath}`;
+  const prefix = LOCALE_PREFIX[locale];
+  if (canonicalPath === "/") return prefix === "" ? "/" : prefix;
+  return `${prefix}${canonicalPath}`;
 }
 
-/** ¿Esta ruta canónica tiene versión en ambos idiomas? */
+/** Idiomas en los que existe esta ruta canónica (siempre incluye "es"). */
+export function localesFor(canonicalPath: string): Locale[] {
+  return ["es", ...(TRANSLATIONS[canonicalPath] ?? [])];
+}
+
+/** ¿Esta ruta canónica tiene versión en más de un idioma? */
 export function hasTranslation(canonicalPath: string): boolean {
-  return TRANSLATED_PATHS.has(canonicalPath);
+  return (TRANSLATIONS[canonicalPath]?.length ?? 0) > 0;
 }
