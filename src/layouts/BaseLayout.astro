@@ -2,7 +2,7 @@
 import BaseHead from "../components/BaseHead.astro";
 import Navigation from "../components/global/Navigation.astro";
 import Footer from "../components/global/Footer.astro";
-import FooterEn from "../components/global/FooterEn.astro";
+import FooterIntl from "../components/global/FooterIntl.astro";
 import Mascot from "../components/global/Mascot.astro";
 import GoogleAnalytics from "../components/global/GoogleAnalytics.astro";
 import LanguageBanner from "../components/global/LanguageBanner.astro";
@@ -13,6 +13,7 @@ import {
   stripLocale,
   localizePath,
   hasTranslation,
+  localesFor,
 } from "../i18n/config";
 
 interface Props {
@@ -32,8 +33,11 @@ const {
 const locale = getLocaleFromPath(Astro.url.pathname);
 const canonicalPath = stripLocale(Astro.url.pathname);
 const showAlternates = hasTranslation(canonicalPath);
+const alternates = localesFor(canonicalPath).map((l) => ({
+  locale: l,
+  href: new URL(localizePath(canonicalPath, l), Astro.site).href,
+}));
 const esUrl = new URL(canonicalPath, Astro.site).href;
-const enUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
 ---
 
 <html
@@ -49,8 +53,9 @@ const enUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
     />
     {showAlternates && (
       <>
-        <link rel="alternate" hreflang="es" href={esUrl} />
-        <link rel="alternate" hreflang="en" href={enUrl} />
+        {alternates.map((a) => (
+          <link rel="alternate" hreflang={a.locale} href={a.href} />
+        ))}
         <link rel="alternate" hreflang="x-default" href={esUrl} />
       </>
     )}
@@ -64,7 +69,7 @@ const enUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
     <LanguageBanner />
     <Navigation />
     <main class="grow"><slot /></main>
-    {locale === "en" ? <FooterEn /> : <Footer />}
+    {locale === "es" ? <Footer /> : <FooterIntl locale={locale} />}
     <Mascot />
     <Analytics />
     <SpeedInsights />

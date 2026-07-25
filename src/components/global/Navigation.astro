@@ -1,13 +1,13 @@
 ---
 import OptimizedImage from "../../layouts/utilities/OptimizedImage.astro";
-import NavigationEn from "./NavigationEn.astro";
+import NavigationIntl from "./NavigationIntl.astro";
 import { getLocaleFromPath } from "../../i18n/config";
 
 const currentPath = Astro.url.pathname;
 const locale = getLocaleFromPath(currentPath);
 ---
 
-{locale === "en" ? <NavigationEn /> : (
+{locale !== "es" ? <NavigationIntl /> : (
 <Fragment>
 <header
   id="main-header"

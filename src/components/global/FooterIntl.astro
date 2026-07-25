@@ -1,0 +1,263 @@
+---
+import OptimizedImage from "../../layouts/utilities/OptimizedImage.astro";
+import { localizePath, localesFor, type Locale } from "../../i18n/config";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+// Enlace del embudo: usa la versión traducida si existe, si no cae a español.
+const funnel = (path: string) =>
+  localesFor(path).includes(locale) ? localizePath(path, locale) : path;
+
+const wazuh = localizePath("/wazuh", locale);
+const blog = localizePath("/blog", locale);
+
+const T = {
+  en: {
+    tagline: "Your technology partner: AI, cybersecurity and systems under one team. All connected, all under control.",
+    talkTitle: "Let's talk",
+    ctaDesc: "Tell us about your project and we'll help you deploy and manage Wazuh for your company. The first consultation is free.",
+    requestQuote: "Request a quote",
+    bookMeeting: "Book a meeting",
+    solutions: "Solutions",
+    company: "Company",
+    contact: "Contact",
+    wazuhImpl: "Wazuh Implementation",
+    managedWazuh: "Managed Wazuh (SIEM)",
+    blogLink: "Blog",
+    bookMeetingShort: "Book a Meeting",
+    requestQuoteShort: "Request a Quote",
+    terms: "Terms of Service",
+    privacy: "Privacy Policy",
+    email: "Email",
+    rights: "All rights reserved.",
+    termsShort: "Terms",
+    privacyShort: "Privacy",
+    madeIn: "Made in Spain",
+  },
+  fr: {
+    tagline: "Votre partenaire technologique : IA, cybersécurité et systèmes réunis dans une même équipe. Tout connecté, tout sous contrôle.",
+    talkTitle: "Parlons-en",
+    ctaDesc: "Parlez-nous de votre projet et nous vous aiderons à déployer et gérer Wazuh pour votre entreprise. La première consultation est gratuite.",
+    requestQuote: "Demander un devis",
+    bookMeeting: "Prendre rendez-vous",
+    solutions: "Solutions",
+    company: "Entreprise",
+    contact: "Contact",
+    wazuhImpl: "Déploiement de Wazuh",
+    managedWazuh: "Wazuh infogéré (SIEM)",
+    blogLink: "Blog",
+    bookMeetingShort: "Prendre rendez-vous",
+    requestQuoteShort: "Demander un devis",
+    terms: "Conditions d'utilisation",
+    privacy: "Politique de confidentialité",
+    email: "E-mail",
+    rights: "Tous droits réservés.",
+    termsShort: "Conditions",
+    privacyShort: "Confidentialité",
+    madeIn: "Fait en Espagne",
+  },
+  nl: {
+    tagline: "Uw technologiepartner: AI, cybersecurity en systemen binnen één team. Alles verbonden, alles onder controle.",
+    talkTitle: "Neem contact op",
+    ctaDesc: "Vertel ons over uw project en wij helpen u Wazuh te implementeren en beheren voor uw bedrijf. De eerste consultatie is gratis.",
+    requestQuote: "Offerte aanvragen",
+    bookMeeting: "Een afspraak maken",
+    solutions: "Oplossingen",
+    company: "Bedrijf",
+    contact: "Contact",
+    wazuhImpl: "Wazuh-implementatie",
+    managedWazuh: "Beheerde Wazuh (SIEM)",
+    blogLink: "Blog",
+    bookMeetingShort: "Een afspraak maken",
+    requestQuoteShort: "Offerte aanvragen",
+    terms: "Servicevoorwaarden",
+    privacy: "Privacybeleid",
+    email: "E-mail",
+    rights: "Alle rechten voorbehouden.",
+    termsShort: "Voorwaarden",
+    privacyShort: "Privacy",
+    madeIn: "Gemaakt in Spanje",
+  },
+} as const;
+
+const s = (T as Record<string, (typeof T)["en"]>)[locale] ?? T.en;
+
+const sections = [
+  {
+    title: s.solutions,
+    links: [
+      { name: s.wazuhImpl, href: wazuh },
+      { name: s.managedWazuh, href: `${wazuh}#precios` },
+      { name: s.blogLink, href: blog },
+    ],
+  },
+  {
+    title: s.company,
+    links: [
+      { name: s.bookMeetingShort, href: funnel("/reunion") },
+      { name: s.requestQuoteShort, href: funnel("/presupuesto") },
+      { name: s.terms, href: "/terms" },
+      { name: s.privacy, href: "/privacy" },
+    ],
+  },
+  {
+    title: s.contact,
+    links: [
+      { name: s.email, href: "mailto:info@aisecurity.es" },
+      { name: s.bookMeetingShort, href: funnel("/reunion") },
+    ],
+  },
+];
+---
+
+<footer class="relative overflow-hidden" style="background:#04060c;">
+  <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(96,165,250,0.55),rgba(167,139,250,0.55),transparent);"></div>
+  <div class="absolute inset-0 pointer-events-none" style="background-image:linear-gradient(rgba(99,102,241,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,0.06) 1px,transparent 1px);background-size:46px 46px;opacity:0.5;"></div>
+  <div class="absolute inset-x-0 top-0 pointer-events-none" style="height:260px;background:radial-gradient(ellipse 60% 100% at 50% 0,rgba(99,102,241,0.13),transparent 72%);"></div>
+
+  <div class="relative px-6 md:px-12 lg:px-20 py-16 max-w-7xl mx-auto">
+
+    <!-- Brand + CTA -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-14">
+      <div>
+        <a href={wazuh} class="inline-flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <OptimizedImage width={40} src="/logo.svg" alt="AI SECURITY logo" />
+          <span class="text-lg font-bold text-white">AI SECURITY</span>
+        </a>
+        <p class="mt-5 text-sm leading-relaxed" style="color:#94a3b8;max-width:34ch;">
+          {s.tagline}
+        </p>
+        <a href="mailto:info@aisecurity.es" class="mt-6 inline-flex items-center gap-2 text-sm transition-colors ft-mail" style="color:#cbd5e1;">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          info@aisecurity.es
+        </a>
+        <div class="mt-5 flex items-center gap-3">
+          <a href="https://www.youtube.com/@Systems_Boy" target="_blank" rel="noopener" aria-label="YouTube channel" class="ft-social">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.5 15.5v-7l6.5 3.5-6.5 3.5z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- CTA card -->
+      <div class="lg:col-span-2">
+        <div class="ft-cta-card">
+          <div>
+            <h3 class="text-xl font-bold text-white mb-2">{s.talkTitle}</h3>
+            <p class="text-sm leading-relaxed" style="color:#94a3b8;max-width:48ch;">
+              {s.ctaDesc}
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-3 mt-6">
+            <a href={funnel("/presupuesto")} class="ft-btn-primary">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              {s.requestQuote}
+            </a>
+            <a href={funnel("/reunion")} class="ft-btn-ghost">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              {s.bookMeeting}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Link columns -->
+    <div class="ft-links grid grid-cols-2 md:grid-cols-3 gap-8 text-sm">
+      {
+        sections.map(({ title, links }) => (
+          <div>
+            <h4 class="ft-col-title">{title}</h4>
+            <ul class="space-y-3">
+              {links.map(({ name, href }) => (
+                <li>
+                  <a href={href}>{name}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="pt-8 mt-12 flex flex-col md:flex-row justify-between items-center gap-4 text-sm" style="border-top:1px solid rgba(255,255,255,0.07);color:#64748b;">
+      <p>&copy; {new Date().getFullYear()} AI SECURITY · {s.rights}</p>
+      <div class="flex items-center gap-5">
+        <a href="/terms" class="ft-legal">{s.termsShort}</a>
+        <a href="/privacy" class="ft-legal">{s.privacyShort}</a>
+        <span class="flex items-center gap-1.5" style="color:#94a3b8;">{s.madeIn} <span aria-hidden="true">🇪🇸</span></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ft-mail:hover { color: #a5b4fc; }
+  .ft-social {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:40px; height:40px; border-radius:11px;
+    color:#94a3b8;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    transition:all .2s ease;
+  }
+  .ft-social:hover { color:#fff; border-color:#818cf8; background:rgba(129,140,248,0.14); transform:translateY(-2px); }
+
+  .ft-cta-card {
+    position:relative; height:100%;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:1.85rem;
+    border-radius:1.1rem;
+    background:rgba(255,255,255,0.035);
+    border:1px solid rgba(129,140,248,0.28);
+    box-shadow:0 0 0 1px rgba(129,140,248,0.05), 0 24px 60px -30px rgba(99,102,241,0.6);
+    overflow:hidden;
+  }
+  .ft-cta-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg,#60a5fa,#818cf8,#a78bfa);
+  }
+
+  .ft-btn-primary {
+    display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;
+    padding:0.8rem 1.5rem; border-radius:0.7rem;
+    font-weight:700; font-size:0.9rem; color:#fff; cursor:pointer; text-decoration:none;
+    background:linear-gradient(135deg,#2563eb 0%,#7c3aed 100%);
+    box-shadow:0 10px 30px -10px rgba(99,102,241,0.7);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .ft-btn-primary:hover { transform:translateY(-2px); box-shadow:0 14px 40px -10px rgba(124,58,237,0.8); }
+
+  .ft-btn-ghost {
+    display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;
+    padding:0.8rem 1.5rem; border-radius:0.7rem;
+    font-weight:600; font-size:0.9rem; color:#e2e8f0; text-decoration:none;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.16);
+    transition:all .2s ease;
+  }
+  .ft-btn-ghost:hover { color:#fff; border-color:rgba(255,255,255,0.32); background:rgba(255,255,255,0.1); transform:translateY(-2px); }
+
+  .ft-col-title {
+    position:relative; display:inline-block;
+    font-size:0.95rem; font-weight:700; color:#fff;
+    margin-bottom:1.3rem; padding-bottom:0.5rem;
+  }
+  .ft-col-title::after {
+    content:''; position:absolute; left:0; bottom:0;
+    width:22px; height:2px; border-radius:2px;
+    background:linear-gradient(90deg,#60a5fa,#a78bfa);
+  }
+  .ft-links a {
+    color:#94a3b8;
+    transition:color .2s ease, padding-left .2s ease;
+    display:inline-block;
+  }
+  .ft-links a:hover { color:#a5b4fc; padding-left:4px; }
+
+  .ft-legal { color:#64748b; transition:color .2s ease; }
+  .ft-legal:hover { color:#a5b4fc; }
+</style>

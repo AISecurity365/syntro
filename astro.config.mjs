@@ -9,7 +9,7 @@ export default defineConfig({
   site: "https://aisecurity.es",
   i18n: {
     defaultLocale: "es",
-    locales: ["es", "en"],
+    locales: ["es", "en", "fr", "nl"],
     routing: {
       prefixDefaultLocale: false,
     },
