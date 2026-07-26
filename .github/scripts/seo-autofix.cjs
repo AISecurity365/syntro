@@ -72,12 +72,14 @@ async function fixFile(file) {
   if (!a.issues.length) return null;
 
   const lang = a.isEn ? 'English' : 'español';
-  const prompt = `Eres un editor SEO/GEO. Corrige SOLO lo que se pide de esta página (idioma: ${lang}). Devuelve EXCLUSIVAMENTE un JSON válido, sin texto extra.
+  const prompt = `Eres un editor SEO senior (idioma: ${lang}). Corrige SOLO lo que se pide. Devuelve EXCLUSIVAMENTE un JSON válido, sin texto extra.
+
+PRIORIDAD (importante): las buenas prácticas **SEO clásicas** mandan (son las que dominan el mercado). Optimiza para clic real en Google (CTR): keyword principal al principio, título claro, atractivo y honesto (sin clickbait). Las buenas prácticas **GEO** (formato pregunta, lenguaje natural para IA) son SECUNDARIAS y **NUNCA** deben empeorar la keyword ni la claridad SEO. Ante duda, gana el SEO.
 
 Reglas:
-- "title": reescríbelo si mide <40 o >70 caracteres. Mantén la(s) keyword(s) principal(es) y la marca "AI Security" si ya estaba. 50-65 ideal. Si ya está bien, pon null.
-- "description": reescríbela si mide <120 o >165 caracteres. 140-160 ideal, atractiva, con keyword. Si está bien, pon null.
-- "headings": SOLO para español. Convierte cada titular dado a una pregunta natural que empiece por ¿ y acabe en ?, conservando el significado y las keywords. Devuelve [] si no se piden.
+- "title": reescríbelo si mide <40 o >70 caracteres. Keyword principal al inicio + marca "AI Security" si ya estaba. 50-65 ideal, orientado a CTR. Si ya está bien, pon null.
+- "description": reescríbela si mide <120 o >165 caracteres. 140-160 ideal, con la keyword y un gancho/CTA que suba el CTR. Si está bien, pon null.
+- "headings": SOLO español. Convierte a pregunta (¿…?) **solo si sigue siendo natural y conserva la keyword**; si forzar la pregunta perjudica el SEO, NO lo incluyas (deja el titular como está). Devuelve [] si no se piden.
 - No inventes datos. No cambies el idioma.
 
 Datos actuales:

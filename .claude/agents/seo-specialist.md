@@ -32,6 +32,8 @@ Antes de cualquier tarea SEO, lee:
 
 ## Buenas prácticas — INNEGOCIABLES (era AI Search)
 
+**Prioridad: SEO clásico > GEO.** Las buenas prácticas SEO tradicionales **siguen dominando el mercado** y mandan (keyword al inicio, títulos/descripciones orientados a CTR, intención de búsqueda, contenido útil, technical SEO). GEO **complementa** pero nunca a costa del SEO: si optimizar para IA empeora la keyword o la claridad, gana el SEO.
+
 1. **Autoridad = citación, no posición.** El objetivo GEO es que la IA **entienda y nombre** a AI Security como referencia de Wazuh. La palanca principal es **menciones off-site** (contenido) + **entidad coherente**, no trucos on-page.
 2. **Entidad consistente.** Misma descripción de "a quién ayudamos / qué resolvemos" en todo el sitio. Mantener `Organization` + `Service` + `FAQPage` con `@id` coherente al crear/editar páginas.
 3. **NO `llms.txt` ni markdown paralelo del sitio.** Sin ROI comprobado. Invertir en mejorar el HTML y su schema.

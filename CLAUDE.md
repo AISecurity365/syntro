@@ -59,6 +59,8 @@ Cuando en una conversación se produzca un cambio **sustancial y real** que pued
 
 Contexto: tras el **June 2026 Spam Update** y la generalización de AI Overviews / AI Mode. Detalle y fuentes en `docs/seo/README.md`.
 
+- **SEO clásico > GEO.** Las buenas prácticas SEO tradicionales **siguen dominando el mercado** y son la prioridad; GEO complementa pero nunca a costa del SEO (keyword, claridad, CTR). El auto-fix (`seo-autofix.cjs`) aplica este orden.
+
 - **Autoridad = citación, no posición.** El objetivo GEO es que la IA entienda y **nombre** a AI Security como referencia de Wazuh (España/LATAM). El esfuerzo va a menciones off-site (canal de contenido) + entidad coherente, no a trucos on-page.
 - **Entidad consistente.** Misma descripción de "a quién ayudamos / qué resolvemos" en todo el sitio. Mantener/ampliar structured data `Organization` + `Service` + `FAQPage` al crear o editar páginas.
 - **NO `llms.txt` ni versión markdown paralela del sitio.** Sin ROI GEO comprobado (aviso de Google + estudio Ahrefs: 97% de los `llms.txt` nunca reciben peticiones). Invertir en mejorar el HTML existente y su schema.
