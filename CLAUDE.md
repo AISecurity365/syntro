@@ -14,16 +14,20 @@ CLAUDE.md — AI Security (aisecurity.es)
 
 ## 📂 Documentación de referencia
 
-Leer el doc correspondiente antes de trabajar en esa área:
+Este archivo es el **índice-maestro**. Leer el doc correspondiente antes de trabajar en esa área:
 
 | Área | Archivo |
 |------|---------|
 | Contexto, servicios, filosofía, embudos | `docs/project/contexto.md` |
+| **Al crear/editar un servicio: qué documentar (checklist)** | `docs/project/nuevo-servicio.md` |
 | Stack, estructura de carpetas, Tailwind v4, Supabase | `docs/project/arquitectura.md` |
 | Colores, contraste, WCAG, callout boxes | `docs/project/ui-design.md` |
 | Sistema de email (Resend + SMTP) | `docs/project/email.md` |
-| Cuándo y cómo usar cada agente | `docs/project/agentes.md` |
+| Agentes de desarrollo (ui-designer, frontend, seo) | `docs/project/agentes.md` |
+| **Sistema de contenido** (blog/Medium/Reddit/X/YouTube) + skills `/idea` `/contenido` `/publicar` | `docs/content/README.md` |
 | SEO/GEO, blog, keywords, automatizaciones | `docs/seo/README.md` |
+
+**Foco de negocio (jul 2026):** Wazuh + servicios de IA. El posicionamiento "soporte técnico geo" (`docs/seo/geo-posicionamiento.md`, `/soporte-tecnico`) es **secundario/histórico**, no la prioridad actual.
 
 ---
 

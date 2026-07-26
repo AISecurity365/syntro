@@ -19,7 +19,7 @@ Sub-temas:
 Ángulos que SIEMPRE funcionan: número concreto en el título, caso sectorial específico,
 desmontar una creencia popular ("no, la IA no va a sustituir a tu equipo de ventas, pero sí…").
 
-### Pilar 2 — IA + ciberseguridad / Wazuh (pequeño)
+### Pilar 2 — IA + ciberseguridad / Wazuh
 
 IA aplicada a defensa: threat hunting con IA, triage de alertas, Wazuh + LLM (MCP).
 Enlaza a `/wazuh`, `/curso-wazuh`. Reutiliza el conocimiento del `seo-specialist`.
@@ -64,14 +64,6 @@ Checklist de voz (todo "sí"):
 - [ ] ¿Se entiende sin ser experto?
 - [ ] ¿Sobreviviría al filtro "esto no es genérico"?
 
-## Pilar → plataforma → objetivo (mapa de decisión)
-
-| Si el tema es… | Plataforma ancla | Derivadas | Objetivo primario |
-|----------------|------------------|-----------|-------------------|
-| Caso de uso PyME (pilar 1) | Blog (SEO) | LinkedIn-style en Medium, hilo X, vídeo YT | Leads + SEO |
-| Técnico MCP/agentes (pilar 3) | YouTube o Reddit | Medium long-form, hilo X | Autoridad |
-| Conceptual (pilar 4) | Twitter/X o Medium | Reddit (debate), vídeo opinión | Autoridad |
-| Wazuh/seguridad (pilar 2) | YouTube → `/wazuh` | Blog técnico, Reddit r/Wazuh | Leads |
 
 ## CTAs por objetivo (suaves, no agresivos)
 

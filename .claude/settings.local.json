@@ -18,7 +18,6 @@
       "Bash(pnpm dev)",
       "Bash(timeout /t 10 /nobreak)",
       "Skill(playwright-skill)",
-<<<<<<< Updated upstream
       "Bash(git rebase:*)",
       "Skill(playwright-skill:playwright-skill)",
       "Bash(find:*)",
@@ -73,13 +72,12 @@
       "Skill(deep-research:*)",
       "WebFetch(domain:wazuh.com)",
       "WebFetch(domain:wazuh-documentation-49-master.readthedocs.io)",
-      "WebFetch(domain:opennix.org)"
-=======
-      "Bash(git checkout:*)"
->>>>>>> Stashed changes
+      "WebFetch(domain:opennix.org)",
+      "Bash(xargs -n1 basename)"
     ],
     "deny": [],
     "ask": [],
+    "defaultMode": "bypassPermissions",
     "additionalDirectories": [
       "\\tmp",
       "c:\\tmp",

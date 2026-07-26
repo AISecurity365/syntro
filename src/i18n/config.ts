@@ -34,7 +34,7 @@ export const LOCALE_LABEL: Record<Locale, string> = {
  * El homepage de cada idioma es "/" (sirve la raíz de ese prefijo).
  */
 export const TRANSLATIONS: Record<string, Locale[]> = {
-  "/wazuh": ["en"],
+  "/wazuh": ["en", "fr", "nl"],
   "/blog": ["en"],
   // Embudo de conversión
   "/reunion": ["en"],

@@ -7,7 +7,7 @@
 
 ## Por qué importa
 
-Cada vez más gente pregunta a ChatGPT/Perplexity/Gemini en vez de a Google. Esos motores
+Cada vez más gente pregunta a ChatGPT/claude/grok/Gemini en vez de a Google. Esos motores
 **resumen y citan** fuentes. Si nuestro contenido está estructurado para ser citado,
 aparecemos en la respuesta — y eso trae autoridad y tráfico cualificado.
 

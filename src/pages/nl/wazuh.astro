@@ -1,0 +1,1106 @@
+---
+import WazuhLayout from "../../layouts/WazuhLayoutIntl.astro";
+export const prerender = false; // Force SSR to bypass cache
+
+const title = "Wazuh-implementatie & beheerde SIEM-service | AI Security";
+const description = "Professionele implementatie, uitrol en beheer van Wazuh. Open source SIEM/XDR-configuratie, dreigingsdetectie, compliance en advies voor bedrijven.";
+const canonical = "https://aisecurity.es/nl/wazuh";
+---
+
+<WazuhLayout locale="nl" title={title} description={description} canonical={canonical}>
+
+  <!-- FAQ Schema JSON-LD for GEO (Google AI Overviews, ChatGPT, Perplexity) -->
+  <script type="application/ld+json" is:inline>
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "nl",
+    "url": "https://aisecurity.es/nl/wazuh",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Wat is Wazuh en waarvoor wordt het gebruikt?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Wazuh is een open source SIEM/XDR-platform dat beveiligingslogs centraliseert, dreigingen in realtime detecteert, de integriteit van bestanden bewaakt en helpt te voldoen aan compliance-eisen zoals AVG, PCI-DSS, HIPAA en NIST. Het is gratis en draait op Linux, Windows, macOS en in de cloud."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Hoeveel kost een Wazuh-implementatiedienst?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Bij AI Security begint de implementatie van Wazuh vanaf 1.500 € voor basisuitrol (tot 20 servers), 3.500-7.000 € voor een volledige uitrol met geavanceerde configuratie en audit, en 300 €/maand voor de volledig beheerde Wazuh-dienst met hosting, support en doorlopend onderhoud."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Waarom heb ik Wazuh nodig voor compliance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "De meeste beveiligings- en gegevensbeschermingskaders vereisen doorlopend logbeheer, inbraakdetectie en incidentrespons. Wazuh dekt rechtstreeks activiteitsmonitoring, inbraakdetectie, logbeheer en incidentrespons, wat het een kostenefficiënte basis maakt voor compliance met AVG, PCI-DSS, HIPAA, NIST en ISO 27001."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Hoe lang duurt een Wazuh-uitrol?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Een standaard Wazuh-uitrol duurt tussen 2 en 4 weken: serverinstallatie (1-2 dagen), uitrol van agents op alle endpoints (3-5 dagen), afstemmen van regels en meldingen (1 week) en teamtraining (1-2 dagen). Complexe omgevingen kunnen tot 2 maanden duren."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Werkt Wazuh met Windows en Linux?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ja. Wazuh heeft native agents voor Windows (Server 2008 en later, Windows 10/11), Linux (Ubuntu, Debian, CentOS, Rocky Linux, RHEL), macOS, en het bewaakt ook cloudomgevingen zoals AWS, Azure, GCP en Docker/Kubernetes-containers."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Heb ik technische kennis nodig om Wazuh te gebruiken?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Wazuh vereist kennis van systeembeheer voor de installatie en geavanceerde configuratie. AI Security biedt de volledige dienst: installatie, configuratie, integratie met uw infrastructuur en training van uw technische team zodat u het zelfstandig kunt beheren."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- ═══ LEFT SIDEBAR NAV ═══ -->
+  <nav id="wz-sidenav" class="fixed z-50 hidden xl:flex flex-col items-start" style="left:1.5rem;top:50%;transform:translateY(-50%);">
+    <div class="relative flex flex-col">
+      <div class="absolute w-px rounded-full" style="left:6px;top:20px;bottom:20px;background:linear-gradient(to bottom,rgba(96,165,250,0.4),rgba(129,140,248,0.4),rgba(34,211,238,0.4),rgba(96,165,250,0.4),rgba(139,92,246,0.4),rgba(74,222,128,0.4));"></div>
+
+      <a href="#precios" data-wz-target="precios" class="wz-sn-link flex items-center gap-3 py-3 group">
+        <div class="wz-sn-dot relative z-10 w-3 h-3 rounded-full border-2 transition-all duration-300" style="border-color:rgba(96,165,250,0.6);background:#020817;"></div>
+        <span class="wz-sn-label text-xs font-mono transition-all duration-200 opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none" style="color:#60a5fa;">Tarieven</span>
+      </a>
+
+      <a href="#por-que-wazuh" data-wz-target="por-que-wazuh" class="wz-sn-link flex items-center gap-3 py-3 group">
+        <div class="wz-sn-dot relative z-10 w-3 h-3 rounded-full border-2 transition-all duration-300" style="border-color:rgba(129,140,248,0.6);background:#020817;"></div>
+        <span class="wz-sn-label text-xs font-mono transition-all duration-200 opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none" style="color:#818cf8;">Waarom Wazuh?</span>
+      </a>
+
+      <a href="#monitorización" data-wz-target="monitorización" class="wz-sn-link flex items-center gap-3 py-3 group">
+        <div class="wz-sn-dot relative z-10 w-3 h-3 rounded-full border-2 transition-all duration-300" style="border-color:rgba(34,211,238,0.6);background:#020817;"></div>
+        <span class="wz-sn-label text-xs font-mono transition-all duration-200 opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none" style="color:#22d3ee;">Monitoring</span>
+      </a>
+
+      <a href="#por-que-espana" data-wz-target="por-que-espana" class="wz-sn-link flex items-center gap-3 py-3 group">
+        <div class="wz-sn-dot relative z-10 w-3 h-3 rounded-full border-2 transition-all duration-300" style="border-color:rgba(96,165,250,0.6);background:#020817;"></div>
+        <span class="wz-sn-label text-xs font-mono transition-all duration-200 opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none" style="color:#60a5fa;">Waarom wij</span>
+      </a>
+
+      <a href="#cta-wazuh" data-wz-target="cta-wazuh" class="wz-sn-link flex items-center gap-3 py-3 group">
+        <div class="wz-sn-dot relative z-10 w-3 h-3 rounded-full border-2 transition-all duration-300" style="border-color:rgba(139,92,246,0.6);background:#020817;"></div>
+        <span class="wz-sn-label text-xs font-mono transition-all duration-200 opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none" style="color:#a78bfa;">Beginnen</span>
+      </a>
+
+      <a href="#faq" data-wz-target="faq" class="wz-sn-link flex items-center gap-3 py-3 group">
+        <div class="wz-sn-dot relative z-10 w-3 h-3 rounded-full border-2 transition-all duration-300" style="border-color:rgba(74,222,128,0.6);background:#020817;"></div>
+        <span class="wz-sn-label text-xs font-mono transition-all duration-200 opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none" style="color:#4ade80;">FAQ</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden" data-page="wazuh" style="background-color: #020817;">
+    <div class="absolute inset-0" style="background-image: linear-gradient(rgba(59,130,246,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.12) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.6;"></div>
+    <div class="absolute rounded-full blur-3xl" style="width:700px;height:700px;top:-200px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(59,130,246,0.14),transparent 70%);"></div>
+
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 pt-12 pb-4">
+
+      <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12 mb-6">
+
+      <!-- ─── GLOBE — left ─── -->
+      <div class="flex-shrink-0 flex flex-col items-center">
+        <div class="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full border text-sm font-medium" style="background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.25);color:#93c5fd;">
+          <span class="w-2 h-2 rounded-full animate-pulse" style="background:#60a5fa;"></span>
+          Open Source SIEM · XDR · Compliance
+        </div>
+        <div class="relative" style="width:clamp(240px,80vw,480px);height:clamp(240px,80vw,480px);">
+          <div class="absolute inset-0 rounded-full blur-3xl opacity-30" style="background:radial-gradient(circle,#3b82f6,transparent 65%);transform:scale(1.1);"></div>
+
+          <svg viewBox="-110 -110 220 220" style="width:100%;height:100%;overflow:visible;">
+            <defs>
+              <clipPath id="gc"><circle r="95"/></clipPath>
+              <radialGradient id="gf" cx="32%" cy="28%">
+                <stop offset="0%" stop-color="rgba(59,130,246,0.18)"/>
+                <stop offset="100%" stop-color="rgba(2,8,23,0.95)"/>
+              </radialGradient>
+              <path id="p-ru" d="M 68,-54 Q 30,-98 -8,-16"/>
+              <path id="p-cn" d="M 82,-8  Q 48,-90 -8,-16"/>
+              <path id="p-us" d="M -84,-20 Q -50,-92 -8,-16"/>
+              <path id="p-br" d="M -32,65  Q -52,18  -8,-16"/>
+            </defs>
+
+            <circle r="95" fill="url(#gf)"/>
+
+            <g clip-path="url(#gc)" stroke="rgba(59,130,246,0.12)" stroke-width="0.5" fill="none">
+              <ellipse rx="95" ry="20"/>
+              <ellipse rx="95" ry="48"/>
+              <ellipse rx="95" ry="72"/>
+              <ellipse rx="95" ry="88"/>
+            </g>
+
+            <g clip-path="url(#gc)" fill="none" stroke-width="0.5">
+              <ellipse class="wg-m1" ry="95" stroke="rgba(59,130,246,0.15)"/>
+              <ellipse class="wg-m2" ry="95" stroke="rgba(99,102,241,0.12)"/>
+              <ellipse class="wg-m3" ry="95" stroke="rgba(59,130,246,0.1)"/>
+              <ellipse class="wg-m4" ry="95" stroke="rgba(139,92,246,0.08)"/>
+            </g>
+
+            <g class="wg-continents" clip-path="url(#gc)" fill="rgba(20,50,110,0.82)" stroke="rgba(96,165,250,0.9)" stroke-width="1" stroke-linejoin="round">
+              <path d="M -15,-10 L -12,-8 L -10,-30 L -13,-37 L -4,-58 L 13,-75 L 13,-63 L 11,-50 L 6,-42 L 13,-24 L 9,-8 Z"/>
+              <path d="M -12,-7 L 16,-16 L 26,14 L 22,55 L 10,70 L -5,70 L -15,40 L -20,10 Z"/>
+              <path d="M 16,-10 L 25,-30 L 45,-62 L 88,-62 L 92,-35 L 88,14 L 68,22 L 42,20 L 35,8 L 28,-14 Z"/>
+              <path d="M -35,-70 L -50,-65 L -90,-55 L -92,-25 L -68,-2 L -50,-2 L -32,-25 L -40,-52 Z"/>
+              <path d="M -62,-2 L -33,-2 L -20,30 L -35,75 L -52,70 L -68,25 Z"/>
+              <path d="M 50,28 L 88,20 L 90,50 L 60,54 L 48,42 Z"/>
+            </g>
+
+            <circle r="95" fill="none" stroke="rgba(59,130,246,0.4)" stroke-width="1.2"/>
+
+            <use href="#p-ru" fill="none" stroke="rgba(239,68,68,0.18)" stroke-width="0.8" stroke-dasharray="3,5"/>
+            <use href="#p-cn" fill="none" stroke="rgba(239,68,68,0.18)" stroke-width="0.8" stroke-dasharray="3,5"/>
+            <use href="#p-us" fill="none" stroke="rgba(245,158,11,0.18)" stroke-width="0.8" stroke-dasharray="3,5"/>
+            <use href="#p-br" fill="none" stroke="rgba(239,68,68,0.18)" stroke-width="0.8" stroke-dasharray="3,5"/>
+
+            <circle r="4" fill="#ef4444" opacity="0">
+              <animateMotion id="ru-m" dur="2.8s" begin="0s;ru-m.end+4.2s" calcMode="spline" keySplines="0.4 0 0.2 1">
+                <mpath href="#p-ru"/>
+              </animateMotion>
+              <animate attributeName="opacity" dur="2.8s" begin="0s;ru-m.end+4.2s"
+                values="0;1;1;0" keyTimes="0;0.04;0.88;1"/>
+              <animate attributeName="r" dur="2.8s" begin="0s;ru-m.end+4.2s"
+                values="3;4;3" keyTimes="0;0.5;1"/>
+            </circle>
+            <circle cx="-8" cy="-16" fill="none" stroke="#4ade80" stroke-width="2" opacity="0">
+              <animate attributeName="r" from="6" to="26" dur="0.7s"
+                begin="ru-m.end;ru-m.end+7s;ru-m.end+14s;ru-m.end+21s"/>
+              <animate attributeName="opacity" from="1" to="0" dur="0.7s"
+                begin="ru-m.end;ru-m.end+7s;ru-m.end+14s;ru-m.end+21s"/>
+            </circle>
+
+            <circle r="3.5" fill="#ef4444" opacity="0">
+              <animateMotion id="cn-m" dur="2.8s" begin="1.75s;cn-m.end+4.2s" calcMode="spline" keySplines="0.4 0 0.2 1">
+                <mpath href="#p-cn"/>
+              </animateMotion>
+              <animate attributeName="opacity" dur="2.8s" begin="1.75s;cn-m.end+4.2s"
+                values="0;1;1;0" keyTimes="0;0.04;0.88;1"/>
+            </circle>
+            <circle cx="-8" cy="-16" fill="none" stroke="#4ade80" stroke-width="2" opacity="0">
+              <animate attributeName="r" from="6" to="26" dur="0.7s"
+                begin="cn-m.end;cn-m.end+7s;cn-m.end+14s"/>
+              <animate attributeName="opacity" from="1" to="0" dur="0.7s"
+                begin="cn-m.end;cn-m.end+7s;cn-m.end+14s"/>
+            </circle>
+
+            <circle r="3.5" fill="#f59e0b" opacity="0">
+              <animateMotion id="us-m" dur="2.8s" begin="3.5s;us-m.end+4.2s" calcMode="spline" keySplines="0.4 0 0.2 1">
+                <mpath href="#p-us"/>
+              </animateMotion>
+              <animate attributeName="opacity" dur="2.8s" begin="3.5s;us-m.end+4.2s"
+                values="0;1;1;0" keyTimes="0;0.04;0.88;1"/>
+            </circle>
+            <circle cx="-8" cy="-16" fill="none" stroke="#4ade80" stroke-width="2" opacity="0">
+              <animate attributeName="r" from="6" to="26" dur="0.7s"
+                begin="us-m.end;us-m.end+7s;us-m.end+14s"/>
+              <animate attributeName="opacity" from="1" to="0" dur="0.7s"
+                begin="us-m.end;us-m.end+7s;us-m.end+14s"/>
+            </circle>
+
+            <circle r="3" fill="#ef4444" opacity="0">
+              <animateMotion id="br-m" dur="2.8s" begin="5.25s;br-m.end+4.2s" calcMode="spline" keySplines="0.4 0 0.2 1">
+                <mpath href="#p-br"/>
+              </animateMotion>
+              <animate attributeName="opacity" dur="2.8s" begin="5.25s;br-m.end+4.2s"
+                values="0;1;1;0" keyTimes="0;0.04;0.88;1"/>
+            </circle>
+            <circle cx="-8" cy="-16" fill="none" stroke="#4ade80" stroke-width="2" opacity="0">
+              <animate attributeName="r" from="6" to="26" dur="0.7s"
+                begin="br-m.end;br-m.end+7s;br-m.end+14s"/>
+              <animate attributeName="opacity" from="1" to="0" dur="0.7s"
+                begin="br-m.end;br-m.end+7s;br-m.end+14s"/>
+            </circle>
+
+            <circle cx="68"  cy="-54" r="3"   fill="rgba(239,68,68,0.7)"/>
+            <circle cx="82"  cy="-8"  r="2.5" fill="rgba(239,68,68,0.7)"/>
+            <circle cx="-84" cy="-20" r="2.5" fill="rgba(245,158,11,0.7)"/>
+            <circle cx="-32" cy="65"  r="2.5" fill="rgba(239,68,68,0.7)"/>
+
+            <text x="68"  y="-59" text-anchor="middle" font-size="5.5" fill="rgba(239,68,68,0.8)" font-family="monospace">RU</text>
+            <text x="85"  y="-13" text-anchor="middle" font-size="5.5" fill="rgba(239,68,68,0.8)" font-family="monospace">CN</text>
+            <text x="-84" y="-25" text-anchor="middle" font-size="5.5" fill="rgba(245,158,11,0.8)" font-family="monospace">US</text>
+            <text x="-32" y="73"  text-anchor="middle" font-size="5.5" fill="rgba(239,68,68,0.8)" font-family="monospace">BR</text>
+
+            <circle cx="-8" cy="-16" r="6" fill="#4ade80" opacity="0.9"/>
+            <circle cx="-8" cy="-16" r="10" fill="none" stroke="rgba(74,222,128,0.35)" stroke-width="1.2"/>
+            <text x="-8" y="-22" text-anchor="middle" font-size="5" fill="#4ade80" font-family="monospace" font-weight="bold" letter-spacing="0.5">WAZUH</text>
+          </svg>
+
+          <div class="wg-notif wg-notif-ru absolute top-3 right-0 max-w-[160px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.4);color:#4ade80;">
+            🛡️ GEBLOKKEERD · RU → SRV
+          </div>
+          <div class="wg-notif wg-notif-cn absolute top-3 right-0 max-w-[160px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.4);color:#4ade80;">
+            🛡️ GEBLOKKEERD · CN → SRV
+          </div>
+          <div class="wg-notif wg-notif-us absolute bottom-12 right-0 max-w-[160px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.4);color:#fbbf24;">
+            ⚠️ ONDERSCHEPT · US → SRV
+          </div>
+          <div class="wg-notif wg-notif-br absolute bottom-4 left-0 max-w-[160px] text-xs font-mono px-3 py-2 rounded-lg border" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.4);color:#4ade80;">
+            🛡️ GEBLOKKEERD · BR → SRV
+          </div>
+        </div>
+      </div><!-- end globe -->
+
+      <!-- ─── TEXT — right ─── -->
+      <div class="flex-1 min-w-0">
+        <h1 class="font-bold text-white leading-tight mb-4" style="font-size:clamp(2rem,3.2vw,3.2rem);letter-spacing:-0.02em;">
+          <span style="background:linear-gradient(135deg,#60a5fa 0%,#818cf8 50%,#c084fc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Wazuh</span> beschermt<br/>uw bedrijf 24/7
+        </h1>
+        <p class="text-lg mb-6 leading-relaxed" style="color:#94a3b8;">
+          Wij leveren een Wazuh-implementatie die vanaf dag één dreigingen detecteert en blokkeert — volledig geconfigureerd voor compliance en zonder leercurve voor uw team.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+          <button type="button" id="wazuh-demo-btn" class="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold rounded-xl transition-all duration-200 hover:-translate-y-1" style="background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;box-shadow:0 4px 32px rgba(99,102,241,0.4);cursor:pointer;">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            Bekijk de interactieve demo
+          </button>
+          <a href="/presupuesto?plan=wazuh-consultoria" class="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold rounded-xl border transition-all duration-200 hover:-translate-y-1" style="border-color:rgba(255,255,255,0.12);color:white;background:rgba(255,255,255,0.04);">
+            Gratis consult
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+        </div>
+        <div class="flex flex-wrap gap-3 mb-6">
+          <span class="px-4 py-2 rounded-lg text-sm font-medium" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#e2e8f0;">⏱ <strong>24/7</strong> monitoring</span>
+          <span class="px-4 py-2 rounded-lg text-sm font-medium" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#e2e8f0;">🏛 <strong>Compliance</strong>-klaar</span>
+          <span class="px-4 py-2 rounded-lg text-sm font-medium" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#e2e8f0;">💰 <strong>0 €</strong> licentie</span>
+          <span class="px-4 py-2 rounded-lg text-sm font-medium" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#e2e8f0;">🔓 <strong>100 %</strong> Open Source</span>
+        </div>
+      </div><!-- end text -->
+
+      </div><!-- end two-column -->
+
+      <div class="relative overflow-hidden rounded-xl border py-3 mb-6" style="background:rgba(255,255,255,0.02);border-color:rgba(255,255,255,0.07);">
+        <div class="absolute left-0 top-0 bottom-0 w-16 z-10" style="background:linear-gradient(90deg,#020817,transparent);"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-16 z-10" style="background:linear-gradient(270deg,#020817,transparent);"></div>
+        <div class="flex gap-12 wazuh-ticker" style="width:max-content;padding:0 2rem;">
+          <span class="flex items-center gap-2 text-sm whitespace-nowrap" style="color:#94a3b8;"><span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span><span style="color:#f87171;">KRITIEK</span> SSH brute force geblokkeerd · 45.142.212.61 (RU)</span>
+          <span class="flex items-center gap-2 text-sm whitespace-nowrap" style="color:#94a3b8;"><span class="w-2 h-2 rounded-full bg-yellow-500"></span><span style="color:#fbbf24;">WAARSCHUWING</span> Poortscan · 104.21.66.94 (CN)</span>
+          <span class="flex items-center gap-2 text-sm whitespace-nowrap" style="color:#94a3b8;"><span class="w-2 h-2 rounded-full bg-green-500"></span><span style="color:#4ade80;">COMPLIANCE</span> 96 % dekking · Audit voltooid</span>
+          <span class="flex items-center gap-2 text-sm whitespace-nowrap" style="color:#94a3b8;"><span class="w-2 h-2 rounded-full bg-blue-500"></span><span style="color:#60a5fa;">INFO</span> 23 pakketten bijgewerkt · db-prod-02</span>
+          <span class="flex items-center gap-2 text-sm whitespace-nowrap" style="color:#94a3b8;"><span class="w-2 h-2 rounded-full bg-purple-500"></span><span style="color:#c084fc;">REGEL</span> Toegang buiten kantooruren · gebruiker: deploy (BR)</span>
+          <span class="flex items-center gap-2 text-sm whitespace-nowrap" style="color:#94a3b8;"><span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span><span style="color:#f87171;">KRITIEK</span> SSH brute force geblokkeerd · 45.142.212.61 (RU)</span>
+          <span class="flex items-center gap-2 text-sm whitespace-nowrap" style="color:#94a3b8;"><span class="w-2 h-2 rounded-full bg-yellow-500"></span><span style="color:#fbbf24;">WAARSCHUWING</span> Poortscan · 104.21.66.94 (CN)</span>
+          <span class="flex items-center gap-2 text-sm whitespace-nowrap" style="color:#94a3b8;"><span class="w-2 h-2 rounded-full bg-green-500"></span><span style="color:#4ade80;">COMPLIANCE</span> 96 % dekking · Audit voltooid</span>
+          <span class="flex items-center gap-2 text-sm whitespace-nowrap" style="color:#94a3b8;"><span class="w-2 h-2 rounded-full bg-blue-500"></span><span style="color:#60a5fa;">INFO</span> 23 pakketten bijgewerkt · db-prod-02</span>
+          <span class="flex items-center gap-2 text-sm whitespace-nowrap" style="color:#94a3b8;"><span class="w-2 h-2 rounded-full bg-purple-500"></span><span style="color:#c084fc;">REGEL</span> Toegang buiten kantooruren · gebruiker: deploy (BR)</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <style is:global>
+    .wz-sn-link.active .wz-sn-dot { transform: scale(1.5); background: currentColor; }
+    .wz-sn-link.active .wz-sn-label { opacity: 1 !important; font-weight: 600; }
+    #wz-sidenav { transition: opacity 0.3s; }
+    #wz-sidenav.hidden-nav { opacity: 0; pointer-events: none; }
+
+    .wz-grid::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(59,130,246,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.08) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .wazuh-ticker { animation: ticker-scroll 35s linear infinite; }
+    .wazuh-ticker:hover { animation-play-state: paused; }
+
+    @keyframes continent-pulse { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+    .wg-continents { animation: continent-pulse 4s ease-in-out infinite; }
+
+    @keyframes wg-spin { 0% { rx: 1px; } 25% { rx: 95px; } 50% { rx: 1px; } 75% { rx: 95px; } 100% { rx: 1px; } }
+    .wg-m1 { animation: wg-spin 12s linear infinite; }
+    .wg-m2 { animation: wg-spin 12s linear infinite -3s; }
+    .wg-m3 { animation: wg-spin 12s linear infinite -6s; }
+    .wg-m4 { animation: wg-spin 12s linear infinite -9s; }
+
+    @keyframes notif-ru {
+      0%,38%,100% { opacity:0; transform:translateY(-6px) scale(0.95); }
+      40% { opacity:1; transform:translateY(0) scale(1); }
+      54% { opacity:1; transform:translateY(0) scale(1); }
+      56% { opacity:0; }
+    }
+    .wg-notif-ru { animation: notif-ru 7s ease-in-out infinite; opacity:0; }
+
+    @keyframes notif-cn {
+      0%,63%,100% { opacity:0; transform:translateY(-6px) scale(0.95); }
+      65% { opacity:1; transform:translateY(0) scale(1); }
+      79% { opacity:1; transform:translateY(0) scale(1); }
+      81% { opacity:0; }
+    }
+    .wg-notif-cn { animation: notif-cn 7s ease-in-out infinite; opacity:0; }
+
+    @keyframes notif-us {
+      0%,88%,100% { opacity:0; transform:translateY(-6px) scale(0.95); }
+      90% { opacity:1; transform:translateY(0) scale(1); }
+      98% { opacity:1; transform:translateY(0) scale(1); }
+      100% { opacity:0; }
+    }
+    .wg-notif-us { animation: notif-us 7s ease-in-out infinite; opacity:0; }
+
+    @keyframes notif-br {
+      0%,13%,100% { opacity:0; transform:translateY(-6px) scale(0.95); }
+      15% { opacity:1; transform:translateY(0) scale(1); }
+      29% { opacity:1; transform:translateY(0) scale(1); }
+      31% { opacity:0; }
+    }
+    .wg-notif-br { animation: notif-br 7s ease-in-out infinite; opacity:0; }
+  </style>
+
+
+  <div style="height:60px;overflow:hidden;line-height:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+      <polygon points="0,0 1440,0 0,60" fill="#020817"/>
+      <polygon points="0,60 1440,0 1440,60" fill="#0f1a30"/>
+    </svg>
+  </div>
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="wz-grid py-20 relative overflow-hidden" style="background-color:#0f1a30;">
+    <div class="absolute -top-32 -right-32 w-[600px] h-[600px] pointer-events-none rounded-full blur-3xl" style="background:radial-gradient(circle,rgba(59,130,246,0.14),transparent 65%);"></div>
+    <div class="absolute top-0 inset-x-0 h-40 pointer-events-none" style="background:linear-gradient(to bottom,rgba(59,130,246,0.1),transparent);"></div>
+  <div class="relative z-10">
+    <div class="max-w-7xl mx-auto px-4 md:px-12 lg:px-24">
+      <div class="text-center mb-16">
+        <h2 id="precios" class="text-3xl md:text-4xl font-bold text-white mb-4">
+          Transparante <span style="background:linear-gradient(135deg,#60a5fa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">tarieven</span>
+        </h2>
+        <p class="text-xl text-white/90 max-w-3xl mx-auto">
+          Geen verrassingen, geen verborgen kosten
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <!-- Basic Package -->
+        <div class="rounded-xl p-6 flex flex-col border" style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);">
+          <h4 class="text-xl font-bold mb-2 text-white">Basis</h4>
+          <p class="text-sm text-gray-300 mb-3">Tot 20 servers</p>
+
+          <div class="bg-blue-500/10 border border-blue-400/30 rounded-lg px-3 py-2 mb-3">
+            <p class="text-blue-300 text-xs font-semibold text-center">🔧 Wij configureren het voor u — u gebruikt alleen het dashboard</p>
+          </div>
+
+          <div class="text-3xl font-bold mb-4 text-white">1.500-2.500 €</div>
+          <p class="text-sm text-gray-300 mb-4">Eenmalige implementatiekosten</p>
+
+          <ul class="space-y-2 text-sm text-gray-300 mb-6 flex-grow">
+            <li><span class="text-blue-400">✅</span> Tot 20 bewaakte servers</li>
+            <li><span class="text-blue-400">✅</span> Basisconfiguratie voor compliance</li>
+            <li><span class="text-blue-400">✅</span> Aangepaste regels en meldingen</li>
+            <li><span class="text-blue-400">✅</span> 2 dagen praktijkgerichte training</li>
+            <li><span class="text-blue-400">✅</span> 30 dagen support na uitrol</li>
+            <li><span class="text-blue-400">✅</span> Volledige documentatie</li>
+            <li><span class="text-blue-400">✅</span> Volledig geconfigureerde Wazuh-server</li>
+          </ul>
+
+          <a
+            href="/presupuesto?plan=wazuh-basico"
+            style="color: white;"
+            class="block w-full px-4 py-3 text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors mt-auto"
+          >
+            Offerte aanvragen
+          </a>
+        </div>
+
+        <!-- Support Package - MOST POPULAR -->
+        <div class="rounded-xl p-6 border-2 border-blue-500 relative flex flex-col" style="background:rgba(59,130,246,0.08);">
+          <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 px-4 py-1 rounded-full text-xs font-bold text-white">
+            MEEST POPULAIR
+          </div>
+          <h4 class="text-xl font-bold mb-2 text-white">Beheerde Wazuh</h4>
+          <p class="text-sm text-gray-300 mb-4">Hosting + volledig beheer</p>
+
+          <div class="text-3xl font-bold mb-4 text-white">300 €/maand</div>
+
+          <div class="bg-green-600/20 border border-green-500 rounded-lg px-3 py-2 mb-4">
+            <p class="text-green-400 text-sm font-semibold text-center">Uw Wazuh op onze servers · Live in 48 uur</p>
+          </div>
+
+          <p class="text-sm text-gray-300 mb-4">Alles inbegrepen, geen verrassingen</p>
+
+          <ul class="space-y-2 text-sm text-gray-300 mb-6 flex-grow">
+            <li><span class="text-blue-400">✅</span> Wazuh-server gehost door ons</li>
+            <li><span class="text-blue-400">✅</span> Geen hardware of updates om u zorgen over te maken</li>
+            <li><span class="text-blue-400">✅</span> Initiële installatie en configuratie inbegrepen</li>
+            <li><span class="text-blue-400">✅</span> Dagelijkse back-ups en hoge beschikbaarheid</li>
+            <li><span class="text-blue-400">✅</span> Updates en beveiligingspatches</li>
+            <li><span class="text-blue-400">✅</span> Prioritaire technische support</li>
+            <li><span class="text-blue-400">✅</span> Maandelijkse managementrapporten</li>
+          </ul>
+
+          <a
+            href="/presupuesto?plan=wazuh-gestionado"
+            style="color: white;"
+            class="block w-full px-4 py-3 text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors mt-auto"
+          >
+            Kies beheerde Wazuh
+          </a>
+        </div>
+
+        <!-- Complete Package -->
+        <div class="rounded-xl p-6 flex flex-col border" style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);">
+          <h4 class="text-xl font-bold mb-2 text-white">Compleet</h4>
+          <p class="text-sm text-gray-300 mb-4">Tot 50 servers</p>
+
+          <div class="text-3xl font-bold mb-4 text-white">3.500-7.000 €</div>
+          <p class="text-sm text-gray-300 mb-4">Eenmalige implementatiekosten</p>
+
+          <ul class="space-y-2 text-sm text-gray-300 mb-6 flex-grow">
+            <li><span class="text-blue-400">✅</span> Alles uit het Basis-pakket +</li>
+            <li><span class="text-blue-400">✅</span> Tot 50 bewaakte servers</li>
+            <li><span class="text-blue-400">✅</span> Geavanceerde compliance-configuratie + audit</li>
+            <li><span class="text-blue-400">✅</span> Aangepaste managementdashboards</li>
+            <li><span class="text-blue-400">✅</span> Integratie met ticketing en externe SIEM</li>
+            <li><span class="text-blue-400">✅</span> 10 uur training</li>
+            <li><span class="text-blue-400">✅</span> 90 dagen support na uitrol</li>
+          </ul>
+
+          <a
+            href="/presupuesto?plan=wazuh-empresarial"
+            style="color: white;"
+            class="block w-full px-4 py-3 text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors mt-auto"
+          >
+            Offerte aanvragen
+          </a>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center max-w-5xl mx-auto">
+        <p class="text-white/90 max-w-3xl mx-auto">
+          💡 <strong class="text-white">Let op:</strong> de tarieven variëren met de complexiteit van uw infrastructuur. Vraag een offerte op maat aan, zonder verplichting.
+        </p>
+      </div>
+    </div>
+    </div>
+  </section>
+
+
+  <div style="height:60px;overflow:hidden;line-height:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+      <polygon points="0,0 1440,0 1440,60" fill="#0f1a30"/>
+      <polygon points="0,0 1440,60 0,60" fill="#020817"/>
+    </svg>
+  </div>
+
+  <!-- Real Monitoring Section -->
+  <section class="wz-grid py-20 relative overflow-hidden" style="background-color:#020817;">
+    <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-[700px] h-[400px] pointer-events-none rounded-full blur-3xl" style="background:radial-gradient(ellipse,rgba(6,182,212,0.12),transparent 65%);"></div>
+    <div class="absolute top-0 inset-x-0 h-40 pointer-events-none" style="background:linear-gradient(to bottom,rgba(6,182,212,0.09),transparent);"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 md:px-12 lg:px-24">
+      <h2 id="monitorización" class="text-3xl md:text-4xl font-bold text-white text-center mb-6">
+        Zie het in actie: <span style="background:linear-gradient(135deg,#60a5fa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">echte monitoring</span>
+      </h2>
+
+      <p class="text-lg md:text-xl text-white/90 text-center max-w-3xl mx-auto mb-12">
+        Ontdek hoe Wazuh u in staat stelt de <strong class="text-white">beveiliging van uw infrastructuur te visualiseren en analyseren</strong> in realtime.
+      </p>
+
+      <div class="max-w-5xl mx-auto">
+        <div class="relative bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 rounded-t-2xl p-3 shadow-2xl">
+          <div class="bg-gray-800 rounded-t-xl py-2 px-4 flex items-center gap-2">
+            <div class="flex gap-2">
+              <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+              <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+              <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+            </div>
+            <div class="flex-1 text-center text-white/60 text-sm font-medium">
+              Wazuh-dashboard - Monitoring in realtime
+            </div>
+          </div>
+
+          <div class="bg-white rounded-b-xl overflow-hidden">
+            <div class="flex bg-gray-100 border-b border-gray-200 overflow-x-auto">
+              <button
+                data-tab="wazuh-tab1"
+                class="wazuh-demo-tab active flex-1 whitespace-nowrap px-2 md:px-4 py-3 text-xs md:text-sm font-medium text-blue-600 border-b-2 border-blue-600 transition-colors">
+                Overzichtsdashboard
+              </button>
+              <button
+                data-tab="wazuh-tab2"
+                class="wazuh-demo-tab flex-1 whitespace-nowrap px-2 md:px-4 py-3 text-xs md:text-sm font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent transition-colors">
+                Threat hunting
+              </button>
+              <button
+                data-tab="wazuh-tab3"
+                class="wazuh-demo-tab flex-1 whitespace-nowrap px-2 md:px-4 py-3 text-xs md:text-sm font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent transition-colors">
+                Gebeurtenisonderzoek
+              </button>
+            </div>
+
+            <div class="relative" style="min-height: 400px;">
+              <div id="wazuh-tab1" class="wazuh-demo-content">
+                <img src="/images/wazuh-dashboard.png" alt="Wazuh-overzichtsdashboard" class="w-full h-auto" loading="lazy" />
+              </div>
+              <div id="wazuh-tab2" class="wazuh-demo-content hidden">
+                <img src="/images/wazuh-dashboard (1).png" alt="Wazuh threat hunting" class="w-full h-auto" loading="lazy" />
+              </div>
+              <div id="wazuh-tab3" class="wazuh-demo-content hidden">
+                <img src="/images/save-the-results1.png" alt="Wazuh gebeurtenisonderzoek" class="w-full h-auto" loading="lazy" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="h-4 bg-gray-800 rounded-b-2xl mx-auto" style="width: 80%;"></div>
+        <div class="h-2 bg-gray-700 rounded-b-3xl mx-auto" style="width: 95%;"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div class="text-3xl mb-3">📊</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Overzichtsdashboard</h3>
+          <p class="text-white/80 text-sm">
+            Een overzicht met de belangrijkste statistieken: totaal aantal gebeurtenissen, kritieke meldingen (niveau 12+), mislukte authenticaties en gedetecteerde MITRE ATT&CK-tactieken. Bewaak elke agent (Windows, Linux, macOS) op één plek.
+          </p>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div class="text-3xl mb-3">🎯</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Threat hunting</h3>
+          <p class="text-white/80 text-sm">
+            Analyseer aanvalspatronen zoals het raden van wachtwoorden, SSH brute force en defense evasion. Visualiseer de trend van meldingen door de tijd en detecteer afwijkend gedrag voordat het een incident wordt.
+          </p>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div class="text-3xl mb-3">🔍</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Gebeurtenisonderzoek</h3>
+          <p class="text-white/80 text-sm">
+            Geavanceerd zoeken om specifieke gebeurtenissen te onderzoeken. Filter op velden, duik in gedetailleerde logs en controleer de naleving van regelgeving (HIPAA, PCI-DSS, AVG, NIST) met volledige traceerbaarheid.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <div style="height:60px;overflow:hidden;line-height:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+      <polygon points="0,0 1440,0 0,60" fill="#020817"/>
+      <polygon points="0,60 1440,0 1440,60" fill="#0f1a30"/>
+    </svg>
+  </div>
+
+  <!-- Why Choose Us Section -->
+  <section id="por-que-espana" class="wz-grid py-16 relative overflow-hidden" style="background-color:#0f1a30;">
+    <div class="absolute -top-32 -left-32 w-[600px] h-[600px] pointer-events-none rounded-full blur-3xl" style="background:radial-gradient(circle,rgba(59,130,246,0.13),transparent 65%);"></div>
+    <div class="absolute top-0 inset-x-0 h-40 pointer-events-none" style="background:linear-gradient(to bottom,rgba(59,130,246,0.09),transparent);"></div>
+    <div class="relative z-10">
+      <div class="max-w-5xl mx-auto px-4 md:px-12 lg:px-24">
+        <div class="text-center mb-10">
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">
+            Waarom kiezen voor een gespecialiseerde <span style="background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Wazuh-partner</span>?
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="rounded-xl p-6 border" style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);">
+            <div class="text-3xl mb-3">📍</div>
+            <h3 class="text-lg font-semibold text-white mb-2">Toegewijde support</h3>
+            <p class="text-sm" style="color:#94a3b8;">
+              Europese kantooruren (9.00-18.00 CET) en onboarding op afstand, waar uw team zich ook bevindt.
+            </p>
+          </div>
+
+          <div class="rounded-xl p-6 border" style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);">
+            <div class="text-3xl mb-3">🏛️</div>
+            <h3 class="text-lg font-semibold text-white mb-2">Compliance-experts</h3>
+            <p class="text-sm" style="color:#94a3b8;">
+              Diepgaande kennis van AVG, PCI-DSS, HIPAA, NIST en ISO 27001, gekoppeld aan Wazuh-controls voor audit-klare uitrol.
+            </p>
+          </div>
+
+          <div class="rounded-xl p-6 border" style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);">
+            <div class="text-3xl mb-3">🤝</div>
+            <h3 class="text-lg font-semibold text-white mb-2">Zonder gedoe</h3>
+            <p class="text-sm" style="color:#94a3b8;">
+              Facturatie binnen de EU, transparante contracten en één aanspreekpunt. Wij begrijpen de context van uw bedrijf.
+            </p>
+          </div>
+
+          <div class="rounded-xl p-6 border" style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);">
+            <div class="text-3xl mb-3">🇪🇺</div>
+            <h3 class="text-lg font-semibold text-white mb-2">Data in de EU</h3>
+            <p class="text-sm" style="color:#94a3b8;">
+              Uw infrastructuur en logs blijven binnen de EU. Ondubbelzinnige AVG-compliance zonder internationale gegevensoverdracht.
+            </p>
+          </div>
+
+          <div class="rounded-xl p-6 border" style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);">
+            <div class="text-3xl mb-3">⚡</div>
+            <h3 class="text-lg font-semibold text-white mb-2">Incidentrespons</h3>
+            <p class="text-sm" style="color:#94a3b8;">
+              Wanneer een kritieke melding afgaat, reageren wij snel — geen anonieme ticketwachtrijen, geen intercontinentale wachttijden.
+            </p>
+          </div>
+
+          <div class="rounded-xl p-6 border" style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);">
+            <div class="text-3xl mb-3">🎓</div>
+            <h3 class="text-lg font-semibold text-white mb-2">Team-empowerment</h3>
+            <p class="text-sm" style="color:#94a3b8;">
+              Trainingssessies, documentatie en support zodat uw team Wazuh met vertrouwen en zelfstandig kan beheren.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <div style="height:60px;overflow:hidden;line-height:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+      <polygon points="0,0 1440,0 1440,60" fill="#0f1a30"/>
+      <polygon points="0,0 1440,60 0,60" fill="#020817"/>
+    </svg>
+  </div>
+
+  <!-- Why Wazuh Section -->
+  <section class="wz-grid py-20 relative overflow-hidden" style="background-color:#020817;">
+    <div class="absolute -top-32 -right-32 w-[600px] h-[600px] pointer-events-none rounded-full blur-3xl" style="background:radial-gradient(circle,rgba(139,92,246,0.14),transparent 65%);"></div>
+    <div class="absolute top-0 inset-x-0 h-40 pointer-events-none" style="background:linear-gradient(to bottom,rgba(139,92,246,0.1),transparent);"></div>
+    <div class="relative z-10">
+    <div class="max-w-7xl mx-auto px-4 md:px-12 lg:px-24">
+      <div class="text-center mb-16">
+        <h2 id="por-que-wazuh" class="text-3xl md:text-4xl font-bold text-white mb-4">
+          Waarom <span style="background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Wazuh</span>?
+        </h2>
+        <p class="text-xl text-white/90 max-w-3xl mx-auto">
+          Het open source-alternatief voor commerciële SIEM's die 10x meer kosten
+        </p>
+      </div>
+
+      <div style="background-color: #10181f;" class="rounded-2xl shadow-xl overflow-hidden mb-12 border border-blue-500/50">
+        <table class="w-full border-collapse">
+          <thead class="text-white" style="background-color: #1a2332;">
+            <tr>
+              <th class="px-6 py-4 text-left font-semibold border border-blue-500/50">Kenmerk</th>
+              <th class="px-6 py-4 text-center font-semibold border border-blue-500/50">Wazuh</th>
+              <th class="px-6 py-4 text-center font-semibold border border-blue-500/50">Commerciële SIEM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background-color: #10181f;">
+              <td class="px-6 py-4 font-medium text-white border border-blue-500/50">Licentiekosten</td>
+              <td class="px-6 py-4 text-center text-green-400 font-semibold border border-blue-500/50">0 €</td>
+              <td class="px-6 py-4 text-center text-red-400 font-semibold border border-blue-500/50">15.000-50.000 €/jaar</td>
+            </tr>
+            <tr style="background-color: #10181f;">
+              <td class="px-6 py-4 font-medium text-white border border-blue-500/50">Implementatie</td>
+              <td class="px-6 py-4 text-center text-white font-medium border border-blue-500/50">1.500-7.000 €</td>
+              <td class="px-6 py-4 text-center text-white font-medium border border-blue-500/50">10.000-30.000 €</td>
+            </tr>
+            <tr style="background-color: #10181f;">
+              <td class="px-6 py-4 font-medium text-white border border-blue-500/50">24/7 support</td>
+              <td class="px-6 py-4 text-center font-bold text-xl border border-blue-500/50" style="color:#a78bfa;">✓</td>
+              <td class="px-6 py-4 text-center font-bold text-xl border border-blue-500/50" style="color:#a78bfa;">✓</td>
+            </tr>
+            <tr style="background-color: #10181f;">
+              <td class="px-6 py-4 font-medium text-white border border-blue-500/50">Compliance-klaar</td>
+              <td class="px-6 py-4 text-center font-bold text-xl border border-blue-500/50" style="color:#a78bfa;">✓</td>
+              <td class="px-6 py-4 text-center font-bold text-xl border border-blue-500/50" style="color:#a78bfa;">✓</td>
+            </tr>
+            <tr style="background-color: #10181f;">
+              <td class="px-6 py-4 font-medium text-white border border-blue-500/50">Open source</td>
+              <td class="px-6 py-4 text-center font-bold text-xl border border-blue-500/50" style="color:#a78bfa;">✓</td>
+              <td class="px-6 py-4 text-center text-red-400 font-bold text-xl border border-blue-500/50">✗</td>
+            </tr>
+            <tr style="background-color: #10181f;">
+              <td class="px-6 py-4 font-medium text-white border border-blue-500/50">Geen vendor lock-in</td>
+              <td class="px-6 py-4 text-center font-bold text-xl border border-blue-500/50" style="color:#a78bfa;">✓</td>
+              <td class="px-6 py-4 text-center text-red-400 font-bold text-xl border border-blue-500/50">✗</td>
+            </tr>
+            <tr style="background-color: #10181f;">
+              <td class="px-6 py-4 font-medium text-white border border-blue-500/50">Aanpasbaarheid</td>
+              <td class="px-6 py-4 text-center font-semibold border border-blue-500/50" style="color:#a78bfa;">Volledig</td>
+              <td class="px-6 py-4 text-center text-yellow-400 font-semibold border border-blue-500/50">Beperkt</td>
+            </tr>
+            <tr style="background-color: #10181f;">
+              <td class="px-6 py-4 font-medium text-white border border-blue-500/50">Onbeperkt aantal agents</td>
+              <td class="px-6 py-4 text-center font-bold text-xl border border-blue-500/50" style="color:#a78bfa;">✓</td>
+              <td class="px-6 py-4 text-center text-red-400 font-semibold border border-blue-500/50">Kosten per agent</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+  </section>
+
+
+  <div style="height:60px;overflow:hidden;line-height:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+      <polygon points="0,0 1440,0 0,60" fill="#020817"/>
+      <polygon points="0,60 1440,0 1440,60" fill="#0f1a30"/>
+    </svg>
+  </div>
+
+  <!-- FAQ Section -->
+  <section class="wz-grid py-20 relative overflow-hidden" style="background-color:#0f1a30;">
+    <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[400px] pointer-events-none rounded-full blur-3xl" style="background:radial-gradient(ellipse,rgba(96,165,250,0.08),transparent 65%);"></div>
+    <div class="absolute top-0 inset-x-0 h-40 pointer-events-none" style="background:linear-gradient(to bottom,rgba(96,165,250,0.06),transparent);"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 md:px-12 lg:px-24">
+      <h2 id="faq" class="text-3xl md:text-4xl font-bold text-white text-center mb-4"><span style="background:linear-gradient(135deg,#60a5fa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Veelgestelde vragen</span> over Wazuh</h2>
+      <p class="text-white/70 text-center mb-12">Alles wat u moet weten voordat u Wazuh uitrolt</p>
+      <div class="space-y-4">
+
+        <details class="group bg-white/5 rounded-xl border border-white/10 hover:border-white/20 group-open:border-white/30 transition-all duration-300">
+          <summary class="cursor-pointer px-6 py-5 flex items-center justify-between font-semibold text-base md:text-lg text-white">
+            <span class="flex-1 min-w-0 pr-4">Helpt Wazuh echt bij compliance in beveiliging?</span>
+          </summary>
+          <div class="px-6 pb-6 text-white/70 leading-relaxed">
+            Ja. Wazuh biedt de technische mogelijkheden om aan meerdere controlefamilies te voldoen: logging van gebeurtenissen, incidentbeheer, monitoring van bestandsintegriteit en back-ups — in directe overeenstemming met AVG, PCI-DSS, HIPAA, NIST en ISO 27001. Onze implementatie omvat de specifieke configuratie en documentatie die nodig zijn voor audits.
+          </div>
+        </details>
+
+        <details class="group bg-white/5 rounded-xl border border-white/10 hover:border-white/20 group-open:border-white/30 transition-all duration-300">
+          <summary class="cursor-pointer px-6 py-5 flex items-center justify-between font-semibold text-base md:text-lg text-white">
+            <span class="flex-1 min-w-0 pr-4">Hoe lang duurt een volledige uitrol?</span>
+          </summary>
+          <div class="px-6 pb-6 text-white/70 leading-relaxed">
+            Tussen 4 en 6 weken, van de eerste audit tot volledige monitoring. Het exacte tijdschema hangt af van het aantal servers, de complexiteit van de infrastructuur en uw specifieke compliance-eisen.
+          </div>
+        </details>
+
+        <details class="group bg-white/5 rounded-xl border border-white/10 hover:border-white/20 group-open:border-white/30 transition-all duration-300">
+          <summary class="cursor-pointer px-6 py-5 flex items-center justify-between font-semibold text-base md:text-lg text-white">
+            <span class="flex-1 min-w-0 pr-4">Hoe verhoudt Wazuh zich tot oplossingen zoals Splunk of QRadar?</span>
+          </summary>
+          <div class="px-6 pb-6 text-white/70 leading-relaxed">
+            Wazuh biedt vergelijkbare mogelijkheden (SIEM, dreigingsdetectie, compliance) maar is 100 % open source zonder licentiekosten — een besparing van 15.000-50.000 €/jaar. Commerciële oplossingen hebben soms verfijndere interfaces, maar de kernfunctionaliteit is gelijkwaardig.
+          </div>
+        </details>
+
+        <details class="group bg-white/5 rounded-xl border border-white/10 hover:border-white/20 group-open:border-white/30 transition-all duration-300">
+          <summary class="cursor-pointer px-6 py-5 flex items-center justify-between font-semibold text-base md:text-lg text-white">
+            <span class="flex-1 min-w-0 pr-4">Is training voor ons IT-team inbegrepen?</span>
+          </summary>
+          <div class="px-6 pb-6 text-white/70 leading-relaxed">
+            Ja. Al onze pakketten omvatten training: 2 dagen in het Basis-pakket en tot 10 uur in het Compleet-pakket. We behandelen alles van dagelijks gebruik tot incidentrespons en compliance-rapportage.
+          </div>
+        </details>
+
+        <details class="group bg-white/5 rounded-xl border border-white/10 hover:border-white/20 group-open:border-white/30 transition-all duration-300">
+          <summary class="cursor-pointer px-6 py-5 flex items-center justify-between font-semibold text-base md:text-lg text-white">
+            <span class="flex-1 min-w-0 pr-4">Kan ik Wazuh zelf uitrollen?</span>
+          </summary>
+          <div class="px-6 pb-6 text-white/70 leading-relaxed">
+            Absoluut — Wazuh is open source en goed gedocumenteerd. U schakelt onze diensten in als: (1) u geen tijd heeft om het te doen, (2) u een gecertificeerde, audit-klare compliance-configuratie nodig heeft, (3) u doorlopende professionele support wilt, of (4) u een complexe infrastructuur heeft die gespecialiseerde expertise vereist.
+          </div>
+        </details>
+
+        <details class="group bg-white/5 rounded-xl border border-white/10 hover:border-white/20 group-open:border-white/30 transition-all duration-300">
+          <summary class="cursor-pointer px-6 py-5 flex items-center justify-between font-semibold text-base md:text-lg text-white">
+            <span class="flex-1 min-w-0 pr-4">Wat als ik Wazuh al heb geïnstalleerd maar hulp nodig heb?</span>
+          </summary>
+          <div class="px-6 pb-6 text-white/70 leading-relaxed">
+            We kunnen uw huidige installatie auditen, verbeteringen en optimalisaties identificeren, compliance-controls configureren of gewoon doorlopende support bieden. Neem contact op en we beoordelen uw specifieke situatie.
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+
+  <div style="height:60px;overflow:hidden;line-height:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+      <polygon points="0,0 1440,0 1440,60" fill="#0f1a30"/>
+      <polygon points="0,0 1440,60 0,60" fill="#020817"/>
+    </svg>
+  </div>
+
+  <!-- Final CTA -->
+  <section id="cta-wazuh" class="wz-grid py-20 relative overflow-hidden" style="background-color:#020817;">
+    <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(99,102,241,0.2),transparent);"></div>
+
+    <div class="relative z-10">
+    <div class="max-w-4xl mx-auto px-4 md:px-12 text-center text-white">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6">
+        Klaar om <span style="background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Wazuh uit te rollen</span>?
+      </h2>
+      <p class="text-xl mb-8 text-white/90">
+        Boek een gratis consult van 30 minuten om uw infrastructuur te beoordelen
+        en een vrijblijvende offerte te ontvangen.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/presupuesto?plan=wazuh-consultoria"
+          style="color: black;"
+          class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-white text-[#0052cc] hover:bg-blue-50 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+        >
+          Boek een gratis consult
+        </a>
+        <a
+          href="https://www.youtube.com/watch?v=g9zpIOGCK5g"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="color: white;"
+          class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border-2 border-white rounded-xl transition-all duration-200"
+        >
+          Bekijk tutorials op YouTube
+        </a>
+      </div>
+
+      <div class="mt-12 pt-8 border-t border-white/20 flex flex-col items-center gap-2">
+        <p class="text-white/90 text-sm font-medium text-center">
+          💡 Wij bouwen ook AI-automatiseringsoplossingen om de efficiëntie van uw bedrijf te verhogen
+        </p>
+        <a href="/presupuesto?plan=automatizacion" class="text-white hover:text-white/80 underline text-sm font-medium">
+          Bekijk automatiseringsdiensten →
+        </a>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- FAQ Schema JSON-LD -->
+  <script is:inline type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "nl",
+    "url": "https://aisecurity.es/nl/wazuh",
+    "mainEntity": [
+      { "@type": "Question", "name": "Helpt Wazuh echt bij compliance in beveiliging?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Wazuh biedt de technische mogelijkheden om aan meerdere controlefamilies te voldoen: logging van gebeurtenissen, incidentbeheer, monitoring van bestandsintegriteit en back-ups, in directe overeenstemming met AVG, PCI-DSS, HIPAA, NIST en ISO 27001. De implementatie omvat de specifieke configuratie en documentatie voor audits." } },
+      { "@type": "Question", "name": "Hoe lang duurt een volledige Wazuh-uitrol?", "acceptedAnswer": { "@type": "Answer", "text": "Tussen 4 en 6 weken, van de eerste audit tot volledige monitoring, afhankelijk van het aantal servers en de complexiteit van de infrastructuur." } },
+      { "@type": "Question", "name": "Hoe verhoudt Wazuh zich tot oplossingen zoals Splunk of QRadar?", "acceptedAnswer": { "@type": "Answer", "text": "Wazuh is 100 % open source zonder licentiekosten, een besparing van 15.000-50.000 €/jaar ten opzichte van commerciële oplossingen, en biedt gelijkwaardige mogelijkheden voor SIEM, dreigingsdetectie en compliance." } },
+      { "@type": "Question", "name": "Omvat de Wazuh-implementatie training voor het IT-team?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Alle pakketten omvatten training: 2 dagen in het Basis-pakket en tot 10 uur in het Compleet-pakket, met dagelijks gebruik, incidentrespons en compliance-rapportage." } },
+      { "@type": "Question", "name": "Kan ik Wazuh zelf uitrollen?", "acceptedAnswer": { "@type": "Answer", "text": "Ja, Wazuh is open source en goed gedocumenteerd. Een professionele dienst is aan te raden als u te weinig tijd heeft, een gecertificeerde compliance-configuratie nodig heeft, doorlopende support wilt of een complexe infrastructuur heeft." } },
+      { "@type": "Question", "name": "Wat als ik Wazuh al heb geïnstalleerd maar hulp nodig heb?", "acceptedAnswer": { "@type": "Answer", "text": "We kunnen uw huidige installatie auditen, verbeteringen identificeren, compliance-controls configureren of doorlopende support bieden, afgestemd op uw specifieke situatie." } }
+    ]
+  }</script>
+
+  <!-- Service Schema JSON-LD — Wazuh entity (provider linked to #organization) -->
+  <script is:inline type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": "https://aisecurity.es/nl/wazuh#service",
+    "name": "Wazuh-implementatie & beheerde Wazuh (SIEM/XDR)",
+    "serviceType": "Implementatie en beheer van Wazuh (open source SIEM/XDR)",
+    "description": "Professionele Wazuh-implementatie voor SIEM, dreigingsdetectie en compliance, plus een volledig beheerde dienst met doorlopende support en onderhoud. Op afstand wereldwijd geleverd.",
+    "provider": { "@id": "https://aisecurity.es/#organization" },
+    "areaServed": "Worldwide",
+    "url": "https://aisecurity.es/nl/wazuh",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Wazuh Basis",
+        "description": "Implementatie voor basisomgevingen (tot 10 agents), training inbegrepen.",
+        "priceCurrency": "EUR",
+        "priceSpecification": { "@type": "PriceSpecification", "minPrice": 999, "maxPrice": 1499, "priceCurrency": "EUR" },
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "@type": "Offer",
+        "name": "Wazuh Compleet",
+        "description": "Volledige implementatie met gecertificeerde compliance-configuratie en uitgebreide training.",
+        "priceCurrency": "EUR",
+        "priceSpecification": { "@type": "PriceSpecification", "minPrice": 1999, "maxPrice": 3999, "priceCurrency": "EUR" },
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "@type": "Offer",
+        "name": "Beheerde Wazuh",
+        "description": "Volledig beheerde dienst met hosting, doorlopende support en onderhoud.",
+        "priceCurrency": "EUR",
+        "priceSpecification": { "@type": "UnitPriceSpecification", "price": 200, "priceCurrency": "EUR", "unitCode": "MON", "unitText": "per maand" },
+        "availability": "https://schema.org/InStock"
+      }
+    ]
+  }</script>
+
+  <!-- ══ MODAL: request a Wazuh demo ══ -->
+  <div id="wazuh-demo-modal" class="fixed inset-0 z-[9998] hidden items-center justify-center p-4" style="background:rgba(2,6,16,0.78);backdrop-filter:blur(4px);">
+    <div id="wazuh-demo-card" role="dialog" aria-modal="true" aria-label="Een Wazuh-demo aanvragen" style="width:min(460px,calc(100vw - 2rem));background:linear-gradient(155deg,#0b1020 0%,#111a33 60%,#0b1020 100%);border:1px solid rgba(99,102,241,0.35);border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,0.7),0 0 60px -20px rgba(99,102,241,0.5);overflow:hidden;">
+      <div style="height:4px;background:linear-gradient(90deg,#3b82f6,#6366f1,#a78bfa);"></div>
+      <div style="padding:1.8rem 1.8rem 2rem;position:relative;">
+        <button id="wazuh-demo-close" type="button" aria-label="Sluiten" style="position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+
+        <div style="width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);margin-bottom:16px;">
+          <svg width="26" height="26" fill="none" stroke="#818cf8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+
+        <h3 style="font-size:1.35rem;font-weight:800;color:#f0f6ff;margin:0 0 8px;line-height:1.2;">Live Wazuh-demo</h3>
+        <p style="font-size:0.92rem;line-height:1.6;color:#94a3b8;margin:0 0 18px;">Laat uw e-mail achter en we nemen contact op om u een <strong style="color:#cbd5e1;">live demo</strong> te geven en Wazuh in actie te tonen voor uw bedrijf.</p>
+
+        <form id="wazuh-demo-form">
+          <input type="email" id="wazuh-demo-email" name="email" required placeholder="u@bedrijf.com" autocomplete="email"
+            style="width:100%;padding:13px 16px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.14);color:#f0f6ff;font-size:0.95rem;outline:none;margin-bottom:12px;" />
+          <div id="wazuh-demo-msg" style="display:none;font-size:0.85rem;margin-bottom:12px;"></div>
+          <button type="submit" id="wazuh-demo-submit"
+            style="width:100%;padding:14px;border-radius:12px;border:none;cursor:pointer;font-weight:800;font-size:0.95rem;color:#fff;background:linear-gradient(135deg,#3b82f6,#6366f1);box-shadow:0 10px 30px -10px rgba(99,102,241,0.7);">
+            Toon mij de demo →
+          </button>
+        </form>
+        <p style="font-size:0.72rem;color:#64748b;text-align:center;margin:14px 0 0;">Zonder verplichting · We nemen alleen contact op over de demo</p>
+      </div>
+    </div>
+  </div>
+</WazuhLayout>
+
+<script>
+  (function () {
+    const modal = document.getElementById('wazuh-demo-modal');
+    const card = document.getElementById('wazuh-demo-card');
+    const openBtn = document.getElementById('wazuh-demo-btn');
+    const closeBtn = document.getElementById('wazuh-demo-close');
+    const form = document.getElementById('wazuh-demo-form');
+    const emailInput = document.getElementById('wazuh-demo-email');
+    const submitBtn = document.getElementById('wazuh-demo-submit');
+    const msg = document.getElementById('wazuh-demo-msg');
+    if (!modal || !openBtn) return;
+
+    function open() { modal.classList.remove('hidden'); modal.classList.add('flex'); document.body.style.overflow = 'hidden'; setTimeout(() => emailInput && emailInput.focus(), 50); }
+    function close() { modal.classList.add('hidden'); modal.classList.remove('flex'); document.body.style.overflow = ''; }
+
+    openBtn.addEventListener('click', open);
+    closeBtn && closeBtn.addEventListener('click', close);
+    modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+    form && form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = (emailInput.value || '').trim();
+      msg.style.display = 'none';
+      if (!email || !email.includes('@')) {
+        emailInput.style.borderColor = 'rgba(239,68,68,0.6)';
+        return;
+      }
+      emailInput.style.borderColor = 'rgba(255,255,255,0.14)';
+      submitBtn.disabled = true; submitBtn.textContent = 'Versturen...';
+      try {
+        const fd = new FormData();
+        fd.append('email', email);
+        const res = await fetch('/api/demo-wazuh', { method: 'POST', body: fd });
+        if (res.ok) {
+          form.style.display = 'none';
+          msg.style.display = 'block';
+          msg.style.color = '#6ee7b7';
+          msg.innerHTML = '✓ Gelukt! We nemen zeer binnenkort contact op om u de live Wazuh-demo te tonen.';
+        } else {
+          const d = await res.json().catch(() => ({}));
+          msg.style.display = 'block'; msg.style.color = '#fca5a5';
+          msg.textContent = d.error || 'Verzenden mislukt. Probeer het opnieuw.';
+          submitBtn.disabled = false; submitBtn.textContent = 'Toon mij de demo →';
+        }
+      } catch {
+        msg.style.display = 'block'; msg.style.color = '#fca5a5';
+        msg.textContent = 'Verbindingsfout. Mail ons op info@aisecurity.es';
+        submitBtn.disabled = false; submitBtn.textContent = 'Toon mij de demo →';
+      }
+    });
+  })();
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const wazuhDemoTabs = document.querySelectorAll('.wazuh-demo-tab');
+    const wazuhDemoContents = document.querySelectorAll('.wazuh-demo-content');
+
+    wazuhDemoTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetTab = tab.getAttribute('data-tab');
+
+        wazuhDemoTabs.forEach(t => {
+          t.classList.remove('text-blue-600', 'border-blue-600');
+          t.classList.add('text-gray-600', 'border-transparent');
+        });
+
+        tab.classList.add('text-blue-600', 'border-blue-600');
+        tab.classList.remove('text-gray-600', 'border-transparent');
+
+        wazuhDemoContents.forEach(content => {
+          content.classList.add('hidden');
+        });
+
+        const targetContent = document.getElementById(targetTab!);
+        if (targetContent) {
+          targetContent.classList.remove('hidden');
+        }
+      });
+    });
+  });
+
+  const sidenav = document.getElementById('wz-sidenav');
+  const sectionIds = ['precios','por-que-wazuh','monitorización','por-que-espana','faq','cta-wazuh'];
+  const dotColors = {
+    'precios':        { border:'#60a5fa', bg:'rgba(96,165,250,0.85)' },
+    'por-que-wazuh':  { border:'#818cf8', bg:'rgba(129,140,248,0.85)' },
+    'monitorización': { border:'#22d3ee', bg:'rgba(34,211,238,0.85)' },
+    'por-que-espana': { border:'#60a5fa', bg:'rgba(96,165,250,0.85)' },
+    'cta-wazuh':      { border:'#a78bfa', bg:'rgba(167,139,250,0.85)' },
+    'faq':            { border:'#4ade80', bg:'rgba(74,222,128,0.85)' },
+  };
+
+  function setActive(id) {
+    document.querySelectorAll('.wz-sn-link').forEach(link => {
+      const dot = link.querySelector('.wz-sn-dot');
+      const target = link.dataset.wzTarget;
+      const isActive = target === id;
+      link.classList.toggle('active', isActive);
+      if (dot && dotColors[target]) {
+        dot.style.borderColor = dotColors[target].border;
+        dot.style.background = isActive ? dotColors[target].bg : '#020817';
+        dot.style.boxShadow = isActive ? `0 0 10px ${dotColors[target].border}` : 'none';
+        dot.style.transform = isActive ? 'scale(1.5)' : 'scale(1)';
+      }
+    });
+  }
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY < 200) {
+      sidenav?.classList.add('hidden-nav');
+    } else {
+      sidenav?.classList.remove('hidden-nav');
+    }
+  }, { passive: true });
+  if (window.scrollY < 200) sidenav?.classList.add('hidden-nav');
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) setActive(entry.target.id);
+    });
+  }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+
+  sectionIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) obs.observe(el);
+  });
+</script>
+
+<style>
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  details summary::after {
+    content: '+';
+    float: right;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  details[open] summary::after {
+    content: '−';
+  }
+</style>
