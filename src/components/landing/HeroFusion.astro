@@ -139,6 +139,11 @@
     const toast = document.getElementById('talk-toast');
     document.getElementById('talk-voice')?.addEventListener('click', () => {
       ga('talk_voice'); closeModal();
+      // Avisa por correo de que alguien quiere hablar por voz
+      try {
+        const blob = new Blob([JSON.stringify({ page: location.pathname })], { type: 'application/json' });
+        navigator.sendBeacon('/api/voice-notify', blob);
+      } catch (e) {}
       // Oculta el bot de chat para que no se solape con el widget de voz (ambos van abajo-derecha)
       const mascot = document.getElementById('mascot-widget');
       if (mascot) mascot.style.display = 'none';

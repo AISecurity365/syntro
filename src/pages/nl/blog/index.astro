@@ -1,0 +1,274 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+const title = "Technische blog — Wazuh, SIEM & AI voor IT | AI Security";
+const description = "Praktische gidsen over Wazuh, SIEM en AI toegepast op IT-systemen en cybersecurity. Echte configuraties en concrete tutorials, zonder overbodige theorie.";
+const canonical = "https://aisecurity.es/nl/blog";
+
+// Naar het Nederlands vertaalde artikelen (Wazuh-cluster) — groeit gaandeweg
+const articles = [
+  {
+    slug: "que-es-wazuh-para-que-sirve",
+    title: "Wat is Wazuh en waarvoor dient het: open source SIEM/XDR [2026]",
+    description: "Wat Wazuh is, waarvoor het dient en hoe het uw bedrijf beschermt: dreigingsdetectie, compliance, logmonitoring op Linux en Windows. Gids met echte voorbeelden.",
+    publishDate: "2026-02-12",
+    readTime: "10 min",
+    tags: ["Wazuh", "SIEM", "XDR", "Cybersecurity", "Open Source", "Monitoring"],
+    category: "Wazuh & Beveiliging"
+  },
+].sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
+
+const categories = [
+  { value: "All", label: "Alles" },
+  { value: "Wazuh & Beveiliging", label: "Wazuh & Beveiliging" },
+];
+
+const hasArticles = articles.length > 0;
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+  <!-- Hero Section -->
+  <section class="py-16 md:py-20 relative overflow-hidden" style="background:#050f1f;border-bottom:1px solid rgba(255,255,255,0.08);">
+    <canvas id="blog-hero-canvas" class="absolute inset-0 w-full h-full" style="opacity:0.5;"></canvas>
+    <div class="absolute inset-x-0 bottom-0 h-16" style="background:linear-gradient(to bottom,transparent,#020817);"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm text-white rounded-full text-sm font-semibold border border-white/20 mb-6">
+          <span class="text-xl">📰</span>
+          Technische blog
+        </div>
+
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+          Nieuws & tutorials
+        </h1>
+
+        <p class="text-xl text-white/80 leading-relaxed">
+          Technische artikelen over <strong class="text-white">AI toegepast op IT-systemen</strong> en <strong class="text-white">cybersecurity met Wazuh</strong>.
+          Praktische gidsen, echte configuraties en use cases zonder overbodige theorie.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+  (function() {
+    const canvas = document.getElementById('blog-hero-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+    const NODES = 60, MAX_DIST = 140;
+    const nodes = Array.from({ length: NODES }, () => ({
+      x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 1.5 + 1, phase: Math.random() * Math.PI * 2,
+    }));
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      nodes.forEach(n => {
+        n.x += n.vx; n.y += n.vy; n.phase += 0.02;
+        if (n.x < 0 || n.x > canvas.width) n.vx *= -1;
+        if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+      });
+      for (let i = 0; i < NODES; i++) {
+        for (let j = i + 1; j < NODES; j++) {
+          const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MAX_DIST) {
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(96,165,250,${(1 - dist / MAX_DIST) * 0.25})`;
+            ctx.lineWidth = 0.8; ctx.stroke();
+          }
+        }
+      }
+      nodes.forEach(n => {
+        const pulse = 0.5 + 0.5 * Math.sin(n.phase);
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r + pulse * 0.8, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(129,140,248,${0.4 + pulse * 0.4})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+  </script>
+
+  {hasArticles && (
+    <section class="py-6 border-b sticky top-[73px] z-40" style="background:#020817;border-color:rgba(255,255,255,0.08)">
+      <div class="max-w-7xl mx-auto px-6 md:px-12">
+        <div class="flex flex-wrap gap-2">
+          {categories.map((category, index) => (
+            <button
+              data-category={category.value}
+              class={`px-4 py-1.5 rounded-full font-medium text-sm transition-all duration-200 ${
+                index === 0
+                  ? 'bg-accent-600 text-white'
+                  : 'text-white/60 border hover:text-white hover:border-white/30'
+              }`}
+              style={index !== 0 ? 'border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.05)' : ''}>
+              {category.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Articles Grid -->
+  <section class="py-16 md:py-20 relative overflow-hidden" style="background:#020817;">
+    <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
+      {hasArticles ? (
+        <>
+          <div class="mb-12 flex items-center justify-between">
+            <p id="article-count" class="text-white/70">
+              <span class="font-semibold text-white">{articles.length}</span> {articles.length === 1 ? 'artikel gepubliceerd' : 'artikelen gepubliceerd'}
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {articles.map(article => (
+              <article
+                class="blog-card group flex flex-col rounded-xl border border-white/10 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:shadow-xl hover:shadow-black/40 cursor-pointer"
+                style="background:rgba(255,255,255,0.04);"
+                data-article-category={article.category}
+                onclick={`window.location.href='/nl/blog/${article.slug}'`}>
+
+                <div class="h-0.5 w-full" style="background:linear-gradient(90deg,#60a5fa,#818cf8)"></div>
+
+                <div class="p-5 flex flex-col flex-1">
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-semibold px-2.5 py-1 rounded-full" style="background:rgba(96,165,250,0.15);color:#93c5fd;">
+                      {article.category}
+                    </span>
+                    <span class="flex items-center gap-1 text-xs text-white/40">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      {article.readTime}
+                    </span>
+                  </div>
+
+                  <a href={`/nl/blog/${article.slug}`} class="block mb-2 group-hover:text-accent-300 transition-colors">
+                    <p class="font-bold text-white leading-snug" style="font-size:1rem;">
+                      {article.title}
+                    </p>
+                  </a>
+
+                  <p class="text-white/55 text-sm leading-relaxed mb-4 flex-1" style="font-size:0.8rem;">
+                    {article.description}
+                  </p>
+
+                  <div class="flex flex-wrap gap-1.5 mb-4">
+                    {article.tags.slice(0, 3).map(tag => (
+                      <span class="text-xs text-white/40 bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div class="pt-3 border-t border-white/10">
+                    <time class="text-xs text-white/35" datetime={article.publishDate}>
+                      {new Date(article.publishDate).toLocaleDateString('nl-NL', { year: 'numeric', month: 'short', day: 'numeric' })}
+                    </time>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div id="empty-state" class="hidden text-center py-16">
+            <div class="text-6xl mb-4">📭</div>
+            <h3 class="text-xl font-semibold text-white mb-2">Geen artikelen in deze categorie</h3>
+            <p class="text-white/70">Probeer een andere categorie of kom later terug</p>
+          </div>
+        </>
+      ) : (
+        <div class="max-w-2xl mx-auto text-center py-12 md:py-16">
+          <div class="text-6xl mb-6">🌐</div>
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">
+            De Nederlandse artikelen komen eraan
+          </h2>
+          <p class="text-lg text-white/70 leading-relaxed mb-10">
+            We vertalen onze technische artikelen naar het Nederlands. Nieuwe gidsen over
+            Wazuh, SIEM en IT-beveiliging komen binnenkort.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href="/nl/wazuh"
+              class="inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-white transition-all duration-200 hover:-translate-y-0.5"
+              style="background:#2563eb;">
+              Ontdek Wazuh
+            </a>
+            <a
+              href="/blog"
+              class="inline-flex items-center gap-1 text-white/70 hover:text-white font-medium transition-colors">
+              Lees onze Spaanse artikelen →
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const categoryButtons = document.querySelectorAll('[data-category]');
+    const articles = document.querySelectorAll('[data-article-category]');
+    const emptyState = document.getElementById('empty-state');
+    const articleCount = document.getElementById('article-count');
+
+    if (categoryButtons.length === 0) return;
+
+    const updateCount = (count: number) => {
+      if (articleCount) {
+        articleCount.innerHTML = `<span class="font-semibold text-white">${count}</span> ${count === 1 ? 'artikel gepubliceerd' : 'artikelen gepubliceerd'}`;
+      }
+    };
+
+    categoryButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const selectedCategory = button.getAttribute('data-category');
+
+        categoryButtons.forEach(btn => {
+          if (btn === button) {
+            btn.classList.add('bg-accent-600', 'text-white');
+            btn.classList.remove('text-white/60', 'border', 'hover:text-white', 'hover:border-white/30');
+            (btn as HTMLElement).style.borderColor = '';
+            (btn as HTMLElement).style.background = '';
+          } else {
+            btn.classList.remove('bg-accent-600', 'text-white');
+            btn.classList.add('text-white/60', 'border', 'hover:text-white', 'hover:border-white/30');
+            (btn as HTMLElement).style.borderColor = 'rgba(255,255,255,0.15)';
+            (btn as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
+          }
+        });
+
+        let visibleCount = 0;
+        articles.forEach(article => {
+          const articleCategory = article.getAttribute('data-article-category');
+          if (selectedCategory === 'All' || articleCategory === selectedCategory) {
+            article.classList.remove('hidden');
+            visibleCount++;
+          } else {
+            article.classList.add('hidden');
+          }
+        });
+
+        updateCount(visibleCount);
+
+        if (visibleCount === 0) {
+          emptyState?.classList.remove('hidden');
+        } else {
+          emptyState?.classList.add('hidden');
+        }
+      });
+    });
+  });
+</script>
