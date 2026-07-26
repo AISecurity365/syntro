@@ -73,7 +73,11 @@
       "WebFetch(domain:wazuh.com)",
       "WebFetch(domain:wazuh-documentation-49-master.readthedocs.io)",
       "WebFetch(domain:opennix.org)",
-      "Bash(xargs -n1 basename)"
+      "Bash(xargs -n1 basename)",
+      "Bash(ls public/favicon.ico)",
+      "Bash(command -v magick convert)",
+      "Bash(not exist *)",
+      "PowerShell(if \\(-not \\(Test-Path \"C:\\\\Users\\\\Jul\\\\.claude\\\\commands\"\\)\\) { New-Item -ItemType Directory -Path \"C:\\\\Users\\\\Jul\\\\.claude\\\\commands\" })"
     ],
     "deny": [],
     "ask": [],
