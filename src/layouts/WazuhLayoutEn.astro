@@ -3,6 +3,7 @@ import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/global/FooterEn.astro";
 import Analytics from "@vercel/analytics/astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
+import { localizePath, localesFor } from "../i18n/config";
 
 interface Props {
   title?: string;
@@ -17,6 +18,12 @@ const {
   canonical = "https://aisecurity.es/en/wazuh",
   ogImage = "https://aisecurity.es/og-image.png"
 } = Astro.props;
+
+const SITE = "https://aisecurity.es";
+const wazuhAlternates = localesFor("/wazuh").map((l) => ({
+  locale: l,
+  href: `${SITE}${localizePath("/wazuh", l)}`,
+}));
 ---
 
 <html
@@ -29,8 +36,9 @@ const {
       canonical={canonical}
       ogImage={ogImage}
     />
-    <link rel="alternate" hreflang="es" href="https://aisecurity.es/wazuh" />
-    <link rel="alternate" hreflang="en" href="https://aisecurity.es/en/wazuh" />
+    {wazuhAlternates.map((a) => (
+      <link rel="alternate" hreflang={a.locale} href={a.href} />
+    ))}
     <link rel="alternate" hreflang="x-default" href="https://aisecurity.es/wazuh" />
   </head>
   <body class="bg-base-50 flex flex-col min-h-svh">
