@@ -39,6 +39,14 @@ Aplicar este orden al priorizar SEO, contenido y mejoras de páginas.
 
 ## 🤖 Comportamientos automáticos — no esperar instrucción
 
+**📚 Documentación viva — MUY IMPORTANTE. El usuario NO debe mantener el contexto; lo mantienes tú.**
+Cuando en una conversación se produzca un cambio **sustancial y real** que pueda afectar a **futuras conversaciones**, actualiza el documento correspondiente **en el mismo turno** (y, si es una decisión que debo recordar entre sesiones, guárdala también en memoria). Sin esperar que lo pida el usuario.
+
+- **SÍ documentar (sustancial):** cambio de foco/estrategia de negocio · política SEO/GEO o buenas prácticas · alta/baja o cambio profundo de un servicio · precios · decisiones de arquitectura/i18n · cambios en automatizaciones o agentes.
+- **NO documentar (efímero):** cambios visuales/estéticos, copys de una página, ajustes de layout, textos de demo, fixes menores. Nada que no cambie *cómo trabajar* en el futuro.
+- **Dónde (cambio → doc):** foco/servicios/embudos/precios/i18n → `docs/project/contexto.md` · servicio nuevo → seguir `docs/project/nuevo-servicio.md` · SEO/GEO/estrategia/buenas prácticas → `docs/seo/README.md` (+ agente `.claude/agents/seo-specialist.md`) · automatizaciones → `docs/seo/automatizaciones.md` · sistema de contenido → `docs/content/README.md` · decisión que sobrevive entre sesiones → **memoria**.
+- **Test:** "¿alguien que abra el proyecto en frío necesita saber esto para trabajar bien?" Sí → documentar. Es un detalle de esta tarea → no.
+
 **Deploy**: Tras cualquier modificación de código, hacer `git add -A` + commit descriptivo + `git push origin main` sin esperar que el usuario lo pida. El hook Stop también lo hace automáticamente al terminar el turno.
 
 **Blog**: Al crear cualquier archivo en `src/pages/blog/`, añadirlo **en la misma operación** al array manual en `src/pages/blog/index.astro`. No son dos pasos separados — es siempre un único commit.

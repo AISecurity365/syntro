@@ -1,0 +1,247 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="fr"
+  title="Qu'est-ce que Wazuh et à quoi ça sert : SIEM/XDR open source [2026]"
+  description="Ce qu'est Wazuh, à quoi il sert et comment il protège votre entreprise : détection des menaces, conformité, surveillance des journaux sous Linux et Windows. Guide avec exemples réels."
+  publishDate="2026-02-12"
+  author="AI Security"
+  readTime="10 min"
+  tags={["Wazuh", "SIEM", "XDR", "Cybersécurité", "Open Source", "Surveillance"]}
+  canonical="https://aisecurity.es/fr/blog/que-es-wazuh-para-que-sirve"
+  faqSchema={[
+    {
+      question: "Wazuh est-il vraiment gratuit ?",
+      answer: "Oui. Wazuh est entièrement open source sous licence GPLv2, sans frais par agent ni paliers payants. Vous pouvez surveiller un nombre illimité de serveurs et de postes sans coûts de licence ; vous ne payez que l'infrastructure sur laquelle vous l'exécutez ou un support professionnel optionnel."
+    },
+    {
+      question: "Quelle est la différence entre un SIEM et un XDR dans Wazuh ?",
+      answer: "La partie SIEM collecte, stocke et corrèle les journaux pour détecter et investiguer les menaces, tandis que la partie XDR ajoute une détection étendue et une réponse automatisée sur les postes. Wazuh combine les deux dans une seule plateforme : il ne se contente pas de trouver les menaces, il peut aussi y réagir automatiquement."
+    },
+    {
+      question: "Avec quelles normes de conformité Wazuh aide-t-il ?",
+      answer: "Le module Security Configuration Assessment (SCA) de Wazuh audite vos systèmes par rapport aux CIS Benchmarks, PCI-DSS, HIPAA, RGPD et au cadre espagnol ENS. Il produit des rapports avec des étapes de remédiation précises, utiles pour réussir les audits."
+    },
+    {
+      question: "En combien de temps Wazuh détecte-t-il une nouvelle vulnérabilité ?",
+      answer: "Wazuh maintient un inventaire à jour des logiciels installés et le recoupe avec les bases de données CVE en quasi temps réel. Lorsqu'un exploit critique comme Log4j est publié à 10h00, Wazuh peut signaler les serveurs vulnérables concernés en environ 15 minutes."
+    },
+    {
+      question: "Wazuh peut-il répondre aux incidents automatiquement ?",
+      answer: "Oui. Grâce aux règles de réponse active, Wazuh peut bloquer une IP sur le pare-feu, isoler une machine, désactiver un utilisateur ou exécuter des scripts personnalisés. Une règle courante consiste à bloquer une IP pendant 30 minutes après 5 échecs de connexion en 2 minutes."
+    }
+  ]}>
+
+  <p>
+    <strong>Wazuh</strong> est une plateforme de sécurité open source qui fonctionne comme un SIEM et un XDR : elle centralise les journaux de tous vos serveurs et appareils, détecte les menaces en temps réel, surveille l'intégrité des fichiers critiques et génère des alertes automatiques. Elle est gratuite, respecte des normes comme l'ENS et l'ISO 27001, et c'est l'option la plus utilisée par les PME qui ont besoin d'une vraie cybersécurité sans licences payantes.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/fr/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Clé en main</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Besoin de Wazuh dans votre entreprise ?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Nous déployons Wazuh pour vous — ou ajoutons des configurations avancées sur mesure en prestation de conseil. Prêt pour la production et la conformité.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Consultation Wazuh →</span>
+    </a>
+  </aside>
+
+
+  <h2>Qu'est-ce que Wazuh exactement ?</h2>
+
+  <p>
+    <strong>Wazuh</strong> est une plateforme de sécurité <strong>open source</strong> qui combine les capacités d'un <strong>SIEM (Security Information and Event Management)</strong> et d'un <strong>XDR (Extended Detection and Response)</strong>. Cela signifie qu'elle ne se contente pas de collecter et d'analyser les journaux de sécurité : elle peut aussi détecter des menaces avancées et répondre automatiquement aux incidents.
+  </p>
+
+  <p>
+    Dans un environnement d'entreprise typique, vous avez des dizaines (voire des centaines) de serveurs, postes de travail, pare-feux, applications et services cloud. Sans un outil comme Wazuh, surveiller la sécurité de tout cela est pratiquement impossible.
+  </p>
+
+  <!-- Vidéo YouTube -->
+  <div class="my-8">
+    <div class="relative w-full" style="padding-bottom: 56.25%;">
+      <iframe
+        class="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg"
+        src="https://www.youtube.com/embed/g9zpIOGCK5g"
+        title="Qu'est-ce que Wazuh ? Explication complète"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <p class="text-center text-base-600 mt-3 text-sm">
+      Vidéo explicative : ce qu'est Wazuh et comment il fonctionne
+    </p>
+  </div>
+
+  <h2>À quoi sert Wazuh ? Les 6 fonctionnalités clés</h2>
+
+  <h3>Comment fonctionne la centralisation et l'analyse des journaux ?</h3>
+
+  <p>
+    Imaginez devoir consulter chaque jour les journaux de 50 serveurs différents. Sans Wazuh, vous devriez vous connecter à chaque serveur individuellement, parcourir des fichiers de logs bruts (souvent dans des formats différents) et rechercher manuellement des schémas suspects. <strong>Cela peut prendre des heures et est source d'erreurs humaines.</strong>
+  </p>
+
+  <p>
+    Avec Wazuh, tous les journaux de tous vos appareils sont envoyés vers un point central. Vous pouvez :
+  </p>
+
+  <ul>
+    <li><strong>Rechercher des événements</strong> sur tous les serveurs depuis un seul tableau de bord</li>
+    <li><strong>Filtrer par critères précis</strong> : utilisateur, IP, type d'événement, date, gravité</li>
+    <li><strong>Corréler des événements</strong> : détecter qu'un même attaquant teste des identifiants sur plusieurs serveurs</li>
+    <li><strong>Conserver l'historique</strong> : investiguer des incidents survenus il y a des semaines ou des mois</li>
+  </ul>
+
+  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Gain réel :</strong> ce qui prenait 2 à 3 heures à examiner les journaux serveur par serveur prend désormais 5 à 10 minutes depuis le tableau de bord centralisé.</p>
+  </div>
+
+  <h3>Comment Wazuh détecte-t-il les menaces en temps réel ?</h3>
+
+  <p>
+    Wazuh surveille en continu l'activité de vos systèmes et la compare à des bases de données de menaces connues et à des règles de détection. Par exemple :
+  </p>
+
+  <ul>
+    <li><strong>Nouveaux exploits</strong> : si une vulnérabilité (CVE) est publiée et affecte un paquet installé sur vos serveurs, Wazuh vous prévient immédiatement</li>
+    <li><strong>Tentatives d'intrusion</strong> : il détecte la force brute SSH, l'injection SQL, le scan de ports</li>
+    <li><strong>Malwares connus</strong> : il identifie les signatures de malwares et les comportements malveillants</li>
+    <li><strong>Activité anormale</strong> : des utilisateurs qui se connectent à des heures inhabituelles, depuis des pays étranges, ou qui accèdent à des ressources qu'ils n'utilisent jamais</li>
+  </ul>
+
+  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Exemple concret :</strong> un exploit critique pour Apache Log4j sort à 10h00. À 10h15, Wazuh vous a déjà indiqué quels serveurs exécutent des versions vulnérables et nécessitent une mise à jour urgente.</p>
+  </div>
+
+  <h3>Qu'est-ce que le module de surveillance de configuration SCA ?</h3>
+
+  <p>
+    Le module <strong>Security Configuration Assessment (SCA)</strong> de Wazuh examine automatiquement la configuration de vos serveurs et la compare à des référentiels de sécurité officiels tels que :
+  </p>
+
+  <ul>
+    <li><strong>CIS Benchmarks</strong> : guides de configuration sécurisée pour Windows, Linux, bases de données, etc.</li>
+    <li><strong>PCI-DSS</strong> : exigences pour les entreprises qui traitent des paiements par carte</li>
+    <li><strong>HIPAA</strong> : réglementation pour les données de santé</li>
+    <li><strong>RGPD</strong> : protection des données personnelles en Europe</li>
+    <li><strong>ENS</strong> : cadre national de sécurité espagnol (obligatoire pour les entreprises travaillant avec les administrations publiques espagnoles)</li>
+  </ul>
+
+  <p>
+    Le SCA génère des rapports avec des recommandations précises : « Le serveur WEB-01 a SSH configuré pour autoriser l'accès root direct. Recommandation : désactiver PermitRootLogin dans /etc/ssh/sshd_config ».
+  </p>
+
+  <h3>Comment fonctionne l'évaluation des vulnérabilités dans Wazuh ?</h3>
+
+  <p>
+    Wazuh tient un inventaire à jour des logiciels installés sur chaque appareil surveillé et le recoupe avec des bases de données de vulnérabilités connues (CVE). Cela vous permet de :
+  </p>
+
+  <ul>
+    <li><strong>Détecter les ransomwares</strong> et les menaces avancées en temps réel</li>
+    <li><strong>Identifier les logiciels obsolètes</strong> présentant des vulnérabilités connues</li>
+    <li><strong>Prioriser les correctifs</strong> : voir quelles vulnérabilités sont critiques et lesquelles peuvent attendre</li>
+    <li><strong>Générer des rapports de conformité</strong> pour les audits</li>
+  </ul>
+
+  <h3>Qu'est-ce que la surveillance de l'intégrité des fichiers (FIM) de Wazuh ?</h3>
+
+  <p>
+    Le module <strong>File Integrity Monitoring (FIM)</strong> surveille les fichiers système critiques et vous alerte lorsqu'ils sont modifiés, supprimés ou lorsque leurs permissions changent. C'est crucial car :
+  </p>
+
+  <ul>
+    <li><strong>En cas de piratage</strong> : les attaquants modifient souvent des fichiers système pour persister (backdoors, rootkits)</li>
+    <li><strong>Changements non autorisés</strong> : un administrateur modifie des configurations sans les documenter</li>
+    <li><strong>Malware</strong> : de nombreux ransomwares changent les extensions de fichiers ou suppriment les sauvegardes</li>
+  </ul>
+
+  <p>
+    Vous pouvez configurer les répertoires à surveiller : <code>/etc/</code>, <code>/bin/</code>, <code>/usr/sbin/</code>, les fichiers de configuration des applications critiques, etc.
+  </p>
+
+  <div style="background:rgba(239,68,68,0.12);border-left:4px solid #ef4444;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Cas réel :</strong> un attaquant accède à un serveur et modifie <code style="color: #000000; background-color: rgba(0,0,0,0.1);">/etc/passwd</code> pour créer un utilisateur caché. Le FIM détecte le changement immédiatement et génère une alerte de haute priorité.</p>
+  </div>
+
+  <h3>Comment fonctionne la réponse automatisée aux incidents dans Wazuh ?</h3>
+
+  <p>
+    C'est l'une des fonctionnalités les plus puissantes de Wazuh. Il ne se contente pas de détecter les menaces, il peut <strong>réagir automatiquement</strong> :
+  </p>
+
+  <ul>
+    <li><strong>Isoler une machine du réseau</strong> s'il détecte un comportement de ransomware</li>
+    <li><strong>Désactiver un utilisateur</strong> après plusieurs tentatives d'accès échouées</li>
+    <li><strong>Bloquer une IP</strong> sur le pare-feu automatiquement</li>
+    <li><strong>Exécuter des scripts personnalisés</strong> : envoyer une alerte sur Slack/Teams, créer un ticket dans Jira, etc.</li>
+    <li><strong>S'intégrer à des API externes</strong> : TheHive, MISP, VirusTotal, et plus encore</li>
+  </ul>
+
+  <p>
+    Tout cela se configure via des <strong>règles de réponse active</strong>. Par exemple : « Si un utilisateur échoue 5 fois à se connecter en 2 minutes, bloquer son IP pendant 30 minutes ».
+  </p>
+
+  <!-- Diagramme d'architecture -->
+  <div class="my-8">
+    <figure class="bg-white rounded-xl border border-base-200 p-4 shadow-sm">
+      <a href="/images/escalidraw/wazuh-arquitectura.png" target="_blank" class="block overflow-hidden rounded-lg cursor-zoom-in hover:opacity-90 transition-opacity">
+        <img
+          src="/images/escalidraw/wazuh-arquitectura.png"
+          alt="Schéma d'architecture de Wazuh montrant comment il centralise les journaux de plusieurs sources : serveurs Windows, Linux, pare-feux, applications et services cloud"
+          style="width: 180%; max-width: none; margin-left: -15%;"
+          loading="lazy"
+        />
+      </a>
+      <figcaption class="text-center text-base-600 mt-3 text-sm">
+        Architecture de Wazuh : centralisation des journaux de plusieurs sources <span class="text-accent-600">(cliquez pour agrandir)</span>
+      </figcaption>
+    </figure>
+  </div>
+
+
+
+  <h2>Questions fréquentes</h2>
+
+  <h3>Wazuh est-il vraiment gratuit ?</h3>
+  <p>
+    Oui. Wazuh est entièrement open source sous licence GPLv2, sans frais par agent ni paliers payants. Vous pouvez surveiller un nombre illimité de serveurs et de postes sans coûts de licence ; vous ne payez que l'infrastructure sur laquelle vous l'exécutez ou un support professionnel optionnel.
+  </p>
+
+  <h3>Quelle est la différence entre un SIEM et un XDR dans Wazuh ?</h3>
+  <p>
+    La partie SIEM collecte, stocke et corrèle les journaux pour détecter et investiguer les menaces, tandis que la partie XDR ajoute une détection étendue et une réponse automatisée sur les postes. Wazuh combine les deux dans une seule plateforme : il ne se contente pas de trouver les menaces, il peut aussi y réagir automatiquement.
+  </p>
+
+  <h3>Avec quelles normes de conformité Wazuh aide-t-il ?</h3>
+  <p>
+    Le module Security Configuration Assessment (SCA) de Wazuh audite vos systèmes par rapport aux CIS Benchmarks, PCI-DSS, HIPAA, RGPD et au cadre espagnol ENS. Il produit des rapports avec des étapes de remédiation précises, utiles pour réussir les audits.
+  </p>
+
+  <h3>En combien de temps Wazuh détecte-t-il une nouvelle vulnérabilité ?</h3>
+  <p>
+    Wazuh maintient un inventaire à jour des logiciels installés et le recoupe avec les bases de données CVE en quasi temps réel. Lorsqu'un exploit critique comme Log4j est publié à 10h00, Wazuh peut signaler les serveurs vulnérables concernés en environ 15 minutes.
+  </p>
+
+  <h3>Wazuh peut-il répondre aux incidents automatiquement ?</h3>
+  <p>
+    Oui. Grâce aux règles de réponse active, Wazuh peut bloquer une IP sur le pare-feu, isoler une machine, désactiver un utilisateur ou exécuter des scripts personnalisés. Une règle courante consiste à bloquer une IP pendant 30 minutes après 5 échecs de connexion en 2 minutes.
+  </p>
+
+  <hr />
+
+  <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 my-8">
+    <h3 class="text-accent-800 mt-0">Besoin d'aide avec Wazuh ?</h3>
+    <p class="text-base-700 mb-4">
+      Confiez-nous une implémentation professionnelle adaptée à votre environnement.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a style="color: black;" href="/fr/wazuh" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent-700 font-semibold rounded-lg border border-accent-300 hover:bg-accent-50 transition-colors">
+        Implémentation professionnelle
+      </a>
+    </div>
+  </div>
+
+</BlogLayout>
