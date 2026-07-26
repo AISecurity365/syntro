@@ -46,7 +46,7 @@ Cuando en una conversación se produzca un cambio **sustancial y real** que pued
 - **NO documentar (efímero):** cambios visuales/estéticos, copys de una página, ajustes de layout, textos de demo, fixes menores. Nada que no cambie *cómo trabajar* en el futuro.
 - **Dónde (cambio → doc):** foco/servicios/embudos/precios/i18n → `docs/project/contexto.md` · servicio nuevo → seguir `docs/project/nuevo-servicio.md` · SEO/GEO/estrategia/buenas prácticas → `docs/seo/README.md` (+ agente `.claude/agents/seo-specialist.md`) · automatizaciones → `docs/seo/automatizaciones.md` · sistema de contenido → `docs/content/README.md` · decisión que sobrevive entre sesiones → **memoria**.
 - **Test:** "¿alguien que abra el proyecto en frío necesita saber esto para trabajar bien?" Sí → documentar. Es un detalle de esta tarea → no.
-- *(Un hook `Stop` en `.claude/settings.json` refuerza esto: al terminar el turno te recuerda revisarlo. Ignóralo si el cambio fue efímero.)*
+- **Silencio cuando no toca:** si el cambio es efímero o ya está documentado, no documentes **ni lo menciones** — termina el turno sin comentar nada sobre documentación. Solo háblalo cuando de verdad actualices un doc. (No hay hook que lo recuerde; es tu responsabilidad revisarlo en cambios sustanciales.)
 
 **Deploy**: Tras cualquier modificación de código, hacer `git add -A` + commit descriptivo + `git push origin main` sin esperar que el usuario lo pida. El hook Stop también lo hace automáticamente al terminar el turno.
 

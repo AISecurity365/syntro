@@ -77,7 +77,9 @@
       "Bash(ls public/favicon.ico)",
       "Bash(command -v magick convert)",
       "Bash(not exist *)",
-      "PowerShell(if \\(-not \\(Test-Path \"C:\\\\Users\\\\Jul\\\\.claude\\\\commands\"\\)\\) { New-Item -ItemType Directory -Path \"C:\\\\Users\\\\Jul\\\\.claude\\\\commands\" })"
+      "PowerShell(if \\(-not \\(Test-Path \"C:\\\\Users\\\\Jul\\\\.claude\\\\commands\"\\)\\) { New-Item -ItemType Directory -Path \"C:\\\\Users\\\\Jul\\\\.claude\\\\commands\" })",
+      "Bash(jq -e '.' .claude/settings.json)",
+      "Bash(jq -e '.hooks.Stop' .claude/settings.json)"
     ],
     "deny": [],
     "ask": [],
