@@ -8,7 +8,7 @@
  * respuesta y guarda el histórico para ver la tendencia.
  *
  * Proveedores (se activan si existe su env key):
- *   - DEEPSEEK_API_KEY   → deepseek-chat        (https://api.deepseek.com)
+ *   - DEEPSEEK_API_KEY   → deepseek-v4-flash    (https://api.deepseek.com)
  *   - OPENAI_API_KEY     → gpt-4o-mini          (https://api.openai.com)
  *   - PERPLEXITY_API_KEY → sonar                (https://api.perplexity.ai)
  *
@@ -29,7 +29,7 @@ const HISTORY = path.join(__dirname, 'history.json');
 const REPORT = path.join(__dirname, 'last-report.md');
 
 const PROVIDERS = [
-  { id: 'deepseek',   env: 'DEEPSEEK_API_KEY',   url: 'https://api.deepseek.com/chat/completions', model: 'deepseek-chat' },
+  { id: 'deepseek',   env: 'DEEPSEEK_API_KEY',   url: 'https://api.deepseek.com/chat/completions', model: 'deepseek-v4-flash' },
   { id: 'openai',     env: 'OPENAI_API_KEY',     url: 'https://api.openai.com/v1/chat/completions', model: 'gpt-4o-mini' },
   { id: 'perplexity', env: 'PERPLEXITY_API_KEY', url: 'https://api.perplexity.ai/chat/completions',  model: 'sonar' },
 ].filter(p => (process.env[p.env] || '').trim());

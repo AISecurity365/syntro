@@ -55,7 +55,7 @@ async function deepseek(messages) {
   const res = await fetch('https://api.deepseek.com/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_KEY}` },
-    body: JSON.stringify({ model: 'deepseek-chat', temperature: 0.4, messages }),
+    body: JSON.stringify({ model: 'deepseek-v4-flash', temperature: 0.4, messages }),
   });
   if (!res.ok) throw new Error('DeepSeek HTTP ' + res.status);
   const d = await res.json();
