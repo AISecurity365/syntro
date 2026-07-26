@@ -65,6 +65,16 @@ Flujo: análisis previo → desarrollo personalizado → formación del equipo �
 - Objetivo: referente Wazuh/ENS para PyMEs españolas
 - Pricing público en `/wazuh` (ver también memoria del proyecto: precios Wazuh)
 
+**Planes actuales en `/wazuh` (jul 2026):**
+| Plan | Precio | Incluye formación |
+|------|--------|------------------|
+| Básico (≤20 servidores) | 999-1.499€ pago único | 2h online |
+| Wazuh Gestionado | 200€/mes | incluida en onboarding |
+| Completo (≤50 servidores) | 1.999-3.999€ pago único | 4h online |
+| **Consultoría por horas** | sin precio público | sesiones sueltas para instalaciones existentes: revisar reglas, integrar fuentes, depurar agentes |
+
+⚠️ Formación es **online** (no presencial). Si alguien pide presencial, valorar coste adicional de desplazamiento.
+
 **Soporte técnico** (`/soporte-tecnico` + geo): servicio remoto. Foco **secundario** ahora (ver `docs/seo/geo-posicionamiento.md`).
 
 Otros: administración Linux/Windows, backups (Veeam, Restic), afiliación Wazuh (`/wazuh-afiliado`).
