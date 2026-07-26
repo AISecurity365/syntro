@@ -5,6 +5,9 @@ on:
     - cron: '0 9 * * 1'   # Cada lunes 09:00 UTC (tras el informe GA4 plano)
   workflow_dispatch:        # Ejecución manual desde GitHub para probar
 
+permissions:
+  contents: write           # para commitear el histórico del análisis
+
 jobs:
   analyze:
     runs-on: ubuntu-latest
@@ -32,3 +35,11 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
+      - name: Commit history (memoria semanal)
+        run: |
+          git config user.name "AI Security SEO Bot"
+          git config user.email "info@aisecurity.es"
+          git add scripts/seo-analyst/history.json || true
+          git diff --cached --quiet || git commit -m "chore(seo-analyst): histórico de análisis semanal [skip ci]"
+          git push origin HEAD:main || true

@@ -12,7 +12,7 @@
  * Secrets/env: GOOGLE_SERVICE_ACCOUNT_JSON, RESEND_API_KEY, DEEPSEEK_API_KEY, EMAIL_TO (opcional)
  */
 import { google } from 'googleapis';
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -144,17 +144,19 @@ async function analyze(payload) {
   if (!DEEPSEEK_KEY) return { error: 'DEEPSEEK_API_KEY no configurada' };
   const prompt = `Eres un analista SEO senior. ${BUSINESS_CONTEXT}
 
-Tienes los datos de Search Console (núcleo), GA4 (incluye clics de CTA), el CONTENIDO REAL de las páginas (title/description/h1) y las campañas. Analiza la semana y su tendencia. Sé concreto, honesto y accionable; cero paja. Si algo sube, dilo y no lo toques. Si hay CTR bajo con impresiones altas, es oportunidad (propón un title/description NUEVO concreto usando el actual que te doy). Prioriza siempre acciones que empujen tráfico a Wazuh/cursos y que mejoren la conversión de los blogs (CTA).
+Tienes datos de Search Console, GA4 (incluye clics de CTA), el contenido real de las páginas (title/description/h1), las campañas y tu propio análisis de semanas anteriores (analisis_semanas_anteriores).
 
-Devuelve EXCLUSIVAMENTE un JSON válido (sin texto extra) con esta forma:
+MUY IMPORTANTE — sé BREVE y NO comentes todo página por página:
+- Da una **conclusión** de 2-3 frases sobre el estado global y hacia dónde va (orientado a Wazuh/cursos).
+- Da **2-4 comentarios clave** (los que mueven la aguja), no más. Pueden incluir UNA propuesta concreta de title/description si es la oportunidad top.
+- Compara con tu análisis anterior: di **qué ha cambiado** y si se aplicaron tus recomendaciones. **No repitas** lo mismo que ya dijiste la semana pasada.
+- Valora cada campaña en una línea.
+
+Devuelve EXCLUSIVAMENTE un JSON válido (sin texto extra):
 {
- "resumen": "2-4 frases del estado y tendencia, orientado a Wazuh/cursos",
- "cambiar": ["accion concreta priorizada: pagina + que cambiar + por que (si es title/description, escribe la propuesta nueva)", "..."],
- "mantener": ["que va bien, no tocar", "..."],
- "cta": ["observacion sobre CTA de blogs: pagina con visitas pero pocos clics de CTA, o CTA que funciona", "..."],
- "keywords": ["keyword/oportunidad a trabajar y de que dato sale", "..."],
- "ideas_contenido": ["idea de blog o video concreta ligada a un dato, que atraiga clientes hacia Wazuh/cursos", "..."],
- "campanas": [{"nombre":"...", "valoracion":"mejora/empeora/estable + por que"}]
+ "conclusion": "2-3 frases, estado global + tendencia + palanca principal",
+ "comentarios": ["comentario clave accionable (máx 4)", "..."],
+ "campanas": [{"nombre":"...", "valoracion":"mejora/empeora/estable + una frase"}]
 }
 
 DATOS (JSON):
@@ -206,10 +208,11 @@ async function main() {
     notes.push('⚠️ Search Console: sin acceso (la cuenta de servicio no tiene permiso de lectura en la propiedad). Añádela como usuario en Search Console para activar el análisis de CTR/posición.');
   }
 
-  // GA4 (totales + CTA)
-  const ga4Cur = await ga4Totals(cur), ga4Prev = await ga4Totals(prev);
+  // GA4 (totales + CTA) — GA4 quiere {startDate,endDate}
+  const curR = { startDate: cur.start, endDate: cur.end }, prevR = { startDate: prev.start, endDate: prev.end };
+  const ga4Cur = await ga4Totals(curR), ga4Prev = await ga4Totals(prevR);
   if (ga4Cur.error) notes.push('GA4 error: ' + ga4Cur.error);
-  const cta = await ga4CtaClicks(cur);
+  const cta = await ga4CtaClicks(curR);
 
   // Contenido real de páginas foco (top GSC + prioritarias)
   const focusPaths = [...new Set([...topPages.slice(0, 6).map(r => (r.keys?.[0] || '').replace('https://aisecurity.es', '')), ...PRIORITY_PAGES])].filter(Boolean).slice(0, 10);
@@ -231,9 +234,16 @@ async function main() {
     } catch (e) { campaigns.push({ name: c.name, note: c.note, error: e.message }); }
   }
 
+  // Memoria: análisis de semanas anteriores (para no repetir y ver qué cambió)
+  const histFile = join(__dirname, 'seo-analyst/history.json');
+  let history = [];
+  try { history = JSON.parse(readFileSync(histFile, 'utf8')); } catch (e) {}
+  const prevAnalyses = history.slice(-2); // las 2 últimas semanas
+
   // Análisis IA
   const payload = {
     periodo: cur, comparado_con: prev,
+    analisis_semanas_anteriores: prevAnalyses,
     gsc: {
       actual: gscCur, anterior: gscPrev, tendencia_semanal: trend,
       top_queries: topQueries.map(r => ({ q: r.keys?.[0], clicks: r.clicks, impr: r.impressions, ctr: +(r.ctr * 100).toFixed(1), pos: +r.position.toFixed(1) })),
@@ -246,16 +256,22 @@ async function main() {
   };
   const ai = await analyze(payload);
 
+  // Guardar en el histórico (para la memoria de la semana que viene)
+  if (!ai.error) {
+    history.push({
+      fecha: cur.end, conclusion: ai.conclusion, comentarios: ai.comentarios, campanas: ai.campanas,
+      gsc: { clicks: gscCur.clicks, impr: gscCur.impressions, ctr: +((gscCur.ctr || 0) * 100).toFixed(2), pos: +((gscCur.position || 0)).toFixed(1) },
+      ga4: { sessions: ga4Cur.sessions ?? null },
+    });
+    try { writeFileSync(histFile, JSON.stringify(history.slice(-12), null, 2)); } catch (e) {}
+  }
+
   // ── Email ──
   const aiBlock = ai.error
     ? `<p style="color:#b45309;font-size:13px;">No se pudo generar el análisis IA: ${esc(ai.error)}</p>`
-    : `${block('📌 Resumen', `<p style="margin:0;font-size:13.5px;color:#0f172a;line-height:1.6;">${esc(ai.resumen)}</p>`)}
-       ${block('🔧 Qué cambiar (prioridad)', li(ai.cambiar))}
-       ${block('✅ Qué mantener', li(ai.mantener))}
-       ${block('🖱️ CTA de blogs', li(ai.cta))}
-       ${block('🔑 Oportunidades de keyword', li(ai.keywords))}
-       ${block('💡 Ideas de contenido (blog/vídeo)', li(ai.ideas_contenido))}
-       ${block('🚀 Campañas (valoración IA)', li((ai.campanas || []).map(c => `${c.nombre}: ${c.valoracion}`)))}`;
+    : `${block('📌 Conclusión', `<p style="margin:0;font-size:13.5px;color:#0f172a;line-height:1.6;">${esc(ai.conclusion)}</p>`)}
+       ${block('💬 Comentarios clave', li(ai.comentarios))}
+       ${block('🚀 Campañas', li((ai.campanas || []).map(c => `${c.nombre}: ${c.valoracion}`)))}`;
 
   const trendRows = trend.filter(t => !t.error).map(t => [t.week, t.clicks, t.impressions, (t.ctr * 100).toFixed(1) + '%', t.position.toFixed(1)]);
   const qRows = topQueries.map(r => [esc(r.keys?.[0]), r.clicks, r.impressions, (r.ctr * 100).toFixed(1) + '%', r.position.toFixed(1)]);
