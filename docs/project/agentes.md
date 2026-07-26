@@ -8,6 +8,7 @@
 | Componentes frontend, accesibilidad, rendimiento | `frontend-developer` |
 | SEO, GEO, keywords, Schema.org, meta tags | `seo-specialist` |
 | Tareas generales no especializadas | `claude` (por defecto) |
+| Contenido (blog, Medium, Reddit, X, YouTube) | Ver `docs/content/README.md` (agentes `blog-writer`, `medium-writer`, `content-strategist`, etc.) |
 
 **Regla**: usar agente especializado cuando el dominio importa. Para cambios simples (typo, un atributo) usar las herramientas directamente sin agente.
 

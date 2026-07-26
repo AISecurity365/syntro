@@ -8,8 +8,11 @@
 
 | Archivo | Contenido |
 |---------|-----------|
-| [geo-posicionamiento.md](geo-posicionamiento.md) | Estrategia completa de SEO geográfico (páginas por ciudad, blog, GBP, LinkedIn) |
+| [geo-posicionamiento.md](geo-posicionamiento.md) | Estrategia SEO geográfico (soporte técnico remoto). **Foco SECUNDARIO** ahora — la prioridad es Wazuh + IA |
 | [automatizaciones.md](automatizaciones.md) | Scripts de automatización SEO: qué hacen, cómo usarlos, dónde se ejecutan |
+| [plan-atencion-llamadas-cv.md](plan-atencion-llamadas-cv.md) | Plan de motor de captación para Atención de Llamadas IA (Comunidad Valenciana) |
+| [ga4-data.md](ga4-data.md) | Snapshot de datos GA4 (lo regenera el script semanal) |
+| [search-console-data.md](search-console-data.md) | Snapshot de datos Search Console (lo regenera el script semanal) |
 
 ---
 
