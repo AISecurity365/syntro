@@ -1,0 +1,247 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="nl"
+  title="Wat is Wazuh en waarvoor dient het: open source SIEM/XDR [2026]"
+  description="Wat Wazuh is, waarvoor het dient en hoe het uw bedrijf beschermt: dreigingsdetectie, compliance, logmonitoring op Linux en Windows. Gids met echte voorbeelden."
+  publishDate="2026-02-12"
+  author="AI Security"
+  readTime="10 min"
+  tags={["Wazuh", "SIEM", "XDR", "Cybersecurity", "Open Source", "Monitoring"]}
+  canonical="https://aisecurity.es/nl/blog/que-es-wazuh-para-que-sirve"
+  faqSchema={[
+    {
+      question: "Is Wazuh echt gratis?",
+      answer: "Ja. Wazuh is volledig open source onder de GPLv2-licentie, zonder kosten per agent of betaalde niveaus. U kunt een onbeperkt aantal servers en endpoints bewaken zonder licentiekosten; u betaalt alleen voor de infrastructuur waarop u het draait of voor optionele professionele support."
+    },
+    {
+      question: "Wat is het verschil tussen een SIEM en een XDR in Wazuh?",
+      answer: "De SIEM-kant verzamelt, bewaart en correleert logs om dreigingen te detecteren en te onderzoeken, terwijl de XDR-kant uitgebreide detectie en geautomatiseerde respons op endpoints toevoegt. Wazuh combineert beide in één platform, zodat het niet alleen dreigingen vindt maar er ook automatisch op kan reageren."
+    },
+    {
+      question: "Bij welke compliance-normen helpt Wazuh?",
+      answer: "De module Security Configuration Assessment (SCA) van Wazuh auditeert uw systemen aan de hand van CIS Benchmarks, PCI-DSS, HIPAA, AVG en het Spaanse ENS-kader. Het levert rapporten met concrete herstelstappen, handig om audits te doorstaan."
+    },
+    {
+      question: "Hoe snel detecteert Wazuh een nieuwe kwetsbaarheid?",
+      answer: "Wazuh houdt een actuele inventaris bij van geïnstalleerde software en vergelijkt die vrijwel realtime met CVE-databases. Wanneer een kritieke exploit zoals Log4j om 10.00 uur wordt gepubliceerd, kan Wazuh de getroffen kwetsbare servers binnen ongeveer 15 minuten markeren."
+    },
+    {
+      question: "Kan Wazuh automatisch op incidenten reageren?",
+      answer: "Ja. Via active response-regels kan Wazuh een IP op de firewall blokkeren, een machine isoleren, een gebruiker uitschakelen of aangepaste scripts uitvoeren. Een gangbare regel is een IP 30 minuten blokkeren na 5 mislukte aanmeldingen in 2 minuten."
+    }
+  ]}>
+
+  <p>
+    <strong>Wazuh</strong> is een open source beveiligingsplatform dat werkt als SIEM én XDR: het centraliseert de logs van al uw servers en apparaten, detecteert dreigingen in realtime, bewaakt de integriteit van kritieke bestanden en genereert automatische meldingen. Het is gratis, voldoet aan normen zoals ENS en ISO 27001, en het is de meest gebruikte optie onder mkb-bedrijven die echte cybersecurity nodig hebben zonder betaalde licenties.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/nl/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Kant-en-klaar</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Wazuh nodig in uw bedrijf?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Wij rollen Wazuh voor u uit — of voegen geavanceerde configuraties op maat toe als adviesdienst. Productieklaar en compliance-klaar.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Wazuh-advies →</span>
+    </a>
+  </aside>
+
+
+  <h2>Wat is Wazuh precies?</h2>
+
+  <p>
+    <strong>Wazuh</strong> is een <strong>open source</strong> beveiligingsplatform dat de mogelijkheden van een <strong>SIEM (Security Information and Event Management)</strong> en een <strong>XDR (Extended Detection and Response)</strong> combineert. Dat betekent dat het niet alleen beveiligingslogs verzamelt en analyseert, maar ook geavanceerde dreigingen kan detecteren en automatisch op incidenten kan reageren.
+  </p>
+
+  <p>
+    In een typische bedrijfsomgeving heeft u tientallen (of honderden) servers, werkstations, firewalls, applicaties en clouddiensten. Zonder een tool als Wazuh is het praktisch onmogelijk om de beveiliging van dit alles te bewaken.
+  </p>
+
+  <!-- YouTube-video -->
+  <div class="my-8">
+    <div class="relative w-full" style="padding-bottom: 56.25%;">
+      <iframe
+        class="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg"
+        src="https://www.youtube.com/embed/g9zpIOGCK5g"
+        title="Wat is Wazuh? Volledige uitleg"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <p class="text-center text-base-600 mt-3 text-sm">
+      Uitlegvideo: wat Wazuh is en hoe het werkt
+    </p>
+  </div>
+
+  <h2>Waarvoor dient Wazuh? De 6 belangrijkste functies</h2>
+
+  <h3>Hoe werkt logcentralisatie en -analyse?</h3>
+
+  <p>
+    Stel u voor dat u dagelijks de logs van 50 verschillende servers moet doornemen. Zonder Wazuh zou u met elke server afzonderlijk verbinding moeten maken, ruwe logbestanden (vaak in verschillende formaten) moeten doorbladeren en handmatig naar verdachte patronen moeten zoeken. <strong>Dit kan uren duren en is gevoelig voor menselijke fouten.</strong>
+  </p>
+
+  <p>
+    Met Wazuh worden alle logs van al uw apparaten naar één centraal punt gestuurd. U kunt:
+  </p>
+
+  <ul>
+    <li><strong>Gebeurtenissen doorzoeken</strong> over alle servers vanuit één dashboard</li>
+    <li><strong>Filteren op specifieke criteria</strong>: gebruiker, IP, gebeurtenistype, datum, ernst</li>
+    <li><strong>Gebeurtenissen correleren</strong>: detecteren dat dezelfde aanvaller inloggegevens op meerdere servers uitprobeert</li>
+    <li><strong>Geschiedenis bewaren</strong>: incidenten onderzoeken die weken of maanden geleden plaatsvonden</li>
+  </ul>
+
+  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Echte tijdwinst:</strong> wat vroeger 2 tot 3 uur kostte om logs server per server te bekijken, kost nu 5 tot 10 minuten vanuit het gecentraliseerde dashboard.</p>
+  </div>
+
+  <h3>Hoe detecteert Wazuh dreigingen in realtime?</h3>
+
+  <p>
+    Wazuh bewaakt continu de activiteit van uw systemen en vergelijkt die met databases van bekende dreigingen en detectieregels. Bijvoorbeeld:
+  </p>
+
+  <ul>
+    <li><strong>Nieuwe exploits</strong>: als er een kwetsbaarheid (CVE) wordt gepubliceerd die een pakket op uw servers treft, waarschuwt Wazuh u onmiddellijk</li>
+    <li><strong>Inbraakpogingen</strong>: het detecteert SSH brute force, SQL-injectie en poortscans</li>
+    <li><strong>Bekende malware</strong>: het identificeert malwaresignaturen en kwaadaardig gedrag</li>
+    <li><strong>Afwijkende activiteit</strong>: gebruikers die op ongebruikelijke tijden inloggen, vanuit vreemde landen, of die toegang krijgen tot bronnen die ze nooit gebruiken</li>
+  </ul>
+
+  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Praktijkvoorbeeld:</strong> om 10.00 uur verschijnt een kritieke exploit voor Apache Log4j. Om 10.15 uur heeft Wazuh u al verteld welke servers kwetsbare versies draaien en een dringende update nodig hebben.</p>
+  </div>
+
+  <h3>Wat is de SCA-module voor configuratiemonitoring?</h3>
+
+  <p>
+    De module <strong>Security Configuration Assessment (SCA)</strong> van Wazuh controleert automatisch de configuratie van uw servers en vergelijkt die met officiële beveiligingsbenchmarks zoals:
+  </p>
+
+  <ul>
+    <li><strong>CIS Benchmarks</strong>: gidsen voor veilige configuratie van Windows, Linux, databases, enz.</li>
+    <li><strong>PCI-DSS</strong>: eisen voor bedrijven die kaartbetalingen verwerken</li>
+    <li><strong>HIPAA</strong>: regelgeving voor zorggegevens</li>
+    <li><strong>AVG</strong>: bescherming van persoonsgegevens in Europa</li>
+    <li><strong>ENS</strong>: het Spaanse nationale beveiligingskader (verplicht voor bedrijven die met Spaanse overheden werken)</li>
+  </ul>
+
+  <p>
+    De SCA genereert rapporten met concrete aanbevelingen: "Server WEB-01 heeft SSH geconfigureerd om directe root-toegang toe te staan. Aanbeveling: schakel PermitRootLogin uit in /etc/ssh/sshd_config".
+  </p>
+
+  <h3>Hoe werkt kwetsbaarheidsbeoordeling in Wazuh?</h3>
+
+  <p>
+    Wazuh houdt een actuele inventaris bij van de software die op elk bewaakt apparaat is geïnstalleerd en vergelijkt die met databases van bekende kwetsbaarheden (CVE). Hiermee kunt u:
+  </p>
+
+  <ul>
+    <li><strong>Ransomware detecteren</strong> en geavanceerde dreigingen in realtime</li>
+    <li><strong>Verouderde software identificeren</strong> met bekende kwetsbaarheden</li>
+    <li><strong>Patches prioriteren</strong>: zien welke kwetsbaarheden kritiek zijn en welke kunnen wachten</li>
+    <li><strong>Compliance-rapporten genereren</strong> voor audits</li>
+  </ul>
+
+  <h3>Wat is de File Integrity Monitoring (FIM) van Wazuh?</h3>
+
+  <p>
+    De module <strong>File Integrity Monitoring (FIM)</strong> bewaakt kritieke systeembestanden en waarschuwt u wanneer ze worden gewijzigd, verwijderd of wanneer hun rechten veranderen. Dit is cruciaal omdat:
+  </p>
+
+  <ul>
+    <li><strong>Bij een hack</strong>: aanvallers wijzigen vaak systeembestanden om zich te nestelen (backdoors, rootkits)</li>
+    <li><strong>Ongeautoriseerde wijzigingen</strong>: een beheerder wijzigt configuraties zonder ze te documenteren</li>
+    <li><strong>Malware</strong>: veel ransomware verandert bestandsextensies of verwijdert back-ups</li>
+  </ul>
+
+  <p>
+    U kunt instellen welke mappen bewaakt worden: <code>/etc/</code>, <code>/bin/</code>, <code>/usr/sbin/</code>, configuratiebestanden van kritieke applicaties, enz.
+  </p>
+
+  <div style="background:rgba(239,68,68,0.12);border-left:4px solid #ef4444;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Echt geval:</strong> een aanvaller krijgt toegang tot een server en wijzigt <code style="color: #000000; background-color: rgba(0,0,0,0.1);">/etc/passwd</code> om een verborgen gebruiker aan te maken. De FIM detecteert de wijziging onmiddellijk en genereert een melding met hoge prioriteit.</p>
+  </div>
+
+  <h3>Hoe werkt geautomatiseerde incidentrespons in Wazuh?</h3>
+
+  <p>
+    Dit is een van de krachtigste functies van Wazuh. Het detecteert niet alleen dreigingen, het kan ook <strong>automatisch reageren</strong>:
+  </p>
+
+  <ul>
+    <li><strong>Een machine van het netwerk isoleren</strong> als het ransomwaregedrag detecteert</li>
+    <li><strong>Een gebruiker uitschakelen</strong> na meerdere mislukte toegangspogingen</li>
+    <li><strong>Een IP blokkeren</strong> op de firewall, automatisch</li>
+    <li><strong>Aangepaste scripts uitvoeren</strong>: een melding naar Slack/Teams sturen, een ticket in Jira aanmaken, enz.</li>
+    <li><strong>Integreren met externe API's</strong>: TheHive, MISP, VirusTotal en meer</li>
+  </ul>
+
+  <p>
+    Dit alles wordt geconfigureerd via <strong>active response-regels</strong>. Bijvoorbeeld: "Als een gebruiker 5 keer in 2 minuten mislukt inlogt, blokkeer dan zijn IP gedurende 30 minuten".
+  </p>
+
+  <!-- Architectuurschema -->
+  <div class="my-8">
+    <figure class="bg-white rounded-xl border border-base-200 p-4 shadow-sm">
+      <a href="/images/escalidraw/wazuh-arquitectura.png" target="_blank" class="block overflow-hidden rounded-lg cursor-zoom-in hover:opacity-90 transition-opacity">
+        <img
+          src="/images/escalidraw/wazuh-arquitectura.png"
+          alt="Architectuurschema van Wazuh dat toont hoe het logs van meerdere bronnen centraliseert: Windows- en Linux-servers, firewalls, applicaties en clouddiensten"
+          style="width: 180%; max-width: none; margin-left: -15%;"
+          loading="lazy"
+        />
+      </a>
+      <figcaption class="text-center text-base-600 mt-3 text-sm">
+        Wazuh-architectuur: logcentralisatie vanuit meerdere bronnen <span class="text-accent-600">(klik om te vergroten)</span>
+      </figcaption>
+    </figure>
+  </div>
+
+
+
+  <h2>Veelgestelde vragen</h2>
+
+  <h3>Is Wazuh echt gratis?</h3>
+  <p>
+    Ja. Wazuh is volledig open source onder de GPLv2-licentie, zonder kosten per agent of betaalde niveaus. U kunt een onbeperkt aantal servers en endpoints bewaken zonder licentiekosten; u betaalt alleen voor de infrastructuur waarop u het draait of voor optionele professionele support.
+  </p>
+
+  <h3>Wat is het verschil tussen een SIEM en een XDR in Wazuh?</h3>
+  <p>
+    De SIEM-kant verzamelt, bewaart en correleert logs om dreigingen te detecteren en te onderzoeken, terwijl de XDR-kant uitgebreide detectie en geautomatiseerde respons op endpoints toevoegt. Wazuh combineert beide in één platform, zodat het niet alleen dreigingen vindt maar er ook automatisch op kan reageren.
+  </p>
+
+  <h3>Bij welke compliance-normen helpt Wazuh?</h3>
+  <p>
+    De module Security Configuration Assessment (SCA) van Wazuh auditeert uw systemen aan de hand van CIS Benchmarks, PCI-DSS, HIPAA, AVG en het Spaanse ENS-kader. Het levert rapporten met concrete herstelstappen, handig om audits te doorstaan.
+  </p>
+
+  <h3>Hoe snel detecteert Wazuh een nieuwe kwetsbaarheid?</h3>
+  <p>
+    Wazuh houdt een actuele inventaris bij van geïnstalleerde software en vergelijkt die vrijwel realtime met CVE-databases. Wanneer een kritieke exploit zoals Log4j om 10.00 uur wordt gepubliceerd, kan Wazuh de getroffen kwetsbare servers binnen ongeveer 15 minuten markeren.
+  </p>
+
+  <h3>Kan Wazuh automatisch op incidenten reageren?</h3>
+  <p>
+    Ja. Via active response-regels kan Wazuh een IP op de firewall blokkeren, een machine isoleren, een gebruiker uitschakelen of aangepaste scripts uitvoeren. Een gangbare regel is een IP 30 minuten blokkeren na 5 mislukte aanmeldingen in 2 minuten.
+  </p>
+
+  <hr />
+
+  <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 my-8">
+    <h3 class="text-accent-800 mt-0">Hulp nodig met Wazuh?</h3>
+    <p class="text-base-700 mb-4">
+      Laat het aan ons over met een professionele implementatie afgestemd op uw omgeving.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a style="color: black;" href="/nl/wazuh" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent-700 font-semibold rounded-lg border border-accent-300 hover:bg-accent-50 transition-colors">
+        Professionele implementatie
+      </a>
+    </div>
+  </div>
+
+</BlogLayout>

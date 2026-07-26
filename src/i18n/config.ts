@@ -35,12 +35,12 @@ export const LOCALE_LABEL: Record<Locale, string> = {
  */
 export const TRANSLATIONS: Record<string, Locale[]> = {
   "/wazuh": ["en", "fr", "nl"],
-  "/blog": ["en"],
+  "/blog": ["en", "fr", "nl"],
   // Embudo de conversión
   "/reunion": ["en"],
   "/presupuesto": ["en"],
   // Clúster Wazuh del blog (mismo slug bajo cada prefijo)
-  "/blog/que-es-wazuh-para-que-sirve": ["en"],
+  "/blog/que-es-wazuh-para-que-sirve": ["en", "fr", "nl"],
   "/blog/como-instalar-wazuh-en-linux": ["en"],
   "/blog/como-instalar-wazuh-con-docker": ["en"],
   "/blog/como-instalar-agente-wazuh-en-windows": ["en"],
