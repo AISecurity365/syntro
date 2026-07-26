@@ -1,0 +1,31 @@
+[
+  {
+    "fecha": "2026-07-23",
+    "conclusion": "El tráfico global mejora ligeramente (clicks +8.6%, posición media baja de 9.4 a 8.5), pero las visitas cualificadas a /wazuh y cursos siguen siendo bajas. La palanca principal está en optimizar el CTR del blog estrella 'qué es wazuh' (0.9% con 2245 impresiones) y reforzar los CTAs hacia /wazuh y /curso-wazuh. La tendencia es positiva si se capitaliza el interés informativo con conversión.",
+    "comentarios": [
+      "Optimizar title/description de /blog/que-es-wazuh-para-que-sirve: actual 'Qué es Wazuh y Para Qué Sirve: SIEM/XDR Open Source [2026]' → 'Wazuh para Empresas: SIEM Open Source que Cumple ENS [Guía 2026]' para atraer intención comercial. CTR actual 0.9% debe subir a >3%.",
+      "Añadir CTA prominente hacia /wazuh y /curso-wazuh en los dos blogs con más tráfico (/que-es-wazuh y /como-instalar-wazuh-en-linux). Actualmente el CTA 'Implementación Wazuh…' solo recibe 2 clics; necesita botón visible y texto de urgencia.",
+      "Los clics '✕' (cerrar) en varios blogs (12+4+20+4=40) indican que un popup o banner está siendo rechazado masivamente. Revisar su contenido: si no convierte, eliminarlo o redirigirlo directamente al curso por 50€.",
+      "El curso /curso-wazuh tiene buen CTR (8.8%) pero solo 57 impresiones. Incrementar su visibilidad enlazándolo desde todos los blogs de Wazuh y desde la navegación principal."
+    ],
+    "campanas": [
+      {
+        "nombre": "Wazuh multi-idioma (EN/FR/NL)",
+        "valoracion": "estable – sin impacto, 0 clics y 0 impresiones en la semana"
+      },
+      {
+        "nombre": "Rediseño Atención de Llamadas IA",
+        "valoracion": "estable – 26 impresiones sin clics, tráfico irrelevante para el objetivo Wazuh/cursos"
+      }
+    ],
+    "gsc": {
+      "clicks": 88,
+      "impr": 6115,
+      "ctr": 1.44,
+      "pos": 8.5
+    },
+    "ga4": {
+      "sessions": 192
+    }
+  }
+]
