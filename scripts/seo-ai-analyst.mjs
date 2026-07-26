@@ -160,9 +160,9 @@ ${JSON.stringify(payload).slice(0, 12000)}`;
     const res = await fetch('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_KEY}` },
-      body: JSON.stringify({ model: 'deepseek-chat', temperature: 0.4, messages: [{ role: 'user', content: prompt }] }),
+      body: JSON.stringify({ model: 'deepseek-chat', temperature: 0.4, max_tokens: 2000, messages: [{ role: 'user', content: prompt }] }),
     });
-    if (!res.ok) return { error: 'DeepSeek HTTP ' + res.status };
+    if (!res.ok) { let b = ''; try { b = (await res.text()).slice(0, 300); } catch (e) {} return { error: `DeepSeek HTTP ${res.status}${b ? ': ' + b : ''}` }; }
     let txt = (await res.json()).choices?.[0]?.message?.content || '';
     txt = txt.replace(/```json|```/g, '').trim();
     return JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1));
