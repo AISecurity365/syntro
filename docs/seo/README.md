@@ -22,46 +22,31 @@
 **Propietario:** Julián, administrador de sistemas, 1 persona  
 **Estado del dominio:** En producción en Vercel, dominio aisecurity.es activo
 
-### Dos áreas de negocio con estrategias SEO distintas
+### Prioridad SEO (jul 2026)
 
-**1. Servicios de IA** (chatbot, automatización, gestor documental, etc.)
-- Keywords: "chatbot para empresas España", "automatización procesos pymes"
-- Páginas: `/servicios/chatbot`, `/servicios/automatizacion`, etc.
-- Sin estrategia geo activa aún
-
-**2. Ciberseguridad / Soporte Técnico** ← **FOCO PRINCIPAL SEO AHORA**
-- Keywords: "soporte técnico empresas [ciudad]", "Wazuh implementación", "ENS ciberseguridad"
-- Estrategia geo activa: páginas `/soporte-tecnico/[ciudad]`
-- Blog de concienciación ya creado (5 artículos publicados)
-- Ver [geo-posicionamiento.md](geo-posicionamiento.md)
+1. **Wazuh** (`/wazuh`) — objetivo: ser *la* referencia de Wazuh/ENS en España/LATAM. Keywords: "implementar Wazuh España", "Wazuh ENS cumplimiento", "SIEM open source pymes". Canal YouTube → web.
+2. **Cursos Wazuh** (`/curso-wazuh`, `/curso-wazuh-avanzado`) — "curso Wazuh", "curso Wazuh para empresas / equipo de TI".
+3. **Servicios de IA** (`/servicios/*`) — "chatbot para empresas España", "automatización procesos pymes", "gestor documental IA".
+4. **El resto** — soporte técnico geo (`/soporte-tecnico/[ciudad]`), desarrollo web. **Secundario/histórico**; la estrategia geo está en [geo-posicionamiento.md](geo-posicionamiento.md) pero ya no es el foco.
 
 ---
 
-## Estado actual (abril 2026)
+## Estado actual (jul 2026)
 
-### Páginas geo creadas
-- `/soporte-tecnico/benicarlo` — primera página geo de prueba (creada)
-- Pendientes: Madrid, Barcelona, Valencia, Sevilla, Bilbao...
+### Automatizaciones ACTIVAS (GitHub Actions)
+Detalle completo en [automatizaciones.md](automatizaciones.md).
+- **Cada push a main:** ping IndexNow (`seo-ping.yml`) + solicitud a Google Indexing API (`google-indexing-on-push.yml`) + **auto-fix SEO/GEO con IA** (`page-quality-check.yml`, corrige y avisa por email solo si mejora).
+- **Cada lunes:** informe GA4 + Search Console por email (`ga4-weekly-report.yml`, solo lectura).
+- **Mensual (día 1):** monitor GEO — comprueba si nos citan en ChatGPT/Perplexity/Google AI Mode (`geo-monitor.yml`).
 
-### Blog artículos publicados
-- `/blog/ciberseguridad-basica-empleados-guia-completa`
-- `/blog/detectar-phishing-outlook-microsoft-guia-empleados`
-- `/blog/detectar-phishing-gmail-guia-empleados`
-- `/blog/tu-contrasena-mayuscula-numeros-hackeable`
-- `/blog/contrasenas-seguras-empleados-guia-completa`
-- `/blog/pc-empresa-lento-causas-y-soluciones`
-- `/blog/backup-automatico-pymes-guia-completa`
-- `/blog/configurar-correo-corporativo-outlook-movil`
+### Crons DESACTIVADOS — riesgo June 2026 Spam Update
+Solo `workflow_dispatch` (manual). Reactivar únicamente con criterio editorial humano:
+- ~~bump de `modifiedDate` semanal (`seo-update-dates.yml`, script 1)~~ → *frescura falsa*.
+- ~~rotación A/B de títulos/meta días 1 y 15 (`seo-ab-rotation.yml`, script 3)~~ → *scaled content abuse*.
 
-### Automatizaciones activas (GitHub Actions)
-- **Cada push a main:** ping a Google/Bing/Yandex con IndexNow (script 5)
-- **Cada lunes:** informe GA4/GSC por email (solo lectura, no muta contenido)
-- **Manual/programado:** indexación directa via Google Indexing API (script 2)
-
-### Crons DESACTIVADOS (jul 2026) — riesgo spam update
-Se dejaron solo en `workflow_dispatch` (manual). Reactivar únicamente con criterio editorial humano:
-- ~~**Cada lunes:** bump de `modifiedDate` (script 1 / `seo-update-dates.yml`)~~ → *frescura falsa*, señal penalizable.
-- ~~**Días 1 y 15:** rotación A/B de títulos/meta (script 3 / `seo-ab-rotation.yml`)~~ → *scaled content abuse*.
+### Conexiones de datos
+- **Search Console** y **Google Analytics 4**: vía cuenta de servicio Google (informe semanal). Solo lectura.
+- **Google Trends**: ❌ no conectado aún (posible mejora futura para research de keywords).
 
 ---
 

@@ -4,6 +4,14 @@
 1. **Soluciones de IA**: Automatización para empresas pequeñas y grandes
 2. **Ciberseguridad y Sistemas**: Wazuh/ENS, consultoría técnica
 
+## Prioridad de negocio (jul 2026)
+
+Orden para priorizar SEO, contenido y mejoras:
+1. **`/wazuh`** — producto estrella (SIEM/ENS, canal YouTube → web)
+2. **Cursos Wazuh** — `/curso-wazuh`, `/curso-wazuh-avanzado`
+3. **Servicios de IA** — chatbot, gestor documental, atención de llamadas…
+4. **El resto** — soporte técnico geo, desarrollo web, etc. (secundario)
+
 ---
 
 ## Filosofía — MUY IMPORTANTE

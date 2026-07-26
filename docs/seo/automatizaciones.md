@@ -1,101 +1,72 @@
 # Automatizaciones SEO — Scripts y GitHub Actions
 
-Todos los scripts están en `scripts/seo-automation/`. Se ejecutan automáticamente via GitHub Actions o manualmente con Node.js.
+Estado a **jul 2026**. Scripts en `scripts/seo-automation/` (+ `scripts/ga4-weekly-report.mjs` y `scripts/geo-monitor/`). Se ejecutan por GitHub Actions o a mano con Node.
 
 ---
 
-## Scripts disponibles
+## 🟢 Automatizaciones ACTIVAS
 
-### Script 1 — Actualizar fechas (`1-update-dates.js`)
-**Qué hace:** Actualiza `modifiedDate` en los 5 artículos de concienciación del blog para que Google los vea como contenido fresco.  
-**Cuándo se ejecuta:** Cada lunes a las 09:00h (GitHub Actions)  
-**Ejecución manual:** `node scripts/seo-automation/1-update-dates.js`  
-**Archivos afectados:** `src/pages/blog/*.astro` + `src/pages/blog/index.astro`
-
----
-
-### Script 2 — Google Indexing API (`2-google-indexing.js`)
-**Qué hace:** Solicita indexación directa a Google para las URLs prioritarias via Google Indexing API.  
-**Requiere:** `scripts/seo-automation/google-credentials.json` (cuenta de servicio `seo-automation@julensistemas.iam.gserviceaccount.com`) — **NO commitear**  
-**Cuándo se ejecuta:** Manual (ejecutar tras publicar contenido nuevo)  
-**Ejecución manual:** `node scripts/seo-automation/2-google-indexing.js`  
-**URLs indexadas:**
-- `/blog/ciberseguridad-basica-empleados-guia-completa`
-- `/blog/detectar-phishing-outlook-microsoft-guia-empleados`
-- `/blog/detectar-phishing-gmail-guia-empleados`
-- `/blog/tu-contrasena-mayuscula-numeros-hackeable`
-- `/blog/contrasenas-seguras-empleados-guia-completa`
-- `/servicios/test-concienciacion-empleados`
-
-**Setup Google Cloud:**
-- Proyecto: `julensistemas`
-- API habilitada: Web Search Indexing API (`indexing.googleapis.com`)
-- Cuenta de servicio añadida como Propietario en Search Console
+| Automatización | Workflow | Trigger | Qué hace | ¿Modifica el repo? |
+|----------------|----------|---------|----------|--------------------|
+| **Ping IndexNow** | `seo-ping.yml` | push a `main` (+ manual) | Notifica cambios a Bing/Yandex/Google (`5-ping-search-engines.js`). Espera al deploy de Vercel. | No, solo notifica |
+| **Google Indexing API** | `google-indexing-on-push.yml` | push a `main` | Solicita indexación directa de URLs prioritarias a Google. | No |
+| **Auto-fix SEO/GEO con IA** | `page-quality-check.yml` | push a `main` | Analiza páginas cambiadas, detecta fallos SEO/GEO y los **corrige con DeepSeek** (cambios quirúrgicos). Commit `[skip ci]` + email **solo si mejora** (`.github/scripts/seo-autofix.cjs`). | Sí (auto-commit) |
+| **Informe semanal GA4 + GSC** | `ga4-weekly-report.yml` | lunes 08:00 UTC (+ manual) | Descarga métricas de Google Analytics 4 + Search Console y envía email con tendencia (`scripts/ga4-weekly-report.mjs`). Solo lectura. | No |
+| **Monitor GEO (AI Search)** | `geo-monitor.yml` | día 1 de cada mes 07:00 UTC (+ manual) | Comprueba un set fijo de prompts Wazuh (ES+EN) en ChatGPT/Perplexity/Google AI Mode para ver si nos citan (`scripts/geo-monitor/check.mjs`). | Sí (guarda histórico) |
 
 ---
 
-### Script 3 — Rotación A/B (`3-ab-rotation.js`)
-**Qué hace:** Rota títulos y meta descriptions entre 3 variaciones por artículo para probar cuál posiciona mejor.  
-**Cuándo se ejecuta:** Días 1 y 15 de cada mes (GitHub Actions)  
-**Ejecución manual:**
-```bash
-node scripts/seo-automation/3-ab-rotation.js --status   # Ver variación actual
-node scripts/seo-automation/3-ab-rotation.js --rotate   # Ejecutar rotación
-```
-**Estado guardado en:** `scripts/seo-automation/ab-state.json` (no commitear)
+## 🔴 Automatizaciones DESACTIVADAS (June 2026 Spam Update)
+
+Solo quedan en `workflow_dispatch` (manual). **Reactivar el cron únicamente con criterio editorial humano.**
+
+| Script / Workflow | Por qué se desactivó |
+|-------------------|----------------------|
+| `1-update-dates.js` / `seo-update-dates.yml` — bump semanal de `modifiedDate` | **Frescura falsa** → señal penalizable. Subir fecha solo si el artículo cambia de verdad. |
+| `3-ab-rotation.js` / `seo-ab-rotation.yml` — rotación A/B de títulos/meta (días 1 y 15) | **Scaled content abuse**. Además el sitio no tiene volumen para un test A/B estadístico. |
+| `4-content-variations.js` — sinónimos/año en párrafos (era manual) | Mismo riesgo de contenido manipulativo a escala. |
 
 ---
 
-### Script 4 — Variaciones de contenido (`4-content-variations.js`)
-**Qué hace:** Realiza pequeños cambios en párrafos (actualizar año, rotar sinónimos) para que el contenido parezca actualizado.  
-**Cuándo se ejecuta:** Manual / bajo demanda  
-**Ejecución manual:** `node scripts/seo-automation/4-content-variations.js`
+## 🔌 Conexiones de datos
+
+| Fuente | Cómo se conecta | Estado |
+|--------|-----------------|--------|
+| **Google Search Console** | Cuenta de servicio Google (Search Console API), solo lectura → informe semanal | ✅ Activa |
+| **Google Analytics 4** | Cuenta de servicio Google (GA4 Data API) → informe semanal | ✅ Activa |
+| **Google Indexing API** | Cuenta de servicio `seo-automation@julensistemas.iam.gserviceaccount.com` | ✅ Activa (en push) |
+| **IndexNow** (Bing/Yandex) | Clave en `public/` | ✅ Activa (en push) |
+| **AI Search** (ChatGPT/Perplexity/Google AI Mode) | `scripts/geo-monitor/` con prompts fijos | ✅ Activa (mensual) |
+| **Google Trends** | — | ❌ **No conectado.** Posible mejora: research automático de keywords/estacionalidad Wazuh. |
+
+> El informe *Generative AI* de GSC es **UI-only** (aún no en la API); sus impresiones van mezcladas en el total "web". Revisar a mano en la UI.
 
 ---
 
-### Script 5 — Ping a buscadores (`5-ping-search-engines.js`)
-**Qué hace:** Notifica a Google, Bing y Yandex via IndexNow cuando hay cambios en el sitio.  
-**Cuándo se ejecuta:** En cada push a `main` (GitHub Actions — espera 60s al deploy de Vercel)  
-**Ejecución manual:** `node scripts/seo-automation/5-ping-search-engines.js`  
-**IndexNow key:** `68a67eafc24317348d515073e5547e72` (archivo en `public/`)  
-**Resultados esperados:** Google puede dar 404 si el dominio no está activo; Bing/Yandex/IndexNow = 202
+## 🛠️ Scripts (referencia)
+
+En `scripts/seo-automation/`: `1-update-dates` · `2-google-indexing` · `3-ab-rotation` · `4-content-variations` · `5-ping-search-engines` · `6-search-console-report` · `7-fetch-and-save` / `7-fetch-monthly` / `7-weekly-seo-report` · `8-fetch-ga4` / `8-fetch-ga4-monthly` · `9-request-indexing` · `analyze-and-email` · `generate-email` · `send-email` · `run-all`.
+Fuera de esa carpeta: `scripts/ga4-weekly-report.mjs`, `scripts/geo-monitor/check.mjs`, `scripts/index-new-blog-post.js`.
 
 ---
 
-### Script 6 — Ejecutar todos (`run-all.js`)
-**Qué hace:** Lanza los 5 scripts en secuencia.  
-**Ejecución manual:** `node scripts/seo-automation/run-all.js`
+## ➕ Cómo cambiar o añadir automatizaciones
+
+- **Nuevas URLs a indexar/pingear:** editar `URLS_TO_INDEX` en `2-google-indexing.js`, `9-request-indexing.js` y `5-ping-search-engines.js`.
+- **Prompts del monitor GEO:** `scripts/geo-monitor/prompts.json`.
+- **Cambiar horario/trigger:** editar el `cron` del workflow en `.github/workflows/`.
+- **Nueva automatización recurrente:** crear script + workflow, y **actualizar este documento** (regla obligatoria).
+- **Google Trends (si se decide añadir):** no hay API oficial estable; se suele usar una lib no oficial o export manual. Evaluar antes de invertir.
 
 ---
 
-## GitHub Actions Workflows
-
-| Workflow | Archivo | Trigger | Script |
-|----------|---------|---------|--------|
-| SEO Update Dates | `.github/workflows/seo-update-dates.yml` | Cada lunes 08:00 UTC | Script 1 |
-| SEO A/B Rotation | `.github/workflows/seo-ab-rotation.yml` | Días 1 y 15 09:00 UTC | Script 3 |
-| SEO Ping | `.github/workflows/seo-ping.yml` | Push a main | Script 5 |
-
-Los workflows hacen commit automático si hay cambios (scripts 1 y 3). El ping (script 5) solo notifica, no modifica archivos.
-
----
-
-## Archivos que NO se suben a GitHub (.gitignore)
+## 🔒 Ficheros sensibles (NO commitear — en `.gitignore`)
 
 ```
-scripts/seo-automation/google-credentials.json   ← clave API Google
-scripts/seo-automation/ab-state.json             ← estado rotación A/B
-scripts/seo-automation/ping-log.json             ← log de pings
-scripts/seo-automation/indexing-log.json         ← log de indexaciones
-scripts/seo-automation/indexnow-key.txt          ← clave IndexNow
+scripts/seo-automation/google-credentials.json   ← cuenta de servicio Google (rotar si se expone)
+scripts/seo-automation/ab-state.json
+scripts/seo-automation/ping-log.json
+scripts/seo-automation/indexing-log.json
+scripts/seo-automation/indexnow-key.txt
 ```
-
----
-
-## Para añadir nuevas URLs a indexar
-
-Editar la constante `URLS_TO_INDEX` en `scripts/seo-automation/2-google-indexing.js` y `5-ping-search-engines.js`.
-
-## Para añadir nuevos artículos a la rotación A/B
-
-Añadir entrada al objeto `AB_VARIATIONS` en `scripts/seo-automation/3-ab-rotation.js` con el slug del artículo y 3 variaciones de título/descripción.
+En CI, las credenciales llegan por **GitHub Secrets** (`GOOGLE_CREDENTIALS_JSON`, `RESEND_API_KEY`, `DEEPSEEK_API_KEY`, `EMAIL_TO`).

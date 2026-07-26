@@ -27,7 +27,13 @@ Este archivo es el **índice-maestro**. Leer el doc correspondiente antes de tra
 | **Sistema de contenido** (blog/Medium/Reddit/X/YouTube) + skills `/idea` `/contenido` `/publicar` | `docs/content/README.md` |
 | SEO/GEO, blog, keywords, automatizaciones | `docs/seo/README.md` |
 
-**Foco de negocio (jul 2026):** Wazuh + servicios de IA. El posicionamiento "soporte técnico geo" (`docs/seo/geo-posicionamiento.md`, `/soporte-tecnico`) es **secundario/histórico**, no la prioridad actual.
+**Foco de negocio (jul 2026) — orden de prioridad:**
+1. **`/wazuh`** — SIEM/ENS, el producto estrella (canal YouTube → web).
+2. **Cursos Wazuh** — `/curso-wazuh`, `/curso-wazuh-avanzado`.
+3. **Servicios de IA** — chatbot, gestor documental, atención de llamadas, etc.
+4. **El resto** — soporte técnico geo (`/soporte-tecnico`, `docs/seo/geo-posicionamiento.md`), desarrollo web, etc. → **secundario/histórico**.
+
+Aplicar este orden al priorizar SEO, contenido y mejoras de páginas.
 
 ---
 
