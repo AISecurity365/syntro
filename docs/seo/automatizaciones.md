@@ -13,6 +13,7 @@ Estado a **jul 2026**. Scripts en `scripts/seo-automation/` (+ `scripts/ga4-week
 | **Auto-fix SEO/GEO con IA** | `page-quality-check.yml` | push a `main` | Analiza páginas cambiadas, detecta fallos SEO/GEO y los **corrige con DeepSeek** (cambios quirúrgicos). Commit `[skip ci]` + email **solo si mejora** (`.github/scripts/seo-autofix.cjs`). | Sí (auto-commit) |
 | **Informe semanal GA4 + GSC** | `ga4-weekly-report.yml` | lunes 08:00 UTC (+ manual) | Descarga métricas de Google Analytics 4 + Search Console y envía email con tendencia (`scripts/ga4-weekly-report.mjs`). Solo lectura. | No |
 | **Monitor GEO (AI Search)** | `geo-monitor.yml` | día 1 de cada mes 07:00 UTC (+ manual) | Comprueba un set fijo de prompts Wazuh (ES+EN) en ChatGPT/Perplexity/Google AI Mode para ver si nos citan (`scripts/geo-monitor/check.mjs`). | Sí (guarda histórico) |
+| **Analista SEO con IA** | `seo-ai-analyst.yml` | lunes 09:00 UTC (+ manual) | Reúne Search Console (núcleo) + GA4 + Google Trends (best-effort), y **DeepSeek** hace el análisis: qué cambiar (CTR bajo), qué mantener, oportunidades de keyword, ideas de contenido y valoración de **Campañas** (`scripts/seo-ai-analyst.mjs`). **Nunca aplica cambios**, solo informa por email. Prioridad SEO > GEO. Campañas configurables en `scripts/seo-analyst/campaigns.json`. | No |
 
 ---
 
@@ -32,12 +33,12 @@ Solo quedan en `workflow_dispatch` (manual). **Reactivar el cron únicamente con
 
 | Fuente | Cómo se conecta | Estado |
 |--------|-----------------|--------|
-| **Google Search Console** | Cuenta de servicio Google (Search Console API), solo lectura → informe semanal | ✅ Activa |
-| **Google Analytics 4** | Cuenta de servicio Google (GA4 Data API) → informe semanal | ✅ Activa |
+| **Google Search Console** | Cuenta de servicio Google (Search Console API), solo lectura → informe semanal + **analista SEO IA** (núcleo: queries, CTR, posición) | ✅ Activa |
+| **Google Analytics 4** | Cuenta de servicio Google (GA4 Data API) → informe semanal + analista IA | ✅ Activa |
 | **Google Indexing API** | Cuenta de servicio `seo-automation@julensistemas.iam.gserviceaccount.com` | ✅ Activa (en push) |
 | **IndexNow** (Bing/Yandex) | Clave en `public/` | ✅ Activa (en push) |
 | **AI Search** (ChatGPT/Perplexity/Google AI Mode) | `scripts/geo-monitor/` con prompts fijos | ✅ Activa (mensual) |
-| **Google Trends** | — | ❌ **No conectado.** Posible mejora: research automático de keywords/estacionalidad Wazuh. |
+| **Google Trends** | Fetch no oficial en el analista IA (`trendsRelated`) | ⚠️ **Best-effort.** Sin API oficial; Google suele bloquear IPs de CI (429). Si falla, el informe lo indica y sigue con GSC (más fiable). |
 
 > El informe *Generative AI* de GSC es **UI-only** (aún no en la API); sus impresiones van mezcladas en el total "web". Revisar a mano en la UI.
 

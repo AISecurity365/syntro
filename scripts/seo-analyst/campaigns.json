@@ -1,0 +1,17 @@
+{
+  "_comment": "Campañas/iniciativas a vigilar en el informe SEO. El analista compara clics e impresiones de estas rutas (semana actual vs anterior) y la IA valora si mejoran. Añade/quita entradas libremente. 'paths' hace match por 'la URL contiene' (GSC). 'since' es solo informativo.",
+  "campaigns": [
+    {
+      "name": "Wazuh multi-idioma (EN/FR/NL)",
+      "since": "2026-07",
+      "paths": ["/en/wazuh", "/fr/wazuh", "/nl/wazuh"],
+      "note": "Landing Wazuh traducida a inglés, francés y neerlandés (Bélgica). Ver si capta clics/impresiones fuera de España."
+    },
+    {
+      "name": "Rediseño Atención de Llamadas IA",
+      "since": "2026-07",
+      "paths": ["/servicios/atencion-llamadas"],
+      "note": "Demo con voz, agente ElevenLabs, precios por nivel. Ver si mejora tráfico y CTR."
+    }
+  ]
+}
