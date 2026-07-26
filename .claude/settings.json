@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "input=$(cat); printf '%s' \"$input\" | grep -Eq 'stop_hook_active[^,}]*true' && exit 0; printf '%s' '{\"decision\":\"block\",\"reason\":\"Documentacion viva (regla del proyecto, ver CLAUDE.md): antes de terminar, revisa si ESTE turno introdujo un cambio SUSTANCIAL y real: estrategia o foco de negocio, buenas practicas SEO/GEO, alta o cambio profundo de un servicio, precios, decisiones de arquitectura o i18n, automatizaciones o agentes. Si SI y aun no lo documentaste, actualiza el doc correspondiente en docs/ (o la memoria si debe sobrevivir entre sesiones) en este mismo turno y haz commit. Si el cambio fue EFIMERO (visual o estetico, copy de una sola pagina, ajuste de layout, texto de demo, fix menor) o ya esta documentado, NO documentes nada: termina sin tocar documentacion.\"}'",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
