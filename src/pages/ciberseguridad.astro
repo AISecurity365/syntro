@@ -1,0 +1,693 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const title = "Ciberseguridad para Empresas en España | AI Security";
+const description = "Protección integral por capas para PyMEs: firewall, servidores, email, Microsoft 365, Google Workspace, endpoints y cumplimiento ENS. Consultoría de ciberseguridad en Alicante y toda España.";
+const canonical = "https://aisecurity.es/ciberseguridad";
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+
+  <script type="application/ld+json" is:inline>
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": "https://aisecurity.es/ciberseguridad#service",
+    "name": "Ciberseguridad Integral para Empresas",
+    "serviceType": "Consultoría y gestión de ciberseguridad por capas",
+    "description": "Protección completa por capas: perímetro, servidores, endpoints, Microsoft 365, Google Workspace, identidad y cumplimiento ENS para empresas en España.",
+    "provider": { "@id": "https://aisecurity.es/#organization" },
+    "areaServed": { "@type": "Country", "name": "España" },
+    "url": "https://aisecurity.es/ciberseguridad"
+  }
+  </script>
+
+  <!-- ═══ HERO ═══ -->
+  <section style="background:#060b14;min-height:92vh;position:relative;overflow:hidden;display:flex;align-items:center;">
+
+    <!-- Hex grid -->
+    <div class="absolute inset-0 pointer-events-none" style="background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cg fill='none' stroke='rgba(34,211,238,0.07)' stroke-width='0.6'%3E%3Cpolygon points='28,2 54,17 54,47 28,62 2,47 2,17'/%3E%3Cpolygon points='28,52 54,67 54,97 28,112 2,97 2,67'/%3E%3C/g%3E%3C/svg%3E\");opacity:1;"></div>
+
+    <!-- Glow -->
+    <div class="absolute pointer-events-none" style="top:-100px;left:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(34,211,238,0.07),transparent 65%);border-radius:50%;"></div>
+    <div class="absolute pointer-events-none" style="bottom:-200px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(139,92,246,0.08),transparent 65%);border-radius:50%;"></div>
+
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24 py-24 flex flex-col lg:flex-row items-center gap-16">
+
+      <!-- Radar visualization -->
+      <div class="flex-shrink-0" style="width:clamp(260px,38vw,460px);height:clamp(260px,38vw,460px);position:relative;">
+        <svg id="cs-radar" viewBox="0 0 400 400" style="width:100%;height:100%;overflow:visible;">
+          <defs>
+            <radialGradient id="rg-bg" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(34,211,238,0.08)"/>
+              <stop offset="100%" stop-color="rgba(6,11,20,0)"/>
+            </radialGradient>
+            <radialGradient id="rg-center" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(34,211,238,0.25)"/>
+              <stop offset="100%" stop-color="rgba(34,211,238,0.05)"/>
+            </radialGradient>
+            <filter id="glow-c">
+              <feGaussianBlur stdDeviation="3" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Background fill -->
+          <circle cx="200" cy="200" r="185" fill="url(#rg-bg)"/>
+
+          <!-- Concentric rings -->
+          <circle cx="200" cy="200" r="46"  fill="none" stroke="rgba(34,211,238,0.18)" stroke-width="0.8"/>
+          <circle cx="200" cy="200" r="92"  fill="none" stroke="rgba(34,211,238,0.13)" stroke-width="0.8"/>
+          <circle cx="200" cy="200" r="138" fill="none" stroke="rgba(34,211,238,0.09)" stroke-width="0.8"/>
+          <circle cx="200" cy="200" r="184" fill="none" stroke="rgba(34,211,238,0.06)" stroke-width="0.8"/>
+
+          <!-- Cross hairs -->
+          <line x1="200" y1="16"  x2="200" y2="384" stroke="rgba(34,211,238,0.07)" stroke-width="0.6"/>
+          <line x1="16"  y1="200" x2="384" y2="200" stroke="rgba(34,211,238,0.07)" stroke-width="0.6"/>
+          <line x1="70"  y1="70"  x2="330" y2="330" stroke="rgba(34,211,238,0.04)" stroke-width="0.6"/>
+          <line x1="330" y1="70"  x2="70"  y2="330" stroke="rgba(34,211,238,0.04)" stroke-width="0.6"/>
+
+          <!-- Sweep arm (rotates via CSS) -->
+          <g id="cs-sweep" style="transform-origin:200px 200px;">
+            <line x1="200" y1="200" x2="200" y2="18" stroke="rgba(34,211,238,0.7)" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M200,200 L200,18 A182,182 0 0,1 218,20 Z" fill="rgba(34,211,238,0.04)"/>
+          </g>
+
+          <!-- Threat blips (animated, appear + get blocked) -->
+          <!-- Blip 1 -->
+          <circle id="blip1" cx="290" cy="108" r="5" fill="#ef4444" opacity="0" filter="url(#glow-c)">
+            <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.1;0.7;1" dur="4s" begin="0.5s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="5;5;3;3" keyTimes="0;0.1;0.7;1" dur="4s" begin="0.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="290" cy="108" r="11" fill="none" stroke="#ef4444" stroke-width="0.8" opacity="0">
+            <animate attributeName="opacity" values="0;0.5;0.5;0" keyTimes="0;0.1;0.7;1" dur="4s" begin="0.5s" repeatCount="indefinite"/>
+          </circle>
+          <!-- Blip 1 blocked → turns cyan -->
+          <circle cx="290" cy="108" r="5" fill="#22d3ee" opacity="0" filter="url(#glow-c)">
+            <animate attributeName="opacity" values="0;0;0;1;0" keyTimes="0;0.1;0.65;0.75;1" dur="4s" begin="0.5s" repeatCount="indefinite"/>
+          </circle>
+
+          <!-- Blip 2 -->
+          <circle cx="120" cy="300" r="5" fill="#ef4444" opacity="0" filter="url(#glow-c)">
+            <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.1;0.7;1" dur="5.5s" begin="1.8s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="120" cy="300" r="5" fill="#22d3ee" opacity="0" filter="url(#glow-c)">
+            <animate attributeName="opacity" values="0;0;0;1;0" keyTimes="0;0.1;0.65;0.75;1" dur="5.5s" begin="1.8s" repeatCount="indefinite"/>
+          </circle>
+
+          <!-- Blip 3 -->
+          <circle cx="330" cy="250" r="4" fill="#f59e0b" opacity="0">
+            <animate attributeName="opacity" values="0;0.8;0.8;0" keyTimes="0;0.1;0.7;1" dur="7s" begin="3.2s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="330" cy="250" r="4" fill="#22d3ee" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;0" keyTimes="0;0.1;0.65;0.75;1" dur="7s" begin="3.2s" repeatCount="indefinite"/>
+          </circle>
+
+          <!-- Blip 4 -->
+          <circle cx="80" cy="140" r="4" fill="#ef4444" opacity="0">
+            <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.1;0.7;1" dur="6s" begin="5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="80" cy="140" r="4" fill="#22d3ee" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;0" keyTimes="0;0.1;0.65;0.75;1" dur="6s" begin="5s" repeatCount="indefinite"/>
+          </circle>
+
+          <!-- Central protected zone -->
+          <circle cx="200" cy="200" r="40" fill="url(#rg-center)" stroke="rgba(34,211,238,0.4)" stroke-width="1.5"/>
+          <!-- Shield icon -->
+          <path d="M200,180 L215,186 L215,200 C215,208 208,214 200,216 C192,214 185,208 185,200 L185,186 Z" fill="rgba(34,211,238,0.15)" stroke="#22d3ee" stroke-width="1.2" stroke-linejoin="round"/>
+          <path d="M195,200 L198,204 L207,195" fill="none" stroke="#22d3ee" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- Outer border -->
+          <circle cx="200" cy="200" r="185" fill="none" stroke="rgba(34,211,238,0.2)" stroke-width="1"/>
+
+          <!-- Ring labels -->
+          <text x="205" y="155"  font-size="7" fill="rgba(34,211,238,0.4)" font-family="monospace">ENDPOINT</text>
+          <text x="205" y="110"  font-size="7" fill="rgba(34,211,238,0.35)" font-family="monospace">PERIMETER</text>
+          <text x="205" y="22"   font-size="7" fill="rgba(34,211,238,0.25)" font-family="monospace">INTERNET</text>
+        </svg>
+
+        <!-- Status badge overlay -->
+        <div class="absolute bottom-4 right-4 px-3 py-2 rounded-lg border font-mono text-xs" style="background:rgba(34,211,238,0.08);border-color:rgba(34,211,238,0.3);color:#22d3ee;">
+          <span class="inline-block w-2 h-2 rounded-full mr-1.5 animate-pulse" style="background:#22d3ee;"></span>SISTEMA ACTIVO
+        </div>
+      </div>
+
+      <!-- Headline -->
+      <div class="flex-1">
+        <div class="inline-flex items-center gap-2 mb-6 px-3 py-1.5 rounded-full border text-xs font-mono tracking-widest" style="background:rgba(34,211,238,0.05);border-color:rgba(34,211,238,0.2);color:#67e8f9;">
+          CIBERSEGURIDAD · 10 DOMINIOS · PROTECCIÓN TOTAL
+        </div>
+
+        <h1 class="font-bold leading-tight mb-6" style="font-size:clamp(2rem,3.6vw,3.6rem);letter-spacing:-0.03em;color:#f0f9ff;">
+          Cada capa de tu empresa,<br/>
+          <span style="background:linear-gradient(135deg,#22d3ee 0%,#818cf8 60%,#4ade80 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">protegida</span>
+        </h1>
+
+        <p class="mb-8 leading-relaxed" style="color:#94a3b8;font-size:1.125rem;max-width:520px;">
+          La ciberseguridad no es un producto. Es un conjunto de capas que trabajan juntas. Desde el firewall perimetral hasta la concienciación de tu equipo — cubrimos todos los frentes.
+        </p>
+
+        <!-- Stats row -->
+        <div class="flex flex-wrap gap-6 mb-8">
+          <div>
+            <div class="font-mono text-2xl font-bold" style="color:#22d3ee;">10</div>
+            <div class="text-xs" style="color:#64748b;">dominios de seguridad</div>
+          </div>
+          <div>
+            <div class="font-mono text-2xl font-bold" style="color:#4ade80;">+50</div>
+            <div class="text-xs" style="color:#64748b;">controles implementables</div>
+          </div>
+          <div>
+            <div class="font-mono text-2xl font-bold" style="color:#a78bfa;">ENS</div>
+            <div class="text-xs" style="color:#64748b;">/ ISO 27001 / RGPD</div>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="/presupuesto?plan=ciberseguridad" style="color:white;" class="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5" style="background:linear-gradient(135deg,#0e7490,#1d4ed8);box-shadow:0 8px 32px rgba(34,211,238,0.2);">
+            Analizar mi empresa
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+          <a href="/calculadora-it" style="color:#22d3ee;" class="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl font-semibold text-sm border transition-all hover:-translate-y-0.5" style="border-color:rgba(34,211,238,0.25);background:rgba(34,211,238,0.04);">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            Calculadora de ahorro IT
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ INTRO ═══ -->
+  <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(34,211,238,0.2),transparent);"></div>
+  <section style="background:#060b14;padding:4rem 0 2rem;">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-24 text-center">
+      <p class="text-sm font-mono tracking-widest mb-3" style="color:rgba(34,211,238,0.5);">ARQUITECTURA DE DEFENSA</p>
+      <h2 class="font-bold mb-4" style="font-size:clamp(1.6rem,2.4vw,2.4rem);color:#e2e8f0;">
+        Los 10 dominios que protegen tu empresa
+      </h2>
+      <p style="color:#64748b;max-width:640px;margin:0 auto;line-height:1.7;">
+        Cada empresa tiene vulnerabilidades en capas distintas. Aquí están todos los frentes — y cómo los cubrimos.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ DOMAINS MATRIX ═══ -->
+  <section style="background:#060b14;padding:1rem 0 6rem;" id="dominios">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
+      <div class="cs-domains space-y-3">
+
+        <!-- DOMAIN 1: PERÍMETRO -->
+        <div class="cs-domain" data-domain="1" style="--dc:#22d3ee;">
+          <div class="cs-domain-header">
+            <div class="cs-domain-num font-mono" style="color:rgba(34,211,238,0.3);font-size:2.5rem;font-weight:800;line-height:1;min-width:3rem;">01</div>
+            <div class="cs-domain-icon" style="font-size:1.5rem;">🔥</div>
+            <div class="flex-1">
+              <div class="cs-domain-title font-bold text-white" style="font-size:1.1rem;">Perímetro y Red</div>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <span class="cs-tag">Firewall UTM/NGFW</span>
+                <span class="cs-tag">VPN corporativa</span>
+                <span class="cs-tag">IDS/IPS</span>
+                <span class="cs-tag">VLAN</span>
+                <span class="cs-tag">NAC</span>
+                <span class="cs-tag">DNS seguro</span>
+                <span class="cs-tag">NDR</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 ml-auto">
+              <span class="cs-badge" style="--bc:#ef4444;">CRÍTICO</span>
+              <button class="cs-expand-btn" aria-label="Expandir" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                <svg class="cs-chevron w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="cs-domain-detail">
+            <p style="color:#94a3b8;line-height:1.7;margin-bottom:1rem;">La primera línea de defensa. Controla qué entra y qué sale de tu red. Sin un perímetro bien configurado, todos los demás controles son inútiles.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              <div class="cs-detail-item"><strong style="color:#22d3ee;">Firewall UTM/NGFW</strong> — pfSense, FortiGate, Sophos. Inspección de tráfico en capa 7, bloqueo de amenazas conocidas.</div>
+              <div class="cs-detail-item"><strong style="color:#22d3ee;">VPN corporativa</strong> — WireGuard, OpenVPN. Acceso remoto seguro para teletrabajadores.</div>
+              <div class="cs-detail-item"><strong style="color:#22d3ee;">IDS/IPS</strong> — Snort, Suricata. Detección y prevención de intrusiones en tiempo real.</div>
+              <div class="cs-detail-item"><strong style="color:#22d3ee;">DNS seguro</strong> — Filtrado de dominios maliciosos antes de que lleguen al endpoint.</div>
+            </div>
+            <a href="/presupuesto?plan=ciberseguridad-perimetro" style="color:#22d3ee;" class="text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Evaluar mi perímetro →</a>
+          </div>
+        </div>
+
+        <!-- DOMAIN 2: SERVIDORES -->
+        <div class="cs-domain" data-domain="2" style="--dc:#3b82f6;">
+          <div class="cs-domain-header">
+            <div class="cs-domain-num font-mono" style="color:rgba(59,130,246,0.3);font-size:2.5rem;font-weight:800;line-height:1;min-width:3rem;">02</div>
+            <div class="cs-domain-icon" style="font-size:1.5rem;">🖥️</div>
+            <div class="flex-1">
+              <div class="cs-domain-title font-bold text-white" style="font-size:1.1rem;">Servidores y Sistemas</div>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <span class="cs-tag" style="--dc:#3b82f6;">Hardening CIS</span>
+                <span class="cs-tag" style="--dc:#3b82f6;">Patch management</span>
+                <span class="cs-tag" style="--dc:#3b82f6;">SIEM / Wazuh</span>
+                <span class="cs-tag" style="--dc:#3b82f6;">Backup y DR</span>
+                <span class="cs-tag" style="--dc:#3b82f6;">FIM</span>
+                <span class="cs-tag" style="--dc:#3b82f6;">Log management</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 ml-auto">
+              <span class="cs-badge" style="--bc:#ef4444;">CRÍTICO</span>
+              <button class="cs-expand-btn" aria-label="Expandir" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                <svg class="cs-chevron w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="cs-domain-detail">
+            <p style="color:#94a3b8;line-height:1.7;margin-bottom:1rem;">Tus servidores son el objetivo final de cualquier ataque. El hardening correcto, los parches al día y la monitorización con Wazuh eliminan el 80% del riesgo.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              <div class="cs-detail-item"><strong style="color:#3b82f6;">SIEM con Wazuh</strong> — Centralización de logs, detección de amenazas en tiempo real, cumplimiento ENS. <a href="/wazuh" style="color:#3b82f6;">Ver servicio →</a></div>
+              <div class="cs-detail-item"><strong style="color:#3b82f6;">Hardening CIS</strong> — Bastionado de servidores Linux y Windows según benchmarks de seguridad oficiales.</div>
+              <div class="cs-detail-item"><strong style="color:#3b82f6;">Patch management</strong> — Automatización de parches con ventanas de mantenimiento y roll-back controlado.</div>
+              <div class="cs-detail-item"><strong style="color:#3b82f6;">Backup y DR</strong> — Plan de continuidad con RTO/RPO definido. Restic, Veeam, Borg.</div>
+            </div>
+            <a href="/wazuh" style="color:#3b82f6;" class="text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Ver implementación Wazuh →</a>
+          </div>
+        </div>
+
+        <!-- DOMAIN 3: ATAQUES -->
+        <div class="cs-domain" data-domain="3" style="--dc:#ef4444;">
+          <div class="cs-domain-header">
+            <div class="cs-domain-num font-mono" style="color:rgba(239,68,68,0.3);font-size:2.5rem;font-weight:800;line-height:1;min-width:3rem;">03</div>
+            <div class="cs-domain-icon" style="font-size:1.5rem;">💣</div>
+            <div class="flex-1">
+              <div class="cs-domain-title font-bold text-white" style="font-size:1.1rem;">Protección frente a Ataques</div>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <span class="cs-tag" style="--dc:#ef4444;">Anti-DDoS</span>
+                <span class="cs-tag" style="--dc:#ef4444;">WAF</span>
+                <span class="cs-tag" style="--dc:#ef4444;">Anti-bot</span>
+                <span class="cs-tag" style="--dc:#ef4444;">DNS protection</span>
+                <span class="cs-tag" style="--dc:#ef4444;">Honeypots</span>
+                <span class="cs-tag" style="--dc:#ef4444;">Análisis de tráfico</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 ml-auto">
+              <span class="cs-badge" style="--bc:#f59e0b;">ALTO</span>
+              <button class="cs-expand-btn" aria-label="Expandir" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                <svg class="cs-chevron w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="cs-domain-detail">
+            <p style="color:#94a3b8;line-height:1.7;margin-bottom:1rem;">Los ataques DDoS pueden tumbar un servicio web en minutos. Los WAF protegen tus aplicaciones de inyecciones SQL y XSS. Los honeypots detectan intrusos antes de que lleguen a los sistemas reales.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              <div class="cs-detail-item"><strong style="color:#ef4444;">Anti-DDoS</strong> — Cloudflare, Hetzner DDoS Protection. Absorción de tráfico volumétrico antes de que llegue a tu infraestructura.</div>
+              <div class="cs-detail-item"><strong style="color:#ef4444;">WAF</strong> — Web Application Firewall. OWASP Top 10, protección de APIs y aplicaciones web.</div>
+              <div class="cs-detail-item"><strong style="color:#ef4444;">Anti-bot</strong> — Rate limiting, fingerprinting, CAPTCHA inteligente. Para webs con área de cliente o e-commerce.</div>
+              <div class="cs-detail-item"><strong style="color:#ef4444;">Honeypots</strong> — Sistemas trampa que detectan exploración interna. Alerta inmediata si un atacante llega a esa red.</div>
+            </div>
+            <a href="/presupuesto?plan=ciberseguridad-ataques" style="color:#ef4444;" class="text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Consultar →</a>
+          </div>
+        </div>
+
+        <!-- DOMAIN 4: MICROSOFT 365 -->
+        <div class="cs-domain" data-domain="4" style="--dc:#2563eb;">
+          <div class="cs-domain-header">
+            <div class="cs-domain-num font-mono" style="color:rgba(37,99,235,0.3);font-size:2.5rem;font-weight:800;line-height:1;min-width:3rem;">04</div>
+            <div class="cs-domain-icon" style="font-size:1.5rem;">📧</div>
+            <div class="flex-1">
+              <div class="cs-domain-title font-bold text-white" style="font-size:1.1rem;">Microsoft 365 y Email</div>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <span class="cs-tag" style="--dc:#2563eb;">Defender M365</span>
+                <span class="cs-tag" style="--dc:#2563eb;">Antiphishing</span>
+                <span class="cs-tag" style="--dc:#2563eb;">DMARC/DKIM/SPF</span>
+                <span class="cs-tag" style="--dc:#2563eb;">MFA / FIDO2</span>
+                <span class="cs-tag" style="--dc:#2563eb;">Conditional Access</span>
+                <span class="cs-tag" style="--dc:#2563eb;">Intune MDM</span>
+                <span class="cs-tag" style="--dc:#2563eb;">DLP</span>
+                <span class="cs-tag" style="--dc:#2563eb;">Email archiving</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 ml-auto">
+              <span class="cs-badge" style="--bc:#ef4444;">CRÍTICO</span>
+              <button class="cs-expand-btn" aria-label="Expandir" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                <svg class="cs-chevron w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="cs-domain-detail">
+            <p style="color:#94a3b8;line-height:1.7;margin-bottom:1rem;">El 91% de los ataques empiezan por email. Microsoft 365 tiene herramientas de seguridad potentes que, por defecto, están mal configuradas o desactivadas en la mayoría de empresas.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              <div class="cs-detail-item"><strong style="color:#2563eb;">Defender for M365</strong> — ATP con sandboxing de adjuntos y links en tiempo real. Detección de BEC (Business Email Compromise).</div>
+              <div class="cs-detail-item"><strong style="color:#2563eb;">DMARC/DKIM/SPF</strong> — Evita que nadie suplante tu dominio de email. Imprescindible para cualquier empresa.</div>
+              <div class="cs-detail-item"><strong style="color:#2563eb;">MFA + Conditional Access</strong> — Obligar MFA según dispositivo, ubicación y riesgo. Bloqueo automático de accesos sospechosos.</div>
+              <div class="cs-detail-item"><strong style="color:#2563eb;">Intune MDM</strong> — Gestión y cumplimiento de dispositivos: cifrado obligatorio, apps aprobadas, wipe remoto.</div>
+            </div>
+            <a href="/presupuesto?plan=ciberseguridad-microsoft365" style="color:#2563eb;" class="text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Auditar tu Microsoft 365 →</a>
+          </div>
+        </div>
+
+        <!-- DOMAIN 5: GOOGLE WORKSPACE -->
+        <div class="cs-domain" data-domain="5" style="--dc:#4ade80;">
+          <div class="cs-domain-header">
+            <div class="cs-domain-num font-mono" style="color:rgba(74,222,128,0.3);font-size:2.5rem;font-weight:800;line-height:1;min-width:3rem;">05</div>
+            <div class="cs-domain-icon" style="font-size:1.5rem;">🔵</div>
+            <div class="flex-1">
+              <div class="cs-domain-title font-bold text-white" style="font-size:1.1rem;">Google Workspace</div>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <span class="cs-tag" style="--dc:#4ade80;">Security Center</span>
+                <span class="cs-tag" style="--dc:#4ade80;">DLP</span>
+                <span class="cs-tag" style="--dc:#4ade80;">Activity monitoring</span>
+                <span class="cs-tag" style="--dc:#4ade80;">MFA / Passkeys</span>
+                <span class="cs-tag" style="--dc:#4ade80;">MDM</span>
+                <span class="cs-tag" style="--dc:#4ade80;">App control</span>
+                <span class="cs-tag" style="--dc:#4ade80;">Audit logs</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 ml-auto">
+              <span class="cs-badge" style="--bc:#f59e0b;">ALTO</span>
+              <button class="cs-expand-btn" aria-label="Expandir" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                <svg class="cs-chevron w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="cs-domain-detail">
+            <p style="color:#94a3b8;line-height:1.7;margin-bottom:1rem;">Google Workspace bien configurado es seguro. Mal configurado, los documentos de tu empresa pueden estar compartidos públicamente sin que nadie lo sepa. Revisamos y reforzamos.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              <div class="cs-detail-item"><strong style="color:#4ade80;">DLP</strong> — Prevención de fuga de datos: qué documentos están compartidos externamente, quién tiene acceso a qué.</div>
+              <div class="cs-detail-item"><strong style="color:#4ade80;">Security Center</strong> — Panel de alertas nativas de Google: accesos sospechosos, descarga masiva de datos, apps maliciosas.</div>
+              <div class="cs-detail-item"><strong style="color:#4ade80;">MFA / Passkeys</strong> — Obligación de 2FA y llaves de seguridad hardware para cuentas críticas.</div>
+              <div class="cs-detail-item"><strong style="color:#4ade80;">App control</strong> — Lista blanca de aplicaciones de terceros con acceso OAuth a vuestras cuentas.</div>
+            </div>
+            <a href="/presupuesto?plan=ciberseguridad-google" style="color:#4ade80;" class="text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Auditar Google Workspace →</a>
+          </div>
+        </div>
+
+        <!-- DOMAIN 6: ENDPOINT -->
+        <div class="cs-domain" data-domain="6" style="--dc:#a78bfa;">
+          <div class="cs-domain-header">
+            <div class="cs-domain-num font-mono" style="color:rgba(167,139,250,0.3);font-size:2.5rem;font-weight:800;line-height:1;min-width:3rem;">06</div>
+            <div class="cs-domain-icon" style="font-size:1.5rem;">💻</div>
+            <div class="flex-1">
+              <div class="cs-domain-title font-bold text-white" style="font-size:1.1rem;">Endpoint y Puesto de Trabajo</div>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <span class="cs-tag" style="--dc:#a78bfa;">EDR / XDR</span>
+                <span class="cs-tag" style="--dc:#a78bfa;">Antivirus gestionado</span>
+                <span class="cs-tag" style="--dc:#a78bfa;">USB control</span>
+                <span class="cs-tag" style="--dc:#a78bfa;">Asset inventory</span>
+                <span class="cs-tag" style="--dc:#a78bfa;">BitLocker / FileVault</span>
+                <span class="cs-tag" style="--dc:#a78bfa;">Web filtering</span>
+                <span class="cs-tag" style="--dc:#a78bfa;">Vuln. management</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 ml-auto">
+              <span class="cs-badge" style="--bc:#ef4444;">CRÍTICO</span>
+              <button class="cs-expand-btn" aria-label="Expandir" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                <svg class="cs-chevron w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="cs-domain-detail">
+            <p style="color:#94a3b8;line-height:1.7;margin-bottom:1rem;">El portátil de un empleado con un antivirus gratuito es la puerta de entrada favorita del ransomware. Un EDR corporativo detecta comportamientos, no solo firmas conocidas.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              <div class="cs-detail-item"><strong style="color:#a78bfa;">EDR/XDR</strong> — ESET Protect, SentinelOne, Bitdefender GravityZone. Gestión centralizada de todos los endpoints.</div>
+              <div class="cs-detail-item"><strong style="color:#a78bfa;">BitLocker / FileVault</strong> — Cifrado de disco completo. Si pierden el portátil, los datos son ilegibles.</div>
+              <div class="cs-detail-item"><strong style="color:#a78bfa;">USB control</strong> — Bloqueo de dispositivos extraíbles no autorizados. Evita fuga de datos por pendrives.</div>
+              <div class="cs-detail-item"><strong style="color:#a78bfa;">Web filtering</strong> — DNS filtering por categoría. Bloqueo de sitios de malware, phishing y contenido no autorizado.</div>
+            </div>
+            <a href="/presupuesto?plan=ciberseguridad-endpoint" style="color:#a78bfa;" class="text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Ver opciones de endpoint →</a>
+          </div>
+        </div>
+
+        <!-- DOMAIN 7: IAM -->
+        <div class="cs-domain" data-domain="7" style="--dc:#f59e0b;">
+          <div class="cs-domain-header">
+            <div class="cs-domain-num font-mono" style="color:rgba(245,158,11,0.3);font-size:2.5rem;font-weight:800;line-height:1;min-width:3rem;">07</div>
+            <div class="cs-domain-icon" style="font-size:1.5rem;">🔑</div>
+            <div class="flex-1">
+              <div class="cs-domain-title font-bold text-white" style="font-size:1.1rem;">Identidad y Accesos (IAM)</div>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <span class="cs-tag" style="--dc:#f59e0b;">SSO</span>
+                <span class="cs-tag" style="--dc:#f59e0b;">PAM</span>
+                <span class="cs-tag" style="--dc:#f59e0b;">Zero Trust</span>
+                <span class="cs-tag" style="--dc:#f59e0b;">Password manager</span>
+                <span class="cs-tag" style="--dc:#f59e0b;">Account lifecycle</span>
+                <span class="cs-tag" style="--dc:#f59e0b;">CIEM</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 ml-auto">
+              <span class="cs-badge" style="--bc:#f59e0b;">ALTO</span>
+              <button class="cs-expand-btn" aria-label="Expandir" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                <svg class="cs-chevron w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="cs-domain-detail">
+            <p style="color:#94a3b8;line-height:1.7;margin-bottom:1rem;">Más del 80% de las brechas involucran credenciales comprometidas. SSO + MFA + privilegio mínimo es el trío que corta el 95% de los ataques basados en identidad.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              <div class="cs-detail-item"><strong style="color:#f59e0b;">SSO</strong> — Un único login seguro para todas las apps. Reduce la fatiga de contraseñas y centraliza el control de accesos.</div>
+              <div class="cs-detail-item"><strong style="color:#f59e0b;">PAM</strong> — Privileged Access Management. Acceso a sistemas críticos con grabación de sesión y aprobación.</div>
+              <div class="cs-detail-item"><strong style="color:#f59e0b;">Password manager</strong> — Keeper, 1Password Teams, Bitwarden Business. Elimina el "misma contraseña para todo".</div>
+              <div class="cs-detail-item"><strong style="color:#f59e0b;">Zero Trust</strong> — Verificar siempre, confiar nunca. Acceso basado en identidad + dispositivo + contexto.</div>
+            </div>
+            <a href="/presupuesto?plan=ciberseguridad-iam" style="color:#f59e0b;" class="text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Consultar →</a>
+          </div>
+        </div>
+
+        <!-- DOMAIN 8: CLOUD -->
+        <div class="cs-domain" data-domain="8" style="--dc:#38bdf8;">
+          <div class="cs-domain-header">
+            <div class="cs-domain-num font-mono" style="color:rgba(56,189,248,0.3);font-size:2.5rem;font-weight:800;line-height:1;min-width:3rem;">08</div>
+            <div class="cs-domain-icon" style="font-size:1.5rem;">☁️</div>
+            <div class="flex-1">
+              <div class="cs-domain-title font-bold text-white" style="font-size:1.1rem;">Cloud y SaaS</div>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <span class="cs-tag" style="--dc:#38bdf8;">CASB</span>
+                <span class="cs-tag" style="--dc:#38bdf8;">CSPM</span>
+                <span class="cs-tag" style="--dc:#38bdf8;">Secrets management</span>
+                <span class="cs-tag" style="--dc:#38bdf8;">Shadow IT</span>
+                <span class="cs-tag" style="--dc:#38bdf8;">AWS/Azure/GCP security</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 ml-auto">
+              <span class="cs-badge" style="--bc:#4ade80;">MEDIO</span>
+              <button class="cs-expand-btn" aria-label="Expandir" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                <svg class="cs-chevron w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="cs-domain-detail">
+            <p style="color:#94a3b8;line-height:1.7;margin-bottom:1rem;">Un bucket S3 mal configurado o una API key expuesta pueden ser la brecha que vacíe tu empresa. La seguridad cloud no viene por defecto: hay que configurarla.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              <div class="cs-detail-item"><strong style="color:#38bdf8;">CASB</strong> — Visibilidad y control sobre el uso de SaaS. Qué apps usa tu equipo y con qué permisos.</div>
+              <div class="cs-detail-item"><strong style="color:#38bdf8;">CSPM</strong> — Cloud Security Posture Management. Detecta configuraciones incorrectas en AWS/Azure/GCP.</div>
+              <div class="cs-detail-item"><strong style="color:#38bdf8;">Secrets management</strong> — HashiCorp Vault, AWS Secrets Manager. Nunca más credenciales en código fuente.</div>
+              <div class="cs-detail-item"><strong style="color:#38bdf8;">Shadow IT</strong> — Descubrimiento de apps y servicios cloud no autorizados en uso por tus empleados.</div>
+            </div>
+            <a href="/presupuesto?plan=ciberseguridad-cloud" style="color:#38bdf8;" class="text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Auditar infraestructura cloud →</a>
+          </div>
+        </div>
+
+        <!-- DOMAIN 9: CONCIENCIACIÓN -->
+        <div class="cs-domain" data-domain="9" style="--dc:#fb923c;">
+          <div class="cs-domain-header">
+            <div class="cs-domain-num font-mono" style="color:rgba(251,146,60,0.3);font-size:2.5rem;font-weight:800;line-height:1;min-width:3rem;">09</div>
+            <div class="cs-domain-icon" style="font-size:1.5rem;">🎓</div>
+            <div class="flex-1">
+              <div class="cs-domain-title font-bold text-white" style="font-size:1.1rem;">Concienciación y Cultura</div>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <span class="cs-tag" style="--dc:#fb923c;">Phishing simulado</span>
+                <span class="cs-tag" style="--dc:#fb923c;">Formación anual</span>
+                <span class="cs-tag" style="--dc:#fb923c;">Políticas de seguridad</span>
+                <span class="cs-tag" style="--dc:#fb923c;">Contraseñas</span>
+                <span class="cs-tag" style="--dc:#fb923c;">Reporte de incidentes</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 ml-auto">
+              <span class="cs-badge" style="--bc:#f59e0b;">ALTO</span>
+              <button class="cs-expand-btn" aria-label="Expandir" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                <svg class="cs-chevron w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="cs-domain-detail">
+            <p style="color:#94a3b8;line-height:1.7;margin-bottom:1rem;">Las personas son el eslabón más débil. Un empleado que hace clic en un phishing anula cualquier inversión técnica. La concienciación reduce la tasa de éxito de ataques sociales en un 70%.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              <div class="cs-detail-item"><strong style="color:#fb923c;">Phishing simulado</strong> — Campañas de phishing controladas para medir y mejorar la resistencia de tu equipo. Ver también <a href="/servicios/concienciacion" style="color:#fb923c;">servicio de concienciación →</a></div>
+              <div class="cs-detail-item"><strong style="color:#fb923c;">Formación anual</strong> — Módulos cortos y eficaces sobre phishing, ingeniería social, contraseñas y uso seguro de dispositivos.</div>
+              <div class="cs-detail-item"><strong style="color:#fb923c;">Políticas de seguridad</strong> — Documento de política de seguridad adaptado a tu empresa, sin tecnicismos innecesarios.</div>
+              <div class="cs-detail-item"><strong style="color:#fb923c;">Reporte de incidentes</strong> — Canal claro para que empleados reporten comportamientos sospechosos sin miedo.</div>
+            </div>
+            <a href="/servicios/concienciacion" style="color:#fb923c;" class="text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Ver servicio de concienciación →</a>
+          </div>
+        </div>
+
+        <!-- DOMAIN 10: CUMPLIMIENTO -->
+        <div class="cs-domain" data-domain="10" style="--dc:#34d399;">
+          <div class="cs-domain-header">
+            <div class="cs-domain-num font-mono" style="color:rgba(52,211,153,0.3);font-size:2.5rem;font-weight:800;line-height:1;min-width:3rem;">10</div>
+            <div class="cs-domain-icon" style="font-size:1.5rem;">📋</div>
+            <div class="flex-1">
+              <div class="cs-domain-title font-bold text-white" style="font-size:1.1rem;">Cumplimiento y Auditoría</div>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <span class="cs-tag" style="--dc:#34d399;">ENS</span>
+                <span class="cs-tag" style="--dc:#34d399;">ISO 27001</span>
+                <span class="cs-tag" style="--dc:#34d399;">RGPD</span>
+                <span class="cs-tag" style="--dc:#34d399;">PCI-DSS</span>
+                <span class="cs-tag" style="--dc:#34d399;">SOC 2</span>
+                <span class="cs-tag" style="--dc:#34d399;">Pen testing</span>
+                <span class="cs-tag" style="--dc:#34d399;">Auditorías periódicas</span>
+                <span class="cs-tag" style="--dc:#34d399;">Risk assessment</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 ml-auto">
+              <span class="cs-badge" style="--bc:#34d399;">NORMATIVO</span>
+              <button class="cs-expand-btn" aria-label="Expandir" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                <svg class="cs-chevron w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="cs-domain-detail">
+            <p style="color:#94a3b8;line-height:1.7;margin-bottom:1rem;">El cumplimiento normativo en España es obligatorio para quienes trabajan con administraciones públicas (ENS), procesan datos personales (RGPD) o pagos (PCI-DSS). Las sanciones van de 10.000€ a 20M€.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              <div class="cs-detail-item"><strong style="color:#34d399;">ENS</strong> — Esquema Nacional de Seguridad. Obligatorio para proveedores de la Administración Pública. Wazuh cubre la mayor parte de las medidas técnicas. <a href="/wazuh" style="color:#34d399;">Ver →</a></div>
+              <div class="cs-detail-item"><strong style="color:#34d399;">ISO 27001</strong> — Sistema de gestión de seguridad de la información. Diferenciador competitivo en licitaciones.</div>
+              <div class="cs-detail-item"><strong style="color:#34d399;">Pen testing</strong> — Pruebas de penetración controladas para encontrar vulnerabilidades antes que los atacantes.</div>
+              <div class="cs-detail-item"><strong style="color:#34d399;">Auditorías periódicas</strong> — Revisión trimestral o semestral del estado de seguridad con informe ejecutivo.</div>
+            </div>
+            <a href="/presupuesto?plan=ciberseguridad-cumplimiento" style="color:#34d399;" class="text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Consultar cumplimiento →</a>
+          </div>
+        </div>
+
+      </div><!-- fin domains -->
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section style="background:#060b14;padding:6rem 0;position:relative;overflow:hidden;">
+    <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(34,211,238,0.08),transparent);"></div>
+    <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(34,211,238,0.2),transparent);position:absolute;top:0;inset-x:0;"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
+      <p class="text-xs font-mono tracking-widest mb-4" style="color:rgba(34,211,238,0.5);">PRIMER PASO</p>
+      <h2 class="font-bold mb-4" style="font-size:clamp(1.8rem,2.8vw,2.8rem);color:#f0f9ff;">¿Cuánto estás pagando por IT y ciberseguridad?</h2>
+      <p class="mb-8" style="color:#64748b;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.7;">
+        Antes de hablar de soluciones, comprueba si lo que tienes ahora te cuesta lo que debería — o si podrías tener más seguridad por menos dinero.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/calculadora-it" style="color:white;background:linear-gradient(135deg,#0e7490,#1d4ed8);box-shadow:0 8px 32px rgba(34,211,238,0.2);" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Usar la calculadora de ahorro IT
+        </a>
+        <a href="/presupuesto?plan=ciberseguridad" style="color:#22d3ee;border-color:rgba(34,211,238,0.25);background:rgba(34,211,238,0.04);" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold text-sm border transition-all hover:-translate-y-0.5">
+          Consulta gratuita →
+        </a>
+      </div>
+    </div>
+  </section>
+
+<style>
+  /* Radar sweep animation */
+  #cs-sweep {
+    animation: cs-radar-spin 4s linear infinite;
+  }
+  @keyframes cs-radar-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  /* Domain panels */
+  .cs-domain {
+    position: relative;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-left: 3px solid var(--dc, #22d3ee);
+    border-radius: 0 12px 12px 0;
+    overflow: hidden;
+    transition: background 0.2s, border-color 0.2s;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+  }
+  .cs-domain:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.12);
+  }
+
+  .cs-domain-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+  }
+
+  .cs-domain-icon {
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .cs-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-family: monospace;
+    letter-spacing: 0.02em;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .cs-domain:hover .cs-tag {
+    border-color: rgba(var(--dc), 0.2);
+  }
+
+  .cs-badge {
+    font-size: 0.65rem;
+    font-family: monospace;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(var(--bc), 0.1);
+    border: 1px solid rgba(var(--bc), 0.3);
+    color: var(--bc, #ef4444);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Domain detail (collapsed by default) */
+  .cs-domain-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s ease;
+    padding: 0 1.5rem;
+  }
+  .cs-domain.open .cs-domain-detail {
+    max-height: 600px;
+    padding: 0 1.5rem 1.5rem;
+  }
+  .cs-domain.open .cs-chevron {
+    transform: rotate(180deg);
+  }
+
+  .cs-detail-item {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: #94a3b8;
+  }
+
+  @media (max-width: 640px) {
+    .cs-domain-num { display: none; }
+    .cs-domain-header { gap: 0.75rem; flex-wrap: wrap; }
+  }
+</style>
+
+<script is:inline>
+  document.querySelectorAll('.cs-domain').forEach(domain => {
+    const header = domain.querySelector('.cs-domain-header');
+    if (header) {
+      header.addEventListener('click', () => {
+        domain.classList.toggle('open');
+      });
+    }
+  });
+</script>
+
+</BaseLayout>
