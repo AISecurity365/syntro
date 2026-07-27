@@ -1,0 +1,784 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const title = "Consultoría ENS — Esquema Nacional de Seguridad para Empresas | AI Security";
+const description = "Consultoría ENS integral: gestionamos la documentación y los controles técnicos (Wazuh, hardening, FIM) para que tu empresa obtenga la certificación del Esquema Nacional de Seguridad. ENS básico, medio y alto.";
+const canonical = "https://aisecurity.es/consultoria-ens";
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+
+  <script type="application/ld+json" is:inline>
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": "https://aisecurity.es/consultoria-ens#service",
+        "name": "Consultoría ENS — Esquema Nacional de Seguridad",
+        "serviceType": "Consultoría de adecuación y certificación del Esquema Nacional de Seguridad",
+        "description": "Gestionamos la adecuación al ENS (Real Decreto 311/2022) de forma integral: documentación (políticas, análisis de riesgos MAGERIT, plan de adecuación) y controles técnicos reales (SIEM Wazuh, hardening, gestión de incidentes). Niveles básico, medio y alto.",
+        "provider": { "@id": "https://aisecurity.es/#organization" },
+        "areaServed": { "@type": "Country", "name": "España" },
+        "url": "https://aisecurity.es/consultoria-ens"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "¿Qué es el Esquema Nacional de Seguridad (ENS)?",
+            "acceptedAnswer": { "@type": "Answer", "text": "El ENS es el marco normativo español de seguridad de la información regulado por el Real Decreto 311/2022. Es obligatorio para todas las administraciones públicas y para las empresas privadas que prestan servicios o proveen soluciones tecnológicas al sector público." }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Mi empresa está obligada a cumplir el ENS?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Sí, si tu empresa presta servicios digitales, desarrolla software, gestiona infraestructuras IT o provee cualquier solución tecnológica a una entidad pública española. El plazo de adaptación del RD 311/2022 venció en mayo de 2024; sin ENS, tu empresa queda excluida automáticamente de licitaciones públicas con cláusula ENS." }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Cuánto cuesta la consultoría ENS?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Depende del nivel y del estado de partida de la empresa. Orientativamente: ENS básico 3.000-6.000 €, ENS medio 6.000-12.000 €. Si ya tienes ISO 27001, el esfuerzo se reduce un 20-30%. Ofrecemos tres modalidades: guía autogestionada, consultoría documental y servicio integral (documental + técnico con Wazuh)." }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Cuánto tiempo tarda obtener la certificación ENS?",
+            "acceptedAnswer": { "@type": "Answer", "text": "ENS básico: 2-3 meses. ENS medio: 3-5 meses (requiere auditoría externa por entidad acreditada ENAC). ENS alto: 5-8 meses o más. Los plazos dependen de la madurez de seguridad previa de la empresa." }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Cuál es la diferencia entre ENS básico, medio y alto?",
+            "acceptedAnswer": { "@type": "Answer", "text": "El nivel depende del impacto que un incidente de seguridad tendría sobre los servicios. Básico: impacto limitado, se certifica mediante declaración de conformidad propia. Medio: impacto grave, requiere auditoría externa por entidad acreditada ENAC. Alto: impacto muy grave o catastrófico, auditoría más exhaustiva." }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Qué controles técnicos exige el ENS?",
+            "acceptedAnswer": { "@type": "Answer", "text": "El Anexo II del RD 311/2022 incluye controles técnicos como monitorización continua de sistemas (op.mon), registro de actividad (op.acc.5), gestión de incidentes (op.exp.8), control de integridad de archivos y evaluación de configuración segura. Wazuh cubre directamente estos controles como SIEM open source certificable." }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Wazuh es válido para cumplir el ENS?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Sí. Wazuh cubre los controles de monitorización continua, gestión de logs, detección de intrusiones, File Integrity Monitoring (FIM) y evaluación de configuración segura (SCA/hardening) que exige el ENS en niveles medio y alto. Es el SIEM open source más utilizado en proyectos de adecuación ENS en España." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <!-- ═══ HERO ═══ -->
+  <section style="background:#020817;padding:6rem 0 5rem;position:relative;overflow:hidden;">
+    <div class="absolute inset-0 pointer-events-none" style="background-image:linear-gradient(rgba(129,140,248,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(129,140,248,0.04) 1px,transparent 1px);background-size:56px 56px;"></div>
+    <div class="absolute pointer-events-none" style="top:-200px;right:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(99,102,241,0.1),transparent 60%);border-radius:50%;"></div>
+    <div class="absolute pointer-events-none" style="bottom:-150px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(139,92,246,0.07),transparent 65%);border-radius:50%;"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
+      <div class="max-w-3xl">
+        <p style="font-size:0.72rem;letter-spacing:0.18em;color:#818cf8;margin-bottom:1.25rem;font-family:monospace;text-transform:uppercase;">Real Decreto 311/2022 · Plazo vencido: mayo 2024</p>
+
+        <h1 class="font-bold leading-tight mb-6" style="font-size:clamp(2rem,3.8vw,3.8rem);letter-spacing:-0.03em;color:#f0f9ff;">
+          Consultoría ENS:<br/>
+          <span style="background:linear-gradient(135deg,#60a5fa 0%,#818cf8 50%,#c084fc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">documentación y técnica</span>
+        </h1>
+
+        <p class="mb-6 leading-relaxed" style="color:#94a3b8;font-size:1.05rem;max-width:600px;">
+          Si tu empresa presta servicios a la administración pública, el ENS ya no es opcional. Gestionamos la adecuación completa: políticas, análisis de riesgos, plan de adecuación e implementación técnica con Wazuh — lo que el resto de consultoras no hacen.
+        </p>
+
+        <!-- Alerta de urgencia -->
+        <div class="mb-8 flex items-start gap-3 rounded-lg p-4" style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="#f87171" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <p style="font-size:0.85rem;color:#fca5a5;line-height:1.6;">
+            <strong style="color:#f87171;">El plazo de adaptación venció en mayo de 2024.</strong> Si aparece la cláusula ENS en un pliego y no tienes certificación, la exclusión es automática — no es cuestión de puntuación.
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="/presupuesto?plan=consultoria-ens" style="color:white;background:linear-gradient(135deg,#4f46e5,#7c3aed);box-shadow:0 8px 32px rgba(139,92,246,0.3);" class="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5">
+            Solicitar diagnóstico gratuito
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+          <a href="#modalidades" style="color:#a78bfa;border-color:rgba(167,139,250,0.25);background:rgba(139,92,246,0.06);" class="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl font-semibold text-sm border transition-all hover:-translate-y-0.5">
+            Ver modalidades y precios →
+          </a>
+        </div>
+      </div>
+
+      <!-- Stats flotantes -->
+      <div class="flex flex-wrap gap-8 mt-14">
+        <div>
+          <div class="font-mono text-2xl font-bold" style="color:#818cf8;">3</div>
+          <div class="text-xs mt-0.5" style="color:#475569;">niveles: básico, medio, alto</div>
+        </div>
+        <div>
+          <div class="font-mono text-2xl font-bold" style="color:#a78bfa;">2-5</div>
+          <div class="text-xs mt-0.5" style="color:#475569;">meses hasta certificación</div>
+        </div>
+        <div>
+          <div class="font-mono text-2xl font-bold" style="color:#c084fc;">2 años</div>
+          <div class="text-xs mt-0.5" style="color:#475569;">validez del certificado</div>
+        </div>
+        <div>
+          <div class="font-mono text-2xl font-bold" style="color:#818cf8;">RD 311/2022</div>
+          <div class="text-xs mt-0.5" style="color:#475569;">normativa vigente</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Diagonal ── -->
+  <div style="height:60px;overflow:hidden;line-height:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+      <polygon points="0,0 1440,0 0,60" fill="#020817"/>
+      <polygon points="0,60 1440,0 1440,60" fill="#0a0d1a"/>
+    </svg>
+  </div>
+
+  <!-- ═══ ¿A QUIÉN APLICA? ═══ -->
+  <section style="background:#0a0d1a;padding:5rem 0;">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
+      <div class="text-center mb-10">
+        <p style="font-size:0.72rem;letter-spacing:0.18em;color:#818cf8;margin-bottom:0.75rem;font-family:monospace;text-transform:uppercase;">Obligatoriedad</p>
+        <h2 class="font-bold mb-3" style="font-size:clamp(1.6rem,2.4vw,2.4rem);color:#e2e8f0;">¿Tu empresa está obligada?</h2>
+        <p style="color:#475569;max-width:540px;margin:0 auto;font-size:0.9rem;line-height:1.7;">
+          El ENS no aplica solo a organismos públicos. El RD 311/2022 incluye a todo proveedor privado que trabaje con la administración.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <div class="ens-who-card" style="--ac:rgba(239,68,68,0.5);">
+          <div class="ens-who-icon">🖥️</div>
+          <h3 style="font-weight:700;color:#e2e8f0;margin-bottom:0.5rem;font-size:0.95rem;">Empresas TIC proveedoras</h3>
+          <p style="font-size:0.82rem;color:#64748b;line-height:1.6;">Desarrollo de software, soporte IT, ciberseguridad, cloud, infraestructura — si tu cliente es una AAPP, necesitas ENS.</p>
+          <span class="ens-who-badge" style="background:rgba(239,68,68,0.1);color:#fca5a5;border-color:rgba(239,68,68,0.25);">OBLIGATORIO</span>
+        </div>
+
+        <div class="ens-who-card" style="--ac:rgba(239,68,68,0.5);">
+          <div class="ens-who-icon">📡</div>
+          <h3 style="font-weight:700;color:#e2e8f0;margin-bottom:0.5rem;font-size:0.95rem;">MSPs y proveedores de servicios</h3>
+          <p style="font-size:0.82rem;color:#64748b;line-height:1.6;">Si gestionas sistemas, redes o datos de entidades públicas (ayuntamientos, hospitales, universidades…), aplica.</p>
+          <span class="ens-who-badge" style="background:rgba(239,68,68,0.1);color:#fca5a5;border-color:rgba(239,68,68,0.25);">OBLIGATORIO</span>
+        </div>
+
+        <div class="ens-who-card" style="--ac:rgba(245,158,11,0.4);">
+          <div class="ens-who-icon">🔗</div>
+          <h3 style="font-weight:700;color:#e2e8f0;margin-bottom:0.5rem;font-size:0.95rem;">Supply chain en cascada</h3>
+          <p style="font-size:0.82rem;color:#64748b;line-height:1.6;">Si tu cliente directo tiene ENS y subcontrata parte de su servicio a ti, puede exigírtelo contractualmente.</p>
+          <span class="ens-who-badge" style="background:rgba(245,158,11,0.1);color:#fcd34d;border-color:rgba(245,158,11,0.25);">CRECIENTE</span>
+        </div>
+
+        <div class="ens-who-card" style="--ac:rgba(245,158,11,0.4);">
+          <div class="ens-who-icon">📋</div>
+          <h3 style="font-weight:700;color:#e2e8f0;margin-bottom:0.5rem;font-size:0.95rem;">Empresas que quieren licitar</h3>
+          <p style="font-size:0.82rem;color:#64748b;line-height:1.6;">Cada vez más pliegos incluyen ENS como requisito de admisión. Sin él, tu empresa queda excluida del proceso.</p>
+          <span class="ens-who-badge" style="background:rgba(245,158,11,0.1);color:#fcd34d;border-color:rgba(245,158,11,0.25);">MUY FRECUENTE</span>
+        </div>
+
+        <div class="ens-who-card" style="--ac:rgba(129,140,248,0.4);">
+          <div class="ens-who-icon">🏛️</div>
+          <h3 style="font-weight:700;color:#e2e8f0;margin-bottom:0.5rem;font-size:0.95rem;">Entidades del sector público</h3>
+          <p style="font-size:0.82rem;color:#64748b;line-height:1.6;">Administraciones locales, organismos autónomos, fundaciones públicas — obligación directa del RD 311/2022.</p>
+          <span class="ens-who-badge" style="background:rgba(129,140,248,0.1);color:#a5b4fc;border-color:rgba(129,140,248,0.25);">OBLIGATORIO</span>
+        </div>
+
+        <div class="ens-who-card" style="--ac:rgba(129,140,248,0.4);">
+          <div class="ens-who-icon">✅</div>
+          <h3 style="font-weight:700;color:#e2e8f0;margin-bottom:0.5rem;font-size:0.95rem;">¿Tienes dudas?</h3>
+          <p style="font-size:0.82rem;color:#64748b;line-height:1.6;">Hacemos un diagnóstico gratuito en 30 minutos para determinar si aplica, qué nivel necesitas y cuánto tiempo tienes.</p>
+          <a href="/presupuesto?plan=consultoria-ens-diagnostico" style="display:inline-flex;align-items:center;gap:4px;font-size:0.75rem;font-weight:600;color:#a78bfa;margin-top:0.5rem;">Diagnóstico gratuito →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Diagonal ── -->
+  <div style="height:60px;overflow:hidden;line-height:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+      <polygon points="0,0 1440,0 1440,60" fill="#0a0d1a"/>
+      <polygon points="0,0 1440,60 0,60" fill="#020817"/>
+    </svg>
+  </div>
+
+  <!-- ═══ NIVELES ENS ═══ -->
+  <section style="background:#020817;padding:5rem 0;">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
+      <div class="text-center mb-10">
+        <p style="font-size:0.72rem;letter-spacing:0.18em;color:#818cf8;margin-bottom:0.75rem;font-family:monospace;text-transform:uppercase;">Certificación</p>
+        <h2 class="font-bold mb-3" style="font-size:clamp(1.6rem,2.4vw,2.4rem);color:#e2e8f0;">Los tres niveles del ENS</h2>
+        <p style="color:#475569;max-width:540px;margin:0 auto;font-size:0.9rem;line-height:1.7;">El nivel se determina por el impacto que un incidente tendría sobre los servicios. Nosotros hacemos el análisis de categorización contigo.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+        <!-- BÁSICO -->
+        <div class="ens-level-card" style="border-top-color:#4ade80;">
+          <div class="ens-level-top">
+            <span class="ens-level-label" style="color:#86efac;border-color:rgba(74,222,128,0.3);background:rgba(74,222,128,0.06);">NIVEL BÁSICO</span>
+            <div class="ens-level-price">3.000 – 6.000 €</div>
+            <div class="ens-level-time">2 – 3 meses</div>
+          </div>
+          <div class="ens-level-body">
+            <p style="font-size:0.8rem;color:#64748b;line-height:1.6;margin-bottom:1rem;">Impacto <strong style="color:#94a3b8;">limitado</strong> sobre los servicios. La empresa se certifica mediante <strong style="color:#86efac;">declaración de conformidad propia</strong> — no requiere auditoría externa.</p>
+            <ul class="ens-list">
+              <li>Análisis GAP inicial</li>
+              <li>Categorización del sistema (Anexo I)</li>
+              <li>Políticas y procedimientos documentales</li>
+              <li>Análisis de riesgos simplificado</li>
+              <li>Plan de adecuación y medidas técnicas</li>
+              <li>Declaración de conformidad final</li>
+            </ul>
+          </div>
+          <div class="ens-level-foot">
+            <a href="/presupuesto?plan=consultoria-ens-basico" style="color:white;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.3);" class="ens-cta-btn">Solicitar presupuesto →</a>
+          </div>
+        </div>
+
+        <!-- MEDIO — destacado -->
+        <div class="ens-level-card ens-level-featured" style="border-top-color:#818cf8;">
+          <div class="ens-level-badge-top">MÁS SOLICITADO</div>
+          <div class="ens-level-top">
+            <span class="ens-level-label" style="color:#a5b4fc;border-color:rgba(129,140,248,0.3);background:rgba(129,140,248,0.06);">NIVEL MEDIO</span>
+            <div class="ens-level-price">6.000 – 12.000 €</div>
+            <div class="ens-level-time">3 – 5 meses</div>
+          </div>
+          <div class="ens-level-body">
+            <p style="font-size:0.8rem;color:#64748b;line-height:1.6;margin-bottom:1rem;">Impacto <strong style="color:#94a3b8;">grave</strong>. Requiere <strong style="color:#a5b4fc;">auditoría externa obligatoria</strong> por entidad acreditada ENAC. Es el nivel más habitual para proveedores TIC de administraciones locales y regionales.</p>
+            <ul class="ens-list">
+              <li>Todo lo del nivel básico</li>
+              <li>Análisis de riesgos MAGERIT completo</li>
+              <li>Controles técnicos Wazuh (monitorización continua)</li>
+              <li>Gestión de incidentes (op.exp.8)</li>
+              <li>Hardening de sistemas y bastionado</li>
+              <li>Auditoría interna previa</li>
+              <li>Coordinación con auditor ENAC externo</li>
+            </ul>
+          </div>
+          <div class="ens-level-foot">
+            <a href="/presupuesto?plan=consultoria-ens-medio" style="color:white;background:linear-gradient(135deg,#4f46e5,#7c3aed);box-shadow:0 4px 16px rgba(124,58,237,0.3);" class="ens-cta-btn">Solicitar presupuesto →</a>
+          </div>
+        </div>
+
+        <!-- ALTO -->
+        <div class="ens-level-card" style="border-top-color:#f59e0b;">
+          <div class="ens-level-top">
+            <span class="ens-level-label" style="color:#fcd34d;border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.06);">NIVEL ALTO</span>
+            <div class="ens-level-price">+15.000 €</div>
+            <div class="ens-level-time">5 – 8 meses</div>
+          </div>
+          <div class="ens-level-body">
+            <p style="font-size:0.8rem;color:#64748b;line-height:1.6;margin-bottom:1rem;">Impacto <strong style="color:#94a3b8;">muy grave o catastrófico</strong>. Auditoría ENAC exhaustiva. Habitual en proveedores de infraestructuras críticas, sanidad y seguridad.</p>
+            <ul class="ens-list">
+              <li>Todo lo del nivel medio</li>
+              <li>SIEM con correlación avanzada de eventos</li>
+              <li>Plan de continuidad y gestión de crisis</li>
+              <li>Pruebas de penetración (pen testing)</li>
+              <li>Gestión de cambios y configuración</li>
+              <li>Auditoría ENAC de alto nivel</li>
+            </ul>
+          </div>
+          <div class="ens-level-foot">
+            <a href="/presupuesto?plan=consultoria-ens-alto" style="color:white;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);" class="ens-cta-btn">Solicitar presupuesto →</a>
+          </div>
+        </div>
+
+      </div>
+
+      <p style="text-align:center;font-size:0.78rem;color:#334155;margin-top:1.5rem;">
+        * Precios orientativos para PyMEs sin punto de partida. Si ya tienes ISO 27001, el esfuerzo se reduce un 20-30%. Precio final tras diagnóstico gratuito.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── Diagonal ── -->
+  <div style="height:60px;overflow:hidden;line-height:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+      <polygon points="0,0 1440,0 0,60" fill="#020817"/>
+      <polygon points="0,60 1440,0 1440,60" fill="#0a0d1a"/>
+    </svg>
+  </div>
+
+  <!-- ═══ DIFERENCIADOR: DOCUMENTAL + TÉCNICA ═══ -->
+  <section style="background:#0a0d1a;padding:5rem 0;">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
+
+        <!-- Texto izquierda -->
+        <div>
+          <p style="font-size:0.72rem;letter-spacing:0.18em;color:#818cf8;margin-bottom:0.75rem;font-family:monospace;text-transform:uppercase;">Por qué somos distintos</p>
+          <h2 class="font-bold mb-5" style="font-size:clamp(1.6rem,2.4vw,2.4rem);color:#e2e8f0;">
+            No solo documentos:<br/>
+            <span style="background:linear-gradient(135deg,#818cf8,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">también los controles técnicos</span>
+          </h2>
+          <p style="color:#64748b;line-height:1.8;margin-bottom:1.25rem;font-size:0.9rem;">
+            La mayoría de consultoras ENS son expertos en documentación: políticas, procedimientos, análisis de riesgos. Pero el ENS medio y alto exige también <strong style="color:#94a3b8;">controles técnicos reales</strong> que hay que implementar en los sistemas: monitorización continua, gestión de incidentes, control de integridad de archivos, hardening.
+          </p>
+          <p style="color:#64748b;line-height:1.8;margin-bottom:1.5rem;font-size:0.9rem;">
+            Esos controles técnicos son precisamente los que <strong style="color:#94a3b8;">más fallan en las auditorías ENAC</strong>. Un consultor de documentos no puede instalarte el SIEM. Un técnico sin visión ENS no sabe qué documentar. Nosotros hacemos las dos cosas.
+          </p>
+          <div class="p-4 rounded-lg mb-5" style="background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.15);border-left:3px solid rgba(167,139,250,0.6);">
+            <p style="font-size:0.85rem;color:#a5b4fc;line-height:1.7;">
+              <strong>Wazuh cubre directamente los controles del Anexo II</strong> del RD 311/2022: op.mon (monitorización), op.acc.5 (registro de actividad), op.exp.8 (gestión de incidentes), FIM (integridad de archivos) y SCA (evaluación de configuración segura).
+            </p>
+          </div>
+          <a href="/wazuh" style="color:#818cf8;font-size:0.875rem;font-weight:600;" class="inline-flex items-center gap-1 hover:gap-2 transition-all">Ver implementación Wazuh → ENS →</a>
+        </div>
+
+        <!-- Tabla comparativa derecha -->
+        <div>
+          <div class="text-xs font-mono mb-3" style="color:#475569;letter-spacing:0.1em;">COMPARATIVA — QUIÉN HACE QUÉ</div>
+          <div style="border:1px solid rgba(255,255,255,0.07);border-radius:12px;overflow:hidden;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
+              <thead>
+                <tr style="background:rgba(255,255,255,0.04);">
+                  <th style="padding:0.75rem 1rem;text-align:left;color:#64748b;font-weight:600;border-bottom:1px solid rgba(255,255,255,0.06);">Tarea ENS</th>
+                  <th style="padding:0.75rem 0.5rem;text-align:center;color:#64748b;font-weight:600;border-bottom:1px solid rgba(255,255,255,0.06);">Consultora<br/>tradicional</th>
+                  <th style="padding:0.75rem 0.5rem;text-align:center;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06);" style="color:#a78bfa;">AI Security</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["Análisis GAP y categorización", true, true],
+                  ["Políticas y procedimientos", true, true],
+                  ["Análisis de riesgos MAGERIT", true, true],
+                  ["Plan de adecuación", true, true],
+                  ["Auditoría interna previa", true, true],
+                  ["Wazuh SIEM (monitorización continua)", false, true],
+                  ["Hardening y bastionado de sistemas", false, true],
+                  ["File Integrity Monitoring (FIM)", false, true],
+                  ["Gestión de incidentes operacional", false, true],
+                  ["Soporte técnico post-certificación", false, true],
+                ].map(([task, trad, ai]) => (
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                    <td style="padding:0.65rem 1rem;color:#94a3b8;">{task}</td>
+                    <td style="padding:0.65rem 0.5rem;text-align:center;">{trad ? <span style="color:#4ade80;">✓</span> : <span style="color:#334155;">—</span>}</td>
+                    <td style="padding:0.65rem 0.5rem;text-align:center;background:rgba(129,140,248,0.04);">{ai ? <span style="color:#a78bfa;font-weight:700;">✓</span> : <span style="color:#334155;">—</span>}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Diagonal ── -->
+  <div style="height:60px;overflow:hidden;line-height:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+      <polygon points="0,0 1440,0 1440,60" fill="#0a0d1a"/>
+      <polygon points="0,0 1440,60 0,60" fill="#020817"/>
+    </svg>
+  </div>
+
+  <!-- ═══ MODALIDADES ═══ -->
+  <section id="modalidades" style="background:#020817;padding:5rem 0;">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
+      <div class="text-center mb-10">
+        <p style="font-size:0.72rem;letter-spacing:0.18em;color:#818cf8;margin-bottom:0.75rem;font-family:monospace;text-transform:uppercase;">Modalidades de servicio</p>
+        <h2 class="font-bold mb-3" style="font-size:clamp(1.6rem,2.4vw,2.4rem);color:#e2e8f0;">Elige el nivel de apoyo que necesitas</h2>
+        <p style="color:#475569;max-width:560px;margin:0 auto;font-size:0.9rem;line-height:1.7;">No todas las empresas parten del mismo punto. Adaptamos el servicio a tu situación actual.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+        <!-- GUÍA -->
+        <div class="ens-mod-card">
+          <div class="ens-mod-num">01</div>
+          <h3 style="font-weight:700;color:#e2e8f0;font-size:1rem;margin-bottom:0.5rem;">Guía ENS</h3>
+          <p style="font-size:0.8rem;color:#64748b;line-height:1.6;margin-bottom:1rem;">Para equipos con capacidad técnica interna. Te entregamos el roadmap completo, las plantillas de documentación y la lista de controles a implementar. Lo haces tú con nuestro apoyo puntual.</p>
+          <ul class="ens-list mb-4">
+            <li>Informe de categorización</li>
+            <li>Plantillas de políticas y procedimientos</li>
+            <li>Checklist de controles por nivel</li>
+            <li>2 sesiones de revisión incluidas</li>
+          </ul>
+          <div style="font-size:0.72rem;font-family:monospace;color:#475569;margin-bottom:1rem;">PRECIO ESTIMADO: 1.500 – 3.000 €</div>
+          <a href="/presupuesto?plan=consultoria-ens-guia" style="color:#a78bfa;border:1px solid rgba(167,139,250,0.25);background:rgba(139,92,246,0.06);" class="ens-cta-btn">Solicitar →</a>
+        </div>
+
+        <!-- DOCUMENTAL -->
+        <div class="ens-mod-card" style="border-color:rgba(129,140,248,0.15);">
+          <div class="ens-mod-num">02</div>
+          <h3 style="font-weight:700;color:#e2e8f0;font-size:1rem;margin-bottom:0.5rem;">Solo documental</h3>
+          <p style="font-size:0.8rem;color:#64748b;line-height:1.6;margin-bottom:1rem;">Si ya tienes equipo técnico que implementará los controles, nos encargamos de toda la parte documental: análisis de riesgos, políticas, declaración o coordinación con auditor ENAC.</p>
+          <ul class="ens-list mb-4">
+            <li>Análisis GAP + categorización</li>
+            <li>Análisis de riesgos MAGERIT</li>
+            <li>Documentación completa (Anexo II)</li>
+            <li>Plan de adecuación</li>
+            <li>Apoyo en auditoría ENAC</li>
+          </ul>
+          <div style="font-size:0.72rem;font-family:monospace;color:#475569;margin-bottom:1rem;">PRECIO ESTIMADO: 3.000 – 8.000 €</div>
+          <a href="/presupuesto?plan=consultoria-ens-documental" style="color:#a78bfa;border:1px solid rgba(167,139,250,0.25);background:rgba(139,92,246,0.06);" class="ens-cta-btn">Solicitar →</a>
+        </div>
+
+        <!-- INTEGRAL -->
+        <div class="ens-mod-card ens-mod-featured">
+          <div class="ens-mod-badge">RECOMENDADO</div>
+          <div class="ens-mod-num">03</div>
+          <h3 style="font-weight:700;color:#e2e8f0;font-size:1rem;margin-bottom:0.5rem;">Integral: documental + técnica</h3>
+          <p style="font-size:0.8rem;color:#64748b;line-height:1.6;margin-bottom:1rem;">Gestión completa del proyecto ENS. Hacemos la documentación, implementamos Wazuh como SIEM, bastionamos los sistemas y te llevamos hasta la certificación. Disponible en cuota mensual.</p>
+          <ul class="ens-list mb-4">
+            <li>Todo lo del servicio documental</li>
+            <li>Implementación Wazuh (SIEM + FIM + SCA)</li>
+            <li>Hardening de sistemas (CIS Benchmarks)</li>
+            <li>Procedimientos operativos técnicos</li>
+            <li>Soporte post-certificación incluido</li>
+          </ul>
+          <div style="font-size:0.72rem;font-family:monospace;color:#475569;margin-bottom:1rem;">PRECIO ESTIMADO: 6.000 – 15.000 € (o cuota mensual)</div>
+          <a href="/presupuesto?plan=consultoria-ens-integral" style="color:white;background:linear-gradient(135deg,#4f46e5,#7c3aed);box-shadow:0 4px 16px rgba(124,58,237,0.25);" class="ens-cta-btn">Solicitar →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Diagonal ── -->
+  <div style="height:60px;overflow:hidden;line-height:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+      <polygon points="0,0 1440,0 0,60" fill="#020817"/>
+      <polygon points="0,60 1440,0 1440,60" fill="#0a0d1a"/>
+    </svg>
+  </div>
+
+  <!-- ═══ PROCESO ═══ -->
+  <section style="background:#0a0d1a;padding:5rem 0;">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
+      <div class="text-center mb-12">
+        <p style="font-size:0.72rem;letter-spacing:0.18em;color:#818cf8;margin-bottom:0.75rem;font-family:monospace;text-transform:uppercase;">Proceso</p>
+        <h2 class="font-bold" style="font-size:clamp(1.6rem,2.4vw,2.4rem);color:#e2e8f0;">Cómo trabajamos</h2>
+      </div>
+
+      <div class="relative">
+        <!-- Línea vertical -->
+        <div class="hidden lg:block absolute left-8 top-6 bottom-6" style="width:1px;background:linear-gradient(to bottom,transparent,rgba(129,140,248,0.3),rgba(167,139,250,0.3),transparent);"></div>
+
+        <div class="space-y-6">
+
+          <div class="ens-step">
+            <div class="ens-step-num">01</div>
+            <div class="ens-step-body">
+              <h3 style="font-weight:700;color:#e2e8f0;margin-bottom:0.4rem;">Diagnóstico gratuito — análisis GAP</h3>
+              <p style="font-size:0.85rem;color:#64748b;line-height:1.7;">Revisamos en qué punto está tu empresa respecto al Anexo II del RD 311/2022. Identificamos qué controles ya cumples y cuáles necesitan trabajo. <span style="color:#818cf8;">30-60 minutos, sin coste.</span></p>
+            </div>
+            <div class="ens-step-time">~1 semana</div>
+          </div>
+
+          <div class="ens-step">
+            <div class="ens-step-num">02</div>
+            <div class="ens-step-body">
+              <h3 style="font-weight:700;color:#e2e8f0;margin-bottom:0.4rem;">Categorización del sistema</h3>
+              <p style="font-size:0.85rem;color:#64748b;line-height:1.7;">Determinamos qué nivel ENS corresponde a tus sistemas según el Anexo I (dimensiones: disponibilidad, integridad, confidencialidad, autenticidad, trazabilidad).</p>
+            </div>
+            <div class="ens-step-time">~1-2 sem.</div>
+          </div>
+
+          <div class="ens-step">
+            <div class="ens-step-num">03</div>
+            <div class="ens-step-body">
+              <h3 style="font-weight:700;color:#e2e8f0;margin-bottom:0.4rem;">Análisis de riesgos MAGERIT</h3>
+              <p style="font-size:0.85rem;color:#64748b;line-height:1.7;">Identificación de activos, amenazas, vulnerabilidades y riesgos. Es la base sobre la que se construye el plan de adecuación y se prioriza el trabajo técnico.</p>
+            </div>
+            <div class="ens-step-time">~2-3 sem.</div>
+          </div>
+
+          <div class="ens-step">
+            <div class="ens-step-num">04</div>
+            <div class="ens-step-body">
+              <h3 style="font-weight:700;color:#e2e8f0;margin-bottom:0.4rem;">Implantación: documentación y controles técnicos</h3>
+              <p style="font-size:0.85rem;color:#64748b;line-height:1.7;">Redactamos las políticas y procedimientos. Paralelamente implementamos Wazuh, aplicamos hardening (CIS Benchmarks) y configuramos FIM y gestión de incidentes. La parte más larga del proyecto.</p>
+            </div>
+            <div class="ens-step-time">4-8 sem.</div>
+          </div>
+
+          <div class="ens-step">
+            <div class="ens-step-num">05</div>
+            <div class="ens-step-body">
+              <h3 style="font-weight:700;color:#e2e8f0;margin-bottom:0.4rem;">Auditoría interna previa</h3>
+              <p style="font-size:0.85rem;color:#64748b;line-height:1.7;">Revisamos que todo está en orden antes de la auditoría externa (nivel medio/alto). Corregimos los puntos débiles. Para nivel básico, preparamos la declaración de conformidad.</p>
+            </div>
+            <div class="ens-step-time">~1-2 sem.</div>
+          </div>
+
+          <div class="ens-step">
+            <div class="ens-step-num">06</div>
+            <div class="ens-step-body">
+              <h3 style="font-weight:700;color:#e2e8f0;margin-bottom:0.4rem;">Auditoría ENAC y emisión del certificado</h3>
+              <p style="font-size:0.85rem;color:#64748b;line-height:1.7;">Para nivel medio y alto: coordinamos con la entidad certificadora acreditada por ENAC. Te acompañamos durante todo el proceso. Resultado: certificación ENS con validez de 2 años.</p>
+            </div>
+            <div class="ens-step-time">~2-4 sem.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Diagonal ── -->
+  <div style="height:60px;overflow:hidden;line-height:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+      <polygon points="0,0 1440,0 1440,60" fill="#0a0d1a"/>
+      <polygon points="0,0 1440,60 0,60" fill="#020817"/>
+    </svg>
+  </div>
+
+  <!-- ═══ FAQ ═══ -->
+  <section style="background:#020817;padding:5rem 0;">
+    <div class="max-w-3xl mx-auto px-6 md:px-12">
+      <div class="text-center mb-10">
+        <p style="font-size:0.72rem;letter-spacing:0.18em;color:#818cf8;margin-bottom:0.75rem;font-family:monospace;text-transform:uppercase;">Preguntas frecuentes</p>
+        <h2 class="font-bold" style="font-size:clamp(1.4rem,2vw,2rem);color:#e2e8f0;">Lo que más nos preguntan</h2>
+      </div>
+
+      <div class="space-y-3" id="ens-faq">
+
+        <div class="ens-faq-item">
+          <button class="ens-faq-q">
+            ¿Qué es el Esquema Nacional de Seguridad?
+            <svg class="ens-faq-chev w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="ens-faq-a">
+            <p>El ENS es el marco normativo español de seguridad de la información regulado por el Real Decreto 311/2022. Es obligatorio para todas las administraciones públicas y para las empresas privadas que prestan servicios o proveen soluciones tecnológicas al sector público, con el objetivo de garantizar la seguridad de los sistemas, datos y comunicaciones que soportan el ejercicio de sus competencias.</p>
+          </div>
+        </div>
+
+        <div class="ens-faq-item">
+          <button class="ens-faq-q">
+            El plazo venció en 2024 — ¿qué pasa si todavía no cumplimos?
+            <svg class="ens-faq-chev w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="ens-faq-a">
+            <p>El plazo de adaptación para sistemas preexistentes al RD 311/2022 venció en mayo de 2024. En la práctica, las consecuencias se materializan cuando aparece la cláusula ENS en un pliego: la empresa que no puede acreditar cumplimiento queda excluida automáticamente del proceso de licitación. Cuanto antes empieces, más contratos puedes atacar. El proceso de certificación lleva tiempo, así que empezar hoy es la mejor decisión.</p>
+          </div>
+        </div>
+
+        <div class="ens-faq-item">
+          <button class="ens-faq-q">
+            ¿Cómo sé qué nivel ENS me aplica?
+            <svg class="ens-faq-chev w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="ens-faq-a">
+            <p>El nivel (básico, medio o alto) lo determina el análisis de categorización del sistema, que evalúa el impacto potencial de un incidente sobre las dimensiones de seguridad: disponibilidad, integridad, confidencialidad, autenticidad y trazabilidad. En muchos casos el propio pliego de licitación te indica el nivel exigido. Hacemos esta categorización contigo como parte del diagnóstico inicial gratuito.</p>
+          </div>
+        </div>
+
+        <div class="ens-faq-item">
+          <button class="ens-faq-q">
+            ¿Wazuh sirve realmente para el ENS?
+            <svg class="ens-faq-chev w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="ens-faq-a">
+            <p>Sí. Wazuh es un SIEM open source que cubre directamente los controles técnicos del Anexo II del RD 311/2022: monitorización continua (op.mon), registro de actividad (op.acc.5), gestión de incidentes (op.exp.8), control de integridad de archivos (FIM) y evaluación de la configuración segura de los sistemas (SCA/hardening). Es el SIEM más utilizado en proyectos de adecuación ENS en España por su coste (open source) y la amplitud de controles que cubre.</p>
+          </div>
+        </div>
+
+        <div class="ens-faq-item">
+          <button class="ens-faq-q">
+            ¿Tenemos que contratar auditor ENAC por vuestra cuenta o lo incluís?
+            <svg class="ens-faq-chev w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="ens-faq-a">
+            <p>Para nivel medio y alto, la auditoría la realiza una entidad acreditada por ENAC (independiente de quien hace la consultoría — es un requisito legal). Coordinamos el proceso contigo: preparamos la documentación, hacemos la auditoría interna previa y te acompañamos durante la auditoría ENAC. El coste de la auditoría ENAC es externo y va por separado (habitualmente entre 3.000 y 8.000 € según el tamaño del sistema).</p>
+          </div>
+        </div>
+
+        <div class="ens-faq-item">
+          <button class="ens-faq-q">
+            ¿Tenemos ISO 27001 — nos reduce el trabajo para el ENS?
+            <svg class="ens-faq-chev w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="ens-faq-a">
+            <p>Sí, significativamente. Hay una correspondencia alta entre los controles de ISO 27001 y los del Anexo II del ENS. Si tienes ISO 27001 activa, el esfuerzo de adecuación ENS se reduce entre un 20 y un 40% — principalmente en la parte documental. Los controles técnicos (SIEM, FIM, hardening) suelen seguir necesitando trabajo independientemente de la ISO.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA FINAL ═══ -->
+  <section style="background:#0a0d1a;padding:6rem 0;position:relative;overflow:hidden;">
+    <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(99,102,241,0.1),transparent);"></div>
+    <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(129,140,248,0.3),transparent);position:absolute;top:0;inset-x:0;"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
+      <p style="font-size:0.72rem;letter-spacing:0.18em;color:#818cf8;margin-bottom:1rem;font-family:monospace;text-transform:uppercase;">Próximo paso</p>
+      <h2 class="font-bold mb-4" style="font-size:clamp(1.8rem,2.8vw,2.8rem);color:#f0f9ff;">Diagnóstico ENS gratuito<br/>en 30 minutos</h2>
+      <p class="mb-8" style="color:#475569;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.7;">
+        Analizamos tu situación, determinamos qué nivel te aplica y te decimos exactamente qué necesitas — sin compromiso y sin venderte nada que no necesites.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/presupuesto?plan=consultoria-ens" style="color:white;background:linear-gradient(135deg,#4f46e5,#7c3aed);box-shadow:0 8px 32px rgba(124,58,237,0.3);" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5">
+          Solicitar diagnóstico gratuito →
+        </a>
+        <a href="/wazuh" style="color:#a78bfa;border-color:rgba(167,139,250,0.25);background:rgba(139,92,246,0.06);" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold text-sm border transition-all hover:-translate-y-0.5">
+          Ver Wazuh para ENS
+        </a>
+      </div>
+    </div>
+  </section>
+
+<style>
+  /* Who cards */
+  .ens-who-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-top: 2px solid var(--ac, rgba(129,140,248,0.4));
+    border-radius: 10px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .ens-who-icon { font-size: 1.5rem; }
+  .ens-who-badge {
+    display: inline-flex; align-self: flex-start;
+    font-size: 0.6rem; font-family: monospace; font-weight: 700;
+    letter-spacing: 0.1em; padding: 2px 7px; border-radius: 3px;
+    border: 1px solid; margin-top: 0.25rem;
+  }
+
+  /* Level cards */
+  .ens-level-card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-top: 3px solid transparent;
+    border-radius: 12px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .ens-level-featured {
+    background: rgba(129,140,248,0.04);
+    border-color: rgba(129,140,248,0.15);
+  }
+  .ens-level-badge-top {
+    position: absolute; top: -1px; right: 1.5rem;
+    background: linear-gradient(135deg,#4f46e5,#7c3aed);
+    color: white; font-size: 0.6rem; font-family: monospace;
+    font-weight: 700; letter-spacing: 0.12em;
+    padding: 3px 10px; border-radius: 0 0 6px 6px;
+  }
+  .ens-level-top { margin-bottom: 1rem; }
+  .ens-level-label {
+    display: inline-flex; font-size: 0.65rem; font-family: monospace;
+    font-weight: 700; letter-spacing: 0.1em; padding: 3px 8px;
+    border-radius: 3px; border: 1px solid; margin-bottom: 0.75rem;
+  }
+  .ens-level-price {
+    font-family: monospace; font-size: 1.3rem; font-weight: 800;
+    color: #e2e8f0; line-height: 1; margin-bottom: 4px;
+  }
+  .ens-level-time { font-size: 0.75rem; color: #475569; }
+  .ens-level-body { flex: 1; }
+  .ens-level-foot { margin-top: 1.25rem; }
+
+  /* Lists */
+  .ens-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 0.4rem;
+  }
+  .ens-list li {
+    font-size: 0.8rem; color: #64748b; padding-left: 1.1rem;
+    position: relative; line-height: 1.5;
+  }
+  .ens-list li::before {
+    content: "›"; position: absolute; left: 0;
+    color: #818cf8; font-weight: 700;
+  }
+
+  /* CTA buttons */
+  .ens-cta-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0.65rem 1.25rem; border-radius: 8px;
+    font-weight: 600; font-size: 0.85rem; text-decoration: none;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .ens-cta-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* Modal cards */
+  .ens-mod-card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 1.75rem;
+    display: flex; flex-direction: column;
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+    position: relative;
+  }
+  .ens-mod-featured {
+    background: rgba(129,140,248,0.04);
+    border-color: rgba(129,140,248,0.2);
+  }
+  .ens-mod-badge {
+    position: absolute; top: 0; right: 1.25rem;
+    background: linear-gradient(135deg,#4f46e5,#7c3aed);
+    color: white; font-size: 0.6rem; font-family: monospace;
+    font-weight: 700; letter-spacing: 0.12em;
+    padding: 3px 10px; border-radius: 0 0 6px 6px;
+  }
+  .ens-mod-num {
+    font-family: monospace; font-size: 2rem; font-weight: 800;
+    color: rgba(129,140,248,0.2); line-height: 1; margin-bottom: 0.5rem;
+  }
+
+  /* Steps */
+  .ens-step {
+    display: flex; gap: 1.5rem; align-items: flex-start;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px; padding: 1.25rem 1.5rem;
+  }
+  .ens-step-num {
+    font-family: monospace; font-size: 1.4rem; font-weight: 800;
+    color: rgba(129,140,248,0.35); flex-shrink: 0; min-width: 2.5rem; line-height: 1.3;
+  }
+  .ens-step-body { flex: 1; }
+  .ens-step-time {
+    font-family: monospace; font-size: 0.7rem;
+    color: #475569; flex-shrink: 0; padding-top: 4px; white-space: nowrap;
+  }
+
+  /* FAQ */
+  .ens-faq-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px; overflow: hidden;
+  }
+  .ens-faq-q {
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; padding: 1rem 1.25rem;
+    font-size: 0.9rem; font-weight: 600; color: #e2e8f0;
+    text-align: left; cursor: pointer;
+    background: none; border: none;
+  }
+  .ens-faq-chev { transition: transform 0.2s; flex-shrink: 0; color: #475569; }
+  .ens-faq-item.open .ens-faq-chev { transform: rotate(180deg); }
+  .ens-faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s ease;
+    padding: 0 1.25rem;
+  }
+  .ens-faq-item.open .ens-faq-a {
+    max-height: 300px; padding: 0 1.25rem 1.25rem;
+  }
+  .ens-faq-a p { font-size: 0.85rem; color: #64748b; line-height: 1.7; }
+
+  @media (max-width: 640px) {
+    .ens-step { flex-wrap: wrap; }
+    .ens-step-time { width: 100%; }
+  }
+</style>
+
+<script is:inline>
+  document.querySelectorAll('.ens-faq-item').forEach(item => {
+    item.querySelector('.ens-faq-q').addEventListener('click', () => {
+      item.classList.toggle('open');
+    });
+  });
+</script>
+
+</BaseLayout>
