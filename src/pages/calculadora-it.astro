@@ -86,6 +86,15 @@ const canonical = "https://aisecurity.es/calculadora-it";
                   <option value="industry">Industria / Manufactura</option>
                 </select>
               </div>
+
+              <div class="calc-field">
+                <label class="calc-label">Facturación anual <span style="font-size:0.7rem;color:#475569;font-weight:normal;">(opcional)</span></label>
+                <div class="flex items-center gap-4">
+                  <input type="range" id="f-revenue" min="0" max="5000000" step="50000" value="0" class="calc-range flex-1">
+                  <span id="f-revenue-val" class="calc-range-val">No indicar</span>
+                </div>
+                <p style="font-size:0.71rem;color:#475569;margin-top:0.4rem;line-height:1.5;">Si lo indicas, calculamos si tu inversión IT es coherente con tu tamaño. Referencia: 5–10% de la facturación.</p>
+              </div>
             </div>
 
             <div class="flex justify-end mt-6">
@@ -106,6 +115,16 @@ const canonical = "https://aisecurity.es/calculadora-it";
             </div>
 
             <div class="space-y-5">
+              <div class="calc-field">
+                <label class="calc-label">Personal IT en plantilla</label>
+                <div class="flex gap-3 flex-wrap">
+                  <label class="calc-radio-card flex-1"><input type="radio" name="it-staff" value="0" checked> Ninguno</label>
+                  <label class="calc-radio-card flex-1"><input type="radio" name="it-staff" value="1"> 1 persona</label>
+                  <label class="calc-radio-card flex-1"><input type="radio" name="it-staff" value="2"> 2-3 personas</label>
+                  <label class="calc-radio-card flex-1"><input type="radio" name="it-staff" value="4"> 4+ personas</label>
+                </div>
+              </div>
+
               <div class="calc-field">
                 <label class="calc-label">¿Tienes soporte IT contratado?</label>
                 <div class="flex gap-3">
@@ -283,6 +302,31 @@ const canonical = "https://aisecurity.es/calculadora-it";
                   <div class="flex items-center gap-4">
                     <input type="range" id="f-siem-cost" min="50" max="2000" step="50" value="200" class="calc-range flex-1">
                     <span id="f-siem-cost-val" class="calc-range-val">200 €/mes</span>
+                  </div>
+                </div>
+                <!-- Opción avanzada: desglose de herramientas -->
+                <div id="siem-advanced-wrap" class="hidden mt-4">
+                  <button id="siem-toggle-adv" type="button" style="font-size:0.75rem;color:#818cf8;background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;">
+                    ▾ Ver desglose de herramientas de ciberseguridad
+                  </button>
+                  <div id="siem-adv-detail" class="hidden mt-3" style="border:1px solid rgba(129,140,248,0.12);border-radius:8px;padding:1rem;">
+                    <p style="font-size:0.72rem;color:#475569;margin-bottom:0.75rem;">Marca las herramientas que tienes contratadas o gestionadas actualmente:</p>
+                    <div class="calc-adv-grid">
+                      <label class="cs-adv-check"><input type="checkbox" value="wazuh"> SIEM / Wazuh</label>
+                      <label class="cs-adv-check"><input type="checkbox" value="soc"> SOC gestionado</label>
+                      <label class="cs-adv-check"><input type="checkbox" value="pentest"> Pen testing anual</label>
+                      <label class="cs-adv-check"><input type="checkbox" value="waf"> WAF (Web App Firewall)</label>
+                      <label class="cs-adv-check"><input type="checkbox" value="dns-filter"> DNS filtering</label>
+                      <label class="cs-adv-check"><input type="checkbox" value="email-sec"> Email security avanzada</label>
+                      <label class="cs-adv-check"><input type="checkbox" value="pam"> PAM (Acceso privilegiado)</label>
+                      <label class="cs-adv-check"><input type="checkbox" value="xdr"> XDR / EDR avanzado</label>
+                      <label class="cs-adv-check"><input type="checkbox" value="ddos"> Anti-DDoS</label>
+                      <label class="cs-adv-check"><input type="checkbox" value="deception"> Honeypots / Deception</label>
+                      <label class="cs-adv-check"><input type="checkbox" value="threat-intel"> Threat Intelligence</label>
+                      <label class="cs-adv-check"><input type="checkbox" value="vuln-scan"> Análisis de vulnerabilidades</label>
+                      <label class="cs-adv-check"><input type="checkbox" value="drp"> Plan de recuperación (DRP)</label>
+                      <label class="cs-adv-check"><input type="checkbox" value="casb"> CASB / Shadow IT</label>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -471,6 +515,29 @@ const canonical = "https://aisecurity.es/calculadora-it";
       position: relative;
     }
 
+    /* Advanced cybersecurity tool grid */
+    .calc-adv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem;
+    }
+    .cs-adv-check {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.78rem; color: #94a3b8; cursor: pointer;
+      padding: 0.4rem 0.7rem; border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.02);
+      transition: background 0.15s;
+    }
+    .cs-adv-check:has(input:checked) {
+      background: rgba(129,140,248,0.07);
+      border-color: rgba(129,140,248,0.22);
+      color: #a78bfa;
+    }
+    .cs-adv-check input { display: none; }
+
+    @media (max-width: 480px) { .calc-adv-grid { grid-template-columns: 1fr; } }
+
     /* Misc */
     .hidden { display: none; }
 
@@ -513,6 +580,12 @@ const canonical = "https://aisecurity.es/calculadora-it";
     }
     bindRange('f-employees', 'f-employees-val', v => v + ' personas');
     bindRange('f-devices',   'f-devices-val',   v => v + ' equipos');
+    bindRange('f-revenue',   'f-revenue-val',   v => {
+      const n = parseInt(v);
+      if (n === 0) return 'No indicar';
+      if (n >= 1000000) return (n/1000000).toFixed(1) + ' M€';
+      return Math.round(n/1000) + 'k €';
+    });
     bindRange('f-it-monthly','f-it-monthly-val', v => v + ' €/mes');
     bindRange('f-it-hours',  'f-it-hours-val',   v => v + ' h/mes');
     bindRange('f-it-rate',   'f-it-rate-val',    v => v + ' €/h');
@@ -548,8 +621,17 @@ const canonical = "https://aisecurity.es/calculadora-it";
     });
     document.querySelectorAll('[name="siem-type"]').forEach(r => {
       r.addEventListener('change', () => {
-        document.getElementById('siem-cost-block').classList.toggle('hidden', r.value === 'none');
+        const val = document.querySelector('[name="siem-type"]:checked').value;
+        document.getElementById('siem-cost-block').classList.toggle('hidden', val === 'none');
+        document.getElementById('siem-advanced-wrap').classList.toggle('hidden', val !== 'advanced');
       });
+    });
+    document.getElementById('siem-toggle-adv').addEventListener('click', function() {
+      const detail = document.getElementById('siem-adv-detail');
+      const hidden = detail.classList.toggle('hidden');
+      this.textContent = hidden
+        ? '▾ Ver desglose de herramientas de ciberseguridad'
+        : '▴ Ocultar desglose';
     });
     document.getElementById('f-m365-plan').addEventListener('change', function() {
       document.getElementById('m365-custom-block').classList.toggle('hidden', this.value !== 'custom');
@@ -600,6 +682,7 @@ const canonical = "https://aisecurity.es/calculadora-it";
       const employees = getVal('f-employees', 15);
       const devices   = getVal('f-devices', 18);
       const sector    = getSelect('f-sector') || 'general';
+      const revenue   = getVal('f-revenue', 0);
       const itType    = getRadio('it-type') || 'none';
       const itUpdates = getRadio('it-updates') || 'no';
 
@@ -724,7 +807,6 @@ const canonical = "https://aisecurity.es/calculadora-it";
         risks++;
         issues.push({ area: 'Firewall', icon: '🔥', level: 'risk', msg: 'Sin firewall perimetral (solo router del ISP). Tu red está expuesta directamente a internet sin inspección de tráfico.', action: 'Implementar firewall UTM' });
       } else if (fwType === 'basic') {
-        const bench = BENCH.fw(employees);
         issues.push({ area: 'Firewall', icon: '🔥', level: 'info', msg: 'Tienes firewall básico (hardware sin gestión). Sin mantenimiento activo, las reglas pueden quedarse obsoletas y las actualizaciones de firmware sin aplicar.', action: 'Considerar gestión activa' });
       } else if (fwType === 'managed') {
         const bench = BENCH.fw(employees);
@@ -846,6 +928,19 @@ const canonical = "https://aisecurity.es/calculadora-it";
               <div style="font-size:0.75rem;font-family:monospace;letter-spacing:0.1em;color:#94a3b8;margin-bottom:0.75rem;">LO QUE YA TIENES BIEN</div>
               <div style="display:flex;flex-direction:column;gap:0.5rem;">${goodsHtml}</div>
             </div>` : ''}
+
+          ${revenue > 0 ? (() => {
+            const revLabel = revenue >= 1000000 ? (revenue/1000000).toFixed(1) + 'M€' : Math.round(revenue/1000) + 'k€';
+            const benchLow = Math.round(revenue * 0.05 / 12);
+            const benchHigh = Math.round(revenue * 0.10 / 12);
+            const totalNow = Math.round(totalCurrent);
+            const status = totalNow === 0 ? '' : totalNow < benchLow ? ' — <span style="color:#fcd34d;">por debajo del mínimo recomendado</span>' : totalNow > benchHigh ? ' — <span style="color:#fcd34d;">por encima del rango</span>' : ' — <span style="color:#86efac;">dentro del rango</span>';
+            return \`<div style="background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.12);border-radius:8px;padding:0.9rem 1.1rem;margin-bottom:1rem;">
+              <p style="font-size:0.78rem;color:#94a3b8;line-height:1.6;margin:0;">
+                📊 <strong style="color:#a5b4fc;">Referencia por facturación:</strong> con \${revLabel} anuales, la inversión IT recomendada es <strong style="color:#e2e8f0;">\${benchLow}–\${benchHigh} €/mes</strong> (5–10%). Tu gasto declarado: <strong style="color:#e2e8f0;">\${totalNow > 0 ? totalNow + ' €/mes' : 'sin datos'}</strong>\${status}.
+              </p>
+            </div>\`;
+          })() : ''}
 
           <!-- Disclaimer -->
           <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:0.9rem 1.1rem;margin-bottom:1.5rem;">
