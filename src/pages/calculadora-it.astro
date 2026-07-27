@@ -9,13 +9,11 @@ const canonical = "https://aisecurity.es/calculadora-it";
 <BaseLayout title={title} description={description} canonical={canonical}>
 
   <!-- ═══ HERO ═══ -->
-  <section style="background:#060b14;padding:5rem 0 3rem;position:relative;overflow:hidden;">
-    <div class="absolute inset-0 pointer-events-none" style="background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='1' cy='1' r='0.8' fill='rgba(34,211,238,0.06)'/%3E%3C/svg%3E\");"></div>
-    <div class="absolute pointer-events-none" style="top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(245,158,11,0.08),transparent 65%);border-radius:50%;"></div>
+  <section style="background:#020817;padding:5rem 0 3rem;position:relative;overflow:hidden;">
+    <div class="calc-dotgrid absolute inset-0 pointer-events-none"></div>
+    <div class="absolute pointer-events-none" style="top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(139,92,246,0.1),transparent 65%);border-radius:50%;"></div>
     <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
-      <div class="inline-flex items-center gap-2 mb-6 px-3 py-1.5 rounded-full border text-xs font-mono" style="background:rgba(245,158,11,0.06);border-color:rgba(245,158,11,0.2);color:#fbbf24;">
-        CALCULADORA · ALICANTE / COMUNIDAD VALENCIANA · GRATUITA
-      </div>
+      <p style="font-size:0.72rem;letter-spacing:0.18em;color:#818cf8;margin-bottom:1.25rem;font-family:monospace;text-transform:uppercase;">Calculadora · Alicante / Comunidad Valenciana · Gratuita</p>
       <h1 class="font-bold mb-4 leading-tight" style="font-size:clamp(1.9rem,3.2vw,3.2rem);letter-spacing:-0.02em;color:#f0f9ff;">
         ¿Estás pagando un precio justo<br/>por tu IT y ciberseguridad?
       </h1>
@@ -31,17 +29,17 @@ const canonical = "https://aisecurity.es/calculadora-it";
   </section>
 
   <!-- ═══ CALCULATOR ═══ -->
-  <section style="background:#060b14;padding:0 0 6rem;">
+  <section style="background:#020817;padding:0 0 6rem;">
     <div class="max-w-3xl mx-auto px-6">
 
       <!-- Progress bar -->
       <div class="mb-8">
         <div class="flex items-center justify-between mb-2">
           <span id="calc-step-label" class="text-xs font-mono" style="color:#64748b;">Paso 1 de 4</span>
-          <span id="calc-step-pct" class="text-xs font-mono" style="color:#fbbf24;">25%</span>
+          <span id="calc-step-pct" class="text-xs font-mono" style="color:#a78bfa;">25%</span>
         </div>
         <div class="h-1 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.06);">
-          <div id="calc-progress" class="h-full rounded-full transition-all duration-500" style="width:25%;background:linear-gradient(90deg,#0e7490,#f59e0b);"></div>
+          <div id="calc-progress" class="h-full rounded-full transition-all duration-500" style="width:25%;background:linear-gradient(90deg,#4f46e5,#7c3aed);"></div>
         </div>
       </div>
 
@@ -313,11 +311,17 @@ const canonical = "https://aisecurity.es/calculadora-it";
   </section>
 
   <style>
+    /* ── Dot grid ── */
+    .calc-dotgrid {
+      background-image: radial-gradient(circle, rgba(129,140,248,0.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
     /* ── Base ── */
     .calc-panel {
       background: rgba(255,255,255,0.025);
       border: 1px solid rgba(255,255,255,0.08);
-      border-left: 3px solid rgba(245,158,11,0.6);
+      border-left: 3px solid rgba(129,140,248,0.6);
       border-radius: 0 16px 16px 0;
       padding: 2rem;
       clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%);
@@ -332,7 +336,7 @@ const canonical = "https://aisecurity.es/calculadora-it";
       font-family: monospace;
       font-size: 2.5rem;
       font-weight: 800;
-      color: rgba(245,158,11,0.25);
+      color: rgba(129,140,248,0.25);
       line-height: 1;
       flex-shrink: 0;
     }
@@ -368,15 +372,15 @@ const canonical = "https://aisecurity.es/calculadora-it";
       width: 18px;
       height: 18px;
       border-radius: 50%;
-      background: #f59e0b;
+      background: #818cf8;
       cursor: pointer;
-      border: 2px solid #060b14;
-      box-shadow: 0 0 8px rgba(245,158,11,0.5);
+      border: 2px solid #020817;
+      box-shadow: 0 0 8px rgba(129,140,248,0.5);
     }
     .calc-range-val {
       font-family: monospace;
       font-size: 0.85rem;
-      color: #fbbf24;
+      color: #a78bfa;
       min-width: 90px;
       text-align: right;
     }
@@ -416,9 +420,9 @@ const canonical = "https://aisecurity.es/calculadora-it";
       transition: all 0.15s;
     }
     .calc-radio-card:has(input:checked) {
-      border-color: rgba(245,158,11,0.4);
-      background: rgba(245,158,11,0.07);
-      color: #fbbf24;
+      border-color: rgba(129,140,248,0.4);
+      background: rgba(129,140,248,0.07);
+      color: #a78bfa;
     }
     .calc-radio-card input { display: none; }
 
@@ -440,7 +444,7 @@ const canonical = "https://aisecurity.es/calculadora-it";
     .calc-btn-next {
       padding: 0.75rem 1.75rem;
       border-radius: 10px;
-      background: linear-gradient(135deg,#b45309,#d97706);
+      background: linear-gradient(135deg,#4f46e5,#7c3aed);
       color: white;
       font-weight: 700;
       font-size: 0.9rem;
@@ -489,7 +493,7 @@ const canonical = "https://aisecurity.es/calculadora-it";
       document.getElementById('calc-step-pct').textContent = pct + '%';
 
       if (n === 4) generateResults();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('calc-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     document.querySelectorAll('.calc-btn-next').forEach(btn => {
@@ -852,7 +856,7 @@ const canonical = "https://aisecurity.es/calculadora-it";
 
           <!-- CTA -->
           <div style="display:flex;flex-wrap:wrap;gap:1rem;">
-            <a href="/presupuesto?plan=ciberseguridad&ref=calculadora" style="color:white;background:linear-gradient(135deg,#0e7490,#1d4ed8);padding:0.9rem 1.75rem;border-radius:10px;font-weight:700;font-size:0.9rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+            <a href="/presupuesto?plan=ciberseguridad&ref=calculadora" style="color:white;background:linear-gradient(135deg,#4f46e5,#7c3aed);padding:0.9rem 1.75rem;border-radius:10px;font-weight:700;font-size:0.9rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;box-shadow:0 4px 20px rgba(124,58,237,0.3);">
               Consulta gratuita sin compromiso →
             </a>
             <a href="/ciberseguridad" style="color:#94a3b8;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:0.9rem 1.5rem;border-radius:10px;font-size:0.875rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
