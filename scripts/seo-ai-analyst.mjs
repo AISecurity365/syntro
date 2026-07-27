@@ -82,14 +82,24 @@ async function gscTotals(startDate, endDate, filters = null) {
   const r = (await gscQuery({ startDate, endDate, dimensions: [], rowLimit: 1, filters }))[0];
   return { clicks: r?.clicks || 0, impressions: r?.impressions || 0, ctr: r?.ctr || 0, position: r?.position || 0 };
 }
-async function weeklyTrend(weeks = 5) {
+// Ventana de la semana i (0 = la más reciente ya cerrada)
+function weekWindow(i) { return { start: iso(daysAgo(GSC_END + i * 7 + 6)), end: iso(daysAgo(GSC_END + i * 7)) }; }
+// Totales GSC con un grupo de filtros (para OR de rutas en campañas)
+async function gscTotalsGroup(startDate, endDate, group) {
+  const r = (await gsc.searchanalytics.query({ siteUrl: SITE, requestBody: { startDate, endDate, dimensions: [], rowLimit: 1, dimensionFilterGroups: [group] } })).data.rows || [];
+  return { clicks: r[0]?.clicks || 0, impressions: r[0]?.impressions || 0 };
+}
+// Últimas 4 semanas (S1 = más antigua → S4 = más reciente): GSC + sesiones GA4. Rueda solo.
+async function weekly4() {
   const out = [];
-  for (let i = 0; i < weeks; i++) {
-    const end = daysAgo(GSC_END + i * 7), start = daysAgo(GSC_END + i * 7 + 6);
-    try { out.push({ week: `${iso(start)}→${iso(end)}`, ...(await gscTotals(iso(start), iso(end))) }); }
-    catch (e) { out.push({ week: `${iso(start)}→${iso(end)}`, error: e.message }); }
+  for (let i = 3; i >= 0; i--) {
+    const w = weekWindow(i);
+    let g = { clicks: 0, impressions: 0, ctr: 0, position: 0 };
+    if (SITE) { try { g = await gscTotals(w.start, w.end); } catch (e) {} }
+    const t = await ga4Totals({ startDate: w.start, endDate: w.end });
+    out.push({ week: `${w.start}→${w.end}`, ...g, sessions: t.error ? null : t.sessions });
   }
-  return out.reverse();
+  return out;
 }
 
 // ── GA4 ──
@@ -146,6 +156,8 @@ async function analyze(payload) {
 
 Tienes datos de Search Console, GA4 (incluye clics de CTA), el contenido real de las páginas (title/description/h1), las campañas y tu propio análisis de semanas anteriores (analisis_semanas_anteriores).
 
+VISTA DE 4 SEMANAS: en gsc.tendencia_4semanas tienes la evolución de las últimas 4 semanas (S1 = más antigua → S4 = más reciente) con clics/impresiones/CTR/posición/sesiones. Cada campaña trae clics_por_semana_S1_a_S4. Comenta la EVOLUCIÓN: ¿mejora o empeora de S1 a S4? ¿alguna campaña despega o sigue plana?
+
 MUY IMPORTANTE — sé BREVE y NO comentes todo página por página:
 - Da una **conclusión** de 2-3 frases sobre el estado global y hacia dónde va (orientado a Wazuh/cursos).
 - Da **2-4 comentarios clave** (los que mueven la aguja), no más. Pueden incluir UNA propuesta concreta de title/description si es la oportunidad top.
@@ -193,12 +205,11 @@ async function main() {
   const notes = [];
 
   // GSC
-  let gscCur = {}, gscPrev = {}, trend = [], topQueries = [], topPages = [], lowCtr = [];
+  let gscCur = {}, gscPrev = {}, topQueries = [], topPages = [], lowCtr = [];
   if (SITE) {
     try {
       gscCur = await gscTotals(cur.start, cur.end);
       gscPrev = await gscTotals(prev.start, prev.end);
-      trend = await weeklyTrend(5);
       const q = await gscQuery({ startDate: cur.start, endDate: cur.end, dimensions: ['query'], rowLimit: 100 });
       topQueries = q.slice(0, 15);
       lowCtr = q.filter(r => r.impressions >= 30 && r.position >= 4 && r.position <= 20 && r.ctr < 0.03).sort((a, b) => b.impressions - a.impressions).slice(0, 10);
@@ -214,23 +225,23 @@ async function main() {
   if (ga4Cur.error) notes.push('GA4 error: ' + ga4Cur.error);
   const cta = await ga4CtaClicks(curR);
 
+  // Vista rodante de las últimas 4 semanas (GSC + sesiones GA4)
+  const weeks4 = await weekly4();
+
   // Contenido real de páginas foco (top GSC + prioritarias)
   const focusPaths = [...new Set([...topPages.slice(0, 6).map(r => (r.keys?.[0] || '').replace('https://aisecurity.es', '')), ...PRIORITY_PAGES])].filter(Boolean).slice(0, 10);
   const pageContent = focusPaths.map(readPageMeta).filter(Boolean);
 
-  // Campañas
+  // Campañas — clics e impresiones por cada una de las últimas 4 semanas (S1→S4)
   const cfg = JSON.parse(readFileSync(join(__dirname, 'seo-analyst/campaigns.json'), 'utf-8'));
   const campaigns = [];
   for (const c of (cfg.campaigns || [])) {
     if (!SITE) { campaigns.push({ name: c.name, note: c.note, error: 'sin GSC' }); continue; }
-    let cc = { clicks: 0, impressions: 0 }, cp = { clicks: 0, impressions: 0 };
+    const group = { groupType: 'or', filters: c.paths.map(p => ({ dimension: 'page', operator: 'contains', expression: p })) };
+    const weekly = [];
     try {
-      for (const p of c.paths) {
-        const f = [{ dimension: 'page', operator: 'contains', expression: p }];
-        const a = await gscTotals(cur.start, cur.end, f), b = await gscTotals(prev.start, prev.end, f);
-        cc.clicks += a.clicks; cc.impressions += a.impressions; cp.clicks += b.clicks; cp.impressions += b.impressions;
-      }
-      campaigns.push({ name: c.name, note: c.note, cur: cc, prev: cp });
+      for (let i = 3; i >= 0; i--) { const w = weekWindow(i); weekly.push(await gscTotalsGroup(w.start, w.end, group)); }
+      campaigns.push({ name: c.name, note: c.note, weekly });
     } catch (e) { campaigns.push({ name: c.name, note: c.note, error: e.message }); }
   }
 
@@ -245,14 +256,15 @@ async function main() {
     periodo: cur, comparado_con: prev,
     analisis_semanas_anteriores: prevAnalyses,
     gsc: {
-      actual: gscCur, anterior: gscPrev, tendencia_semanal: trend,
+      actual: gscCur, anterior: gscPrev,
+      tendencia_4semanas: weeks4.map(w => ({ semana: w.week, clicks: w.clicks, impr: w.impressions, ctr: +((w.ctr || 0) * 100).toFixed(1), pos: +((w.position || 0)).toFixed(1), sesiones: w.sessions })),
       top_queries: topQueries.map(r => ({ q: r.keys?.[0], clicks: r.clicks, impr: r.impressions, ctr: +(r.ctr * 100).toFixed(1), pos: +r.position.toFixed(1) })),
       ctr_bajo: lowCtr.map(r => ({ q: r.keys?.[0], impr: r.impressions, ctr: +(r.ctr * 100).toFixed(1), pos: +r.position.toFixed(1) })),
       top_pages: topPages.map(r => ({ page: (r.keys?.[0] || '').replace('https://aisecurity.es', ''), clicks: r.clicks, impr: r.impressions, ctr: +(r.ctr * 100).toFixed(1) })),
     },
     ga4: { actual: ga4Cur, anterior: ga4Prev, cta_clicks: cta.slice(0, 20) },
     contenido_paginas: pageContent,
-    campanas: campaigns.map(c => ({ nombre: c.name, actual: c.cur, anterior: c.prev, nota: c.note })),
+    campanas: campaigns.map(c => ({ nombre: c.name, nota: c.note, clics_por_semana_S1_a_S4: c.weekly ? c.weekly.map(w => w.clicks) : null, impresiones_por_semana_S1_a_S4: c.weekly ? c.weekly.map(w => w.impressions) : null })),
   };
   const ai = await analyze(payload);
 
@@ -273,12 +285,12 @@ async function main() {
        ${block('💬 Comentarios clave', li(ai.comentarios))}
        ${block('🚀 Campañas', li((ai.campanas || []).map(c => `${c.nombre}: ${c.valoracion}`)))}`;
 
-  const trendRows = trend.filter(t => !t.error).map(t => [t.week, t.clicks, t.impressions, (t.ctr * 100).toFixed(1) + '%', t.position.toFixed(1)]);
+  const trendRows = weeks4.map((t, i) => [`S${i + 1} · ${t.week}`, t.clicks, t.impressions, ((t.ctr || 0) * 100).toFixed(1) + '%', (t.position || 0).toFixed(1), t.sessions ?? '-']);
   const qRows = topQueries.map(r => [esc(r.keys?.[0]), r.clicks, r.impressions, (r.ctr * 100).toFixed(1) + '%', r.position.toFixed(1)]);
   const lowRows = lowCtr.map(r => [esc(r.keys?.[0]), r.impressions, (r.ctr * 100).toFixed(1) + '%', r.position.toFixed(1)]);
   const pRows = topPages.map(r => [esc((r.keys?.[0] || '').replace('https://aisecurity.es', '')), r.clicks, r.impressions, (r.ctr * 100).toFixed(1) + '%']);
   const ctaRows = cta.slice(0, 12).map(c => [esc(c.label), esc(c.page), c.clicks]);
-  const campRows = campaigns.map(c => c.error ? [esc(c.name), 'error: ' + c.error, '', esc(c.note || '')] : [esc(c.name), `${c.cur.clicks} (${pct(c.cur.clicks, c.prev.clicks) || '='})`, `${c.cur.impressions} (${pct(c.cur.impressions, c.prev.impressions) || '='})`, esc(c.note || '')]);
+  const campRows = campaigns.map(c => c.error ? [esc(c.name), 'error', '', '', '', esc(c.note || '')] : [esc(c.name), ...c.weekly.map(w => w.clicks), esc(c.note || '')]);
 
   const html = `<div style="font-family:system-ui,sans-serif;background:#f1f5f9;padding:24px;max-width:720px;margin:0 auto;">
     <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);border-radius:12px;padding:24px 28px;margin-bottom:18px;">
@@ -287,8 +299,8 @@ async function main() {
     </div>
     ${notes.length ? block('ℹ️ Notas de datos', li(notes)) : ''}
     ${aiBlock}
-    ${block('📈 Tendencia semanal (Search Console)', tbl(['Semana', 'Clics', 'Impres.', 'CTR', 'Pos.'], trendRows))}
-    ${block('🚀 Campañas (datos)', tbl(['Campaña', 'Clics (Δ)', 'Impres. (Δ)', 'Nota'], campRows))}
+    ${block('📈 Últimas 4 semanas (S1→S4 · GSC + sesiones)', tbl(['Semana', 'Clics', 'Impres.', 'CTR', 'Pos.', 'Sesiones'], trendRows))}
+    ${block('🚀 Campañas · clics por semana (S1→S4)', tbl(['Campaña', 'S1', 'S2', 'S3', 'S4', 'Nota'], campRows))}
     ${block('🎯 CTR bajo = oportunidad', tbl(['Query', 'Impres.', 'CTR', 'Pos.'], lowRows))}
     ${block('🖱️ Clics de CTA (GA4)', tbl(['Botón / enlace', 'Página', 'Clics'], ctaRows))}
     ${block('🔎 Top queries', tbl(['Query', 'Clics', 'Impres.', 'CTR', 'Pos.'], qRows))}
