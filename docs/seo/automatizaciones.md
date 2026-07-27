@@ -11,7 +11,6 @@ Estado a **jul 2026**. Scripts en `scripts/seo-automation/` (+ `scripts/ga4-week
 | **Ping IndexNow** | `seo-ping.yml` | push a `main` (+ manual) | Notifica cambios a Bing/Yandex/Google (`5-ping-search-engines.js`). Espera al deploy de Vercel. | No, solo notifica |
 | **Google Indexing API** | `google-indexing-on-push.yml` | push a `main` | Solicita indexación directa de URLs prioritarias a Google. | No |
 | **Auto-fix SEO/GEO con IA** | `page-quality-check.yml` | push a `main` | Analiza páginas cambiadas, detecta fallos SEO/GEO y los **corrige con DeepSeek** (cambios quirúrgicos). Commit `[skip ci]` + email **solo si mejora** (`.github/scripts/seo-autofix.cjs`). | Sí (auto-commit) |
-| **Informe semanal GA4 + GSC** | `ga4-weekly-report.yml` | lunes 08:00 UTC (+ manual) | Descarga métricas de Google Analytics 4 + Search Console y envía email con tendencia (`scripts/ga4-weekly-report.mjs`). Solo lectura. | No |
 | **Monitor GEO (AI Search)** | `geo-monitor.yml` | día 1 de cada mes 07:00 UTC (+ manual) | Comprueba un set fijo de prompts Wazuh (ES+EN) en ChatGPT/Perplexity/Google AI Mode para ver si nos citan (`scripts/geo-monitor/check.mjs`). | Sí (guarda histórico) |
 | **Analista SEO con IA** | `seo-ai-analyst.yml` | lunes 09:00 UTC (+ manual) | Reúne Search Console (núcleo) + GA4 (incluye **clics de CTA** por página) + el **contenido real de las páginas** (lee el repo del checkout: title/description/h1) y se lo pasa a **DeepSeek** (`v4-flash`) con el **contexto de negocio** (prioridad Wazuh/cursos, blogs como embudo). Devuelve un email **conciso**: conclusión + 2-4 comentarios clave + valoración de **Campañas** (`scripts/seo-ai-analyst.mjs`); debajo, una **vista rodante de las últimas 4 semanas** (S1→S4, GSC + sesiones GA4) + clics por semana de cada campaña, y el resto de tablas de datos. Las 4 semanas salen directas de GSC/GA4 (hay histórico desde la 1ª ejecución). Tiene **memoria semanal**: guarda su análisis en `scripts/seo-analyst/history.json` (commiteado por el workflow) y lee las 2 últimas semanas para no repetirse y detectar qué cambió. **Nunca aplica cambios**, solo informa. Campañas en `scripts/seo-analyst/campaigns.json`. | Sí (commit del histórico) |
 
@@ -26,6 +25,7 @@ Solo quedan en `workflow_dispatch` (manual). **Reactivar el cron únicamente con
 | `1-update-dates.js` / `seo-update-dates.yml` — bump semanal de `modifiedDate` | **Frescura falsa** → señal penalizable. Subir fecha solo si el artículo cambia de verdad. |
 | `3-ab-rotation.js` / `seo-ab-rotation.yml` — rotación A/B de títulos/meta (días 1 y 15) | **Scaled content abuse**. Además el sitio no tiene volumen para un test A/B estadístico. |
 | `4-content-variations.js` — sinónimos/año en párrafos (era manual) | Mismo riesgo de contenido manipulativo a escala. |
+| `ga4-weekly-report.yml` — informe semanal GA4+GSC de tablas planas (lunes 08:00) | **Reemplazado** por el analista IA (`seo-ai-analyst.yml`), que ya trae GA4 + GSC + análisis. Queda solo manual. |
 
 ---
 

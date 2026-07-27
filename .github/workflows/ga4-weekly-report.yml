@@ -1,9 +1,11 @@
 name: GA4 Weekly Report
 
 on:
-  schedule:
-    - cron: '0 8 * * 1'   # Cada lunes a las 08:00 UTC
-  workflow_dispatch:        # Permite ejecutarlo manualmente desde GitHub
+  # Cron DESACTIVADO (jul 2026) — sustituido por el analista IA (seo-ai-analyst.yml),
+  # que ya incluye GA4 + Search Console + análisis. Queda solo el disparo manual.
+  # schedule:
+  #   - cron: '0 8 * * 1'   # Cada lunes a las 08:00 UTC
+  workflow_dispatch:        # Ejecución manual desde GitHub si se necesita el informe plano
 
 jobs:
   send-report:
