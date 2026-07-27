@@ -2579,6 +2579,221 @@
           "isNew": true
         }
       ]
+    },
+    {
+      "date": "2026-07-27T06:16:04.078Z",
+      "totals": {
+        "current": {
+          "clicks": 32,
+          "impressions": 2183
+        },
+        "previous": {
+          "clicks": 26,
+          "impressions": 2029
+        }
+      },
+      "topKeywords": [
+        {
+          "keyword": "wazuh",
+          "clicks": 12,
+          "impressions": 1746,
+          "ctr": 0.006872852233676976,
+          "position": 5.7376861397479955,
+          "prevClicks": 5,
+          "prevPosition": 6.438516590761223,
+          "isNew": false
+        },
+        {
+          "keyword": "instalar wazuh en ubuntu server",
+          "clicks": 3,
+          "impressions": 9,
+          "ctr": 0.3333333333333333,
+          "position": 2.5555555555555554,
+          "prevClicks": 2,
+          "prevPosition": 2.2,
+          "isNew": false
+        },
+        {
+          "keyword": "aisecurity",
+          "clicks": 2,
+          "impressions": 5,
+          "ctr": 0.4,
+          "position": 1,
+          "prevClicks": 6,
+          "prevPosition": 1.1111111111111112,
+          "isNew": false
+        },
+        {
+          "keyword": "wazhu",
+          "clicks": 2,
+          "impressions": 49,
+          "ctr": 0.04081632653061224,
+          "position": 5.775510204081633,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "citas con ia",
+          "clicks": 1,
+          "impressions": 1,
+          "ctr": 1,
+          "position": 12,
+          "prevClicks": 1,
+          "prevPosition": 12,
+          "isNew": false
+        },
+        {
+          "keyword": "como instalar wazuh en ubuntu",
+          "clicks": 1,
+          "impressions": 3,
+          "ctr": 0.3333333333333333,
+          "position": 3,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "como instalar wazuh en ubuntu server",
+          "clicks": 1,
+          "impressions": 2,
+          "ctr": 0.5,
+          "position": 2,
+          "prevClicks": 1,
+          "prevPosition": 2.6,
+          "isNew": false
+        },
+        {
+          "keyword": "instalar wazuh",
+          "clicks": 1,
+          "impressions": 15,
+          "ctr": 0.06666666666666667,
+          "position": 3.933333333333333,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "instalar wazuh en ubuntu 24.04",
+          "clicks": 1,
+          "impressions": 2,
+          "ctr": 0.5,
+          "position": 1,
+          "prevClicks": 1,
+          "prevPosition": 1,
+          "isNew": false
+        },
+        {
+          "keyword": "phishing outlook",
+          "clicks": 1,
+          "impressions": 1,
+          "ctr": 1,
+          "position": 10,
+          "prevClicks": 1,
+          "prevPosition": 8.333333333333332,
+          "isNew": false
+        },
+        {
+          "keyword": "qué es wazuh",
+          "clicks": 1,
+          "impressions": 4,
+          "ctr": 0.25,
+          "position": 2.75,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "wazuh agent que es",
+          "clicks": 1,
+          "impressions": 10,
+          "ctr": 0.1,
+          "position": 3.8,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "wazuh como instalar",
+          "clicks": 1,
+          "impressions": 2,
+          "ctr": 0.5,
+          "position": 3,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "wazuh download linux",
+          "clicks": 1,
+          "impressions": 1,
+          "ctr": 1,
+          "position": 10,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "wazuh ia",
+          "clicks": 1,
+          "impressions": 2,
+          "ctr": 0.5,
+          "position": 2,
+          "prevClicks": 1,
+          "prevPosition": 3,
+          "isNew": false
+        },
+        {
+          "keyword": "wazuh ubuntu 24.04",
+          "clicks": 1,
+          "impressions": 2,
+          "ctr": 0.5,
+          "position": 2,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "whazu",
+          "clicks": 1,
+          "impressions": 15,
+          "ctr": 0.06666666666666667,
+          "position": 5.933333333333334,
+          "prevClicks": 0,
+          "prevPosition": null,
+          "isNew": true
+        },
+        {
+          "keyword": "agencia ia",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 86,
+          "prevClicks": 0,
+          "prevPosition": 86,
+          "isNew": false
+        },
+        {
+          "keyword": "agencia ia alicante",
+          "clicks": 0,
+          "impressions": 7,
+          "ctr": 0,
+          "position": 27.571428571428573,
+          "prevClicks": 0,
+          "prevPosition": 30.285714285714285,
+          "isNew": false
+        },
+        {
+          "keyword": "agencia inteligencia artificial alicante",
+          "clicks": 0,
+          "impressions": 6,
+          "ctr": 0,
+          "position": 48.166666666666664,
+          "prevClicks": 0,
+          "prevPosition": 48.875,
+          "isNew": false
+        }
+      ]
     }
   ]
 }
