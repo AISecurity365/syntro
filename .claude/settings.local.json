@@ -79,7 +79,11 @@
       "Bash(not exist *)",
       "PowerShell(if \\(-not \\(Test-Path \"C:\\\\Users\\\\Jul\\\\.claude\\\\commands\"\\)\\) { New-Item -ItemType Directory -Path \"C:\\\\Users\\\\Jul\\\\.claude\\\\commands\" })",
       "Bash(jq -e '.' .claude/settings.json)",
-      "Bash(jq -e '.hooks.Stop' .claude/settings.json)"
+      "Bash(jq -e '.hooks.Stop' .claude/settings.json)",
+      "Bash(sort -k5 -n)",
+      "Bash(xargs ls -la)",
+      "mcp__supabase__list_tables",
+      "mcp__supabase__execute_sql"
     ],
     "deny": [],
     "ask": [],
