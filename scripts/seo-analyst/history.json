@@ -27,5 +27,34 @@
     "ga4": {
       "sessions": 192
     }
+  },
+  {
+    "fecha": "2026-07-24",
+    "conclusion": "El tráfico se mantiene estable con leve mejora en posición media (8.5), pero el blog estrella 'qué es wazuh' sigue estancado con CTR del 0.9% y CTAs rechazados masivamente (35 clics '✕'). La palanca principal sigue siendo optimizar ese título/description y eliminar el popup molesto para redirigir a /wazuh y cursos.",
+    "comentarios": [
+      "Aplica ya la title/description propuesta la semana pasada: 'Wazuh para Empresas: SIEM Open Source que Cumple ENS [Guía 2026]' para captar intención comercial; CTR actual 0.9% debe subir a >3%.",
+      "Los 35 clics '✕' en blogs indican que un popup está siendo ignorado; sustitúyelo por un CTA directo a /wazuh o /curso-wazuh sin opción de cierre o con frecuencia limitada.",
+      "Añade enlaces contextuales a /curso-wazuh (CTR 8.8% pero solo 54 impresiones) desde todos los blogs de Wazuh y desde el menú principal; aprovecha el tráfico de 'cómo instalar wazuh' (CTR 6.4%).",
+      "La query 'wazuh' (pos 5.6, 11 clics) es la principal oportunidad; crea una página de aterrizaje específica para esa intención comercial o mejora el snippet de /wazuh para atraer más clics."
+    ],
+    "campanas": [
+      {
+        "nombre": "Wazuh multi-idioma (EN/FR/NL)",
+        "valoracion": "estable – sin clics ni impresiones, no impacta tráfico cualificado"
+      },
+      {
+        "nombre": "Rediseño Atención de Llamadas IA",
+        "valoracion": "estable – 26 impresiones sin clics, irrelevante para el objetivo Wazuh/cursos"
+      }
+    ],
+    "gsc": {
+      "clicks": 76,
+      "impr": 6176,
+      "ctr": 1.23,
+      "pos": 8.5
+    },
+    "ga4": {
+      "sessions": 198
+    }
   }
 ]
