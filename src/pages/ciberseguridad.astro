@@ -67,6 +67,10 @@ const canonical = "https://aisecurity.es/ciberseguridad";
               <feGaussianBlur stdDeviation="5" result="b"/>
               <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
+            <filter id="glow-icon">
+              <feGaussianBlur stdDeviation="1.5" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
             <!-- Paths de ataque -->
             <path id="v-ph"  d="M 340,50  Q 290,130 200,200"/>
             <path id="v-dd"  d="M 200,10  Q 200,100 200,200"/>
@@ -104,12 +108,15 @@ const canonical = "https://aisecurity.es/ciberseguridad";
 
           <!-- ──────────── ATAQUES ──────────── -->
 
-          <!-- PHISHING (top-right) — rojo, ciclo 6s, delay 0 -->
+          <!-- PHISHING (top-right) — icono sobre, ciclo 6s, delay 0 -->
           <text x="352" y="42" font-size="7" fill="rgba(239,68,68,0.55)" font-family="monospace" font-weight="700">PHISHING</text>
-          <circle r="5" fill="#ef4444" opacity="0" filter="url(#glow-v)">
+          <g opacity="0" filter="url(#glow-icon)">
             <animateMotion id="ph-m" dur="2.5s" begin="0s;ph-m.end+3.5s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#v-ph"/></animateMotion>
             <animate attributeName="opacity" dur="2.5s" begin="0s;ph-m.end+3.5s" values="0;1;1;0" keyTimes="0;0.05;0.85;1"/>
-          </circle>
+            <rect x="-7" y="-5" width="14" height="10" rx="1.5" fill="#ef4444"/>
+            <polyline points="-7,-5 0,1 7,-5" fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="1.2" stroke-linejoin="round"/>
+            <line x1="-7" y1="5" x2="7" y2="5" stroke="none"/>
+          </g>
           <circle cx="200" cy="200" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity="0">
             <animate attributeName="r" from="8" to="40" dur="0.8s" begin="ph-m.end;ph-m.end+6s"/>
             <animate attributeName="opacity" from="0.9" to="0" dur="0.8s" begin="ph-m.end;ph-m.end+6s"/>
@@ -119,56 +126,81 @@ const canonical = "https://aisecurity.es/ciberseguridad";
             <animate attributeName="opacity" from="0.5" to="0" dur="1s" begin="ph-m.end;ph-m.end+6s"/>
           </circle>
 
-          <!-- DDoS (top) — rojo más grande, ciclo 8s, delay 1.5s -->
+          <!-- DDoS (top) — icono paquetes HTTP, ciclo 8s, delay 1.5s -->
           <text x="172" y="5" font-size="7" fill="rgba(239,68,68,0.55)" font-family="monospace" font-weight="700">DDoS</text>
-          <circle r="6" fill="#dc2626" opacity="0" filter="url(#glow-v)">
+          <g opacity="0" filter="url(#glow-icon)">
             <animateMotion id="dd-m" dur="3s" begin="1.5s;dd-m.end+5s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#v-dd"/></animateMotion>
             <animate attributeName="opacity" dur="3s" begin="1.5s;dd-m.end+5s" values="0;1;1;0" keyTimes="0;0.05;0.85;1"/>
-          </circle>
+            <rect x="-7" y="-6" width="6" height="2.5" rx="0.8" fill="#dc2626"/>
+            <rect x="-7" y="-1.5" width="6" height="2.5" rx="0.8" fill="#dc2626"/>
+            <rect x="-7" y="3.5" width="6" height="2.5" rx="0.8" fill="#dc2626"/>
+            <path d="M0.5,-4.5 L5,0 L0.5,4.5" fill="#dc2626"/>
+          </g>
           <circle cx="200" cy="200" fill="none" stroke="#c084fc" stroke-width="2" opacity="0">
             <animate attributeName="r" from="10" to="50" dur="1s" begin="dd-m.end;dd-m.end+8.5s"/>
             <animate attributeName="opacity" from="1" to="0" dur="1s" begin="dd-m.end;dd-m.end+8.5s"/>
           </circle>
 
-          <!-- RANSOMWARE (right) — rojo, ciclo 9s, delay 3s -->
+          <!-- RANSOMWARE (right) — icono candado, ciclo 9s, delay 3s -->
           <text x="394" y="175" font-size="7" fill="rgba(239,68,68,0.55)" font-family="monospace" font-weight="700" text-anchor="end">RANSOM</text>
-          <circle r="4.5" fill="#ef4444" opacity="0" filter="url(#glow-v)">
+          <g opacity="0" filter="url(#glow-icon)">
             <animateMotion id="rw-m" dur="2.8s" begin="3s;rw-m.end+6.2s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#v-rw"/></animateMotion>
             <animate attributeName="opacity" dur="2.8s" begin="3s;rw-m.end+6.2s" values="0;1;1;0" keyTimes="0;0.05;0.85;1"/>
-          </circle>
+            <path d="M-3.5,-5.5 L-3.5,-2 A3.5,3.5 0 0,0 3.5,-2 L3.5,-5.5" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round"/>
+            <rect x="-5" y="-2" width="10" height="8" rx="1.5" fill="#ef4444"/>
+            <circle cx="0" cy="2.5" r="1.5" fill="rgba(0,0,0,0.35)"/>
+          </g>
           <circle cx="200" cy="200" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity="0">
             <animate attributeName="r" from="8" to="44" dur="0.9s" begin="rw-m.end;rw-m.end+9s"/>
             <animate attributeName="opacity" from="0.8" to="0" dur="0.9s" begin="rw-m.end;rw-m.end+9s"/>
           </circle>
 
-          <!-- BRUTEFORCE (bottom-right) — ámbar, ciclo 7s, delay 4.5s -->
+          <!-- BRUTEFORCE (bottom-right) — icono llave, ciclo 7s, delay 4.5s -->
           <text x="334" y="378" font-size="7" fill="rgba(251,146,60,0.55)" font-family="monospace" font-weight="700">BRUTE</text>
-          <circle r="4" fill="#fb923c" opacity="0">
+          <g opacity="0">
             <animateMotion id="bf-m" dur="2.8s" begin="4.5s;bf-m.end+4.2s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#v-bf"/></animateMotion>
             <animate attributeName="opacity" dur="2.8s" begin="4.5s;bf-m.end+4.2s" values="0;0.8;0.8;0" keyTimes="0;0.05;0.85;1"/>
-          </circle>
+            <circle cx="-4" cy="0" r="3.5" fill="none" stroke="#fb923c" stroke-width="1.8"/>
+            <circle cx="-4" cy="0" r="1.5" fill="#fb923c"/>
+            <line x1="-0.5" y1="0" x2="7" y2="0" stroke="#fb923c" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="4" y1="0" x2="4" y2="2.8" stroke="#fb923c" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="6.5" y1="0" x2="6.5" y2="2.8" stroke="#fb923c" stroke-width="1.5" stroke-linecap="round"/>
+          </g>
           <circle cx="200" cy="200" fill="none" stroke="#818cf8" stroke-width="1.2" opacity="0">
             <animate attributeName="r" from="8" to="38" dur="0.8s" begin="bf-m.end;bf-m.end+7s"/>
             <animate attributeName="opacity" from="0.7" to="0" dur="0.8s" begin="bf-m.end;bf-m.end+7s"/>
           </circle>
 
-          <!-- MALWARE (bottom-left) — rojo, ciclo 10s, delay 6.5s -->
+          <!-- MALWARE (bottom-left) — icono bug, ciclo 10s, delay 6.5s -->
           <text x="50" y="395" font-size="7" fill="rgba(239,68,68,0.55)" font-family="monospace" font-weight="700">MALWARE</text>
-          <circle r="4.5" fill="#ef4444" opacity="0" filter="url(#glow-v)">
+          <g opacity="0" filter="url(#glow-icon)">
             <animateMotion id="ml-m" dur="3s" begin="6.5s;ml-m.end+7s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#v-ml"/></animateMotion>
             <animate attributeName="opacity" dur="3s" begin="6.5s;ml-m.end+7s" values="0;1;1;0" keyTimes="0;0.05;0.85;1"/>
-          </circle>
+            <ellipse cx="0" cy="0.5" rx="3.5" ry="5" fill="#ef4444"/>
+            <line x1="-6" y1="-3" x2="-3.5" y2="-1" stroke="#ef4444" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="-6" y1="0.5" x2="-3.5" y2="0.5" stroke="#ef4444" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="-6" y1="4" x2="-3.5" y2="2" stroke="#ef4444" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="6" y1="-3" x2="3.5" y2="-1" stroke="#ef4444" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="6" y1="0.5" x2="3.5" y2="0.5" stroke="#ef4444" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="6" y1="4" x2="3.5" y2="2" stroke="#ef4444" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="-1.5" y1="-5.5" x2="-1.5" y2="-7.5" stroke="#ef4444" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="1.5" y1="-5.5" x2="1.5" y2="-7.5" stroke="#ef4444" stroke-width="1.2" stroke-linecap="round"/>
+          </g>
           <circle cx="200" cy="200" fill="none" stroke="#c084fc" stroke-width="1.5" opacity="0">
             <animate attributeName="r" from="8" to="46" dur="0.9s" begin="ml-m.end;ml-m.end+10s"/>
             <animate attributeName="opacity" from="0.8" to="0" dur="0.9s" begin="ml-m.end;ml-m.end+10s"/>
           </circle>
 
-          <!-- EXPLOIT (left) — ámbar, ciclo 8s, delay 8s -->
+          <!-- EXPLOIT (left) — icono terminal, ciclo 8s, delay 8s -->
           <text x="5" y="115" font-size="7" fill="rgba(251,146,60,0.55)" font-family="monospace" font-weight="700">EXPLOIT</text>
-          <circle r="4" fill="#fb923c" opacity="0">
+          <g opacity="0">
             <animateMotion id="ex-m" dur="2.6s" begin="8s;ex-m.end+5.4s" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#v-ex"/></animateMotion>
             <animate attributeName="opacity" dur="2.6s" begin="8s;ex-m.end+5.4s" values="0;0.8;0.8;0" keyTimes="0;0.05;0.85;1"/>
-          </circle>
+            <rect x="-7.5" y="-6" width="15" height="12" rx="2" fill="#1e1b4b"/>
+            <rect x="-7.5" y="-6" width="15" height="12" rx="2" fill="none" stroke="#fb923c" stroke-width="1"/>
+            <path d="M-5.5,-2 L-2.5,0 L-5.5,2" fill="none" stroke="#fb923c" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="-1" y1="2.5" x2="4" y2="2.5" stroke="#fb923c" stroke-width="1.5" stroke-linecap="round"/>
+          </g>
           <circle cx="200" cy="200" fill="none" stroke="#818cf8" stroke-width="1.2" opacity="0">
             <animate attributeName="r" from="8" to="36" dur="0.7s" begin="ex-m.end;ex-m.end+8s"/>
             <animate attributeName="opacity" from="0.7" to="0" dur="0.7s" begin="ex-m.end;ex-m.end+8s"/>
@@ -226,7 +258,7 @@ const canonical = "https://aisecurity.es/ciberseguridad";
         <div class="flex flex-wrap gap-8 mb-8">
           <div>
             <div class="font-mono text-2xl font-bold" style="color:#818cf8;">10</div>
-            <div class="text-xs mt-0.5" style="color:#475569;">dominios de seguridad</div>
+            <div class="text-xs mt-0.5" style="color:#475569;">herramientas de seguridad</div>
           </div>
           <div>
             <div class="font-mono text-2xl font-bold" style="color:#a78bfa;">+50</div>
@@ -266,14 +298,16 @@ const canonical = "https://aisecurity.es/ciberseguridad";
     <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
       <div class="text-center mb-12">
         <p style="font-size:0.72rem;letter-spacing:0.18em;color:#818cf8;margin-bottom:0.75rem;font-family:monospace;text-transform:uppercase;">Casos reales en España</p>
-        <h2 class="font-bold" style="font-size:clamp(1.6rem,2.4vw,2.4rem);color:#e2e8f0;">
+        <h2 class="font-bold mb-2" style="font-size:clamp(1.6rem,2.4vw,2.4rem);color:#e2e8f0;">
           Las amenazas que más afectan a <span style="background:linear-gradient(135deg,#818cf8,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">PyMEs españolas</span>
         </h2>
+        <p style="color:#475569;font-size:0.875rem;max-width:540px;margin:0 auto;line-height:1.6;">Incidentes reales ocurridos en empresas de menos de 50 empleados en España. Nombres cambiados, hechos verificados.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
         <div class="cs-threat-card" style="--tc:#ef4444;">
+          <div class="cs-tc-icon">🔒</div>
           <div class="cs-tc-head">
             <span class="cs-tc-type" style="color:#f87171;">RANSOMWARE</span>
             <span class="cs-tc-impact" style="color:#fca5a5;">15.000 € / 3 semanas parado</span>
@@ -285,6 +319,7 @@ const canonical = "https://aisecurity.es/ciberseguridad";
         </div>
 
         <div class="cs-threat-card" style="--tc:#f59e0b;">
+          <div class="cs-tc-icon">🎣</div>
           <div class="cs-tc-head">
             <span class="cs-tc-type" style="color:#fcd34d;">PHISHING DE CEO</span>
             <span class="cs-tc-impact" style="color:#fde68a;">8.500 € transferidos</span>
@@ -296,6 +331,7 @@ const canonical = "https://aisecurity.es/ciberseguridad";
         </div>
 
         <div class="cs-threat-card" style="--tc:#818cf8;">
+          <div class="cs-tc-icon">📧</div>
           <div class="cs-tc-head">
             <span class="cs-tc-type" style="color:#a5b4fc;">ROBO DE CREDENCIALES M365</span>
             <span class="cs-tc-impact" style="color:#c7d2fe;">Contratos de clientes robados</span>
@@ -307,6 +343,7 @@ const canonical = "https://aisecurity.es/ciberseguridad";
         </div>
 
         <div class="cs-threat-card" style="--tc:#ef4444;">
+          <div class="cs-tc-icon">⚠️</div>
           <div class="cs-tc-head">
             <span class="cs-tc-type" style="color:#f87171;">SERVIDOR SIN PARCHEAR</span>
             <span class="cs-tc-impact" style="color:#fca5a5;">50.000 € multa RGPD</span>
@@ -318,6 +355,7 @@ const canonical = "https://aisecurity.es/ciberseguridad";
         </div>
 
         <div class="cs-threat-card" style="--tc:#f59e0b;">
+          <div class="cs-tc-icon">💥</div>
           <div class="cs-tc-head">
             <span class="cs-tc-type" style="color:#fcd34d;">DDoS EN TEMPORADA ALTA</span>
             <span class="cs-tc-impact" style="color:#fde68a;">14h sin venta online</span>
@@ -329,6 +367,7 @@ const canonical = "https://aisecurity.es/ciberseguridad";
         </div>
 
         <div class="cs-threat-card" style="--tc:#818cf8;">
+          <div class="cs-tc-icon">🔗</div>
           <div class="cs-tc-head">
             <span class="cs-tc-type" style="color:#a5b4fc;">PROVEEDOR IT COMPROMETIDO</span>
             <span class="cs-tc-impact" style="color:#c7d2fe;">15 clientes afectados</span>
@@ -358,7 +397,7 @@ const canonical = "https://aisecurity.es/ciberseguridad";
       <!-- Header centrado -->
       <div class="text-center mb-12">
         <p style="font-size:0.72rem;letter-spacing:0.18em;color:#818cf8;margin-bottom:0.75rem;font-family:monospace;text-transform:uppercase;">Arquitectura de defensa</p>
-        <h2 class="font-bold mb-3" style="font-size:clamp(1.6rem,2.4vw,2.4rem);color:#e2e8f0;">¿Cuáles son los 10 dominios que protegen tu empresa?</h2>
+        <h2 class="font-bold mb-3" style="font-size:clamp(1.6rem,2.4vw,2.4rem);color:#e2e8f0;">¿Cuáles son las 10 herramientas que protegen tu empresa?</h2>
         <p style="color:#475569;max-width:560px;margin:0 auto;line-height:1.7;font-size:0.925rem;">
           Cada empresa tiene vulnerabilidades en capas distintas. Haz clic en cada dominio para ver los controles específicos.
         </p>
@@ -378,6 +417,7 @@ const canonical = "https://aisecurity.es/ciberseguridad";
               </div>
             </div>
             <div class="flex items-center gap-3 flex-shrink-0">
+              <span class="cs-ens-badge">ENS</span>
               <span class="cs-lvl cs-lvl-red">CRÍTICO</span>
               <button class="cs-btn-expand"><svg class="cs-chev w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
             </div>
@@ -406,6 +446,7 @@ const canonical = "https://aisecurity.es/ciberseguridad";
               </div>
             </div>
             <div class="flex items-center gap-3 flex-shrink-0">
+              <span class="cs-ens-badge">ENS</span>
               <span class="cs-lvl cs-lvl-red">CRÍTICO</span>
               <button class="cs-btn-expand"><svg class="cs-chev w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
             </div>
