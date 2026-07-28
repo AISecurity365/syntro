@@ -1,5 +1,6 @@
 ﻿---
 import BlogLayout from "../../layouts/BlogLayout.astro";
+import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
 ---
 
 <BlogLayout
@@ -113,11 +114,13 @@ https://IP_SERVIDOR</code></pre>
     <li><strong>WAZUH_AGENT_NAME:</strong> Nombre identificativo para este agente (ej: PC-CONTABILIDAD, SERVER-WEB, etc.)</li>
   </ul>
 
-  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.7.0-1.msi -OutFile wazuh-agent.msi; Start-Process msiexec.exe -ArgumentList "/i wazuh-agent.msi /q WAZUH_MANAGER=TU_IP_SERVIDOR WAZUH_AGENT_NAME=NOMBRE_AGENTE" -Wait</code></pre>
+  <WazuhVersionReplacer />
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-__WAZUH_VERSION__.msi -OutFile wazuh-agent.msi; Start-Process msiexec.exe -ArgumentList "/i wazuh-agent.msi /q WAZUH_MANAGER=TU_IP_SERVIDOR WAZUH_AGENT_NAME=NOMBRE_AGENTE" -Wait</code></pre>
 
   <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
     <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Ejemplo real:</strong> Si tu servidor Wazuh está en 192.168.1.100 y quieres llamar al agente "PC-OFICINA":</p>
-    <pre style="background:#0f1419;padding:16px;border-radius:8px;margin-top:12px;overflow-x:auto;"><code style="color: #e5e7eb;">Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.7.0-1.msi -OutFile wazuh-agent.msi; Start-Process msiexec.exe -ArgumentList "/i wazuh-agent.msi /q WAZUH_MANAGER=192.168.1.100 WAZUH_AGENT_NAME=PC-OFICINA" -Wait</code></pre>
+    <pre style="background:#0f1419;padding:16px;border-radius:8px;margin-top:12px;overflow-x:auto;"><code style="color: #e5e7eb;">Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-__WAZUH_VERSION__.msi -OutFile wazuh-agent.msi; Start-Process msiexec.exe -ArgumentList "/i wazuh-agent.msi /q WAZUH_MANAGER=192.168.1.100 WAZUH_AGENT_NAME=PC-OFICINA" -Wait</code></pre>
   </div>
 
   <h2>Archivo de configuración ossec.conf</h2>
