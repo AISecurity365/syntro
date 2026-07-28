@@ -32,6 +32,10 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
     Wazuh necesita almacenar todos los eventos en formato JSON para que la IA pueda analizarlos. Edita la configuración del servidor:
   </p>
 
+  <p>
+    Este paso da por hecho que ya tienes un Wazuh Manager funcionando y generando alertas. Si aún no es tu caso, en el <a href="/curso-wazuh">curso de Wazuh en español</a> montamos la plataforma desde la instalación y llegamos hasta las reglas que producen estos eventos.
+  </p>
+
   <pre><code class="language-bash"># Editar configuración de Wazuh
 sudo nano /var/ossec/etc/ossec.conf
 

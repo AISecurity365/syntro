@@ -19,6 +19,10 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
     <strong>FIM (File Integrity Monitoring)</strong> detecta archivos nuevos o modificados, pero no sabe si son maliciosos. <strong>VirusTotal</strong> analiza hashes contra más de 70 motores antivirus. Al integrarlos, Wazuh envía automáticamente cada archivo sospechoso a VirusTotal y recibes alertas directamente en el dashboard.
   </p>
 
+  <p>
+    Esta integración parte de tener FIM bien afinado: si vigilas rutas de más, te comes la cuota de la API en un día. Cómo elegir qué monitorizar lo explicamos en el <a href="/curso-wazuh">curso de Wazuh en español</a>.
+  </p>
+
   <!-- Video del curso bloqueado -->
   <div class="my-8">
     <div class="relative w-full rounded-xl overflow-hidden" style="border: 2px solid #2d3748;">

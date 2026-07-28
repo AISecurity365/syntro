@@ -97,7 +97,11 @@
       "Bash(curl -s http://localhost:4321/aula/registro)",
       "Bash(curl -s http://localhost:4321/curso-wazuh -o C:/Users/Jul/AppData/Local/Temp/claude/c--Users-Jul-Documents-Project-aisecurity-es-web-syntro/ae3f8182-d226-4f29-ad9d-a158e0976957/scratchpad/cw.html)",
       "Bash(curl -s http://localhost:4321/aula/registro -o C:/Users/Jul/AppData/Local/Temp/claude/c--Users-Jul-Documents-Project-aisecurity-es-web-syntro/ae3f8182-d226-4f29-ad9d-a158e0976957/scratchpad/ar.html)",
-      "Bash(curl -s http://localhost:4321/blog/que-es-wazuh-para-que-sirve -o C:/Users/Jul/AppData/Local/Temp/claude/c--Users-Jul-Documents-Project-aisecurity-es-web-syntro/ae3f8182-d226-4f29-ad9d-a158e0976957/scratchpad/bq.html)"
+      "Bash(curl -s http://localhost:4321/blog/que-es-wazuh-para-que-sirve -o C:/Users/Jul/AppData/Local/Temp/claude/c--Users-Jul-Documents-Project-aisecurity-es-web-syntro/ae3f8182-d226-4f29-ad9d-a158e0976957/scratchpad/bq.html)",
+      "Bash(curl -s http://localhost:4322/ -o /tmp/h.html -w \"HTTP %{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:4322/blog/que-es-wazuh-para-que-sirve -o /tmp/b.html -w \"HTTP %{http_code}\\\\n\")",
+      "Bash(git fetch *)",
+      "Bash(curl -s http://localhost:4321/curso-wazuh -o C:/Users/Jul/AppData/Local/Temp/claude/c--Users-Jul-Documents-Project-aisecurity-es-web-syntro/ae3f8182-d226-4f29-ad9d-a158e0976957/scratchpad/cw2.html)"
     ],
     "deny": [],
     "ask": [],

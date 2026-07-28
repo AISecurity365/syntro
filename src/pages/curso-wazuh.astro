@@ -59,6 +59,14 @@ const faqSchema = {
     },
     {
       "@type": "Question",
+      "name": "¿Este curso sirve para aprender SIEM desde cero?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí. Es un curso de SIEM desde cero que usa Wazuh como herramienta: aprendes los conceptos fundamentales de un SIEM (recolección centralizada de logs, correlación de eventos, reglas de detección, alertas y respuesta ante incidentes) aplicándolos sobre una instalación real. No necesitas experiencia previa con Splunk, QRadar ni ningún otro SIEM. Al terminar sabrás administrar un SIEM open source en producción y cumplir los requisitos de monitorización del ENS."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "¿Necesito conocimientos previos para este curso de Wazuh?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -772,8 +780,11 @@ const breadcrumbSchema = {
       <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-6">
         ¿Qué es Wazuh y <span style="background:linear-gradient(135deg,#60a5fa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">para qué sirve</span>?
       </h2>
-      <p class="text-white/80 text-center max-w-3xl mx-auto mb-12 text-lg">
+      <p class="text-white/80 text-center max-w-3xl mx-auto mb-6 text-lg">
         Wazuh es una plataforma open-source de seguridad que combina SIEM (Security Information and Event Management) y XDR (Extended Detection and Response). Es gratuita, de código abierto y una de las más utilizadas por administradores de sistemas en España.
+      </p>
+      <p class="text-white/70 text-center max-w-3xl mx-auto mb-12">
+        Si lo que buscas es un <strong class="text-white">curso de SIEM desde cero</strong>, este lo es: Wazuh es el SIEM open source con el que vas a trabajar de principio a fin. Aprendes los conceptos de un SIEM (recolección de logs, correlación, reglas, alertas, respuesta ante incidentes) montándolo de verdad, no sobre diapositivas.
       </p>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="rounded-xl p-6 border border-white/10" style="background:rgba(255,255,255,0.04);">
@@ -880,6 +891,15 @@ const breadcrumbSchema = {
           </summary>
           <div class="px-6 pb-6 text-white/70 leading-relaxed">
             Wazuh es una plataforma open-source de seguridad que actúa como SIEM y XDR. Permite monitorizar en tiempo real servidores Linux y Windows, detectar intrusiones, analizar logs, controlar la integridad de archivos y cumplir normativas como el ENS, PCI-DSS o GDPR. Es gratuito y es una alternativa open-source a soluciones como Splunk o IBM QRadar.
+          </div>
+        </details>
+        <details class="group rounded-xl border border-white/10 hover:border-white/20 group-open:border-white/30 transition-all duration-300" style="background:rgba(255,255,255,0.04);">
+          <summary class="cursor-pointer px-6 py-5 flex items-center justify-between font-semibold text-base md:text-lg text-white">
+            <span class="flex-1 min-w-0 pr-4">¿Este curso sirve para aprender SIEM desde cero?</span>
+            <svg class="w-5 h-5 transition-transform group-open:rotate-180 text-accent-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </summary>
+          <div class="px-6 pb-6 text-white/70 leading-relaxed">
+            Sí. Es un curso de SIEM desde cero que usa Wazuh como herramienta: aprendes los conceptos fundamentales de un SIEM (recolección centralizada de logs, correlación de eventos, reglas de detección, alertas y respuesta ante incidentes) aplicándolos sobre una instalación real. No necesitas experiencia previa con Splunk, QRadar ni ningún otro SIEM. Al terminar sabrás administrar un SIEM open source en producción y cumplir los requisitos de monitorización del ENS.
           </div>
         </details>
         <details class="group rounded-xl border border-white/10 hover:border-white/20 group-open:border-white/30 transition-all duration-300" style="background:rgba(255,255,255,0.04);">
