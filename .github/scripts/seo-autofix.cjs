@@ -37,14 +37,23 @@ function analyze(src, file) {
   if (t && (t.value.length < 40 || t.value.length > 70)) issues.push('title');
   if (d && (d.value.length < 120 || d.value.length > 165)) issues.push('desc');
 
-  const hs = [...src.matchAll(/<h([23])[^>]*>([\s\S]*?)<\/h\1>/gi)]
-    .map(m => ({ inner: m[2], text: stripTags(m[2]), plain: !/[<]/.test(m[2]) }))
+  // attrs: un heading de artículo va sin atributos (<h2>Texto</h2>). Los que llevan
+  // class/style son etiquetas de tarjeta, cabeceras de sección de landing o títulos de
+  // vídeo: convertirlos a pregunta destroza la UI y no aporta señal (jul 2026).
+  const hs = [...src.matchAll(/<h([23])([^>]*)>([\s\S]*?)<\/h\1>/gi)]
+    .map(m => ({ inner: m[3], text: stripTags(m[3]), plain: !/[<]/.test(m[3]), bare: !m[2].trim() }))
     .filter(h => h.text);
+  // Headings genéricos de cierre/estructura: en pregunta quedan forzados.
+  const GENERIC = /^(conclusi[oó]n|recursos adicionales|requisitos previos|introducci[oó]n|resumen|preguntas frecuentes|faq)$/i;
   let badHeadings = [];
   if (!isEn && hs.length > 2) {
     const q = hs.filter(h => h.text.startsWith('¿')).length;
     if (q / hs.length < 0.6) {
-      badHeadings = hs.filter(h => !h.text.startsWith('¿') && h.plain).slice(0, 8);
+      badHeadings = hs
+        .filter(h => !h.text.startsWith('¿') && h.plain && h.bare
+                     && !GENERIC.test(h.text.trim())
+                     && h.text.trim().split(/\s+/).length >= 3)
+        .slice(0, 3); // máx 3 por página: el objetivo es afinar, no reescribir el índice
       if (badHeadings.length) issues.push('headings');
     }
   }
@@ -125,9 +134,11 @@ Formato de salida:
   }
 
   if (!changes.length) return null;
-  // Re-validar: que no haya empeorado nada obvio (longitudes ok)
+  // Re-validar: que no aparezca ningún problema NUEVO. Antes los cambios de Heading
+  // saltaban esta comprobación por completo y se commiteaban aunque no mejorase nada;
+  // era la vía por la que entraban las reescrituras masivas de titulares (jul 2026).
   const after = analyze(src, file);
-  if (after.issues.length >= a.issues.length && !changes.some(c => c.k === 'Heading')) return null;
+  if (after.issues.some(i => !a.issues.includes(i))) return null;
 
   fs.writeFileSync(file, src, 'utf8');
   return { file, changes, before: a.issues.length, after: after.issues.length };
