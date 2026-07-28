@@ -80,7 +80,7 @@ import ServiceWheel from "../ai-services/ServiceWheel.astro";
     </div><!-- /columna izquierda -->
 
     <!-- Columna derecha: servicios en rueda -->
-    <div class="hidden lg:block" style="pointer-events:auto;cursor:auto;">
+    <div class="mt-2 lg:mt-0" style="pointer-events:auto;cursor:auto;">
       <ServiceWheel />
     </div>
   </div>
@@ -183,6 +183,8 @@ import ServiceWheel from "../ai-services/ServiceWheel.astro";
   #fus-cta:hover { transform:translateY(-2px);box-shadow:0 14px 46px -8px rgba(124,58,237,0.7); }
   #fus-ghost:hover { color:#fff;border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.04); }
   @media (max-width:640px){ #fus-hero{ cursor:auto; } #fus-cursor{ display:none; } }
+  /* Móvil/tablet: fuera la red de nodos de fondo (marea) — se mantiene el fondo oscuro y la rueda */
+  @media (max-width:1023px){ #fus-canvas, #fus-scan{ display:none !important; } #fus-hero{ min-height:auto; padding-top:5rem; padding-bottom:4rem; } }
 
   /* ── Modal "Habla con nuestra gente" ── */
   .talk-modal{ position:fixed; inset:0; z-index:1000; display:none; align-items:center; justify-content:center; padding:1rem; }
@@ -369,7 +371,9 @@ import ServiceWheel from "../ai-services/ServiceWheel.astro";
     // red estática revelada
     ctx.clearRect(0,0,W,H); ctx.globalAlpha=0.5; drawNetwork(ctx,true); ctx.globalAlpha=1;
   } else {
-    requestAnimationFrame(frame);
+    // En móvil/tablet el canvas está oculto (display:none): no lanzamos la animación de la red.
+    const noCanvas = window.matchMedia && window.matchMedia('(max-width:1023px)').matches;
+    if(!noCanvas) requestAnimationFrame(frame);
     (async()=>{ rotor.textContent='conectado'; await decryptIn(); rotorLoop(); })();
   }
 })();

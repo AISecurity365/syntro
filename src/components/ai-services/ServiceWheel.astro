@@ -60,6 +60,14 @@ const loop = [...items, ...items, ...items]; // 3 copias para bucle sin saltos
   }
   .svcw-item.is-active { color: #f8fafc; }
   .svcw-item:hover { color: #c084fc; }
+
+  /* Móvil: rueda más compacta y fuente que quepa sin cortarse */
+  @media (max-width: 640px) {
+    .svcw { height: 340px; padding-left: 30px; }
+    .svcw-track { left: 30px; }
+    .svcw-item { font-size: 1.02rem; }
+    .svcw-arrow { font-size: 1rem; }
+  }
 </style>
 
 <script>
@@ -90,8 +98,8 @@ const loop = [...items, ...items, ...items]; // 3 copias para bucle sin saltos
       }
     }
     function place(withTransition: boolean) {
-      track.style.transition = withTransition ? 'transform ' + MOVE + 'ms cubic-bezier(.22,.61,.36,1)' : 'none';
-      track.style.transform = 'translateY(' + yFor(v) + 'px)';
+      track!.style.transition = withTransition ? 'transform ' + MOVE + 'ms cubic-bezier(.22,.61,.36,1)' : 'none';
+      track!.style.transform = 'translateY(' + yFor(v) + 'px)';
       paint();
     }
     function stepDown() {
