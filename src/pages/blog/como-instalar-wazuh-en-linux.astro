@@ -1,5 +1,6 @@
 ﻿---
 import BlogLayout from "../../layouts/BlogLayout.astro";
+import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
 ---
 
 <BlogLayout
@@ -189,7 +190,9 @@ sudo dnf update -y</code></pre>
     Wazuh proporciona un script oficial que automatiza todo el proceso. Con <strong>un solo comando</strong> descargas el script y lo ejecutas:
   </p>
 
-  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh && sudo bash ./wazuh-install.sh -a</code></pre>
+  <WazuhVersionReplacer format="script" />
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">curl -sO https://packages.wazuh.com/__WAZUH_VERSION__/wazuh-install.sh && sudo bash ./wazuh-install.sh -a</code></pre>
 
   <p>
     El flag <code>-a</code> indica instalación all-in-one. El script:

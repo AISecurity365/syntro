@@ -1,5 +1,6 @@
 ﻿---
 import BlogLayout from "../../layouts/BlogLayout.astro";
+import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
 ---
 
 <BlogLayout
@@ -135,10 +136,12 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 
   <h3>1. Clonar el repositorio oficial</h3>
 
-  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">git clone https://github.com/wazuh/wazuh-docker.git -b v4.14.3</code></pre>
+  <WazuhVersionReplacer format="docker" />
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">git clone https://github.com/wazuh/wazuh-docker.git -b __WAZUH_VERSION__</code></pre>
 
   <p>
-    Esto descarga el repositorio oficial de Wazuh para Docker con la versión 4.14.3.
+    Esto descarga el repositorio oficial de Wazuh para Docker con la versión indicada arriba.
   </p>
 
   <h3>2. Acceder al directorio single-node</h3>
@@ -167,7 +170,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 
   <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
     <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Todos los comandos juntos:</strong></p>
-    <pre style="background:#0f1419;padding:16px;border-radius:8px;margin-top:12px;overflow-x:auto;"><code style="color: #e5e7eb;">git clone https://github.com/wazuh/wazuh-docker.git -b v4.14.3
+    <pre style="background:#0f1419;padding:16px;border-radius:8px;margin-top:12px;overflow-x:auto;"><code style="color: #e5e7eb;">git clone https://github.com/wazuh/wazuh-docker.git -b __WAZUH_VERSION__
 cd wazuh-docker/single-node/
 docker compose -f generate-indexer-certs.yml run --rm generator
 docker compose up -d</code></pre>

@@ -1,11 +1,25 @@
 ---
 interface Props {
   defaultVersion?: string;
+  /**
+   * 'package' → 4.9.2-1  (agente .deb/.msi)
+   * 'script'  → 4.9      (script de instalación del servidor)
+   * 'docker'  → v4.9.2   (branch git de wazuh-docker)
+   */
+  format?: 'package' | 'script' | 'docker';
 }
-const { defaultVersion = "4.9.2-1" } = Astro.props;
+const { defaultVersion, format = 'package' } = Astro.props;
+
+const fallbacks: Record<string, string> = {
+  package: '4.9.2-1',
+  script:  '4.9',
+  docker:  'v4.9.2',
+};
+const fallback = defaultVersion ?? fallbacks[format];
 ---
 
-<div class="wv-replacer" data-default={defaultVersion} style="background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.25);border-radius:10px;padding:1rem 1.25rem;margin:1.75rem 0;">
+<div class="wv-replacer" data-default={fallback} data-format={format}
+  style="background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.25);border-radius:10px;padding:1rem 1.25rem;margin:1.75rem 0;">
   <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
     <span style="font-size:1.1rem;line-height:1;">📦</span>
     <strong style="color:#e2e8f0;font-size:0.875rem;">Adapta los comandos a tu versión de Wazuh</strong>
@@ -14,32 +28,45 @@ const { defaultVersion = "4.9.2-1" } = Astro.props;
       <input
         id="wv-input"
         type="text"
-        placeholder={defaultVersion}
-        style="background:#0f1419;border:1px solid rgba(129,140,248,0.35);border-radius:6px;padding:5px 10px;color:#a5b4fc;font-family:monospace;font-size:0.875rem;width:110px;outline:none;transition:border-color 0.15s;"
+        placeholder={fallback}
+        style="background:#0f1419;border:1px solid rgba(129,140,248,0.35);border-radius:6px;padding:5px 10px;color:#a5b4fc;font-family:monospace;font-size:0.875rem;width:120px;outline:none;transition:border-color 0.15s;"
         onfocus="this.style.borderColor='rgba(129,140,248,0.7)'"
         onblur="this.style.borderColor='rgba(129,140,248,0.35)'"
       />
     </div>
+    <span id="wv-status" style="font-size:0.7rem;color:#4ade80;font-family:monospace;display:none;">↑ última versión</span>
   </div>
-  <p style="color:#64748b;font-size:0.775rem;margin:0.5rem 0 0;max-width:none;">Los bloques de código de esta guía se actualizan con la versión que escribas. Encuéntrala en <a href="https://github.com/wazuh/wazuh/releases" target="_blank" rel="noopener" style="color:#818cf8;">github.com/wazuh/wazuh/releases</a>.</p>
+  <p style="color:#64748b;font-size:0.775rem;margin:0.5rem 0 0;max-width:none;">
+    Los bloques de código se actualizan con la versión que escribas. Encuéntrala en
+    <a href="https://github.com/wazuh/wazuh/releases" target="_blank" rel="noopener" style="color:#818cf8;">github.com/wazuh/wazuh/releases</a>.
+  </p>
 </div>
 
 <script is:inline>
 (function () {
   var el = document.querySelector('.wv-replacer');
   if (!el) return;
-  var defaultVer = el.dataset.default || '4.9.2-1';
-  var LS_KEY = 'wazuh-version';
+
+  var fallback = el.dataset.default || '4.9.2-1';
+  var fmt     = el.dataset.format  || 'package';
+  var LS_KEY  = 'wazuh-version-' + fmt;
   var PLACEHOLDER = '__WAZUH_VERSION__';
 
-  var input = document.getElementById('wv-input');
+  var input  = document.getElementById('wv-input');
+  var status = document.getElementById('wv-status');
   if (!input) return;
 
-  var saved = localStorage.getItem(LS_KEY);
-  var currentVer = saved || defaultVer;
-  input.value = currentVer;
+  /* Convierte el tag de GitHub (v4.9.2) al formato del blog */
+  function tagToVersion(tag) {
+    var clean = tag.replace(/^v/, '');           // '4.9.2'
+    if (fmt === 'package') return clean + '-1';  // '4.9.2-1'
+    if (fmt === 'script')  return clean.split('.').slice(0, 2).join('.');  // '4.9'
+    if (fmt === 'docker')  return 'v' + clean;   // 'v4.9.2'
+    return clean;
+  }
 
-  var blocks = Array.from(document.querySelectorAll('pre code'));
+  /* Guarda los originales una sola vez */
+  var blocks    = Array.from(document.querySelectorAll('pre code'));
   var originals = blocks.map(function (b) { return b.textContent; });
 
   function apply(ver) {
@@ -50,13 +77,33 @@ const { defaultVersion = "4.9.2-1" } = Astro.props;
     });
   }
 
-  apply(currentVer);
+  /* Carga inicial: localStorage → fallback */
+  var saved = localStorage.getItem(LS_KEY);
+  var current = saved || fallback;
+  input.value = current;
+  apply(current);
 
+  /* Input manual */
   input.addEventListener('input', function () {
     var v = input.value.trim();
     if (!v) return;
     localStorage.setItem(LS_KEY, v);
     apply(v);
   });
+
+  /* Intenta auto-detectar la última versión si el usuario no ha guardado nada */
+  if (!saved) {
+    fetch('https://api.github.com/repos/wazuh/wazuh/releases/latest')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data.tag_name) return;
+        var latest = tagToVersion(data.tag_name);
+        input.value = latest;
+        input.placeholder = latest;
+        if (status) { status.style.display = 'inline'; }
+        apply(latest);
+      })
+      .catch(function () { /* sin conexión o rate-limit: usamos fallback */ });
+  }
 })();
 </script>
