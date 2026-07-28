@@ -1,0 +1,113 @@
+---
+// Rueda vertical de servicios: la flecha queda estática y los servicios bajan
+// de uno en uno, con una pausa entre cada paso. El que queda en la flecha se resalta.
+// Pausa al pasar el ratón; cada frase enlaza a su servicio.
+const items = [
+  { phrase: "Automatiza tu empresa con IA", href: "/consultoria-ia" },
+  { phrase: "Organiza tus documentos con IA", href: "/servicios/gestor-documental" },
+  { phrase: "Atiende tus llamadas 24/7", href: "/servicios/atencion-llamadas" },
+  { phrase: "Gestiona tus citas solo", href: "/servicios/gestor-citas" },
+  { phrase: "Responde a tus clientes 24/7", href: "/servicios/chatbot" },
+  { phrase: "Crea tu web profesional", href: "/servicios/desarrollo-web" },
+  { phrase: "Aparece primero en Google", href: "/servicios/geo-posicionamiento" },
+  { phrase: "Protege tu empresa con Wazuh", href: "/wazuh" },
+  { phrase: "Forma a tu equipo en ciberseguridad", href: "/servicios/concienciacion" },
+  { phrase: "Cumple el ENS sin complicaciones", href: "/consultoria-ens" },
+];
+const loop = [...items, ...items, ...items]; // 3 copias para bucle sin saltos
+---
+
+<div class="svcw" id="svcw" data-item-h="60">
+  <span class="svcw-arrow" aria-hidden="true">▶</span>
+  <div class="svcw-track" id="svcw-track">
+    {loop.map((it) => (
+      <a class="svcw-item" href={it.href}>{it.phrase}</a>
+    ))}
+  </div>
+</div>
+
+<style>
+  .svcw {
+    position: relative;
+    height: 420px;
+    overflow: hidden;
+    padding-left: 42px;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
+  }
+  .svcw-arrow {
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #e879f9;
+    font-size: 1.15rem;
+    z-index: 3;
+    filter: drop-shadow(0 0 10px rgba(232, 121, 249, 0.75));
+  }
+  .svcw-track { position: absolute; top: 0; left: 42px; right: 0; will-change: transform; }
+  .svcw-item {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    font-size: clamp(1.15rem, 2.2vw, 1.7rem);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    color: #64748b;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.35s ease, opacity 0.45s ease;
+  }
+  .svcw-item.is-active { color: #f8fafc; }
+  .svcw-item:hover { color: #c084fc; }
+</style>
+
+<script>
+  (function () {
+    const wheel = document.getElementById('svcw');
+    const track = document.getElementById('svcw-track');
+    if (!wheel || !track) return;
+    const ITEM_H = parseInt(wheel.getAttribute('data-item-h') || '60', 10);
+    const kids = Array.from(track.children) as HTMLElement[];
+    const N = kids.length / 3;                 // items reales
+    const H = wheel.clientHeight;
+    const center = H / 2;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const MOVE = 450, PAUSE = 1000;            // ms: desplazamiento + parada
+
+    // translateY para que el item de índice 'v' quede centrado en la flecha
+    const yFor = (v: number) => center - ITEM_H / 2 - v * ITEM_H;
+    let v = 2 * N;                             // arranca centrando services[0] (copia central)
+    let paused = false;
+
+    function paint() {
+      const y = yFor(v);
+      for (let i = 0; i < kids.length; i++) {
+        const c = i * ITEM_H + y + ITEM_H / 2;
+        const d = Math.abs(c - center);
+        kids[i].style.opacity = Math.max(0.12, 1 - d / (center * 0.9)).toFixed(2);
+        kids[i].classList.toggle('is-active', d < ITEM_H / 2);
+      }
+    }
+    function place(withTransition: boolean) {
+      track.style.transition = withTransition ? 'transform ' + MOVE + 'ms cubic-bezier(.22,.61,.36,1)' : 'none';
+      track.style.transform = 'translateY(' + yFor(v) + 'px)';
+      paint();
+    }
+    function stepDown() {
+      v -= 1;                                  // bajar: el de arriba cae a la flecha
+      place(true);
+      // durante la pausa, si nos acercamos al borde, saltamos un set sin animación (invisible)
+      setTimeout(() => { if (v <= N) { v += N; place(false); } }, MOVE + 20);
+    }
+    function loop() {
+      if (!paused) stepDown();
+      setTimeout(loop, MOVE + PAUSE);
+    }
+    wheel.addEventListener('mouseenter', () => { paused = true; });
+    wheel.addEventListener('mouseleave', () => { paused = false; });
+
+    place(false);
+    if (!reduce) setTimeout(loop, PAUSE);
+  })();
+</script>

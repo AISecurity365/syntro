@@ -3,6 +3,7 @@
 // Fondo: red de infraestructura oculta con las 4 áreas y amenazas, revelada por
 // el foco del cursor. Texto: se descifra al cargar y hace glitch siguiendo el ratón.
 // Contexto real AI Security: IA · Ciberseguridad · Sistemas · Automatización.
+import ServiceWheel from "../ai-services/ServiceWheel.astro";
 ---
 
 <section id="fus-hero" class="relative overflow-hidden flex items-center justify-center px-6" style="background:#03060d;min-height:100vh;cursor:none;">
@@ -20,7 +21,10 @@
   <div id="fus-scan" class="absolute left-0 right-0 pointer-events-none" style="height:2px;background:linear-gradient(90deg,transparent,rgba(129,140,248,0.5),transparent);z-index:6;top:0;"></div>
 
   <!-- Contenido -->
-  <div class="relative w-full max-w-4xl mx-auto text-center" style="z-index:20;pointer-events:none;">
+  <div class="relative w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-14 items-center" style="z-index:20;pointer-events:none;">
+
+    <!-- Columna izquierda: mensaje -->
+    <div class="text-center lg:text-left">
 
     <h1 class="sr-only">AI Security — IA, ciberseguridad y sistemas para empresas. Todo conectado, todo bajo control.</h1>
 
@@ -54,11 +58,11 @@
       <span id="fus-rotor" style="color:#a78bfa;"></span><span id="fus-caret" style="display:inline-block;width:0.55ch;height:1.05em;background:#818cf8;vertical-align:text-bottom;margin-left:2px;animation:fusBlink 1s step-end infinite;"></span>
     </p>
 
-    <p class="mx-auto mt-7" style="max-width:40rem;font-size:clamp(0.98rem,2.2vw,1.18rem);line-height:1.6;color:rgba(220,232,255,0.66);text-shadow:0 1px 20px rgba(3,6,13,0.95);">
+    <p class="mx-auto lg:mx-0 mt-7" style="max-width:40rem;font-size:clamp(0.98rem,2.2vw,1.18rem);line-height:1.6;color:rgba(220,232,255,0.66);text-shadow:0 1px 20px rgba(3,6,13,0.95);">
       IA, ciberseguridad y sistemas bajo un mismo equipo. Lo que no se ve no se controla — y lo que no se controla, no se optimiza. Nosotros lo iluminamos todo.
     </p>
 
-    <div class="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3" style="pointer-events:auto;">
+    <div class="mt-9 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3" style="pointer-events:auto;">
       <a href="/reunion" id="fus-cta" data-talk-trigger style="display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,#2563eb 0%,#7c3aed 100%);color:#fff;font-weight:800;padding:0.95rem 2rem;border-radius:0.8rem;text-decoration:none;font-size:1rem;cursor:pointer;box-shadow:0 10px 36px -8px rgba(99,102,241,0.6);transition:transform .2s ease,box-shadow .2s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 14px 46px -8px rgba(124,58,237,0.7)'" onmouseout="this.style.transform='';this.style.boxShadow='0 10px 36px -8px rgba(99,102,241,0.6)'">
         Chatea o llámanos
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 10h8M8 14h5m7-2c0 4.418-4.03 8-9 8a9.9 9.9 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
@@ -68,9 +72,16 @@
       </a>
     </div>
 
-    <div id="fus-hint" class="mt-7 flex items-center justify-center gap-2" style="color:rgba(159,198,255,0.8);font-size:0.84rem;transition:opacity .5s;">
+    <div id="fus-hint" class="mt-7 flex items-center justify-center lg:justify-start gap-2" style="color:rgba(159,198,255,0.8);font-size:0.84rem;transition:opacity .5s;">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"/></svg>
       Mueve el ratón para iluminar tu infraestructura
+    </div>
+
+    </div><!-- /columna izquierda -->
+
+    <!-- Columna derecha: servicios en rueda -->
+    <div class="hidden lg:block" style="pointer-events:auto;cursor:auto;">
+      <ServiceWheel />
     </div>
   </div>
 
@@ -293,9 +304,10 @@
   function frame(){
     t++;
     for(const n of nodes){ if(n.kind==='node'||n.kind==='event'){ n.x+=n.vx; n.y+=n.vy; if(n.x<0||n.x>W)n.vx*=-1; if(n.y<0||n.y>H)n.vy*=-1; } }
-    // En modo automático (antes de interactuar) la luz es transitoria: limpiamos la máscara.
-    // Cuando el usuario mueve el ratón, la máscara se acumula y lo descubierto se queda visible.
-    if(!hasPointer){ mx=W*(0.5+0.32*Math.sin(t*0.011)); my=H*(0.55+0.24*Math.sin(t*0.019+1.5)); mctx.clearRect(0,0,W,H); }
+    // La luz es SIEMPRE transitoria: solo se ilumina la zona actual del foco, sin dejar
+    // rastro por donde ha pasado el ratón. Por eso limpiamos la máscara en cada frame.
+    if(!hasPointer){ mx=W*(0.5+0.32*Math.sin(t*0.011)); my=H*(0.55+0.24*Math.sin(t*0.019+1.5)); }
+    mctx.clearRect(0,0,W,H);
     // pintar el foco actual en la máscara acumulativa (el disco interior revela al 100%)
     const mg=mctx.createRadialGradient(mx,my,0,mx,my,R); mg.addColorStop(0,'rgba(0,0,0,1)'); mg.addColorStop(0.62,'rgba(0,0,0,1)'); mg.addColorStop(1,'rgba(0,0,0,0)');
     mctx.fillStyle=mg; mctx.beginPath(); mctx.arc(mx,my,R,0,6.28); mctx.fill();
