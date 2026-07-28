@@ -11,9 +11,9 @@ interface Props {
 const { defaultVersion, format = 'package' } = Astro.props;
 
 const fallbacks: Record<string, string> = {
-  package: '4.9.2-1',
-  script:  '4.9',
-  docker:  'v4.9.2',
+  package: '4.14.6-1',
+  script:  '4.14',
+  docker:  'v4.14.6',
 };
 const fallback = defaultVersion ?? fallbacks[format];
 ---
@@ -47,9 +47,10 @@ document.addEventListener('DOMContentLoaded', function () {
   var el = document.querySelector('.wv-replacer');
   if (!el) return;
 
-  var fallback = el.dataset.default || '4.9.2-1';
+  var fallback = el.dataset.default || '4.14.6-1';
   var fmt      = el.dataset.format  || 'package';
-  var LS_KEY   = 'wazuh-version-' + fmt;
+  /* v2: la clave antigua guardó versiones obsoletas durante pruebas; se ignora */
+  var LS_KEY   = 'wazuh-version-v2-' + fmt;
   var PLACEHOLDER = '__WAZUH_VERSION__';
 
   var input  = document.getElementById('wv-input');
