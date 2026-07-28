@@ -1,10 +1,14 @@
 name: 🤖 SEO/GEO Auto-fix
 
+# DESACTIVADO (28-jul-2026) — solo manual (workflow_dispatch).
+# Motivo: reescribía titulares a formato pregunta de forma indiscriminada (incluidas
+# etiquetas de tarjeta y pasos numerados) y los cambios de heading se auto-commiteaban
+# saltándose la revalidación. Las reglas que SÍ aplicaba bien (longitudes de title y
+# description, keyword al inicio) están ahora en docs/seo/README.md para aplicarlas a mano.
+# Antes de reactivar el trigger de push: revisar .github/scripts/seo-autofix.cjs y validar
+# varias ejecuciones en manual.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'src/pages/**/*.astro'
+  workflow_dispatch:
 
 # Necesario para que el bot pueda commitear las mejoras
 permissions:
@@ -14,8 +18,8 @@ jobs:
   autofix:
     name: Detectar y auto-mejorar SEO/GEO
     runs-on: ubuntu-latest
-    # No re-disparar en los commits del propio bot
-    if: "!contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, 'seo-bot')"
+    # (La guarda contra bucles del propio bot ya no aplica: sin trigger de push
+    #  no puede re-dispararse. head_commit no existe en workflow_dispatch.)
 
     steps:
       - name: Checkout

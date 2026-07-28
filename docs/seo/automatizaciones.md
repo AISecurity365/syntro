@@ -10,26 +10,25 @@ Estado a **jul 2026**. Scripts en `scripts/seo-automation/` (+ `scripts/ga4-week
 |----------------|----------|---------|----------|--------------------|
 | **Ping IndexNow** | `seo-ping.yml` | push a `main` (+ manual) | Notifica cambios a Bing/Yandex/Google (`5-ping-search-engines.js`). Espera al deploy de Vercel. | No, solo notifica |
 | **Google Indexing API** | `google-indexing-on-push.yml` | push a `main` | Solicita indexación directa de URLs prioritarias a Google. | No |
-| **Auto-fix SEO/GEO con IA** | `page-quality-check.yml` | push a `main` | Analiza páginas cambiadas, detecta fallos SEO/GEO y los **corrige con DeepSeek** (cambios quirúrgicos). Commit `[skip ci]` + email **solo si mejora** (`.github/scripts/seo-autofix.cjs`). | Sí (auto-commit) |
+| ~~**Auto-fix SEO/GEO con IA**~~ | `page-quality-check.yml` | **DESACTIVADO 28-jul-2026** → solo `workflow_dispatch` | Ver sección "Auto-fix desactivado" más abajo. Las reglas útiles pasaron al **checklist on-page a mano** de [README.md](README.md). | Ya no |
 | **Monitor GEO (AI Search)** | `geo-monitor.yml` | día 1 de cada mes 07:00 UTC (+ manual) | Comprueba un set fijo de prompts Wazuh (ES+EN) en ChatGPT/Perplexity/Google AI Mode para ver si nos citan (`scripts/geo-monitor/check.mjs`). | Sí (guarda histórico) |
 | **Analista SEO con IA** | `seo-ai-analyst.yml` | lunes 09:00 UTC (+ manual) | Reúne Search Console (núcleo) + GA4 (incluye **clics de CTA** por página) + el **contenido real de las páginas** (lee el repo del checkout: title/description/h1) y se lo pasa a **DeepSeek** (`v4-flash`) con el **contexto de negocio** (prioridad Wazuh/cursos, blogs como embudo). Devuelve un email **conciso**: conclusión + 2-4 comentarios clave + valoración de **Campañas** (`scripts/seo-ai-analyst.mjs`); debajo, una **vista rodante de las últimas 4 semanas** (S1→S4, GSC + sesiones GA4) + clics por semana de cada campaña, y el resto de tablas de datos. Las 4 semanas salen directas de GSC/GA4 (hay histórico desde la 1ª ejecución). Tiene **memoria semanal**: guarda su análisis en `scripts/seo-analyst/history.json` (commiteado por el workflow) y lee las 2 últimas semanas para no repetirse y detectar qué cambió. **Nunca aplica cambios**, solo informa. Campañas en `scripts/seo-analyst/campaigns.json`. | Sí (commit del histórico) |
 
 ---
 
-## ⚠️ Límites del auto-fix de headings (jul 2026)
+## 🔴 Auto-fix desactivado (28-jul-2026)
 
-El auto-fix convierte titulares a formato pregunta (señal GEO), pero **solo donde tiene sentido**. Se acotó tras detectar que reescribía etiquetas de tarjeta de 2 palabras — "Servidor Linux" → "¿Cómo instalar Wazuh en servidor Linux?" — dentro de rejillas de `/curso-wazuh`, destrozando la UI sin aportar señal.
+`page-quality-check.yml` ya **no se dispara con push**: solo queda `workflow_dispatch`. Sus 4 commits del 28-jul fueron **revertidos**.
 
-Reglas actuales en `analyze()` (`.github/scripts/seo-autofix.cjs`):
+**Qué hacía mal:**
+- Trataba **cualquier** `<h2>`/`<h3>` como titular de artículo, así que reescribía etiquetas de tarjeta de 2 palabras: "Servidor Linux" → "¿Cómo instalar Wazuh en servidor Linux?" dentro de una rejilla de `/curso-wazuh`.
+- **Cuota ciega**: si menos del 60% de los headings eran preguntas, mandaba hasta 8 a convertir. No juzgaba caso por caso — empujaba al 60% pasara lo que pasara. De ahí la sensación de "siempre me lo cambia todo a preguntas": estaba programado para eso.
+- Se cargaba la numeración de pasos (`<h3>1. Ping al servidor</h3>` → `¿Cómo hacer ping al servidor?`) y convertía afirmaciones en dudas ("Requisito previo: Conectividad con el servidor" → "¿Es necesaria la conectividad con el servidor?").
+- **Los cambios de heading saltaban la revalidación entera** (`&& !changes.some(c => c.k === 'Heading')`): se commiteaban aunque no mejorase ninguna métrica. Era la puerta trasera por la que entraba todo.
 
-- **Solo headings sin atributos.** Un titular de artículo se escribe `<h2>Texto</h2>`; los de tarjeta, cabecera de sección de landing o título de vídeo llevan `class`/`style` y quedan excluidos. Es el filtro que más trabajo hace.
-- **Fuera los genéricos** (Conclusión, Recursos adicionales, Introducción…) y los de **menos de 3 palabras**.
-- **Máximo 3 conversiones por página** (antes 8).
-- **La revalidación no tiene vía de escape**: antes, si había cambios de heading el commit se aplicaba aunque no mejorase ninguna métrica. Ahora si aparece cualquier problema nuevo no se escribe nada.
+**Qué hacía bien** (ahora en el checklist on-page a mano de [README.md](README.md)): longitudes de `title` (40-70) y `description` (120-165), keyword al principio y recorte de descriptions kilométricas. Le sobraban las exclamaciones de relleno tipo "¡Empieza ahora!".
 
-**Al crear landings**: los headings de tarjeta deben llevar clase (ya la llevan por estilo), y así el bot no los toca. **Si el bot vuelve a proponer algo raro**, el problema está en `analyze()`, no en el prompt: el filtro decide qué se le manda a DeepSeek.
-
-Efecto secundario conocido y aceptado: en artículos con pasos numerados puede convertir `<h3>1. Ping al servidor</h3>` en `<h3>¿Cómo hacer ping al servidor?</h3>` y perder la numeración. Si importa mantener la secuencia, dale clase al heading o revisa el email del bot.
+El script `.github/scripts/seo-autofix.cjs` conserva los filtros que se le añadieron antes de apagarlo (solo headings sin atributos, fuera genéricos y de menos de 3 palabras, máximo 3 por página, revalidación sin vía de escape). **Antes de reactivar el trigger de push**: ejecutarlo varias veces en manual y revisar el diff a mano.
 
 ---
 

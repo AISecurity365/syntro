@@ -5,7 +5,7 @@ import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
 
 <BlogLayout
   title="Instalar Agente Wazuh en Windows: Guía Completa 2026"
-  description="Instalar agente Wazuh en Windows paso a paso: descarga MSI, comando, configuración ossec.conf, localfile y syscheck. ¡Funciona en 15 minutos!"
+  description="Cómo instalar el agente Wazuh en Windows paso a paso: descarga del MSI, comando de instalación, configuración ossec.conf, localfile y syscheck. Funcionando en 15 minutos."
   publishDate="2026-02-25"
 
   author="AI Security"
@@ -71,7 +71,7 @@ import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
     </p>
   </div>
 
-  <h2>¿Es necesaria la conectividad con el servidor?</h2>
+  <h2>Requisito previo: Conectividad con el servidor</h2>
 
   <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
     <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Importante:</strong> Antes de instalar el agente, asegúrate de que el equipo Windows tiene <strong style="color:rgba(255,255,255,0.9);">conectividad con el servidor Wazuh</strong>. El agente necesita comunicarse con el servidor para enviar los logs y recibir configuración.</p>
@@ -81,11 +81,11 @@ import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
     Puedes verificar la conectividad de varias formas:
   </p>
 
-  <h3>¿Cómo hacer ping al servidor?</h3>
+  <h3>1. Ping al servidor</h3>
 
   <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">ping IP_SERVIDOR</code></pre>
 
-  <h3>¿Cómo verificar el acceso al Dashboard (puerto 443)?</h3>
+  <h3>2. Verificar acceso al Dashboard (puerto 443)</h3>
 
   <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># Usando PowerShell
 Invoke-WebRequest -Uri https://IP_SERVIDOR -SkipCertificateCheck
@@ -103,7 +103,7 @@ https://IP_SERVIDOR</code></pre>
     <li>Configuración de red/VPN si están en redes diferentes</li>
   </ul>
 
-  <h2>¿Cuál es el comando de instalación?</h2>
+  <h2>Comando de instalación</h2>
 
   <p>
     Ejecuta este comando en <strong>PowerShell como Administrador</strong>. Debes sustituir los siguientes valores por los de tu entorno:
@@ -123,7 +123,7 @@ https://IP_SERVIDOR</code></pre>
     <pre style="background:#0f1419;padding:16px;border-radius:8px;margin-top:12px;overflow-x:auto;"><code style="color: #e5e7eb;">Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-__WAZUH_VERSION__.msi -OutFile wazuh-agent.msi; Start-Process msiexec.exe -ArgumentList "/i wazuh-agent.msi /q WAZUH_MANAGER=192.168.1.100 WAZUH_AGENT_NAME=PC-OFICINA" -Wait</code></pre>
   </div>
 
-  <h2>¿Cómo configurar el archivo ossec.conf?</h2>
+  <h2>Archivo de configuración ossec.conf</h2>
 
   <p>
     El archivo de configuración del agente se encuentra en:
@@ -135,7 +135,7 @@ https://IP_SERVIDOR</code></pre>
     Este archivo XML contiene toda la configuración del agente. Las dos secciones más importantes son <code>localfile</code> y <code>syscheck</code>.
   </p>
 
-  <h2>¿Cómo monitorizar logs con la sección localfile?</h2>
+  <h2>Sección localfile - Monitorización de logs</h2>
 
   <p>
     La sección <code>&lt;localfile&gt;</code> define <strong>qué logs del sistema Windows quieres enviar a Wazuh</strong>. Por defecto, el agente monitoriza los Event Logs principales:
@@ -161,7 +161,7 @@ https://IP_SERVIDOR</code></pre>
   &lt;log_format&gt;eventchannel&lt;/log_format&gt;
 &lt;/localfile&gt;</code></pre>
 
-  <h2>¿Cómo configurar la sección syscheck (FIM)?</h2>
+  <h2>Sección syscheck - File Integrity Monitoring (FIM)</h2>
 
   <p>
     La sección <code>&lt;syscheck&gt;</code> configura el <strong>File Integrity Monitoring</strong>. Esta funcionalidad detecta cambios en archivos y carpetas críticas del sistema:

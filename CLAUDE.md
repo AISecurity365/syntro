@@ -52,7 +52,9 @@ Cuando en una conversación se produzca un cambio **sustancial y real** que pued
 
 **Blog**: Al crear cualquier archivo en `src/pages/blog/`, añadirlo **en la misma operación** al array manual en `src/pages/blog/index.astro`. No son dos pasos separados — es siempre un único commit.
 
-**Quality check**: Después de un push que incluya páginas nuevas en `src/pages/`, ejecutar `node .github/scripts/check-page-quality.js` con `CHANGED_FILES` apuntando a esas páginas. El GitHub Action también lo hace en paralelo.
+**Quality check**: Después de un push que incluya páginas nuevas en `src/pages/`, ejecutar `node .github/scripts/check-page-quality.js` con `CHANGED_FILES` apuntando a esas páginas.
+
+**On-page SEO a mano — el auto-fix con IA está DESACTIVADO** (28-jul-2026; reescribía titulares a preguntas de forma indiscriminada). Al crear o editar cualquier página, aplicar tú el **checklist on-page** de `docs/seo/README.md` sin esperar a que lo pidan: `title` 40-70 car. con keyword al inicio · `description` 120-165 car. sin exclamaciones de relleno · formato pregunta **solo** en titulares reales de artículo, nunca en etiquetas de tarjeta, cabeceras de landing ni pasos numerados, y sin forzar cuotas · FAQ visual y `faqSchema` siempre sincronizados.
 
 ---
 
@@ -60,7 +62,7 @@ Cuando en una conversación se produzca un cambio **sustancial y real** que pued
 
 Contexto: tras el **June 2026 Spam Update** y la generalización de AI Overviews / AI Mode. Detalle y fuentes en `docs/seo/README.md`.
 
-- **SEO clásico > GEO.** Las buenas prácticas SEO tradicionales **siguen dominando el mercado** y son la prioridad; GEO complementa pero nunca a costa del SEO (keyword, claridad, CTR). El auto-fix (`seo-autofix.cjs`) aplica este orden.
+- **SEO clásico > GEO.** Las buenas prácticas SEO tradicionales **siguen dominando el mercado** y son la prioridad; GEO complementa pero nunca a costa del SEO (keyword, claridad, CTR). Ante duda, gana el SEO: si convertir un titular en pregunta perjudica la keyword o la claridad, se deja como está.
 
 - **Autoridad = citación, no posición.** El objetivo GEO es que la IA entienda y **nombre** a AI Security como referencia de Wazuh (España/LATAM). El esfuerzo va a menciones off-site (canal de contenido) + entidad coherente, no a trucos on-page.
 - **Entidad consistente.** Misma descripción de "a quién ayudamos / qué resolvemos" en todo el sitio. Mantener/ampliar structured data `Organization` + `Service` + `FAQPage` al crear o editar páginas.

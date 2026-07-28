@@ -4,8 +4,8 @@ import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
 ---
 
 <BlogLayout
-  title="Cómo Instalar el Agente Wazuh en Linux (Guía Paso a Paso)"
-  description="Aprende a instalar y configurar el agente Wazuh en Linux (Debian/Ubuntu). Incluye comandos, configuración ossec.conf y reinicio del servicio. ¡Empieza ahora!"
+  title="Cómo Instalar el Agente Wazuh en Linux"
+  description="Guía paso a paso para instalar y configurar el agente de Wazuh en Linux (Debian/Ubuntu). Comando de instalación, configuración del ossec.conf, localfile y reinicio del servicio."
   publishDate="2026-02-25"
   author="AI Security"
   readTime="8 min"
@@ -80,11 +80,11 @@ import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
     Puedes verificar la conectividad de varias formas:
   </p>
 
-  <h3>¿Cómo hacer ping al servidor?</h3>
+  <h3>1. Ping al servidor</h3>
 
   <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">ping IP_SERVIDOR</code></pre>
 
-  <h3>¿Cómo verificar acceso al Dashboard (puerto 443)?</h3>
+  <h3>2. Verificar acceso al Dashboard (puerto 443)</h3>
 
   <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># Usando curl
 curl -k https://IP_SERVIDOR
@@ -102,7 +102,7 @@ https://IP_SERVIDOR</code></pre>
     <li>Configuración de red/VPN si están en redes diferentes</li>
   </ul>
 
-  <h2>¿Cuál es el comando de instalación?</h2>
+  <h2>Comando de instalación</h2>
 
   <p>
     Ejecuta estos comandos como <strong>root o con sudo</strong>. Debes sustituir los siguientes valores por los de tu entorno:
@@ -124,13 +124,13 @@ https://IP_SERVIDOR</code></pre>
     <pre style="background:#0f1419;padding:16px;border-radius:8px;margin-top:12px;overflow-x:auto;"><code style="color: #e5e7eb;">wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent___WAZUH_VERSION___amd64.deb && sudo WAZUH_MANAGER='192.168.1.100' WAZUH_AGENT_NAME='servidor-web' dpkg -i ./wazuh-agent___WAZUH_VERSION___amd64.deb</code></pre>
   </div>
 
-  <h3>¿Cómo habilitar e iniciar el servicio?</h3>
+  <h3>Habilitar e iniciar el servicio</h3>
 
   <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">sudo systemctl daemon-reload
 sudo systemctl enable wazuh-agent
 sudo systemctl start wazuh-agent</code></pre>
 
-  <h2>¿Cómo configurar el archivo ossec.conf?</h2>
+  <h2>Archivo de configuración ossec.conf</h2>
 
   <p>
     El archivo de configuración del agente se encuentra en:

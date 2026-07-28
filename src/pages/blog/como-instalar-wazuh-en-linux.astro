@@ -5,7 +5,7 @@ import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
 
 <BlogLayout
   title="Cómo Instalar Wazuh en Linux (Ubuntu 24.04)"
-  description="Instala Wazuh en Linux paso a paso: Ubuntu, Debian, CentOS y Rocky Linux. Método all-in-one y componentes separados. Requisitos y configuración inicial."
+  description="Aprende a instalar Wazuh en Ubuntu, Debian, CentOS y Rocky Linux. Guía paso a paso con el método all-in-one y la instalación de componentes por separado. Requisitos, comandos y configuración inicial."
   publishDate="2026-02-18"
   author="AI Security"
   readTime="18 min"
@@ -69,7 +69,7 @@ import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
     </p>
   </div>
 
-  <h2>¿Qué componentes necesitas para la arquitectura de Wazuh?</h2>
+  <h2>Arquitectura de Wazuh: ¿Qué componentes necesitas?</h2>
 
   <p>
     Antes de instalar, es importante entender los <strong>tres componentes principales</strong> de Wazuh:
@@ -85,13 +85,13 @@ import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
     Además, necesitarás instalar <strong>Wazuh Agents</strong> en cada servidor o endpoint que quieras monitorizar.
   </p>
 
-  <h2>¿Cuáles son los métodos de instalación de Wazuh?</h2>
+  <h2>Métodos de instalación</h2>
 
   <p>
     Tienes dos opciones principales para instalar Wazuh:
   </p>
 
-  <h3>¿Cómo instalar Wazuh con el método All-in-One?</h3>
+  <h3>1. Instalación All-in-One (Recomendada para empezar)</h3>
 
   <p>
     El método <strong>all-in-one</strong> instala los tres componentes (Indexer, Server y Dashboard) en un único servidor con <strong>un solo comando</strong>. Es perfecto para:
@@ -107,7 +107,7 @@ import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
     <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Ventaja:</strong> En menos de 10 minutos tienes Wazuh funcionando completamente, listo para añadir agentes.</p>
   </div>
 
-  <h3>¿Cómo instalar Wazuh por componentes separados?</h3>
+  <h3>2. Instalación de componentes por separado</h3>
 
   <p>
     Para entornos de producción con alta disponibilidad o muchos agentes, es mejor instalar cada componente en servidores dedicados:
@@ -123,7 +123,7 @@ import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
     Esto permite escalar cada componente de forma independiente según las necesidades.
   </p>
 
-  <h2>¿Cuáles son los requisitos del sistema para Wazuh?</h2>
+  <h2>Requisitos del sistema</h2>
 
   <p>
     Para una instalación all-in-one, estos son los <strong>requisitos mínimos</strong>:
@@ -166,13 +166,13 @@ import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
     <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Importante:</strong> El disco SSD es muy recomendable porque el Indexer hace muchas operaciones de lectura/escritura. Con HDD tradicional el rendimiento será notablemente peor.</p>
   </div>
 
-  <h2>¿Cómo instalar Wazuh All-in-One paso a paso?</h2>
+  <h2>Instalación All-in-One paso a paso</h2>
 
   <p>
     Vamos a instalar Wazuh con el método all-in-one. Necesitas acceso root o sudo al servidor.
   </p>
 
-  <h3>¿Cómo preparar el servidor para instalar Wazuh?</h3>
+  <h3>Paso 1: Preparar el servidor</h3>
 
   <p>
     Primero, asegúrate de que el sistema está actualizado:
@@ -184,7 +184,7 @@ sudo apt update && sudo apt upgrade -y
 # CentOS/Rocky Linux
 sudo dnf update -y</code></pre>
 
-  <h3>¿Cómo descargar y ejecutar el instalador de Wazuh?</h3>
+  <h3>Paso 2: Descargar y ejecutar el instalador</h3>
 
   <p>
     Wazuh proporciona un script oficial que automatiza todo el proceso. Con <strong>un solo comando</strong> descargas el script y lo ejecutas:
@@ -210,7 +210,7 @@ sudo dnf update -y</code></pre>
     El proceso tarda entre <strong>5 y 15 minutos</strong> dependiendo de la velocidad de tu servidor y conexión a Internet.
   </p>
 
-  <h3>¿Cómo guardar las credenciales después de instalar Wazuh?</h3>
+  <h3>Paso 3: Guardar las credenciales</h3>
 
   <p>
     Al finalizar la instalación, el script te mostrará las <strong>credenciales de acceso</strong> al Dashboard:
@@ -225,7 +225,7 @@ INFO: You can access the web interface https://&lt;wazuh-dashboard-ip&gt;
     <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Importante:</strong> Guarda esta contraseña en un lugar seguro. Si la pierdes, tendrás que resetearla manualmente.</p>
   </div>
 
-  <h3>¿Cómo acceder al Dashboard tras instalar Wazuh?</h3>
+  <h3>Paso 4: Acceder al Dashboard</h3>
 
   <p>
     Abre tu navegador y accede a:
@@ -241,7 +241,7 @@ INFO: You can access the web interface https://&lt;wazuh-dashboard-ip&gt;
     A partir de aquí empieza lo interesante: qué hacer con todos esos eventos. Si prefieres seguirlo guiado en vez de a base de documentación, en el <a href="/curso-wazuh">curso de Wazuh en español</a> partimos de esta misma instalación y llegamos hasta reglas propias y cumplimiento del ENS.
   </p>
 
-  <h2>¿Cómo instalar Wazuh por componentes separados?</h2>
+  <h2>Instalación de componentes por separado</h2>
 
   <p>
     Si necesitas una arquitectura distribuida, puedes instalar cada componente en un servidor diferente. Wazuh proporciona documentación detallada para cada caso:
@@ -257,7 +257,7 @@ INFO: You can access the web interface https://&lt;wazuh-dashboard-ip&gt;
     El proceso es similar: descargas scripts específicos y los ejecutas en cada servidor. La principal diferencia es que debes configurar la comunicación entre componentes (IPs, certificados, etc.).
   </p>
 
-  <h2>¿Cómo instalar agentes de Wazuh?</h2>
+  <h2>Siguiente paso: Instalar agentes</h2>
 
   <p>
     Con Wazuh instalado, el siguiente paso es instalar <strong>agentes</strong> en los servidores y endpoints que quieras monitorizar. Los agentes recopilan logs, monitorizan ficheros, detectan vulnerabilidades y envían toda esa información al Wazuh Server.

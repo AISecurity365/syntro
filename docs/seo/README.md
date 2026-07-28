@@ -66,6 +66,29 @@ Solo `workflow_dispatch` (manual). Reactivar únicamente con criterio editorial 
 
 ---
 
+## ✍️ Checklist on-page (aplicar A MANO en cada página nueva o editada)
+
+> El auto-fix con IA está **desactivado** desde el 28-jul-2026 (ver [automatizaciones.md](automatizaciones.md)). Estas son las reglas que sí aplicaba bien; ahora son responsabilidad de quien edita la página — **Claude las aplica sin que haga falta pedirlo** al crear o tocar una página.
+
+**`title`** — entre **40 y 70 caracteres** (50-65 ideal). Keyword principal **al principio**. Claro y honesto, sin clickbait. Si se queda corto, ampliar con un calificativo real ("Guía Paso a Paso", "2026"), no con relleno.
+
+**`description`** — entre **120 y 165 caracteres** (140-160 ideal). Keyword en la primera mitad. Debe describir lo que hay, con un gancho sobrio. **Sin exclamaciones de relleno** ("¡Empieza ahora!", "¡Empieza hoy!"): el bot las metía, suben el ruido y no el CTR.
+
+**Headings en formato pregunta** — solo en **titulares reales de artículo** (`<h2>`/`<h3>` de contenido), y solo si la pregunta **es natural y conserva la keyword**. NUNCA en:
+- etiquetas de tarjeta o rejilla ("Servidor Linux", "Wazuh como SIEM") — son labels, no titulares;
+- cabeceras de sección de landing;
+- títulos de tarjeta de vídeo;
+- pasos numerados ("1. Ping al servidor") — la pregunta se come la secuencia;
+- genéricos de cierre (Conclusión, Recursos adicionales).
+
+Y **no hay que convertirlos todos**: una página con la mitad de sus H2 en pregunta está bien. Forzar una cuota es sobreoptimización — fue justo el fallo que tenía el bot.
+
+**Prioridad ante duda: SEO clásico > GEO.** Si convertir un titular en pregunta perjudica la keyword o la claridad, se deja como está.
+
+**Structured data** — mantener/ampliar `Organization` + `Service`/`Course` + `FAQPage` al crear o editar páginas. Al añadir una pregunta al FAQ visual, añadirla **también** a `faqSchema` en el frontmatter (y viceversa): los dos bloques deben decir lo mismo.
+
+---
+
 ## Era AI Search — políticas y fundamento (jul 2026)
 
 Resumen de las políticas GEO del proyecto (versión corta en `CLAUDE.md`).
