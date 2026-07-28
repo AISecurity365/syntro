@@ -43,29 +43,27 @@ const fallback = defaultVersion ?? fallbacks[format];
 </div>
 
 <script is:inline>
-(function () {
+document.addEventListener('DOMContentLoaded', function () {
   var el = document.querySelector('.wv-replacer');
   if (!el) return;
 
   var fallback = el.dataset.default || '4.9.2-1';
-  var fmt     = el.dataset.format  || 'package';
-  var LS_KEY  = 'wazuh-version-' + fmt;
+  var fmt      = el.dataset.format  || 'package';
+  var LS_KEY   = 'wazuh-version-' + fmt;
   var PLACEHOLDER = '__WAZUH_VERSION__';
 
   var input  = document.getElementById('wv-input');
   var status = document.getElementById('wv-status');
   if (!input) return;
 
-  /* Convierte el tag de GitHub (v4.9.2) al formato del blog */
   function tagToVersion(tag) {
-    var clean = tag.replace(/^v/, '');           // '4.9.2'
-    if (fmt === 'package') return clean + '-1';  // '4.9.2-1'
-    if (fmt === 'script')  return clean.split('.').slice(0, 2).join('.');  // '4.9'
-    if (fmt === 'docker')  return 'v' + clean;   // 'v4.9.2'
+    var clean = tag.replace(/^v/, '');
+    if (fmt === 'package') return clean + '-1';
+    if (fmt === 'script')  return clean.split('.').slice(0, 2).join('.');
+    if (fmt === 'docker')  return 'v' + clean;
     return clean;
   }
 
-  /* Guarda los originales una sola vez */
   var blocks    = Array.from(document.querySelectorAll('pre code'));
   var originals = blocks.map(function (b) { return b.textContent; });
 
@@ -77,13 +75,11 @@ const fallback = defaultVersion ?? fallbacks[format];
     });
   }
 
-  /* Carga inicial: localStorage → fallback */
-  var saved = localStorage.getItem(LS_KEY);
+  var saved   = localStorage.getItem(LS_KEY);
   var current = saved || fallback;
   input.value = current;
   apply(current);
 
-  /* Input manual */
   input.addEventListener('input', function () {
     var v = input.value.trim();
     if (!v) return;
@@ -91,7 +87,6 @@ const fallback = defaultVersion ?? fallbacks[format];
     apply(v);
   });
 
-  /* Intenta auto-detectar la última versión si el usuario no ha guardado nada */
   if (!saved) {
     fetch('https://api.github.com/repos/wazuh/wazuh/releases/latest')
       .then(function (r) { return r.json(); })
@@ -103,7 +98,7 @@ const fallback = defaultVersion ?? fallbacks[format];
         if (status) { status.style.display = 'inline'; }
         apply(latest);
       })
-      .catch(function () { /* sin conexión o rate-limit: usamos fallback */ });
+      .catch(function () {});
   }
-})();
+});
 </script>
