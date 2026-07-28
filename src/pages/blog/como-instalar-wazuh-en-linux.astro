@@ -90,7 +90,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
     Tienes dos opciones principales para instalar Wazuh:
   </p>
 
-  <h3>1. Instalación All-in-One (Recomendada para empezar)</h3>
+  <h3>¿Cómo instalar Wazuh con el método All-in-One?</h3>
 
   <p>
     El método <strong>all-in-one</strong> instala los tres componentes (Indexer, Server y Dashboard) en un único servidor con <strong>un solo comando</strong>. Es perfecto para:
@@ -106,7 +106,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
     <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Ventaja:</strong> En menos de 10 minutos tienes Wazuh funcionando completamente, listo para añadir agentes.</p>
   </div>
 
-  <h3>2. Instalación de componentes por separado</h3>
+  <h3>¿Cómo instalar Wazuh por componentes separados?</h3>
 
   <p>
     Para entornos de producción con alta disponibilidad o muchos agentes, es mejor instalar cada componente en servidores dedicados:
@@ -171,7 +171,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
     Vamos a instalar Wazuh con el método all-in-one. Necesitas acceso root o sudo al servidor.
   </p>
 
-  <h3>Paso 1: Preparar el servidor</h3>
+  <h3>¿Cómo preparar el servidor para instalar Wazuh?</h3>
 
   <p>
     Primero, asegúrate de que el sistema está actualizado:
@@ -183,7 +183,7 @@ sudo apt update && sudo apt upgrade -y
 # CentOS/Rocky Linux
 sudo dnf update -y</code></pre>
 
-  <h3>Paso 2: Descargar y ejecutar el instalador</h3>
+  <h3>¿Cómo descargar y ejecutar el instalador de Wazuh?</h3>
 
   <p>
     Wazuh proporciona un script oficial que automatiza todo el proceso. Con <strong>un solo comando</strong> descargas el script y lo ejecutas:
@@ -207,7 +207,7 @@ sudo dnf update -y</code></pre>
     El proceso tarda entre <strong>5 y 15 minutos</strong> dependiendo de la velocidad de tu servidor y conexión a Internet.
   </p>
 
-  <h3>Paso 3: Guardar las credenciales</h3>
+  <h3>¿Cómo guardar las credenciales después de instalar Wazuh?</h3>
 
   <p>
     Al finalizar la instalación, el script te mostrará las <strong>credenciales de acceso</strong> al Dashboard:
@@ -222,7 +222,7 @@ INFO: You can access the web interface https://&lt;wazuh-dashboard-ip&gt;
     <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Importante:</strong> Guarda esta contraseña en un lugar seguro. Si la pierdes, tendrás que resetearla manualmente.</p>
   </div>
 
-  <h3>Paso 4: Acceder al Dashboard</h3>
+  <h3>¿Cómo acceder al Dashboard tras instalar Wazuh?</h3>
 
   <p>
     Abre tu navegador y accede a:
@@ -238,7 +238,7 @@ INFO: You can access the web interface https://&lt;wazuh-dashboard-ip&gt;
     A partir de aquí empieza lo interesante: qué hacer con todos esos eventos. Si prefieres seguirlo guiado en vez de a base de documentación, en el <a href="/curso-wazuh">curso de Wazuh en español</a> partimos de esta misma instalación y llegamos hasta reglas propias y cumplimiento del ENS.
   </p>
 
-  <h2>Instalación de componentes por separado</h2>
+  <h2>¿Cómo instalar Wazuh por componentes separados?</h2>
 
   <p>
     Si necesitas una arquitectura distribuida, puedes instalar cada componente en un servidor diferente. Wazuh proporciona documentación detallada para cada caso:
@@ -254,7 +254,7 @@ INFO: You can access the web interface https://&lt;wazuh-dashboard-ip&gt;
     El proceso es similar: descargas scripts específicos y los ejecutas en cada servidor. La principal diferencia es que debes configurar la comunicación entre componentes (IPs, certificados, etc.).
   </p>
 
-  <h2>Siguiente paso: Instalar agentes</h2>
+  <h2>¿Cómo instalar agentes de Wazuh?</h2>
 
   <p>
     Con Wazuh instalado, el siguiente paso es instalar <strong>agentes</strong> en los servidores y endpoints que quieras monitorizar. Los agentes recopilan logs, monitorizan ficheros, detectan vulnerabilidades y envían toda esa información al Wazuh Server.
