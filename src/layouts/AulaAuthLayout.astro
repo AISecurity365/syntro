@@ -4,6 +4,7 @@
  * No header/footer from main site
  */
 import BaseHead from "../components/BaseHead.astro";
+import GoogleAnalytics from "../components/global/GoogleAnalytics.astro";
 import Analytics from "@vercel/analytics/astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
 
@@ -17,6 +18,7 @@ const { title, description = 'Aula Virtual - AI Security' } = Astro.props;
 
 <html lang="es" class="scroll-smooth">
   <head>
+    <GoogleAnalytics />
     <BaseHead
       title={title}
       description={description}

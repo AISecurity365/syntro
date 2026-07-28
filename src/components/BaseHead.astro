@@ -43,6 +43,7 @@ const organizationSchema = {
     "availableLanguage": ["Spanish", "English"],
   },
   "address": { "@type": "PostalAddress", "addressCountry": "ES" },
+  "alternateName": "aisecurity.es",
   "areaServed": isEn ? "Worldwide" : "ES",
   "offers": [
     {
@@ -66,6 +67,19 @@ const organizationSchema = {
       },
     },
   ],
+};
+
+// Nombre del sitio para Google (el "AI Security" que sale sobre el título en los
+// resultados). Google lo lee del schema WebSite de la home + og:site_name + application-name.
+const isHome = Astro.url.pathname === "/" || Astro.url.pathname === "/en" || Astro.url.pathname === "/en/";
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://aisecurity.es/#website",
+  "name": "AI Security",
+  "alternateName": "aisecurity.es",
+  "url": "https://aisecurity.es/",
+  "publisher": { "@id": "https://aisecurity.es/#organization" },
 };
 ---
 

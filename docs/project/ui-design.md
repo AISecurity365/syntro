@@ -18,6 +18,20 @@ Definidos en `src/styles/global.css` dentro de `@theme {}`:
 
 **Si una clase Tailwind de color no funciona** → usar `style="color: #000000;"` inline. Puede ser un problema de especificidad CSS con la regla global `p { color: var(--color-base-600); }`.
 
+## ⚠️ Centrar `<p>` — trampa del max-width global
+
+`src/styles/global.css` tiene `p { max-width: 70ch; }`. Esto hace que todo `<p>` tenga un ancho máximo de 70 caracteres. Sin `margin: 0 auto`, el bloque queda pegado a la izquierda aunque tenga `text-align: center` — el texto PARECE left-aligned aunque técnicamente esté centrado dentro del bloque.
+
+**Regla:** para cualquier `<p>` que deba verse centrado (eyebrow labels, subtítulos de sección), SIEMPRE añadir las dos propiedades juntas:
+
+```html
+<!-- ✅ Correcto -->
+<p style="...;text-align:center;max-width:none;">Eyebrow label</p>
+
+<!-- ❌ Incorrecto — el bloque se queda a la izquierda -->
+<p style="...;text-align:center;">Eyebrow label</p>
+```
+
 ## Tabla de Combinaciones
 
 | Fondo | Texto correcto | ❌ Nunca usar |
