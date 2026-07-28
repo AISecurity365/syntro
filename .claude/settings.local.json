@@ -102,7 +102,9 @@
       "Bash(curl -s http://localhost:4322/blog/que-es-wazuh-para-que-sirve -o /tmp/b.html -w \"HTTP %{http_code}\\\\n\")",
       "Bash(git fetch *)",
       "Bash(curl -s http://localhost:4321/curso-wazuh -o C:/Users/Jul/AppData/Local/Temp/claude/c--Users-Jul-Documents-Project-aisecurity-es-web-syntro/ae3f8182-d226-4f29-ad9d-a158e0976957/scratchpad/cw2.html)",
-      "Bash(curl -s -o /tmp/c2.html -w \"consultoria HTTP=%{http_code}\\\\n\" http://localhost:4321/consultoria-ia)"
+      "Bash(curl -s -o /tmp/c2.html -w \"consultoria HTTP=%{http_code}\\\\n\" http://localhost:4321/consultoria-ia)",
+      "Bash(curl -s http://localhost:4322/consultoria-ens -o /tmp/ens.html -w \"HTTP %{http_code}\\\\n\")",
+      "Bash(curl -s -o /tmp/c3.html -w \"HTTP=%{http_code}\\\\n\" http://localhost:4321/consultoria-ia)"
     ],
     "deny": [],
     "ask": [],
