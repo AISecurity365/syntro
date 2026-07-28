@@ -91,6 +91,7 @@ const websiteSchema = {
 <meta name="description" content={description} />
 <meta name="keywords" content={keywords} />
 <meta name="author" content="AI Security - aisecurity.es" />
+<meta name="application-name" content="AI Security" />
 
 <!-- Favicons (transparente, cuadrado — SVG para navegadores modernos + PNG fallback) -->
 <link rel="icon" href="/favicon.svg?v=5" type="image/svg+xml" />
@@ -100,6 +101,7 @@ const websiteSchema = {
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
+<meta property="og:site_name" content="AI Security" />
 <meta property="og:url" content={canonical} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
@@ -127,6 +129,7 @@ const websiteSchema = {
 
 <!-- JSON-LD Schema.org markup for better SEO -->
 <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+{isHome && <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />}
 
 <!---- Alpine  -->
 <script is:inline defer src="https://unpkg.com/alpinejs@3.10.5/dist/cdn.min.js">
