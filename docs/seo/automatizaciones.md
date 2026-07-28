@@ -16,6 +16,23 @@ Estado a **jul 2026**. Scripts en `scripts/seo-automation/` (+ `scripts/ga4-week
 
 ---
 
+## ⚠️ Límites del auto-fix de headings (jul 2026)
+
+El auto-fix convierte titulares a formato pregunta (señal GEO), pero **solo donde tiene sentido**. Se acotó tras detectar que reescribía etiquetas de tarjeta de 2 palabras — "Servidor Linux" → "¿Cómo instalar Wazuh en servidor Linux?" — dentro de rejillas de `/curso-wazuh`, destrozando la UI sin aportar señal.
+
+Reglas actuales en `analyze()` (`.github/scripts/seo-autofix.cjs`):
+
+- **Solo headings sin atributos.** Un titular de artículo se escribe `<h2>Texto</h2>`; los de tarjeta, cabecera de sección de landing o título de vídeo llevan `class`/`style` y quedan excluidos. Es el filtro que más trabajo hace.
+- **Fuera los genéricos** (Conclusión, Recursos adicionales, Introducción…) y los de **menos de 3 palabras**.
+- **Máximo 3 conversiones por página** (antes 8).
+- **La revalidación no tiene vía de escape**: antes, si había cambios de heading el commit se aplicaba aunque no mejorase ninguna métrica. Ahora si aparece cualquier problema nuevo no se escribe nada.
+
+**Al crear landings**: los headings de tarjeta deben llevar clase (ya la llevan por estilo), y así el bot no los toca. **Si el bot vuelve a proponer algo raro**, el problema está en `analyze()`, no en el prompt: el filtro decide qué se le manda a DeepSeek.
+
+Efecto secundario conocido y aceptado: en artículos con pasos numerados puede convertir `<h3>1. Ping al servidor</h3>` en `<h3>¿Cómo hacer ping al servidor?</h3>` y perder la numeración. Si importa mantener la secuencia, dale clase al heading o revisa el email del bot.
+
+---
+
 ## 🔴 Automatizaciones DESACTIVADAS (June 2026 Spam Update)
 
 Solo quedan en `workflow_dispatch` (manual). **Reactivar el cron únicamente con criterio editorial humano.**
