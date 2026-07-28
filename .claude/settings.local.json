@@ -83,7 +83,9 @@
       "Bash(sort -k5 -n)",
       "Bash(xargs ls -la)",
       "mcp__supabase__list_tables",
-      "mcp__supabase__execute_sql"
+      "mcp__supabase__execute_sql",
+      "Bash(curl -s -o /tmp/h3.html -w \"home HTTP=%{http_code}\\\\n\" http://localhost:4322/)",
+      "Read(//tmp/**)"
     ],
     "deny": [],
     "ask": [],
