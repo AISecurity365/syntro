@@ -237,7 +237,9 @@ async function main() {
   const campaigns = [];
   for (const c of (cfg.campaigns || [])) {
     if (!SITE) { campaigns.push({ name: c.name, note: c.note, error: 'sin GSC' }); continue; }
-    const group = { groupType: 'or', filters: c.paths.map(p => ({ dimension: 'page', operator: 'contains', expression: p })) };
+    // 'equals' con URL completa: evita falsos positivos entre páginas similares
+    // (p.ej. '/wazuh' capturando '/en/wazuh', o '/curso-wazuh' capturando '/curso-wazuh-avanzado').
+    const group = { groupType: 'or', filters: c.paths.map(p => ({ dimension: 'page', operator: 'equals', expression: 'https://aisecurity.es' + p })) };
     const weekly = [];
     try {
       for (let i = 3; i >= 0; i--) { const w = weekWindow(i); weekly.push(await gscTotalsGroup(w.start, w.end, group)); }

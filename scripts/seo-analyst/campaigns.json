@@ -1,17 +1,37 @@
 {
-  "_comment": "Campañas/iniciativas a vigilar en el informe SEO. El analista compara clics e impresiones de estas rutas (semana actual vs anterior) y la IA valora si mejoran. Añade/quita entradas libremente. 'paths' hace match por 'la URL contiene' (GSC). 'since' es solo informativo.",
+  "_comment": "Seguimiento de lo nuevo: páginas clave a vigilar en el informe SEO semanal. El analista compara clics e impresiones de estas rutas (semana actual vs anterior, y las 4 últimas semanas) y la IA valora la evolución. Añade/quita entradas libremente. 'paths' hace match EXACTO ('equals') contra la URL completa — no agrupa variantes (p.ej. '/wazuh' no incluye '/en/wazuh'; '/curso-wazuh' no incluye '/curso-wazuh-avanzado').",
   "campaigns": [
     {
-      "name": "Wazuh multi-idioma (EN/FR/NL)",
-      "since": "2026-07",
-      "paths": ["/en/wazuh", "/fr/wazuh", "/nl/wazuh"],
-      "note": "Landing Wazuh traducida a inglés, francés y neerlandés (Bélgica). Ver si capta clics/impresiones fuera de España."
+      "name": "Wazuh",
+      "paths": ["/wazuh"],
+      "note": "Producto estrella (SIEM/ENS). Prioridad nº1 del negocio."
     },
     {
-      "name": "Rediseño Atención de Llamadas IA",
+      "name": "Curso Wazuh",
+      "paths": ["/curso-wazuh"],
+      "note": "Curso intensivo Wazuh. Prioridad nº2 del negocio."
+    },
+    {
+      "name": "Consultoría IA",
+      "paths": ["/consultoria-ia"],
+      "note": "Entrada principal a los servicios de IA."
+    },
+    {
+      "name": "Ciberseguridad",
+      "paths": ["/ciberseguridad"],
+      "note": "Landing genérica de ciberseguridad para empresas."
+    },
+    {
+      "name": "Consultoría ENS",
       "since": "2026-07",
-      "paths": ["/servicios/atencion-llamadas"],
-      "note": "Demo con voz, agente ElevenLabs, precios por nivel. Ver si mejora tráfico y CTR."
+      "paths": ["/consultoria-ens"],
+      "note": "Página nueva: rediseño completo (modalidades sin precio, niveles antes de FAQ, técnica destacada)."
+    },
+    {
+      "name": "Consultoría ISO 27001",
+      "since": "2026-07",
+      "paths": ["/consultoria-iso27001"],
+      "note": "Página nueva, mismo diseño que ENS, adaptada a SGSI/Anexo A."
     }
   ]
 }
