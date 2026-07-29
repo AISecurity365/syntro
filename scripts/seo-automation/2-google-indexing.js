@@ -34,6 +34,11 @@ const URLS_TO_INDEX = [
   '/soporte-tecnico',
   '/faq',
 
+  // Consultoría ciberseguridad / cumplimiento
+  '/ciberseguridad',
+  '/consultoria-ens',
+  '/consultoria-iso27001',
+
   // Servicios IA
   '/servicios/chatbot',
   '/servicios/gestor-citas',
