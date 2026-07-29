@@ -84,10 +84,30 @@ async function gscTotals(startDate, endDate, filters = null) {
 }
 // Ventana de la semana i (0 = la más reciente ya cerrada)
 function weekWindow(i) { return { start: iso(daysAgo(GSC_END + i * 7 + 6)), end: iso(daysAgo(GSC_END + i * 7)) }; }
-// Totales GSC con un grupo de filtros (para OR de rutas en campañas)
-async function gscTotalsGroup(startDate, endDate, group) {
-  const r = (await gsc.searchanalytics.query({ siteUrl: SITE, requestBody: { startDate, endDate, dimensions: [], rowLimit: 1, dimensionFilterGroups: [group] } })).data.rows || [];
-  return { clicks: r[0]?.clicks || 0, impressions: r[0]?.impressions || 0 };
+// Suma clics/impresiones de páginas EXACTAS (una query por URL, sumadas en JS).
+// Evita depender de dimensionFilterGroups con varios filtros a la vez (no probado de forma
+// fiable) y evita falsos positivos entre páginas similares filtrando la coincidencia exacta.
+async function gscExactPagesTotals(startDate, endDate, absoluteUrls) {
+  let clicks = 0, impressions = 0;
+  for (const u of absoluteUrls) {
+    try {
+      const rows = await gscQuery({ startDate, endDate, dimensions: ['page'], rowLimit: 25, filters: [{ dimension: 'page', operator: 'contains', expression: u }] });
+      const match = rows.find(r => r.keys?.[0] === u);
+      if (match) { clicks += match.clicks || 0; impressions += match.impressions || 0; }
+    } catch (e) { /* si falla una URL, seguimos con las demás */ }
+  }
+  return { clicks, impressions };
+}
+// Suma clics/impresiones por PREFIJO (agrega varias páginas, p.ej. todo /en, /fr, /nl).
+async function gscPrefixTotals(startDate, endDate, prefixes) {
+  let clicks = 0, impressions = 0;
+  for (const p of prefixes) {
+    try {
+      const t = await gscTotals(startDate, endDate, [{ dimension: 'page', operator: 'contains', expression: p }]);
+      clicks += t.clicks; impressions += t.impressions;
+    } catch (e) { /* si falla un prefijo, seguimos con los demás */ }
+  }
+  return { clicks, impressions };
 }
 // Últimas 4 semanas (S1 = más antigua → S4 = más reciente): GSC + sesiones GA4. Rueda solo.
 async function weekly4() {
@@ -237,12 +257,14 @@ async function main() {
   const campaigns = [];
   for (const c of (cfg.campaigns || [])) {
     if (!SITE) { campaigns.push({ name: c.name, note: c.note, error: 'sin GSC' }); continue; }
-    // 'equals' con URL completa: evita falsos positivos entre páginas similares
-    // (p.ej. '/wazuh' capturando '/en/wazuh', o '/curso-wazuh' capturando '/curso-wazuh-avanzado').
-    const group = { groupType: 'or', filters: c.paths.map(p => ({ dimension: 'page', operator: 'equals', expression: 'https://aisecurity.es' + p })) };
+    const absUrls = c.paths.map(p => 'https://aisecurity.es' + p);
+    const isPrefix = c.matchType === 'prefix';
     const weekly = [];
     try {
-      for (let i = 3; i >= 0; i--) { const w = weekWindow(i); weekly.push(await gscTotalsGroup(w.start, w.end, group)); }
+      for (let i = 3; i >= 0; i--) {
+        const w = weekWindow(i);
+        weekly.push(isPrefix ? await gscPrefixTotals(w.start, w.end, absUrls) : await gscExactPagesTotals(w.start, w.end, absUrls));
+      }
       campaigns.push({ name: c.name, note: c.note, weekly });
     } catch (e) { campaigns.push({ name: c.name, note: c.note, error: e.message }); }
   }
@@ -292,7 +314,7 @@ async function main() {
   const lowRows = lowCtr.map(r => [esc(r.keys?.[0]), r.impressions, (r.ctr * 100).toFixed(1) + '%', r.position.toFixed(1)]);
   const pRows = topPages.map(r => [esc((r.keys?.[0] || '').replace('https://aisecurity.es', '')), r.clicks, r.impressions, (r.ctr * 100).toFixed(1) + '%']);
   const ctaRows = cta.slice(0, 12).map(c => [esc(c.label), esc(c.page), c.clicks]);
-  const campRows = campaigns.map(c => c.error ? [esc(c.name), 'error', '', '', '', esc(c.note || '')] : [esc(c.name), ...c.weekly.map(w => w.clicks), esc(c.note || '')]);
+  const campRows = campaigns.map(c => c.error ? [esc(c.name), 'error', '', '', '', esc((c.note || '') + ' — ⚠️ ' + c.error)] : [esc(c.name), ...c.weekly.map(w => w.clicks), esc(c.note || '')]);
 
   const html = `<div style="font-family:system-ui,sans-serif;background:#f1f5f9;padding:24px;max-width:720px;margin:0 auto;">
     <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);border-radius:12px;padding:24px 28px;margin-bottom:18px;">

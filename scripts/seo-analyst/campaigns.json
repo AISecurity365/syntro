@@ -1,37 +1,49 @@
 {
-  "_comment": "Seguimiento de lo nuevo: páginas clave a vigilar en el informe SEO semanal. El analista compara clics e impresiones de estas rutas (semana actual vs anterior, y las 4 últimas semanas) y la IA valora la evolución. Añade/quita entradas libremente. 'paths' hace match EXACTO ('equals') contra la URL completa — no agrupa variantes (p.ej. '/wazuh' no incluye '/en/wazuh'; '/curso-wazuh' no incluye '/curso-wazuh-avanzado').",
+  "_comment": "Seguimiento de lo nuevo: páginas clave a vigilar en el informe SEO semanal. El analista compara clics e impresiones de estas rutas (semana actual vs anterior, y las 4 últimas semanas) y la IA valora la evolución. Añade/quita entradas libremente. 'matchType':'exact' (por defecto) compara la página EXACTA (evita falsos positivos entre páginas similares, p.ej. '/wazuh' no incluye '/en/wazuh'; '/curso-wazuh' no incluye '/curso-wazuh-avanzado'). 'matchType':'prefix' AGREGA todas las páginas que empiecen por esa ruta (para secciones enteras, p.ej. todo /en).",
   "campaigns": [
     {
       "name": "Wazuh",
+      "matchType": "exact",
       "paths": ["/wazuh"],
       "note": "Producto estrella (SIEM/ENS). Prioridad nº1 del negocio."
     },
     {
       "name": "Curso Wazuh",
+      "matchType": "exact",
       "paths": ["/curso-wazuh"],
       "note": "Curso intensivo Wazuh. Prioridad nº2 del negocio."
     },
     {
       "name": "Consultoría IA",
+      "matchType": "exact",
       "paths": ["/consultoria-ia"],
       "note": "Entrada principal a los servicios de IA."
     },
     {
       "name": "Ciberseguridad",
+      "matchType": "exact",
       "paths": ["/ciberseguridad"],
       "note": "Landing genérica de ciberseguridad para empresas."
     },
     {
       "name": "Consultoría ENS",
+      "matchType": "exact",
       "since": "2026-07",
       "paths": ["/consultoria-ens"],
       "note": "Página nueva: rediseño completo (modalidades sin precio, niveles antes de FAQ, técnica destacada)."
     },
     {
       "name": "Consultoría ISO 27001",
+      "matchType": "exact",
       "since": "2026-07",
       "paths": ["/consultoria-iso27001"],
       "note": "Página nueva, mismo diseño que ENS, adaptada a SGSI/Anexo A."
+    },
+    {
+      "name": "Internacional (EN/FR/NL)",
+      "matchType": "prefix",
+      "paths": ["/en", "/fr", "/nl"],
+      "note": "Agrega TODAS las visitas a las versiones traducidas del sitio (inglés, francés, neerlandés)."
     }
   ]
 }
