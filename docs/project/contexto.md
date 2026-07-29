@@ -75,7 +75,9 @@ Flujo: análisis previo → desarrollo personalizado → formación del equipo �
 
 ⚠️ Formación es **online** (no presencial). Si alguien pide presencial, valorar coste adicional de desplazamiento.
 
-**Consultoría ENS** (`/consultoria-ens`): adecuación al Esquema Nacional de Seguridad (RD 311/2022). Diferenciador: gestionamos tanto la parte documental (MAGERIT, políticas, plan de adecuación) como la técnica (Wazuh SIEM, hardening, FIM) — los competidores solo hacen lo documental. Tres modalidades: Guía (1.500-3.000€), Solo documental (3.000-8.000€), Integral documental+técnica (6.000-15.000€ o cuota mensual). Target: proveedores TIC de AAPP que necesitan ENS nivel medio. Plazo transitorio RD 311/2022 venció mayo 2024.
+**Consultoría ENS** (`/consultoria-ens`): adecuación al Esquema Nacional de Seguridad (RD 311/2022). Diferenciador: gestionamos tanto la parte documental (MAGERIT, políticas, plan de adecuación) como la técnica (Wazuh SIEM, hardening, FIM) — los competidores solo hacen lo documental. Tres modalidades **sin precio público** (botón "Consultar precio", presupuesto cerrado en el diagnóstico gratuito): Solo técnica, Solo documental, **Integral documental+técnica (la más solicitada)**. Target: proveedores TIC de AAPP que necesitan ENS nivel medio. Plazo transitorio RD 311/2022 venció mayo 2024.
+
+**Consultoría ISO 27001** (`/consultoria-iso27001`): mismo diseño y planteamiento que ENS (documental + técnica con Wazuh), adaptado a la norma internacional ISO/IEC 27001:2022 (SGSI, Anexo A, auditoría Stage 1/Stage 2 vía entidad acreditada, certificado válido 3 años). No obligatoria por ley (a diferencia del ENS) pero cada vez más exigida contractualmente, sobre todo por grandes clientes y mercados internacionales. Mismas 3 modalidades sin precio público. Target: SaaS/tecnológicas, empresas que exportan, proveedores que tratan datos de terceros.
 
 **Soporte técnico** (`/soporte-tecnico` + geo): servicio remoto. Foco **secundario** ahora (ver `docs/seo/geo-posicionamiento.md`).
 
@@ -123,6 +125,7 @@ Video YouTube → visita /wazuh → ve demo + pricing → solicita reunión
 - `/` — Homepage
 - `/wazuh` — Página Wazuh (alta prioridad, fuente YouTube)
 - `/consultoria-ens` — Consultoría ENS (adecuación RD 311/2022, documental + técnica con Wazuh)
+- `/consultoria-iso27001` — Consultoría ISO 27001 (mismo diseño que ENS, SGSI + Anexo A + Wazuh)
 - `/curso-wazuh`, `/curso-wazuh-avanzado` — Cursos Wazuh (ver `/cursos`)
 - `/servicios/*` — Páginas de servicio de IA (ver tabla arriba)
 - `/consultoria-ia` — Consultoría IA (+ `-alicante`, `-valencia`, `-castellon` y ruta dinámica por ciudad)
