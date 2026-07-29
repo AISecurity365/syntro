@@ -1,0 +1,270 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="fr"
+  title="Comment installer Wazuh avec Docker Compose"
+  description="Guide étape par étape pour installer Wazuh avec Docker Compose. Déployez le SIEM complet en quelques minutes avec des conteneurs : Indexer, Server et Dashboard opérationnels."
+  publishDate="2026-02-25"
+  author="AI Security"
+  readTime="12 min"
+  tags={["Wazuh", "Docker", "Docker Compose", "Conteneurs", "SIEM", "Cybersécurité"]}
+  canonical="https://aisecurity.es/fr/blog/como-instalar-wazuh-con-docker"
+  faqSchema={[
+    {
+      question: "De quoi ai-je besoin avant d'installer Wazuh avec Docker ?",
+      answer: "Vous avez besoin de Docker version 20.10 ou supérieure, Docker Compose 2.0 ou supérieure, et Git pour cloner le dépôt. Le matériel minimum est de 2 cœurs CPU, 4 Go de RAM et 20 Go de disque, avec 4 cœurs, 8 Go et 50 Go SSD recommandés."
+    },
+    {
+      question: "Combien de commandes faut-il pour déployer Wazuh sur Docker ?",
+      answer: "Seulement 4 : cloner le dépôt officiel wazuh-docker, entrer dans le répertoire single-node, générer les certificats SSL et exécuter « docker compose up -d ». En quelques minutes, l'Indexer, le Server et le Dashboard sont opérationnels."
+    },
+    {
+      question: "Quels sont les identifiants par défaut de Wazuh Docker ?",
+      answer: "Les identifiants par défaut sont l'utilisateur « admin » avec le mot de passe « SecretPassword ». Vous devez changer ce mot de passe en production en modifiant le fichier docker-compose.yml avant de démarrer les conteneurs."
+    },
+    {
+      question: "Quelle est la différence entre single-node et multi-node ?",
+      answer: "Le répertoire single-node déploie tous les composants sur un seul serveur, idéal pour les tests et les petits environnements. Le répertoire multi-node sert aux déploiements de production distribués où les composants s'exécutent sur plusieurs hôtes pour la scalabilité et la haute disponibilité."
+    },
+    {
+      question: "Comment vérifier l'état des conteneurs Wazuh ?",
+      answer: "Exécutez « docker compose ps » pour voir l'état des conteneurs, « docker compose logs -f » pour suivre les journaux en temps réel, et « docker compose down » ou « docker compose restart » pour arrêter ou redémarrer le déploiement."
+    }
+  ]}>
+
+  <p>Pour installer Wazuh avec Docker Compose, clonez le dépôt officiel, exécutez <code>docker-compose up -d</code> et en quelques minutes vous aurez les trois composants opérationnels : Indexer, Server et Dashboard. Vous avez seulement besoin de Docker et Docker Compose installés sur le serveur.</p>
+
+  <h2>Comment installer Wazuh avec Docker Compose étape par étape ?</h2>
+
+  <p>
+    Dans ce guide, je vais vous montrer <strong>comment installer Wazuh avec Docker Compose</strong>, l'une des façons les plus rapides et les plus simples de déployer l'environnement complet. Avec seulement 4 commandes, vous aurez Wazuh en fonctionnement avec tous ses composants : Indexer, Server et Dashboard.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/fr/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Clé en main</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Besoin de Wazuh dans votre entreprise ?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Nous déployons Wazuh pour vous — ou ajoutons des configurations avancées sur mesure en prestation de conseil. Prêt pour la production et la conformité.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Consultation Wazuh →</span>
+    </a>
+  </aside>
+
+  <h2>Pourquoi utiliser Docker pour Wazuh ?</h2>
+
+  <p>
+    Docker offre plusieurs avantages pour déployer Wazuh :
+  </p>
+
+  <ul>
+    <li><strong>Rapidité :</strong> l'environnement complet est prêt en quelques minutes</li>
+    <li><strong>Portabilité :</strong> il fonctionne de la même façon sur tout système où Docker est installé</li>
+    <li><strong>Isolation :</strong> les conteneurs n'interfèrent pas avec les autres services du système</li>
+    <li><strong>Mises à jour faciles :</strong> changer de version revient simplement à modifier le tag</li>
+    <li><strong>Idéal pour les tests :</strong> parfait pour les labos et les environnements de développement</li>
+  </ul>
+
+  <h2>De quoi avez-vous besoin avant de commencer ?</h2>
+
+  <p>
+    Avant de commencer, vous devez avoir installé :
+  </p>
+
+  <ul>
+    <li><strong>Docker</strong> (version 20.10 ou supérieure)</li>
+    <li><strong>Docker Compose</strong> (version 2.0 ou supérieure)</li>
+    <li><strong>Git</strong> pour cloner le dépôt</li>
+  </ul>
+
+  <div class="overflow-x-auto my-6">
+    <table class="w-full border-collapse rounded-lg overflow-hidden" style="background-color: #1a1f26;">
+      <thead>
+        <tr style="background-color: #0065ff;">
+          <th class="px-4 py-3 text-left font-semibold" style="color: #ffffff;">Ressource</th>
+          <th class="px-4 py-3 text-left font-semibold" style="color: #ffffff;">Minimum</th>
+          <th class="px-4 py-3 text-left font-semibold" style="color: #ffffff;">Recommandé</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid #2d3748;">
+          <td class="px-4 py-3" style="color: #e5e7eb;">CPU</td>
+          <td class="px-4 py-3" style="color: #9ca3af;">2 cœurs</td>
+          <td class="px-4 py-3" style="color: #4ade80;">4 cœurs</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #2d3748;">
+          <td class="px-4 py-3" style="color: #e5e7eb;">RAM</td>
+          <td class="px-4 py-3" style="color: #9ca3af;">4 Go</td>
+          <td class="px-4 py-3" style="color: #4ade80;">8 Go</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3" style="color: #e5e7eb;">Disque</td>
+          <td class="px-4 py-3" style="color: #9ca3af;">20 Go</td>
+          <td class="px-4 py-3" style="color: #4ade80;">50 Go SSD</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Quelles sont les commandes d'installation ?</h2>
+
+  <p>
+    L'installation se fait en <strong>4 étapes simples</strong> :
+  </p>
+
+  <h3>1. Cloner le dépôt officiel</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">git clone https://github.com/wazuh/wazuh-docker.git -b v4.14.3</code></pre>
+
+  <p>
+    Cela télécharge le dépôt officiel de Wazuh pour Docker en version 4.14.3.
+  </p>
+
+  <h3>2. Entrer dans le répertoire single-node</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">cd wazuh-docker/single-node/</code></pre>
+
+  <p>
+    Le répertoire <code>single-node</code> contient la configuration pour déployer tous les composants sur un seul serveur. Il existe aussi <code>multi-node</code> pour les déploiements distribués.
+  </p>
+
+  <h3>3. Générer les certificats SSL</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">docker compose -f generate-indexer-certs.yml run --rm generator</code></pre>
+
+  <p>
+    Cette commande génère les certificats nécessaires à la communication sécurisée entre les composants.
+  </p>
+
+  <h3>4. Démarrer les conteneurs</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">docker compose up -d</code></pre>
+
+  <p>
+    Le paramètre <code>-d</code> exécute les conteneurs en arrière-plan (mode détaché).
+  </p>
+
+  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Toutes les commandes ensemble :</strong></p>
+    <pre style="background:#0f1419;padding:16px;border-radius:8px;margin-top:12px;overflow-x:auto;"><code style="color: #e5e7eb;">git clone https://github.com/wazuh/wazuh-docker.git -b v4.14.3
+cd wazuh-docker/single-node/
+docker compose -f generate-indexer-certs.yml run --rm generator
+docker compose up -d</code></pre>
+  </div>
+
+  <h2>Comment accéder au Dashboard ?</h2>
+
+  <p>
+    Une fois les conteneurs démarrés, accédez au Dashboard à :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">https://IP-serveur ou https://localhost (s'il est sur votre propre machine)</code></pre>
+
+  <p>
+    Les identifiants par défaut sont :
+  </p>
+
+  <ul>
+    <li><strong>Nom d'utilisateur :</strong> admin</li>
+    <li><strong>Mot de passe :</strong> SecretPassword</li>
+  </ul>
+
+  <h3>Comment obtenir des informations sur les conteneurs ?</h3>
+
+  <p>
+    Pour voir la configuration et les variables d'environnement du conteneur du serveur :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">docker inspect server-container-id</code></pre>
+
+  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Important :</strong> changez le mot de passe par défaut dans les environnements de production. Vous pouvez le faire en modifiant le fichier <code style="color: #000000; background-color: rgba(0,0,0,0.1);">docker-compose.yml</code> avant de démarrer les conteneurs.</p>
+  </div>
+
+  <h2>Commandes utiles</h2>
+
+  <p>
+    Quelques commandes qui vous seront utiles pour gérer le déploiement :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># Vérifier l'état des conteneurs
+docker compose ps
+
+# Voir les journaux en temps réel
+docker compose logs -f
+
+# Arrêter les conteneurs
+docker compose down
+
+# Redémarrer les conteneurs
+docker compose restart</code></pre>
+
+  <h2>À quoi faut-il faire attention en production ?</h2>
+
+  <p>
+    Docker est le moyen le plus rapide de monter un labo, mais un déploiement de production requiert quelques précautions supplémentaires. D'abord, augmentez le paramètre kernel <code>vm.max_map_count</code> de l'hôte à au moins <strong>262144</strong>, sinon le conteneur Indexer ne démarrera pas. Ensuite, les volumes nommés contiennent toutes vos alertes indexées, alors sauvegardez-les et n'exécutez jamais <code>docker compose down -v</code> sur un système en production, car le paramètre <code>-v</code> supprime les volumes de données. Enfin, restreignez les ports exposés (le Dashboard sur le <strong>443</strong> et l'écouteur des agents sur <strong>1514/1515</strong>) avec un pare-feu afin que seuls les réseaux de confiance puissent y accéder.
+  </p>
+
+  <p>
+    Pour des environnements dépassant un petit labo, prévoyez des limites de ressources et une rotation des journaux. L'Indexer peut consommer plusieurs gigaoctets de RAM en charge : définissez donc des limites de mémoire explicites dans <code>docker-compose.yml</code> et surveillez l'utilisation du disque, car les données indexées croissent en continu. Au moment de mettre à jour, changez le tag de version (par exemple de <strong>v4.14.3</strong> vers une version plus récente), récupérez les nouvelles images et recréez les conteneurs ; vos données persistent dans les volumes entre les versions.
+  </p>
+
+  <h2>Ressources supplémentaires</h2>
+
+  <ul>
+    <li><a href="https://documentation.wazuh.com/current/deployment-options/docker/index.html" target="_blank" rel="noopener" style="color: #38b1ff;">Documentation officielle Wazuh Docker</a></li>
+    <li><a href="https://github.com/wazuh/wazuh-docker" target="_blank" rel="noopener" style="color: #38b1ff;">Dépôt wazuh-docker sur GitHub</a></li>
+    <li><a href="/fr/blog/como-instalar-wazuh-en-linux">Installer Wazuh sur Linux (sans Docker)</a></li>
+  </ul>
+
+  <h2>Questions fréquentes</h2>
+
+  <h3>De quoi ai-je besoin avant d'installer Wazuh avec Docker ?</h3>
+  <p>
+    Vous avez besoin de Docker version 20.10 ou supérieure, Docker Compose 2.0 ou supérieure, et Git pour cloner le dépôt. Le matériel minimum est de 2 cœurs CPU, 4 Go de RAM et 20 Go de disque, avec 4 cœurs, 8 Go et 50 Go SSD recommandés.
+  </p>
+
+  <h3>Combien de commandes faut-il pour déployer Wazuh sur Docker ?</h3>
+  <p>
+    Seulement 4 : cloner le dépôt officiel wazuh-docker, entrer dans le répertoire single-node, générer les certificats SSL et exécuter <code>docker compose up -d</code>. En quelques minutes, l'Indexer, le Server et le Dashboard sont opérationnels.
+  </p>
+
+  <h3>Quels sont les identifiants par défaut de Wazuh Docker ?</h3>
+  <p>
+    Les identifiants par défaut sont l'utilisateur <code>admin</code> avec le mot de passe <code>SecretPassword</code>. Vous devez changer ce mot de passe en production en modifiant le fichier docker-compose.yml avant de démarrer les conteneurs.
+  </p>
+
+  <h3>Quelle est la différence entre single-node et multi-node ?</h3>
+  <p>
+    Le répertoire single-node déploie tous les composants sur un seul serveur, idéal pour les tests et les petits environnements. Le répertoire multi-node sert aux déploiements de production distribués où les composants s'exécutent sur plusieurs hôtes pour la scalabilité et la haute disponibilité.
+  </p>
+
+  <h3>Comment vérifier l'état des conteneurs Wazuh ?</h3>
+  <p>
+    Exécutez <code>docker compose ps</code> pour voir l'état des conteneurs, <code>docker compose logs -f</code> pour suivre les journaux en temps réel, et <code>docker compose down</code> ou <code>docker compose restart</code> pour arrêter ou redémarrer le déploiement.
+  </p>
+
+  <hr />
+
+  <p class="text-sm text-base-600">
+    <strong>Articles liés :</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/fr/blog/como-instalar-wazuh-en-linux">Comment installer Wazuh sur Linux (Ubuntu 24.04)</a></li>
+    <li><a href="/fr/blog/que-es-wazuh-para-que-sirve">Qu'est-ce que Wazuh et à quoi ça sert ?</a></li>
+  </ul>
+  <hr />
+
+  <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 my-8">
+    <h3 class="text-accent-800 mt-0">Déployez Wazuh comme il se doit</h3>
+    <p class="text-base-700 mb-4">
+      Cet article n'est qu'un début. Nous pouvons configurer les agents, créer des règles personnalisées, intégrer d'autres outils et bien plus encore.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a style="color: black;" href="/fr/wazuh" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent-700 font-semibold rounded-lg border border-accent-300 hover:bg-accent-50 transition-colors">
+        Implémentation professionnelle
+      </a>
+    </div>
+  </div>
+
+</BlogLayout>

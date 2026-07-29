@@ -42,7 +42,7 @@ export const TRANSLATIONS: Record<string, Locale[]> = {
   // Clúster Wazuh del blog (mismo slug bajo cada prefijo)
   "/blog/que-es-wazuh-para-que-sirve": ["en", "fr", "nl"],
   "/blog/como-instalar-wazuh-en-linux": ["en", "fr", "nl"],
-  "/blog/como-instalar-wazuh-con-docker": ["en"],
+  "/blog/como-instalar-wazuh-con-docker": ["en", "fr", "nl"],
   "/blog/como-instalar-agente-wazuh-en-windows": ["en", "fr", "nl"],
   "/blog/como-instalar-agente-wazuh-en-linux": ["en", "fr", "nl"],
   "/blog/configuracion-de-grupos-en-wazuh": ["en"],

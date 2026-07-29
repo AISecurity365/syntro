@@ -1,0 +1,270 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="nl"
+  title="Hoe installeer je Wazuh met Docker Compose"
+  description="Stapsgewijze gids om Wazuh te installeren met Docker Compose. Rol het volledige SIEM in enkele minuten uit met containers: Indexer, Server en Dashboard draaiend."
+  publishDate="2026-02-25"
+  author="AI Security"
+  readTime="12 min"
+  tags={["Wazuh", "Docker", "Docker Compose", "Containers", "SIEM", "Cybersecurity"]}
+  canonical="https://aisecurity.es/nl/blog/como-instalar-wazuh-con-docker"
+  faqSchema={[
+    {
+      question: "Wat heb ik nodig voordat ik Wazuh met Docker installeer?",
+      answer: "U heeft Docker versie 20.10 of hoger, Docker Compose 2.0 of hoger, en Git nodig om de repository te klonen. De minimale hardware is 2 CPU-kernen, 4 GB RAM en 20 GB schijf, met 4 kernen, 8 GB en 50 GB SSD aanbevolen."
+    },
+    {
+      question: "Hoeveel commando's zijn nodig om Wazuh op Docker uit te rollen?",
+      answer: "Slechts 4: kloon de officiële wazuh-docker-repository, ga naar de map single-node, genereer de SSL-certificaten en voer 'docker compose up -d' uit. Binnen enkele minuten draaien de Indexer, Server en Dashboard."
+    },
+    {
+      question: "Wat zijn de standaard inloggegevens van Wazuh Docker?",
+      answer: "De standaard inloggegevens zijn de gebruiker 'admin' met het wachtwoord 'SecretPassword'. U hoort dit wachtwoord in productie te wijzigen door het bestand docker-compose.yml te bewerken voordat u de containers opstart."
+    },
+    {
+      question: "Wat is het verschil tussen single-node en multi-node?",
+      answer: "De map single-node rolt alle componenten op één server uit, ideaal voor tests en kleine omgevingen. De map multi-node is voor gedistribueerde productie-uitrol waarbij componenten over meerdere hosts draaien voor schaalbaarheid en hoge beschikbaarheid."
+    },
+    {
+      question: "Hoe controleer ik de status van de Wazuh-containers?",
+      answer: "Voer 'docker compose ps' uit om de containerstatus te zien, 'docker compose logs -f' om logs in realtime te volgen, en 'docker compose down' of 'docker compose restart' om de uitrol te stoppen of te herstarten."
+    }
+  ]}>
+
+  <p>Om Wazuh met Docker Compose te installeren, kloont u de officiële repository, voert u <code>docker-compose up -d</code> uit en binnen enkele minuten heeft u de drie componenten draaiend: Indexer, Server en Dashboard. U heeft alleen Docker en Docker Compose op de server nodig.</p>
+
+  <h2>Hoe installeer je Wazuh met Docker Compose stap voor stap?</h2>
+
+  <p>
+    In deze gids laat ik u zien <strong>hoe u Wazuh installeert met Docker Compose</strong>, een van de snelste en eenvoudigste manieren om de volledige omgeving uit te rollen. Met slechts 4 commando's heeft u Wazuh draaiend met al zijn componenten: Indexer, Server en Dashboard.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/nl/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Kant-en-klaar</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Wazuh nodig in uw bedrijf?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Wij rollen Wazuh voor u uit — of voegen geavanceerde configuraties op maat toe als adviesdienst. Productieklaar en compliance-klaar.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Wazuh-advies →</span>
+    </a>
+  </aside>
+
+  <h2>Waarom Docker gebruiken voor Wazuh?</h2>
+
+  <p>
+    Docker biedt verschillende voordelen om Wazuh uit te rollen:
+  </p>
+
+  <ul>
+    <li><strong>Snelheid:</strong> de volledige omgeving is in enkele minuten klaar</li>
+    <li><strong>Portabiliteit:</strong> het werkt hetzelfde op elk systeem waarop Docker is geïnstalleerd</li>
+    <li><strong>Isolatie:</strong> de containers verstoren andere systeemservices niet</li>
+    <li><strong>Eenvoudige updates:</strong> van versie wisselen is zo simpel als de tag aanpassen</li>
+    <li><strong>Ideaal voor tests:</strong> perfect voor labs en ontwikkelomgevingen</li>
+  </ul>
+
+  <h2>Wat heb je nodig voordat je begint?</h2>
+
+  <p>
+    Voordat u begint, moet u het volgende hebben geïnstalleerd:
+  </p>
+
+  <ul>
+    <li><strong>Docker</strong> (versie 20.10 of hoger)</li>
+    <li><strong>Docker Compose</strong> (versie 2.0 of hoger)</li>
+    <li><strong>Git</strong> om de repository te klonen</li>
+  </ul>
+
+  <div class="overflow-x-auto my-6">
+    <table class="w-full border-collapse rounded-lg overflow-hidden" style="background-color: #1a1f26;">
+      <thead>
+        <tr style="background-color: #0065ff;">
+          <th class="px-4 py-3 text-left font-semibold" style="color: #ffffff;">Resource</th>
+          <th class="px-4 py-3 text-left font-semibold" style="color: #ffffff;">Minimum</th>
+          <th class="px-4 py-3 text-left font-semibold" style="color: #ffffff;">Aanbevolen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid #2d3748;">
+          <td class="px-4 py-3" style="color: #e5e7eb;">CPU</td>
+          <td class="px-4 py-3" style="color: #9ca3af;">2 kernen</td>
+          <td class="px-4 py-3" style="color: #4ade80;">4 kernen</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #2d3748;">
+          <td class="px-4 py-3" style="color: #e5e7eb;">RAM</td>
+          <td class="px-4 py-3" style="color: #9ca3af;">4 GB</td>
+          <td class="px-4 py-3" style="color: #4ade80;">8 GB</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3" style="color: #e5e7eb;">Schijf</td>
+          <td class="px-4 py-3" style="color: #9ca3af;">20 GB</td>
+          <td class="px-4 py-3" style="color: #4ade80;">50 GB SSD</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Wat zijn de installatiecommando's?</h2>
+
+  <p>
+    De installatie gebeurt in <strong>4 eenvoudige stappen</strong>:
+  </p>
+
+  <h3>1. De officiële repository klonen</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">git clone https://github.com/wazuh/wazuh-docker.git -b v4.14.3</code></pre>
+
+  <p>
+    Dit downloadt de officiële Wazuh-repository voor Docker in versie 4.14.3.
+  </p>
+
+  <h3>2. Naar de map single-node gaan</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">cd wazuh-docker/single-node/</code></pre>
+
+  <p>
+    De map <code>single-node</code> bevat de configuratie om alle componenten op één server uit te rollen. Er is ook <code>multi-node</code> voor gedistribueerde uitrol.
+  </p>
+
+  <h3>3. SSL-certificaten genereren</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">docker compose -f generate-indexer-certs.yml run --rm generator</code></pre>
+
+  <p>
+    Dit commando genereert de certificaten die nodig zijn voor veilige communicatie tussen de componenten.
+  </p>
+
+  <h3>4. De containers opstarten</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">docker compose up -d</code></pre>
+
+  <p>
+    De parameter <code>-d</code> voert de containers op de achtergrond uit (detached-modus).
+  </p>
+
+  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Alle commando's samen:</strong></p>
+    <pre style="background:#0f1419;padding:16px;border-radius:8px;margin-top:12px;overflow-x:auto;"><code style="color: #e5e7eb;">git clone https://github.com/wazuh/wazuh-docker.git -b v4.14.3
+cd wazuh-docker/single-node/
+docker compose -f generate-indexer-certs.yml run --rm generator
+docker compose up -d</code></pre>
+  </div>
+
+  <h2>Hoe krijg je toegang tot het Dashboard?</h2>
+
+  <p>
+    Zodra de containers draaien, opent u het Dashboard op:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">https://server-IP of https://localhost (als het op uw eigen machine staat)</code></pre>
+
+  <p>
+    De standaard inloggegevens zijn:
+  </p>
+
+  <ul>
+    <li><strong>Gebruikersnaam:</strong> admin</li>
+    <li><strong>Wachtwoord:</strong> SecretPassword</li>
+  </ul>
+
+  <h3>Hoe krijg je informatie over de containers?</h3>
+
+  <p>
+    Om de configuratie en omgevingsvariabelen van de servercontainer te zien:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">docker inspect server-container-id</code></pre>
+
+  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Belangrijk:</strong> wijzig het standaardwachtwoord in productieomgevingen. U kunt dit doen door het bestand <code style="color: #000000; background-color: rgba(0,0,0,0.1);">docker-compose.yml</code> te bewerken voordat u de containers opstart.</p>
+  </div>
+
+  <h2>Nuttige commando's</h2>
+
+  <p>
+    Enkele commando's die van pas komen om de uitrol te beheren:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># De containerstatus controleren
+docker compose ps
+
+# Logs in realtime bekijken
+docker compose logs -f
+
+# De containers stoppen
+docker compose down
+
+# De containers herstarten
+docker compose restart</code></pre>
+
+  <h2>Waar moet je op letten in productie?</h2>
+
+  <p>
+    Docker is de snelste manier om een lab op te zetten, maar een productie-uitrol vereist enkele extra voorzorgsmaatregelen. Verhoog eerst de kernelparameter <code>vm.max_map_count</code> van de host naar minstens <strong>262144</strong>, anders start de Indexer-container niet op. Ten tweede bevatten de benoemde volumes al uw geïndexeerde meldingen, dus maak er back-ups van en voer nooit <code>docker compose down -v</code> uit op een live systeem, want de parameter <code>-v</code> verwijdert de datavolumes. Beperk ten slotte de blootgestelde poorten (het Dashboard op <strong>443</strong> en de agentluisteraar op <strong>1514/1515</strong>) met een firewall zodat alleen vertrouwde netwerken ze kunnen bereiken.
+  </p>
+
+  <p>
+    Voor omgevingen groter dan een klein lab plant u resourcelimieten en logrotatie in. De Indexer kan onder belasting meerdere gigabytes RAM verbruiken, dus stel expliciete geheugenlimieten in <code>docker-compose.yml</code> in en bewaak het schijfgebruik, omdat geïndexeerde data continu groeit. Wanneer het tijd is om te updaten, wijzigt u de versietag (bijvoorbeeld van <strong>v4.14.3</strong> naar een nieuwere versie), haalt u de nieuwe images op en maakt u de containers opnieuw aan; uw data blijft tussen versies behouden in de volumes.
+  </p>
+
+  <h2>Aanvullende bronnen</h2>
+
+  <ul>
+    <li><a href="https://documentation.wazuh.com/current/deployment-options/docker/index.html" target="_blank" rel="noopener" style="color: #38b1ff;">Officiële Wazuh Docker-documentatie</a></li>
+    <li><a href="https://github.com/wazuh/wazuh-docker" target="_blank" rel="noopener" style="color: #38b1ff;">wazuh-docker-repository op GitHub</a></li>
+    <li><a href="/nl/blog/como-instalar-wazuh-en-linux">Wazuh installeren op Linux (zonder Docker)</a></li>
+  </ul>
+
+  <h2>Veelgestelde vragen</h2>
+
+  <h3>Wat heb ik nodig voordat ik Wazuh met Docker installeer?</h3>
+  <p>
+    U heeft Docker versie 20.10 of hoger, Docker Compose 2.0 of hoger, en Git nodig om de repository te klonen. De minimale hardware is 2 CPU-kernen, 4 GB RAM en 20 GB schijf, met 4 kernen, 8 GB en 50 GB SSD aanbevolen.
+  </p>
+
+  <h3>Hoeveel commando's zijn nodig om Wazuh op Docker uit te rollen?</h3>
+  <p>
+    Slechts 4: kloon de officiële wazuh-docker-repository, ga naar de map single-node, genereer de SSL-certificaten en voer <code>docker compose up -d</code> uit. Binnen enkele minuten draaien de Indexer, Server en Dashboard.
+  </p>
+
+  <h3>Wat zijn de standaard inloggegevens van Wazuh Docker?</h3>
+  <p>
+    De standaard inloggegevens zijn de gebruiker <code>admin</code> met het wachtwoord <code>SecretPassword</code>. U hoort dit wachtwoord in productie te wijzigen door het bestand docker-compose.yml te bewerken voordat u de containers opstart.
+  </p>
+
+  <h3>Wat is het verschil tussen single-node en multi-node?</h3>
+  <p>
+    De map single-node rolt alle componenten op één server uit, ideaal voor tests en kleine omgevingen. De map multi-node is voor gedistribueerde productie-uitrol waarbij componenten over meerdere hosts draaien voor schaalbaarheid en hoge beschikbaarheid.
+  </p>
+
+  <h3>Hoe controleer ik de status van de Wazuh-containers?</h3>
+  <p>
+    Voer <code>docker compose ps</code> uit om de containerstatus te zien, <code>docker compose logs -f</code> om logs in realtime te volgen, en <code>docker compose down</code> of <code>docker compose restart</code> om de uitrol te stoppen of te herstarten.
+  </p>
+
+  <hr />
+
+  <p class="text-sm text-base-600">
+    <strong>Gerelateerde artikelen:</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/nl/blog/como-instalar-wazuh-en-linux">Hoe installeer je Wazuh op Linux (Ubuntu 24.04)</a></li>
+    <li><a href="/nl/blog/que-es-wazuh-para-que-sirve">Wat is Wazuh en waarvoor dient het?</a></li>
+  </ul>
+  <hr />
+
+  <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 my-8">
+    <h3 class="text-accent-800 mt-0">Laat Wazuh op de juiste manier uitrollen</h3>
+    <p class="text-base-700 mb-4">
+      Dit artikel is nog maar het begin. Wij kunnen agents configureren, aangepaste regels bouwen, integreren met andere tools en veel meer.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a style="color: black;" href="/nl/wazuh" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent-700 font-semibold rounded-lg border border-accent-300 hover:bg-accent-50 transition-colors">
+        Professionele implementatie
+      </a>
+    </div>
+  </div>
+
+</BlogLayout>
