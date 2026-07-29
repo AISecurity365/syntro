@@ -1,0 +1,257 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="fr"
+  title="Comment installer l'agent Wazuh sur Linux"
+  description="Guide étape par étape pour installer et configurer l'agent Wazuh sur Linux (Debian/Ubuntu). Commande d'installation, configuration d'ossec.conf, localfile et redémarrage du service."
+  publishDate="2026-02-25"
+  author="AI Security"
+  readTime="8 min"
+  tags={["Wazuh", "Linux", "Agent", "SIEM", "Surveillance", "Cybersécurité"]}
+  canonical="https://aisecurity.es/fr/blog/como-instalar-agente-wazuh-en-linux"
+  faqSchema={[
+    {
+      question: "Combien de temps prend l'installation de l'agent Wazuh sur Linux ?",
+      answer: "Le processus complet prend moins de 10 minutes : télécharger le paquet .deb, l'installer avec les variables WAZUH_MANAGER et WAZUH_AGENT_NAME, et démarrer le service avec systemctl. L'agent s'enregistre automatiquement auprès du serveur si la connectivité existe."
+    },
+    {
+      question: "Quels ports l'agent Wazuh a-t-il besoin d'ouvrir ?",
+      answer: "L'agent communique avec le serveur via le port TCP 1514 pour envoyer les événements, et utilise le port 1515 uniquement lors de l'enrôlement initial. Le port 443 sert à accéder au dashboard. Assurez-vous que les pare-feux du serveur et du client autorisent ces ports."
+    },
+    {
+      question: "Où se trouve le fichier de configuration de l'agent Wazuh ?",
+      answer: "Le fichier de configuration se trouve dans /var/ossec/etc/ossec.conf. C'est un fichier XML dont les deux sections les plus importantes sont localfile (quels journaux collecter) et syscheck (surveillance de l'intégrité des fichiers)."
+    },
+    {
+      question: "Faut-il redémarrer l'agent après avoir modifié ossec.conf ?",
+      answer: "Oui. Après avoir modifié ossec.conf, vous devez exécuter sudo systemctl restart wazuh-agent pour que les changements prennent effet, puis vérifier le résultat avec systemctl status wazuh-agent."
+    },
+    {
+      question: "Comment vérifier que l'agent est connecté au serveur Wazuh ?",
+      answer: "Exécutez sudo tail -f /var/ossec/logs/ossec.log et cherchez un message « Connected to the server ». Vous pouvez aussi lister l'état de l'agent depuis le serveur avec /var/ossec/bin/agent_control -i, ou confirmer que l'agent apparaît comme Actif dans le dashboard."
+    }
+  ]}>
+
+  <p>Pour installer l'agent Wazuh sur Linux (Debian/Ubuntu), ajoutez le dépôt officiel, installez le paquet <code>wazuh-agent</code>, définissez l'IP du serveur dans <code>ossec.conf</code> et démarrez le service avec <code>systemctl start wazuh-agent</code>. L'ensemble du processus prend moins de 10 minutes.</p>
+
+  <h2>Comment installer l'agent Wazuh sur Linux étape par étape ?</h2>
+
+  <p>
+    Dans ce guide, je vais vous montrer <strong>comment installer l'agent Wazuh sur Linux</strong> (Debian/Ubuntu) et configurer les parties les plus importantes du fichier <code>ossec.conf</code>. L'agent est le composant qui collecte les journaux, surveille l'intégrité des fichiers et envoie toutes les informations au serveur Wazuh.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/fr/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Clé en main</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Besoin de Wazuh dans votre entreprise ?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Nous déployons Wazuh pour vous — ou ajoutons des configurations avancées sur mesure en prestation de conseil. Prêt pour la production et la conformité.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Consultation Wazuh →</span>
+    </a>
+  </aside>
+
+  <h2>Pourquoi l'agent a-t-il d'abord besoin de connectivité avec le serveur ?</h2>
+
+  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Important :</strong> avant d'installer l'agent, assurez-vous que la machine a une <strong style="color:rgba(255,255,255,0.9);">connectivité avec le serveur Wazuh</strong>. L'agent doit communiquer avec le serveur pour envoyer les journaux et recevoir sa configuration.</p>
+  </div>
+
+  <p>
+    Vous pouvez vérifier la connectivité de plusieurs façons :
+  </p>
+
+  <h3>1. Ping vers le serveur</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">ping IP_SERVEUR</code></pre>
+
+  <h3>2. Vérifier l'accès au Dashboard (port 443)</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># Avec curl
+curl -k https://IP_SERVEUR
+
+# Ou ouvrez-le dans le navigateur
+https://IP_SERVEUR</code></pre>
+
+  <p>
+    Si le Dashboard se charge correctement, la connectivité est établie. Sinon, vérifiez :
+  </p>
+
+  <ul>
+    <li>Le pare-feu du serveur (ports 443 et 1514 ouverts)</li>
+    <li>Le pare-feu du client</li>
+    <li>La configuration réseau/VPN s'ils sont sur des réseaux différents</li>
+  </ul>
+
+  <h2>Quelle est la commande pour installer l'agent Wazuh ?</h2>
+
+  <p>
+    Exécutez ces commandes en <strong>root ou avec sudo</strong>. Ce guide utilise <strong>Wazuh 4.9.2</strong>, la version figée dans l'URL du paquet ci-dessous ; si votre serveur exécute une version différente, faites correspondre le paquet de l'agent. Vous devez remplacer les valeurs suivantes par celles de votre environnement :
+  </p>
+
+  <ul>
+    <li><strong>WAZUH_MANAGER :</strong> IP ou nom d'hôte de votre serveur Wazuh</li>
+    <li><strong>WAZUH_AGENT_NAME :</strong> nom identifiant cet agent (ex. : serveur-web, db-production, etc.)</li>
+  </ul>
+
+  <h3>Debian/Ubuntu</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.9.2-1_amd64.deb && sudo WAZUH_MANAGER='VOTRE_IP_SERVEUR' WAZUH_AGENT_NAME='NOM_AGENT' dpkg -i ./wazuh-agent_4.9.2-1_amd64.deb</code></pre>
+
+  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Exemple concret :</strong> si votre serveur Wazuh est à 192.168.1.100 et que vous voulez nommer l'agent « serveur-web » :</p>
+    <pre style="background:#0f1419;padding:16px;border-radius:8px;margin-top:12px;overflow-x:auto;"><code style="color: #e5e7eb;">wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.9.2-1_amd64.deb && sudo WAZUH_MANAGER='192.168.1.100' WAZUH_AGENT_NAME='serveur-web' dpkg -i ./wazuh-agent_4.9.2-1_amd64.deb</code></pre>
+  </div>
+
+  <h3>Activer et démarrer le service</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">sudo systemctl daemon-reload
+sudo systemctl enable wazuh-agent
+sudo systemctl start wazuh-agent</code></pre>
+
+  <h2>Où se trouve le fichier de configuration ossec.conf ?</h2>
+
+  <p>
+    Le fichier de configuration de l'agent se trouve à :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">/var/ossec/etc/ossec.conf</code></pre>
+
+  <p>
+    Ce fichier XML contient toute la configuration de l'agent. Les deux sections les plus importantes sont <code>localfile</code> et <code>syscheck</code>.
+  </p>
+
+  <h2>Que fait la section localfile pour la surveillance des journaux ?</h2>
+
+  <p>
+    La section <code>&lt;localfile&gt;</code> définit <strong>quels journaux système vous souhaitez envoyer à Wazuh</strong>. Par défaut, l'agent surveille les journaux système, mais vous pouvez ajouter les journaux d'applications spécifiques.
+  </p>
+
+  <h3>Exemple : ajouter les journaux d'Apache2</h3>
+
+  <p>
+    Pour surveiller les journaux d'erreurs d'Apache2, modifiez le fichier <code>ossec.conf</code> :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">sudo nano /var/ossec/etc/ossec.conf</code></pre>
+
+  <p>
+    Ajoutez la configuration suivante à l'intérieur du bloc <code>&lt;ossec_config&gt;</code> :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;localfile&gt;
+  &lt;log_format&gt;apache&lt;/log_format&gt;
+  &lt;location&gt;/var/log/apache2/error.log&lt;/location&gt;
+&lt;/localfile&gt;
+
+&lt;localfile&gt;
+  &lt;log_format&gt;apache&lt;/log_format&gt;
+  &lt;location&gt;/var/log/apache2/access.log&lt;/location&gt;
+&lt;/localfile&gt;</code></pre>
+
+  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Formats de journaux disponibles :</strong></p>
+    <ul style="color: #000000; margin-top: 8px;">
+      <li><code style="color: #000000; background-color: rgba(0,0,0,0.1);">syslog</code> - Pour les journaux système (/var/log/syslog, /var/log/auth.log)</li>
+      <li><code style="color: #000000; background-color: rgba(0,0,0,0.1);">apache</code> - Pour les journaux Apache/Nginx</li>
+      <li><code style="color: #000000; background-color: rgba(0,0,0,0.1);">json</code> - Pour les applications qui génèrent des journaux en JSON</li>
+      <li><code style="color: #000000; background-color: rgba(0,0,0,0.1);">multi-line</code> - Pour les journaux répartis sur plusieurs lignes</li>
+    </ul>
+  </div>
+
+  <h2>À quoi sert la section syscheck pour la surveillance de l'intégrité des fichiers ?</h2>
+
+  <p>
+    La section <code>&lt;syscheck&gt;</code> configure la <strong>surveillance de l'intégrité des fichiers</strong>. Cette fonctionnalité détecte les changements dans les fichiers et dossiers système critiques. Dans l'exemple ci-dessous, la valeur <code>&lt;frequency&gt;</code> est de <strong>300 secondes</strong> (toutes les 5 minutes), l'intervalle de scan par défaut ; réduisez-la pour les répertoires à haute sensibilité ou augmentez-la pour limiter l'usage CPU sur les serveurs chargés.
+  </p>
+
+  <p>
+    Exemple de configuration :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;syscheck&gt;
+  &lt;frequency&gt;300&lt;/frequency&gt;
+  &lt;directories check_all="yes"&gt;/etc&lt;/directories&gt;
+  &lt;directories check_all="yes"&gt;/usr/bin&lt;/directories&gt;
+  &lt;directories check_all="yes"&gt;/var/www&lt;/directories&gt;
+&lt;/syscheck&gt;</code></pre>
+
+  <h2>Comment redémarrer le service de l'agent après des changements ?</h2>
+
+  <p>
+    Après avoir modifié le fichier <code>ossec.conf</code>, vous devez redémarrer le service pour appliquer les changements :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># Redémarrer l'agent
+sudo systemctl restart wazuh-agent
+
+# Vérifier l'état
+sudo systemctl status wazuh-agent
+
+# Activer le démarrage automatique
+sudo systemctl enable wazuh-agent</code></pre>
+
+  <h2>Quelles commandes sont utiles pour gérer l'agent ?</h2>
+
+  <p>
+    Quelques commandes supplémentaires pour gérer l'agent :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># Voir les journaux de l'agent
+sudo tail -f /var/ossec/logs/ossec.log
+
+# Vérifier la connexion avec le serveur
+sudo /var/ossec/bin/agent-auth -m IP_SERVEUR
+
+# Voir les informations de l'agent
+sudo /var/ossec/bin/agent_control -i</code></pre>
+
+  <h2>Questions fréquentes</h2>
+
+  <h3>Combien de temps prend l'installation de l'agent Wazuh sur Linux ?</h3>
+  <p>Le processus complet prend moins de 10 minutes : télécharger le paquet .deb, l'installer avec les variables <code>WAZUH_MANAGER</code> et <code>WAZUH_AGENT_NAME</code>, et démarrer le service avec <code>systemctl</code>. L'agent s'enregistre automatiquement auprès du serveur si la connectivité existe.</p>
+
+  <h3>Quels ports l'agent Wazuh a-t-il besoin d'ouvrir ?</h3>
+  <p>L'agent communique avec le serveur via le port TCP <strong>1514</strong> pour envoyer les événements, et utilise le port <strong>1515</strong> uniquement lors de l'enrôlement initial. Le port <strong>443</strong> sert à accéder au dashboard. Assurez-vous que les pare-feux du serveur et du client autorisent ces ports.</p>
+
+  <h3>Où se trouve le fichier de configuration de l'agent Wazuh ?</h3>
+  <p>Le fichier de configuration se trouve dans <code>/var/ossec/etc/ossec.conf</code>. C'est un fichier XML dont les deux sections les plus importantes sont <code>localfile</code> (quels journaux collecter) et <code>syscheck</code> (surveillance de l'intégrité des fichiers).</p>
+
+  <h3>Faut-il redémarrer l'agent après avoir modifié ossec.conf ?</h3>
+  <p>Oui. Après avoir modifié <code>ossec.conf</code>, vous devez exécuter <code>sudo systemctl restart wazuh-agent</code> pour que les changements prennent effet, puis vérifier le résultat avec <code>systemctl status wazuh-agent</code>.</p>
+
+  <h3>Comment vérifier que l'agent est connecté au serveur Wazuh ?</h3>
+  <p>Exécutez <code>sudo tail -f /var/ossec/logs/ossec.log</code> et cherchez un message « Connected to the server ». Vous pouvez aussi lister l'état de l'agent depuis le serveur avec <code>/var/ossec/bin/agent_control -i</code>, ou confirmer que l'agent apparaît comme Actif dans le dashboard.</p>
+
+  <h2>Ressources supplémentaires</h2>
+
+  <ul>
+    <li><a href="https://documentation.wazuh.com/current/installation-guide/wazuh-agent/wazuh-agent-package-linux.html" target="_blank" rel="noopener" style="color: #38b1ff;">Documentation officielle : agent Linux</a></li>
+    <li><a href="https://documentation.wazuh.com/current/user-manual/capabilities/log-data-collection/index.html" target="_blank" rel="noopener" style="color: #38b1ff;">Collecte des données de journaux dans Wazuh</a></li>
+    <li><a href="/fr/blog/como-instalar-agente-wazuh-en-windows">Installer l'agent Wazuh sur Windows</a></li>
+  </ul>
+
+  <hr />
+
+  <p class="text-sm text-base-600">
+    <strong>Articles liés :</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/fr/blog/como-instalar-agente-wazuh-en-windows">Comment installer l'agent Wazuh sur Windows</a></li>
+    <li><a href="/fr/blog/que-es-wazuh-para-que-sirve">Qu'est-ce que Wazuh et à quoi ça sert ?</a></li>
+  </ul>
+  <hr />
+
+  <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 my-8">
+    <h3 class="text-accent-800 mt-0">Apprenez Wazuh en pratique</h3>
+    <p class="text-base-700 mb-4">
+      Apprenez à configurer les agents, créer des règles personnalisées, intégrer d'autres outils et bien plus encore.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a style="color: black;" href="/fr/wazuh" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent-700 font-semibold rounded-lg border border-accent-300 hover:bg-accent-50 transition-colors">
+        Implémentation professionnelle
+      </a>
+    </div>
+  </div>
+
+</BlogLayout>

@@ -1,0 +1,242 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="nl"
+  title="Wazuh-agent installeren op Windows: volledige gids 2026"
+  description="Hoe u de Wazuh-agent stap voor stap op Windows installeert: MSI-download, installatiecommando, ossec.conf-configuratie, localfile en syscheck. Klaar in 15 minuten."
+  publishDate="2026-02-25"
+  author="AI Security"
+  readTime="10 min"
+  tags={["Wazuh", "Windows", "Agent", "SIEM", "Monitoring", "Cybersecurity"]}
+  canonical="https://aisecurity.es/nl/blog/como-instalar-agente-wazuh-en-windows"
+  faqSchema={[
+    {
+      question: "Hoe lang duurt het installeren van de Wazuh-agent op Windows?",
+      answer: "Het hele proces duurt minder dan 5 minuten. U downloadt het MSI-installatieprogramma, voert het uit vanuit PowerShell met de parameter WAZUH_MANAGER ingesteld op het IP van uw server, en de agent registreert en verbindt automatisch met de server."
+    },
+    {
+      question: "Welke poorten heeft de Wazuh-agent nodig?",
+      answer: "De agent moet de Wazuh-server bereiken op poort 1514 om logs te versturen, en poort 443 wordt gebruikt om het Dashboard te openen. Zorg dat zowel de firewall van de server als de Windows-firewall van de client dit verkeer toestaan."
+    },
+    {
+      question: "Waar staat het configuratiebestand van de Wazuh-agent op Windows?",
+      answer: "Het configuratiebestand is ossec.conf, te vinden in C:\\Program Files (x86)\\ossec-agent\\ossec.conf. Het is een XML-bestand met twee belangrijkste secties: localfile, voor het verzamelen van logs, en syscheck, voor monitoring van bestandsintegriteit."
+    },
+    {
+      question: "Welke Windows-logs verzamelt de agent standaard?",
+      answer: "Via de sectie localfile verzamelt de agent de Event Logs Security, System en Application in het eventchannel-formaat. Het Security-log legt aanmeldingen, mislukte toegang en wijzigingen van rechten vast, wat essentieel is om aanvallen te detecteren."
+    },
+    {
+      question: "Hoe herstart of controleer ik de Wazuh-agentservice?",
+      answer: "Gebruik de PowerShell-commando's Restart-Service WazuhSvc om te herstarten en Get-Service WazuhSvc om de status te controleren. U kunt de agentlogs bekijken met Get-Content op C:\\Program Files (x86)\\ossec-agent\\ossec.log."
+    }
+  ]}>
+
+  <p>Om de Wazuh-agent op Windows te installeren, downloadt u het MSI-installatieprogramma van het Wazuh-portaal, voert u het uit met de parameter <code>WAZUH_MANAGER=SERVER_IP</code>, en registreert en verbindt de agent automatisch met de server. Het hele proces duurt minder dan 5 minuten.</p>
+
+  <h2>Hoe installeer je de Wazuh-agent op Windows stap voor stap?</h2>
+
+  <p>
+    In deze gids laat ik u zien <strong>hoe u de Wazuh-agent op Windows installeert</strong> en de belangrijkste delen van het bestand <code>ossec.conf</code> configureert. De agent is het onderdeel dat logs verzamelt, de integriteit van bestanden bewaakt en alle informatie naar de Wazuh-server stuurt.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/nl/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Kant-en-klaar</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Wazuh nodig in uw bedrijf?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Wij rollen Wazuh voor u uit — of voegen geavanceerde configuraties op maat toe als adviesdienst. Productieklaar en compliance-klaar.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Wazuh-advies →</span>
+    </a>
+  </aside>
+
+  <h2>Vereiste: connectiviteit met de server</h2>
+
+  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Belangrijk:</strong> zorg vóór het installeren van de agent dat de Windows-machine <strong style="color:rgba(255,255,255,0.9);">connectiviteit met de Wazuh-server</strong> heeft. De agent moet met de server communiceren om logs te versturen en zijn configuratie te ontvangen.</p>
+  </div>
+
+  <p>
+    U kunt de connectiviteit op verschillende manieren controleren:
+  </p>
+
+  <h3>1. Ping naar de server</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">ping SERVER_IP</code></pre>
+
+  <h3>2. Toegang tot het Dashboard controleren (poort 443)</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># Met PowerShell
+Invoke-WebRequest -Uri https://SERVER_IP -SkipCertificateCheck
+
+# Of open het in de browser
+https://SERVER_IP</code></pre>
+
+  <p>
+    Als het Dashboard correct laadt, is er connectiviteit. Werkt het niet, controleer dan:
+  </p>
+
+  <ul>
+    <li>De firewall van de server (poorten 443 en 1514 open)</li>
+    <li>De Windows-firewall van de client</li>
+    <li>De netwerk-/VPN-configuratie als ze op verschillende netwerken zitten</li>
+  </ul>
+
+  <h2>Wat is het installatiecommando?</h2>
+
+  <p>
+    Voer dit commando uit in <strong>PowerShell als Administrator</strong>. U moet de volgende waarden vervangen door die van uw omgeving:
+  </p>
+
+  <ul>
+    <li><strong>WAZUH_MANAGER:</strong> IP of hostnaam van uw Wazuh-server</li>
+    <li><strong>WAZUH_AGENT_NAME:</strong> herkenbare naam voor deze agent (bijv.: PC-BOEKHOUDING, SERVER-WEB, enz.)</li>
+  </ul>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.7.0-1.msi -OutFile wazuh-agent.msi; Start-Process msiexec.exe -ArgumentList "/i wazuh-agent.msi /q WAZUH_MANAGER=UW_SERVER_IP WAZUH_AGENT_NAME=AGENT_NAAM" -Wait</code></pre>
+
+  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Concreet voorbeeld:</strong> als uw Wazuh-server op 192.168.1.100 draait en u de agent "PC-KANTOOR" wilt noemen:</p>
+    <pre style="background:#0f1419;padding:16px;border-radius:8px;margin-top:12px;overflow-x:auto;"><code style="color: #e5e7eb;">Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.7.0-1.msi -OutFile wazuh-agent.msi; Start-Process msiexec.exe -ArgumentList "/i wazuh-agent.msi /q WAZUH_MANAGER=192.168.1.100 WAZUH_AGENT_NAME=PC-KANTOOR" -Wait</code></pre>
+  </div>
+
+  <h2>Het configuratiebestand ossec.conf</h2>
+
+  <p>
+    Het configuratiebestand van de agent bevindt zich op:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">C:\Program Files (x86)\ossec-agent\ossec.conf</code></pre>
+
+  <p>
+    Dit XML-bestand bevat de volledige configuratie van de agent. De twee belangrijkste secties zijn <code>localfile</code> en <code>syscheck</code>.
+  </p>
+
+  <h2>Wat doet de localfile-sectie voor logmonitoring?</h2>
+
+  <p>
+    De sectie <code>&lt;localfile&gt;</code> bepaalt <strong>welke Windows-systeemlogs u naar Wazuh wilt sturen</strong>. Standaard bewaakt de agent de belangrijkste Event Logs:
+  </p>
+
+  <ul>
+    <li><strong>Security:</strong> beveiligingsgebeurtenissen (aanmeldingen, mislukte toegang, wijzigingen van rechten, enz.)</li>
+    <li><strong>System:</strong> gebeurtenissen van het besturingssysteem (opstarten, gestopte services, hardwarefouten)</li>
+    <li><strong>Application:</strong> gebeurtenissen van geïnstalleerde applicaties</li>
+  </ul>
+
+  <p>
+    Voorbeeldconfiguratie in ossec.conf:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;localfile&gt;
+  &lt;location&gt;Security&lt;/location&gt;
+  &lt;log_format&gt;eventchannel&lt;/log_format&gt;
+&lt;/localfile&gt;
+
+&lt;localfile&gt;
+  &lt;location&gt;System&lt;/location&gt;
+  &lt;log_format&gt;eventchannel&lt;/log_format&gt;
+&lt;/localfile&gt;</code></pre>
+
+  <h2>Hoe activeert de syscheck-sectie File Integrity Monitoring (FIM)?</h2>
+
+  <p>
+    De sectie <code>&lt;syscheck&gt;</code> configureert <strong>File Integrity Monitoring</strong>. Deze functie detecteert wijzigingen in kritieke systeembestanden en -mappen:
+  </p>
+
+  <ul>
+    <li><strong>Aanmaken</strong> van nieuwe bestanden</li>
+    <li><strong>Wijziging</strong> van bestaande bestanden</li>
+    <li><strong>Verwijdering</strong> van bestanden</li>
+    <li><strong>Wijzigingen van rechten</strong></li>
+    <li><strong>Wijzigingen in het Windows-register</strong></li>
+  </ul>
+
+  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Waarvoor dient het?</strong> FIM is cruciaal voor het detecteren van malware, ransomware of ongeautoriseerde wijzigingen. Als een aanvaller systeembestanden wijzigt of ransomware documenten begint te versleutelen, genereert Wazuh onmiddellijk meldingen.</p>
+  </div>
+
+  <p>
+    Voorbeeldconfiguratie:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;syscheck&gt;
+  &lt;frequency&gt;300&lt;/frequency&gt;
+  &lt;directories check_all="yes"&gt;C:\Windows\System32&lt;/directories&gt;
+  &lt;directories check_all="yes"&gt;C:\Users\*\Documents&lt;/directories&gt;
+  &lt;windows_registry&gt;HKEY_LOCAL_MACHINE\Software&lt;/windows_registry&gt;
+&lt;/syscheck&gt;</code></pre>
+
+  <h2>Nuttige commando's</h2>
+
+  <p>
+    Enkele PowerShell-commando's om de agent te beheren:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># De agentservice herstarten
+Restart-Service WazuhSvc
+
+# De status van de service controleren
+Get-Service WazuhSvc
+
+# De agentlogs bekijken (laatste 50 regels)
+Get-Content "C:\Program Files (x86)\ossec-agent\ossec.log" -Tail 50</code></pre>
+
+  <h2>Aanvullende bronnen</h2>
+
+  <ul>
+    <li><a href="https://documentation.wazuh.com/current/installation-guide/wazuh-agent/wazuh-agent-package-windows.html" target="_blank" rel="noopener" style="color: #38b1ff;">Officiële documentatie: Windows-agent</a></li>
+    <li><a href="https://documentation.wazuh.com/current/user-manual/capabilities/file-integrity/index.html" target="_blank" rel="noopener" style="color: #38b1ff;">File Integrity Monitoring in Wazuh</a></li>
+  </ul>
+
+  <h2>Veelgestelde vragen</h2>
+
+  <h3>Hoe lang duurt het installeren van de Wazuh-agent op Windows?</h3>
+  <p>
+    Het hele proces duurt minder dan 5 minuten. U downloadt het MSI-installatieprogramma, voert het uit vanuit PowerShell met de parameter <code>WAZUH_MANAGER</code> ingesteld op het IP van uw server, en de agent registreert en verbindt automatisch met de server.
+  </p>
+
+  <h3>Welke poorten heeft de Wazuh-agent nodig?</h3>
+  <p>
+    De agent moet de Wazuh-server bereiken op poort 1514 om logs te versturen, en poort 443 wordt gebruikt om het Dashboard te openen. Zorg dat zowel de firewall van de server als de Windows-firewall van de client dit verkeer toestaan.
+  </p>
+
+  <h3>Waar staat het configuratiebestand van de Wazuh-agent op Windows?</h3>
+  <p>
+    Het configuratiebestand is <code>ossec.conf</code>, te vinden in <code>C:\Program Files (x86)\ossec-agent\ossec.conf</code>. Het is een XML-bestand met twee belangrijkste secties: <code>localfile</code>, voor het verzamelen van logs, en <code>syscheck</code>, voor monitoring van bestandsintegriteit.
+  </p>
+
+  <h3>Welke Windows-logs verzamelt de agent standaard?</h3>
+  <p>
+    Via de sectie <code>localfile</code> verzamelt de agent de Event Logs Security, System en Application in het eventchannel-formaat. Het Security-log legt aanmeldingen, mislukte toegang en wijzigingen van rechten vast, wat essentieel is om aanvallen te detecteren.
+  </p>
+
+  <h3>Hoe herstart of controleer ik de Wazuh-agentservice?</h3>
+  <p>
+    Gebruik de PowerShell-commando's <code>Restart-Service WazuhSvc</code> om te herstarten en <code>Get-Service WazuhSvc</code> om de status te controleren. U kunt de agentlogs bekijken met <code>Get-Content</code> op <code>C:\Program Files (x86)\ossec-agent\ossec.log</code>.
+  </p>
+
+  <hr />
+
+  <p class="text-sm text-base-600">
+    <strong>Gerelateerde artikelen:</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/nl/blog/que-es-wazuh-para-que-sirve">Wat is Wazuh en waarvoor dient het?</a></li>
+  </ul>
+  <hr />
+
+  <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 my-8">
+    <h3 class="text-accent-800 mt-0">Laat Wazuh op de juiste manier uitrollen</h3>
+    <p class="text-base-700 mb-4">
+      Wij kunnen agents configureren, aangepaste regels bouwen, integreren met andere tools en veel meer als onderdeel van een professionele implementatie.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a style="color: black;" href="/nl/wazuh" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent-700 font-semibold rounded-lg border border-accent-300 hover:bg-accent-50 transition-colors">
+        Professionele implementatie
+      </a>
+    </div>
+  </div>
+
+</BlogLayout>

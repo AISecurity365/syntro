@@ -1,0 +1,257 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="nl"
+  title="Hoe installeer je de Wazuh-agent op Linux"
+  description="Stapsgewijze gids om de Wazuh-agent op Linux (Debian/Ubuntu) te installeren en configureren. Installatiecommando, ossec.conf-configuratie, localfile en de service herstarten."
+  publishDate="2026-02-25"
+  author="AI Security"
+  readTime="8 min"
+  tags={["Wazuh", "Linux", "Agent", "SIEM", "Monitoring", "Cybersecurity"]}
+  canonical="https://aisecurity.es/nl/blog/como-instalar-agente-wazuh-en-linux"
+  faqSchema={[
+    {
+      question: "Hoe lang duurt het installeren van de Wazuh-agent op Linux?",
+      answer: "Het volledige proces duurt minder dan 10 minuten: het .deb-pakket downloaden, het installeren met de variabelen WAZUH_MANAGER en WAZUH_AGENT_NAME, en de service starten met systemctl. De agent registreert zich automatisch bij de server als er connectiviteit is."
+    },
+    {
+      question: "Welke poorten heeft de Wazuh-agent nodig?",
+      answer: "De agent communiceert met de server via TCP-poort 1514 om gebeurtenissen te versturen, en gebruikt poort 1515 alleen tijdens de eerste registratie. Poort 443 wordt gebruikt om het dashboard te openen. Zorg dat de firewalls van server en client deze poorten toestaan."
+    },
+    {
+      question: "Waar staat het configuratiebestand van de Wazuh-agent?",
+      answer: "Het configuratiebestand staat in /var/ossec/etc/ossec.conf. Het is een XML-bestand met twee belangrijkste secties: localfile (welke logs verzamelen) en syscheck (File Integrity Monitoring)."
+    },
+    {
+      question: "Moet ik de agent herstarten na het bewerken van ossec.conf?",
+      answer: "Ja. Na het wijzigen van ossec.conf moet u sudo systemctl restart wazuh-agent uitvoeren zodat de wijzigingen van kracht worden, en vervolgens het resultaat controleren met systemctl status wazuh-agent."
+    },
+    {
+      question: "Hoe controleer ik of de agent verbonden is met de Wazuh-server?",
+      answer: "Voer sudo tail -f /var/ossec/logs/ossec.log uit en zoek naar een bericht 'Connected to the server'. U kunt ook de agentstatus vanaf de server opvragen met /var/ossec/bin/agent_control -i, of bevestigen dat de agent als Actief verschijnt in het dashboard."
+    }
+  ]}>
+
+  <p>Om de Wazuh-agent op Linux (Debian/Ubuntu) te installeren, voegt u de officiële repository toe, installeert u het pakket <code>wazuh-agent</code>, stelt u het server-IP in <code>ossec.conf</code> in en start u de service met <code>systemctl start wazuh-agent</code>. Het hele proces duurt minder dan 10 minuten.</p>
+
+  <h2>Hoe installeer je de Wazuh-agent op Linux stap voor stap?</h2>
+
+  <p>
+    In deze gids laat ik u zien <strong>hoe u de Wazuh-agent op Linux</strong> (Debian/Ubuntu) installeert en de belangrijkste delen van het bestand <code>ossec.conf</code> configureert. De agent is het onderdeel dat logs verzamelt, de integriteit van bestanden bewaakt en alle informatie naar de Wazuh-server stuurt.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/nl/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Kant-en-klaar</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Wazuh nodig in uw bedrijf?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Wij rollen Wazuh voor u uit — of voegen geavanceerde configuraties op maat toe als adviesdienst. Productieklaar en compliance-klaar.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Wazuh-advies →</span>
+    </a>
+  </aside>
+
+  <h2>Waarom heeft de agent eerst connectiviteit met de server nodig?</h2>
+
+  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Belangrijk:</strong> zorg vóór het installeren van de agent dat de machine <strong style="color:rgba(255,255,255,0.9);">connectiviteit met de Wazuh-server</strong> heeft. De agent moet met de server communiceren om logs te versturen en zijn configuratie te ontvangen.</p>
+  </div>
+
+  <p>
+    U kunt de connectiviteit op verschillende manieren controleren:
+  </p>
+
+  <h3>1. Ping naar de server</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">ping SERVER_IP</code></pre>
+
+  <h3>2. Toegang tot het Dashboard controleren (poort 443)</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># Met curl
+curl -k https://SERVER_IP
+
+# Of open het in de browser
+https://SERVER_IP</code></pre>
+
+  <p>
+    Als het Dashboard correct laadt, is er connectiviteit. Werkt het niet, controleer dan:
+  </p>
+
+  <ul>
+    <li>De firewall van de server (poorten 443 en 1514 open)</li>
+    <li>De firewall van de client</li>
+    <li>De netwerk-/VPN-configuratie als ze op verschillende netwerken zitten</li>
+  </ul>
+
+  <h2>Wat is het commando om de Wazuh-agent te installeren?</h2>
+
+  <p>
+    Voer deze commando's uit als <strong>root of met sudo</strong>. Deze gids gebruikt <strong>Wazuh 4.9.2</strong>, de versie die in de pakket-URL hieronder is vastgezet; als uw server een andere versie draait, laat u het agentpakket daarmee overeenkomen. U moet de volgende waarden vervangen door die van uw omgeving:
+  </p>
+
+  <ul>
+    <li><strong>WAZUH_MANAGER:</strong> IP of hostnaam van uw Wazuh-server</li>
+    <li><strong>WAZUH_AGENT_NAME:</strong> herkenbare naam voor deze agent (bijv.: web-server, db-productie, enz.)</li>
+  </ul>
+
+  <h3>Debian/Ubuntu</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.9.2-1_amd64.deb && sudo WAZUH_MANAGER='UW_SERVER_IP' WAZUH_AGENT_NAME='AGENT_NAAM' dpkg -i ./wazuh-agent_4.9.2-1_amd64.deb</code></pre>
+
+  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Concreet voorbeeld:</strong> als uw Wazuh-server op 192.168.1.100 draait en u de agent "web-server" wilt noemen:</p>
+    <pre style="background:#0f1419;padding:16px;border-radius:8px;margin-top:12px;overflow-x:auto;"><code style="color: #e5e7eb;">wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.9.2-1_amd64.deb && sudo WAZUH_MANAGER='192.168.1.100' WAZUH_AGENT_NAME='web-server' dpkg -i ./wazuh-agent_4.9.2-1_amd64.deb</code></pre>
+  </div>
+
+  <h3>De service inschakelen en starten</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">sudo systemctl daemon-reload
+sudo systemctl enable wazuh-agent
+sudo systemctl start wazuh-agent</code></pre>
+
+  <h2>Waar staat het configuratiebestand ossec.conf?</h2>
+
+  <p>
+    Het configuratiebestand van de agent bevindt zich op:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">/var/ossec/etc/ossec.conf</code></pre>
+
+  <p>
+    Dit XML-bestand bevat de volledige configuratie van de agent. De twee belangrijkste secties zijn <code>localfile</code> en <code>syscheck</code>.
+  </p>
+
+  <h2>Wat doet de localfile-sectie voor logmonitoring?</h2>
+
+  <p>
+    De sectie <code>&lt;localfile&gt;</code> bepaalt <strong>welke systeemlogs u naar Wazuh wilt sturen</strong>. Standaard bewaakt de agent de systeemlogs, maar u kunt logs van specifieke applicaties toevoegen.
+  </p>
+
+  <h3>Voorbeeld: Apache2-logs toevoegen</h3>
+
+  <p>
+    Om de foutlogs van Apache2 te bewaken, bewerkt u het bestand <code>ossec.conf</code>:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">sudo nano /var/ossec/etc/ossec.conf</code></pre>
+
+  <p>
+    Voeg de volgende configuratie toe binnen het blok <code>&lt;ossec_config&gt;</code>:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;localfile&gt;
+  &lt;log_format&gt;apache&lt;/log_format&gt;
+  &lt;location&gt;/var/log/apache2/error.log&lt;/location&gt;
+&lt;/localfile&gt;
+
+&lt;localfile&gt;
+  &lt;log_format&gt;apache&lt;/log_format&gt;
+  &lt;location&gt;/var/log/apache2/access.log&lt;/location&gt;
+&lt;/localfile&gt;</code></pre>
+
+  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Beschikbare logformaten:</strong></p>
+    <ul style="color: #000000; margin-top: 8px;">
+      <li><code style="color: #000000; background-color: rgba(0,0,0,0.1);">syslog</code> - Voor systeemlogs (/var/log/syslog, /var/log/auth.log)</li>
+      <li><code style="color: #000000; background-color: rgba(0,0,0,0.1);">apache</code> - Voor Apache/Nginx-logs</li>
+      <li><code style="color: #000000; background-color: rgba(0,0,0,0.1);">json</code> - Voor applicaties die logs in JSON genereren</li>
+      <li><code style="color: #000000; background-color: rgba(0,0,0,0.1);">multi-line</code> - Voor logs die over meerdere regels lopen</li>
+    </ul>
+  </div>
+
+  <h2>Waarvoor dient de syscheck-sectie voor File Integrity Monitoring?</h2>
+
+  <p>
+    De sectie <code>&lt;syscheck&gt;</code> configureert <strong>File Integrity Monitoring</strong>. Deze functie detecteert wijzigingen in kritieke systeembestanden en -mappen. In het onderstaande voorbeeld is de waarde <code>&lt;frequency&gt;</code> <strong>300 seconden</strong> (elke 5 minuten), het standaard scaninterval; verlaag dit voor mappen met hoge gevoeligheid of verhoog het om het CPU-gebruik op drukke servers te beperken.
+  </p>
+
+  <p>
+    Voorbeeldconfiguratie:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;syscheck&gt;
+  &lt;frequency&gt;300&lt;/frequency&gt;
+  &lt;directories check_all="yes"&gt;/etc&lt;/directories&gt;
+  &lt;directories check_all="yes"&gt;/usr/bin&lt;/directories&gt;
+  &lt;directories check_all="yes"&gt;/var/www&lt;/directories&gt;
+&lt;/syscheck&gt;</code></pre>
+
+  <h2>Hoe herstart je de agentservice na wijzigingen?</h2>
+
+  <p>
+    Na het wijzigen van het bestand <code>ossec.conf</code> moet u de service herstarten om de wijzigingen toe te passen:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># De agent herstarten
+sudo systemctl restart wazuh-agent
+
+# Status controleren
+sudo systemctl status wazuh-agent
+
+# Automatisch opstarten inschakelen
+sudo systemctl enable wazuh-agent</code></pre>
+
+  <h2>Welke commando's zijn handig om de agent te beheren?</h2>
+
+  <p>
+    Enkele aanvullende commando's om de agent te beheren:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># De agentlogs bekijken
+sudo tail -f /var/ossec/logs/ossec.log
+
+# De verbinding met de server controleren
+sudo /var/ossec/bin/agent-auth -m SERVER_IP
+
+# De informatie van de agent bekijken
+sudo /var/ossec/bin/agent_control -i</code></pre>
+
+  <h2>Veelgestelde vragen</h2>
+
+  <h3>Hoe lang duurt het installeren van de Wazuh-agent op Linux?</h3>
+  <p>Het volledige proces duurt minder dan 10 minuten: het .deb-pakket downloaden, het installeren met de variabelen <code>WAZUH_MANAGER</code> en <code>WAZUH_AGENT_NAME</code>, en de service starten met <code>systemctl</code>. De agent registreert zich automatisch bij de server als er connectiviteit is.</p>
+
+  <h3>Welke poorten heeft de Wazuh-agent nodig?</h3>
+  <p>De agent communiceert met de server via TCP-poort <strong>1514</strong> om gebeurtenissen te versturen, en gebruikt poort <strong>1515</strong> alleen tijdens de eerste registratie. Poort <strong>443</strong> wordt gebruikt om het dashboard te openen. Zorg dat de firewalls van server en client deze poorten toestaan.</p>
+
+  <h3>Waar staat het configuratiebestand van de Wazuh-agent?</h3>
+  <p>Het configuratiebestand staat in <code>/var/ossec/etc/ossec.conf</code>. Het is een XML-bestand met twee belangrijkste secties: <code>localfile</code> (welke logs verzamelen) en <code>syscheck</code> (File Integrity Monitoring).</p>
+
+  <h3>Moet ik de agent herstarten na het bewerken van ossec.conf?</h3>
+  <p>Ja. Na het wijzigen van <code>ossec.conf</code> moet u <code>sudo systemctl restart wazuh-agent</code> uitvoeren zodat de wijzigingen van kracht worden, en vervolgens het resultaat controleren met <code>systemctl status wazuh-agent</code>.</p>
+
+  <h3>Hoe controleer ik of de agent verbonden is met de Wazuh-server?</h3>
+  <p>Voer <code>sudo tail -f /var/ossec/logs/ossec.log</code> uit en zoek naar een bericht "Connected to the server". U kunt ook de agentstatus vanaf de server opvragen met <code>/var/ossec/bin/agent_control -i</code>, of bevestigen dat de agent als Actief verschijnt in het dashboard.</p>
+
+  <h2>Aanvullende bronnen</h2>
+
+  <ul>
+    <li><a href="https://documentation.wazuh.com/current/installation-guide/wazuh-agent/wazuh-agent-package-linux.html" target="_blank" rel="noopener" style="color: #38b1ff;">Officiële documentatie: Linux-agent</a></li>
+    <li><a href="https://documentation.wazuh.com/current/user-manual/capabilities/log-data-collection/index.html" target="_blank" rel="noopener" style="color: #38b1ff;">Logdataverzameling in Wazuh</a></li>
+    <li><a href="/nl/blog/como-instalar-agente-wazuh-en-windows">De Wazuh-agent op Windows installeren</a></li>
+  </ul>
+
+  <hr />
+
+  <p class="text-sm text-base-600">
+    <strong>Gerelateerde artikelen:</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/nl/blog/como-instalar-agente-wazuh-en-windows">Hoe installeer je de Wazuh-agent op Windows</a></li>
+    <li><a href="/nl/blog/que-es-wazuh-para-que-sirve">Wat is Wazuh en waarvoor dient het?</a></li>
+  </ul>
+  <hr />
+
+  <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 my-8">
+    <h3 class="text-accent-800 mt-0">Leer Wazuh in de praktijk</h3>
+    <p class="text-base-700 mb-4">
+      Leer agents configureren, aangepaste regels maken, integreren met andere tools en veel meer.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a style="color: black;" href="/nl/wazuh" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent-700 font-semibold rounded-lg border border-accent-300 hover:bg-accent-50 transition-colors">
+        Professionele implementatie
+      </a>
+    </div>
+  </div>
+
+</BlogLayout>

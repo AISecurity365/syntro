@@ -363,6 +363,8 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
             }
           }
 
+          var autoHideTimer;
+
           function showPopup() {
             if (overlay) { overlay.style.opacity = '1'; overlay.style.pointerEvents = 'all'; }
             popup.style.opacity = '1';
@@ -370,9 +372,13 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
             popup.style.pointerEvents = 'all';
             popup.setAttribute('aria-hidden', 'false');
             sendGA('popup_shown');
+
+            // Se cierra solo a los 5s si el usuario no interactúa
+            autoHideTimer = setTimeout(hidePopup, 5000);
           }
 
           function hidePopup() {
+            clearTimeout(autoHideTimer);
             if (overlay) { overlay.style.opacity = '0'; overlay.style.pointerEvents = 'none'; }
             popup.style.opacity = '0';
             popup.style.transform = 'translate(-50%,-50%) scale(0.92)';
@@ -381,8 +387,8 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
             localStorage.setItem(STORAGE_KEY, '1');
           }
 
-          // Mostrar tras 4 s
-          setTimeout(showPopup, 4000);
+          // Aparece a los 3 minutos de estar en el blog
+          setTimeout(showPopup, 180000);
 
           // Cerrar con X
           if (closeBtn) {
@@ -468,57 +474,67 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
 })();
 </script>
 
-<script>
-  // Añadir botón de copiar a cada bloque de código y aplicar color
-  document.addEventListener('DOMContentLoaded', () => {
-    const codeBlocks = document.querySelectorAll('article pre');
+<script is:inline>
+  // Bloques de código estilo terminal: barra con puntos + etiqueta + botón de copiar integrado
+  window.addEventListener('load', function () {
+    var pres = document.querySelectorAll('article pre');
 
-    codeBlocks.forEach((block) => {
-      // Aplicar color al código
-      const codeElement = block.querySelector('code');
-      if (codeElement) {
-        codeElement.style.color = '#64abd3';
-      }
+    pres.forEach(function (pre) {
+      if (pre.classList.contains('mc-pre')) return;
 
-      // Crear botón de copiar
-      const copyButton = document.createElement('button');
-      copyButton.textContent = '📋 Copiar código';
-      copyButton.className = 'copy-button';
-      copyButton.setAttribute('aria-label', 'Copiar código');
+      var codeEl = pre.querySelector('code');
+      if (codeEl) codeEl.style.color = '#64abd3';
+      var text = codeEl ? codeEl.textContent : '';
 
-      // Añadir evento de click
-      copyButton.addEventListener('click', async () => {
-        const code = block.querySelector('code');
-        const text = code?.textContent || '';
+      var lang = 'bash';
+      if (/Invoke-WebRequest|PowerShell|msiexec/i.test(text)) lang = 'powershell';
 
-        try {
-          await navigator.clipboard.writeText(text);
-          copyButton.textContent = '✓ ¡Código copiado!';
-          copyButton.classList.add('copied');
+      pre.classList.add('mc-pre');
+      pre.style.position = 'relative';
+      pre.style.paddingTop = '48px';
 
-          // Volver al estado original después de 2 segundos
-          setTimeout(() => {
-            copyButton.textContent = '📋 Copiar código';
-            copyButton.classList.remove('copied');
-          }, 2000);
-        } catch (err) {
-          console.error('Error al copiar:', err);
-        }
+      var header = document.createElement('div');
+      header.className = 'mc-header';
+
+      var dots = document.createElement('span');
+      dots.className = 'mc-dots';
+      dots.innerHTML = '<span></span><span></span><span></span>';
+
+      var langEl = document.createElement('span');
+      langEl.className = 'mc-lang';
+      langEl.textContent = lang;
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'mc-copy';
+      btn.setAttribute('aria-label', 'Copiar código');
+      btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Copiar</span>';
+
+      header.appendChild(dots);
+      header.appendChild(langEl);
+      header.appendChild(btn);
+      pre.insertBefore(header, pre.firstChild);
+
+      btn.addEventListener('click', function () {
+        navigator.clipboard.writeText(text).then(function () {
+          btn.classList.add('copied');
+          btn.querySelector('span').textContent = '¡Copiado!';
+          setTimeout(function () {
+            btn.classList.remove('copied');
+            btn.querySelector('span').textContent = 'Copiar';
+          }, 1800);
+        });
       });
-
-      // Insertar el botón justo después del bloque de código
-      block.parentNode?.insertBefore(copyButton, block.nextSibling);
     });
 
-    // También aplicar color al código inline
-    const inlineCodes = document.querySelectorAll('article :not(pre) > code');
-    inlineCodes.forEach((code) => {
+    // Color del código inline (fuera de pre)
+    document.querySelectorAll('article :not(pre) > code').forEach(function (code) {
       code.style.color = '#64abd3';
     });
   });
 </script>
 
-<style>
+<style is:global>
   /* Mejoras adicionales para el contenido del artículo */
   article img {
     margin: 2rem auto;
@@ -584,40 +600,67 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
     color: rgba(59, 130, 246, 0.7);
   }
 
-  /* Botón de copiar código */
-  .copy-button {
-    padding: 0.625rem 1rem;
-    margin-top: -0.5rem;
-    margin-bottom: 1.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 0.5rem;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.875rem;
-    font-weight: 500;
+  /* Bloques de código estilo terminal */
+  article pre.mc-pre {
+    border: 1px solid rgba(139,92,246,0.25) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+  }
+</style>
+
+<style is:global>
+  .mc-header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0 14px;
+    background: rgba(255,255,255,0.035);
+    border-bottom: 1px solid rgba(139,92,246,0.18);
+    border-radius: 12px 12px 0 0;
+    box-sizing: border-box;
+  }
+
+  .mc-dots { display: flex; gap: 6px; flex-shrink: 0; }
+  .mc-dots span {
+    width: 9px; height: 9px; border-radius: 50%; display: block;
+    background: rgba(167,139,250,0.35);
+  }
+
+  .mc-lang {
+    flex: 1;
+    font-family: monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .mc-copy {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.75);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    font-family: inherit;
   }
-
-  .copy-button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.3);
-    color: rgba(255, 255, 255, 0.9);
-    transform: translateX(4px);
+  .mc-copy:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border-color: rgba(255,255,255,0.25);
   }
-
-  .copy-button:active {
-    transform: translateX(2px);
-  }
-
-  .copy-button.copied {
-    background: rgba(16, 185, 129, 0.1);
-    border-color: rgba(16, 185, 129, 0.3);
-    color: rgba(16, 185, 129, 0.9);
-  }
-
-  .copy-button.copied:hover {
-    background: rgba(16, 185, 129, 0.15);
-    border-color: rgba(16, 185, 129, 0.4);
+  .mc-copy.copied {
+    background: rgba(16,185,129,0.15);
+    border-color: rgba(16,185,129,0.4);
+    color: #6ee7b7;
   }
 </style>
