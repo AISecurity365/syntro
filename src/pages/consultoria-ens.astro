@@ -240,33 +240,32 @@ const canonical = "https://aisecurity.es/consultoria-ens";
   <section id="modalidades" style="background:#0a0d1a;padding:5rem 0;">
     <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
       <div class="text-center mb-12">
-        <p class="ens-eyebrow-c">Modalidades y precios</p>
+        <p class="ens-eyebrow-c">Modalidades de servicio</p>
         <h2 class="font-bold mb-3" style="font-size:clamp(1.6rem,2.4vw,2.4rem);color:#e2e8f0;">¿Qué nivel de apoyo necesitas?</h2>
         <p style="color:#64748b;max-width:600px;margin:0 auto;font-size:0.95rem;line-height:1.7;">No todas las empresas parten del mismo punto. La mayoría nos elige para la <strong style="color:#6ee7b7;">gestión integral</strong>: dejar su sistema seguro y con las evidencias listas para pasar la auditoría.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
 
-        <!-- 01 GUÍA -->
+        <!-- 01 SOLO TÉCNICA -->
         <div class="ens-mod-card">
           <div class="ens-mod-num">01</div>
-          <h3 style="font-weight:700;color:#e2e8f0;font-size:1.15rem;margin-bottom:0.25rem;">Guía ENS</h3>
-          <div class="ens-price"><span class="ens-price-from">desde</span> 1.500 €</div>
-          <p style="font-size:0.85rem;color:#64748b;line-height:1.6;margin-bottom:1.1rem;">Para equipos con capacidad técnica interna. Te entregamos el roadmap completo, las plantillas de documentación y la lista de controles a implementar. Lo haces tú con nuestro apoyo puntual.</p>
+          <h3 style="font-weight:700;color:#e2e8f0;font-size:1.15rem;margin-bottom:0.5rem;">Solo técnica</h3>
+          <p style="font-size:0.85rem;color:#64748b;line-height:1.6;margin-bottom:1.1rem;">¿La documentación ya la lleva tu equipo o un consultor, pero te falta la seguridad real? Implementamos los controles técnicos del Anexo II y dejamos las evidencias listas para la auditoría.</p>
           <ul class="ens-list mb-6">
-            <li>Informe de categorización</li>
-            <li>Plantillas de políticas y procedimientos</li>
-            <li>Checklist de controles por nivel</li>
-            <li>2 sesiones de revisión incluidas</li>
+            <li>Wazuh SIEM (monitorización + FIM + SCA)</li>
+            <li>Hardening y bastionado (CIS Benchmarks)</li>
+            <li>Gestión de incidentes operacional</li>
+            <li>Evidencias técnicas para la auditoría</li>
+            <li>Soporte técnico post-certificación</li>
           </ul>
-          <a href="/presupuesto?plan=consultoria-ens-guia" style="margin-top:auto;color:#a78bfa;border:1px solid rgba(167,139,250,0.25);background:rgba(139,92,246,0.06);" class="ens-cta-btn">Solicitar →</a>
+          <a href="/presupuesto?plan=consultoria-ens-tecnica" style="margin-top:auto;color:#a78bfa;border:1px solid rgba(167,139,250,0.25);background:rgba(139,92,246,0.06);" class="ens-cta-btn">Consultar precio →</a>
         </div>
 
         <!-- 02 DOCUMENTAL -->
         <div class="ens-mod-card" style="border-color:rgba(129,140,248,0.15);">
           <div class="ens-mod-num">02</div>
-          <h3 style="font-weight:700;color:#e2e8f0;font-size:1.15rem;margin-bottom:0.25rem;">Solo documental</h3>
-          <div class="ens-price">3.000 – 8.000 €</div>
+          <h3 style="font-weight:700;color:#e2e8f0;font-size:1.15rem;margin-bottom:0.5rem;">Solo documental</h3>
           <p style="font-size:0.85rem;color:#64748b;line-height:1.6;margin-bottom:1.1rem;">Si ya tienes equipo técnico que implementará los controles, nos encargamos de toda la parte documental: análisis de riesgos, políticas, declaración o coordinación con auditor ENAC.</p>
           <ul class="ens-list mb-6">
             <li>Análisis GAP + categorización</li>
@@ -275,24 +274,22 @@ const canonical = "https://aisecurity.es/consultoria-ens";
             <li>Plan de adecuación</li>
             <li>Apoyo en auditoría ENAC</li>
           </ul>
-          <a href="/presupuesto?plan=consultoria-ens-documental" style="margin-top:auto;color:#a78bfa;border:1px solid rgba(167,139,250,0.25);background:rgba(139,92,246,0.06);" class="ens-cta-btn">Solicitar →</a>
+          <a href="/presupuesto?plan=consultoria-ens-documental" style="margin-top:auto;color:#a78bfa;border:1px solid rgba(167,139,250,0.25);background:rgba(139,92,246,0.06);" class="ens-cta-btn">Consultar precio →</a>
         </div>
 
         <!-- 03 INTEGRAL (documental + técnica) — LA MÁS SOLICITADA -->
         <div class="ens-mod-card ens-mod-tech">
           <div class="ens-mod-badge-tech">⭐ LA MÁS SOLICITADA</div>
           <div class="ens-mod-num" style="color:rgba(52,211,153,0.28);">03</div>
-          <h3 style="font-weight:800;color:#f0fdf9;font-size:1.2rem;margin-bottom:0.25rem;">Integral: documental + técnica</h3>
-          <div class="ens-price">6.000 – 15.000 € <span class="ens-price-from">· o cuota mensual</span></div>
+          <h3 style="font-weight:800;color:#f0fdf9;font-size:1.2rem;margin-bottom:0.5rem;">Técnica y documental (integral)</h3>
           <p style="font-size:0.85rem;color:#94a3b8;line-height:1.6;margin-bottom:1.1rem;">Gestión completa del proyecto. Hacemos la documentación <strong style="color:#6ee7b7;">e implementamos la seguridad real</strong>: Wazuh como SIEM, bastionado de sistemas y las <strong style="color:#6ee7b7;">evidencias técnicas listas</strong> para que pases la certificación a la primera.</p>
           <ul class="ens-list mb-6">
             <li>Todo lo del servicio documental</li>
             <li>Sistema seguro y monitorizado (Wazuh SIEM + FIM + SCA)</li>
-            <li>Hardening de sistemas (CIS Benchmarks)</li>
             <li>Evidencias técnicas preparadas para la auditoría</li>
             <li>Te llevamos hasta el certificado + soporte post-certificación</li>
           </ul>
-          <a href="/presupuesto?plan=consultoria-ens-integral" style="margin-top:auto;color:white;background:linear-gradient(135deg,#4f46e5,#059669);box-shadow:0 8px 24px rgba(16,185,129,0.3);" class="ens-cta-btn">Solicitar la gestión integral →</a>
+          <a href="/presupuesto?plan=consultoria-ens-integral" style="margin-top:auto;color:white;background:linear-gradient(135deg,#4f46e5,#059669);box-shadow:0 8px 24px rgba(16,185,129,0.3);" class="ens-cta-btn">Consultar precio →</a>
         </div>
 
       </div>
@@ -777,19 +774,12 @@ const canonical = "https://aisecurity.es/consultoria-ens";
     font-family: monospace; font-size: 2.1rem; font-weight: 800;
     color: rgba(129,140,248,0.2); line-height: 1; margin-bottom: 0.4rem;
   }
-  .ens-price {
-    font-family: monospace; font-size: 1.55rem; font-weight: 800;
-    color: #c4b5fd; margin: 0 0 0.9rem; line-height: 1.1;
-  }
-  .ens-price-from { font-size: 0.72rem; color: #64748b; font-weight: 600; }
-
   /* Modalidad técnica destacada (acento esmeralda) */
   .ens-mod-tech {
     background: linear-gradient(180deg, rgba(16,185,129,0.07) 0%, rgba(129,140,248,0.05) 100%);
     border: 1px solid rgba(52,211,153,0.4);
     box-shadow: 0 0 0 1px rgba(52,211,153,0.08), 0 24px 60px -24px rgba(16,185,129,0.4);
   }
-  .ens-mod-tech .ens-price { color: #6ee7b7; }
   .ens-mod-tech .ens-list li::before { color: #34d399; }
   @media (min-width: 768px) { .ens-mod-tech { transform: scale(1.045); } }
   .ens-mod-badge-tech {
