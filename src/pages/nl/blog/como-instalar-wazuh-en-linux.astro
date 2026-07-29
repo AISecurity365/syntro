@@ -1,0 +1,316 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="nl"
+  title="Hoe installeer je Wazuh op Linux (Ubuntu 24.04)"
+  description="Leer hoe u Wazuh installeert op Ubuntu, Debian, CentOS en Rocky Linux. Stapsgewijze gids met de alles-in-één-methode en installatie van losse componenten. Vereisten en commando's."
+  publishDate="2026-02-18"
+  author="AI Security"
+  readTime="18 min"
+  tags={["Wazuh", "Linux", "Ubuntu", "Installatie", "SIEM", "Cybersecurity"]}
+  canonical="https://aisecurity.es/nl/blog/como-instalar-wazuh-en-linux"
+  faqSchema={[
+    {
+      question: "Hoe lang duurt het installeren van Wazuh op Linux?",
+      answer: "Met het alles-in-één-script duurt de volledige installatie tussen 5 en 15 minuten, afhankelijk van de snelheid van de server en de internetverbinding. Daarna heeft u de Indexer, Server en Dashboard draaiend, klaar om agents toe te voegen."
+    },
+    {
+      question: "Wat zijn de minimale vereisten om Wazuh te installeren?",
+      answer: "Voor een alles-in-één-opstelling is het minimum 2 CPU-kernen, 4 GB RAM en 50 GB schijf. De aanbevolen configuratie is 4 kernen, 8 GB RAM en 100 GB SSD, omdat de Indexer veel lees-/schrijfbewerkingen uitvoert."
+    },
+    {
+      question: "Welke Linux-distributies worden ondersteund?",
+      answer: "Het officiële script ondersteunt Ubuntu 22.04 en 24.04, Debian 11 en 12, CentOS 8 en 9, en Rocky Linux 8 en 9. Het installatieprogramma detecteert automatisch uw besturingssysteem en installeert de juiste pakketten."
+    },
+    {
+      question: "Moet ik de alles-in-één-methode gebruiken of de componenten apart installeren?",
+      answer: "De alles-in-één-methode plaatst alle drie de componenten op één server en is ideaal voor tests, labs en kleine bedrijven met maximaal 50-100 agents. Voor hoge beschikbaarheid of veel agents installeert u de Indexer, Server en Dashboard op aparte servers zodat elk onafhankelijk kan schalen."
+    },
+    {
+      question: "Hoe krijg ik toegang tot het Wazuh Dashboard na de installatie?",
+      answer: "Open https://UW_SERVER_IP in een browser en log in met de gebruiker 'admin' en het automatisch gegenereerde wachtwoord dat aan het einde van de installatie wordt getoond. Bewaar dat wachtwoord veilig, want als u het kwijtraakt moet u het handmatig opnieuw instellen."
+    }
+  ]}>
+
+  <p>Om Wazuh op Linux te installeren, gebruikt u het officiële alles-in-één-installatiescript: download <code>wazuh-install.sh</code>, voer het uit, en in 15-20 minuten heeft u de Wazuh Indexer, Server en Dashboard draaiend. Compatibel met Ubuntu 24.04, 22.04, Debian 12, CentOS 8/9 en Rocky Linux.</p>
+
+  <h2>Welke Wazuh-componenten worden geïnstalleerd en welke heb je nodig?</h2>
+
+  <p>
+    In deze gids laat ik u zien <strong>hoe u Wazuh op een Linux-server installeert</strong>, snel en eenvoudig. We behandelen zowel de <strong>alles-in-één</strong>-methode (alle componenten op één server) als de <strong>installatie van losse componenten</strong> voor grotere productieomgevingen. Deze gids werkt voor <strong>Ubuntu 24.04, 22.04, Debian 12, CentOS 8/9 en Rocky Linux</strong>.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/nl/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Kant-en-klaar</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Wazuh nodig in uw bedrijf?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Wij rollen Wazuh voor u uit — of voegen geavanceerde configuraties op maat toe als adviesdienst. Productieklaar en compliance-klaar.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Wazuh-advies →</span>
+    </a>
+  </aside>
+
+  <h2>Wazuh-architectuur: welke componenten heb je nodig?</h2>
+
+  <p>
+    Vóór de installatie is het belangrijk om de <strong>drie hoofdcomponenten</strong> van Wazuh te begrijpen:
+  </p>
+
+  <ul>
+    <li><strong>Wazuh Indexer:</strong> slaat alle gebeurtenissen en meldingen op en maakt ze doorzoekbaar. Gebaseerd op OpenSearch.</li>
+    <li><strong>Wazuh Server (Manager):</strong> ontvangt de gegevens van de agents, analyseert logs, voert detectieregels uit en genereert meldingen.</li>
+    <li><strong>Wazuh Dashboard:</strong> webinterface om meldingen te visualiseren, gebeurtenissen te doorzoeken, agents te beheren en rapporten te genereren.</li>
+  </ul>
+
+  <p>
+    Daarnaast moet u <strong>Wazuh-agents</strong> installeren op elke server of endpoint die u wilt bewaken.
+  </p>
+
+  <h2>Welke installatiemethoden zijn beschikbaar?</h2>
+
+  <p>
+    U heeft twee hoofdopties om Wazuh te installeren:
+  </p>
+
+  <h3>1. Alles-in-één-installatie (aanbevolen om te beginnen)</h3>
+
+  <p>
+    De <strong>alles-in-één</strong>-methode installeert de drie componenten (Indexer, Server en Dashboard) op één server met <strong>één commando</strong>. Ideaal voor:
+  </p>
+
+  <ul>
+    <li>Test- en labomgevingen</li>
+    <li>Kleine bedrijven (tot 50-100 agents)</li>
+    <li>Leren werken met Wazuh voordat u het in productie uitrolt</li>
+  </ul>
+
+  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Voordeel:</strong> in minder dan 10 minuten heeft u Wazuh volledig draaiend, klaar om agents toe te voegen.</p>
+  </div>
+
+  <h3>2. Componenten apart installeren</h3>
+
+  <p>
+    Voor productieomgevingen met hoge beschikbaarheid of veel agents kunt u elk component beter op aparte servers installeren:
+  </p>
+
+  <ul>
+    <li>Een server (of cluster) voor de <strong>Wazuh Indexer</strong></li>
+    <li>Een server (of cluster) voor de <strong>Wazuh Server</strong></li>
+    <li>Een server voor het <strong>Wazuh Dashboard</strong></li>
+  </ul>
+
+  <p>
+    Zo kunt u elk component onafhankelijk schalen op basis van uw behoeften.
+  </p>
+
+  <h2>Wat zijn de systeemvereisten?</h2>
+
+  <p>
+    Voor een alles-in-één-installatie zijn dit de <strong>minimale vereisten</strong>:
+  </p>
+
+  <div class="overflow-x-auto my-6">
+    <table class="w-full border-collapse rounded-lg overflow-hidden" style="background-color: #1a1f26;">
+      <thead>
+        <tr style="background-color: #0065ff;">
+          <th class="px-4 py-3 text-left font-semibold" style="color: #ffffff;">Resource</th>
+          <th class="px-4 py-3 text-left font-semibold" style="color: #ffffff;">Minimum</th>
+          <th class="px-4 py-3 text-left font-semibold" style="color: #ffffff;">Aanbevolen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid #2d3748;">
+          <td class="px-4 py-3" style="color: #e5e7eb;">CPU</td>
+          <td class="px-4 py-3" style="color: #9ca3af;">2 kernen</td>
+          <td class="px-4 py-3" style="color: #4ade80;">4 kernen</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #2d3748;">
+          <td class="px-4 py-3" style="color: #e5e7eb;">RAM</td>
+          <td class="px-4 py-3" style="color: #9ca3af;">4 GB</td>
+          <td class="px-4 py-3" style="color: #4ade80;">8 GB</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #2d3748;">
+          <td class="px-4 py-3" style="color: #e5e7eb;">Schijf</td>
+          <td class="px-4 py-3" style="color: #9ca3af;">50 GB</td>
+          <td class="px-4 py-3" style="color: #4ade80;">100 GB SSD</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3" style="color: #e5e7eb;">Besturingssysteem</td>
+          <td class="px-4 py-3" colspan="2" style="color: #9ca3af;">Ubuntu 22.04/24.04, Debian 11/12, CentOS 8/9, Rocky Linux 8/9</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Belangrijk:</strong> een SSD-schijf wordt sterk aanbevolen omdat de Indexer veel lees-/schrijfbewerkingen uitvoert. Met een traditionele HDD zullen de prestaties merkbaar slechter zijn.</p>
+  </div>
+
+  <h2>Hoe installeer je Wazuh alles-in-één stap voor stap?</h2>
+
+  <p>
+    Laten we Wazuh installeren met de alles-in-één-methode. U heeft root- of sudo-toegang tot de server nodig.
+  </p>
+
+  <h3>Stap 1: hoe bereid je de server voor?</h3>
+
+  <p>
+    Zorg eerst dat het systeem up-to-date is:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># Ubuntu/Debian
+sudo apt update && sudo apt upgrade -y
+
+# CentOS/Rocky Linux
+sudo dnf update -y</code></pre>
+
+  <h3>Stap 2: hoe download en voer je het installatieprogramma uit?</h3>
+
+  <p>
+    Wazuh biedt een officieel script dat het hele proces automatiseert. Met <strong>één commando</strong> downloadt u het script en voert u het uit:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh && sudo bash ./wazuh-install.sh -a</code></pre>
+
+  <p>
+    De parameter <code>-a</code> geeft een alles-in-één-installatie aan. Het script:
+  </p>
+
+  <ul>
+    <li>Detecteert automatisch uw besturingssysteem</li>
+    <li>Installeert alle vereiste afhankelijkheden</li>
+    <li>Configureert de Wazuh Indexer, Server en Dashboard</li>
+    <li>Genereert automatisch SSL-certificaten</li>
+    <li>Start alle services</li>
+  </ul>
+
+  <p>
+    Het proces duurt tussen <strong>5 en 15 minuten</strong> afhankelijk van de snelheid van uw server en uw internetverbinding.
+  </p>
+
+  <h3>Stap 3: waar vind en bewaar je de inloggegevens?</h3>
+
+  <p>
+    Wanneer de installatie klaar is, toont het script de <strong>inloggegevens</strong> voor het Dashboard:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">INFO: --- Summary ---
+INFO: You can access the web interface https://&lt;wazuh-dashboard-ip&gt;
+    User: admin
+    Password: &lt;GENERATED_PASSWORD&gt;</code></pre>
+
+  <div style="background:rgba(239,68,68,0.12);border-left:4px solid #ef4444;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Belangrijk:</strong> bewaar dit wachtwoord op een veilige plek. Als u het kwijtraakt, moet u het handmatig opnieuw instellen.</p>
+  </div>
+
+  <h3>Stap 4: hoe krijg je toegang tot het Dashboard?</h3>
+
+  <p>
+    Open uw browser en ga naar:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">https://&lt;UW_SERVER_IP&gt;</code></pre>
+
+  <p>
+    Voer de gebruiker <code>admin</code> in en het wachtwoord dat u heeft bewaard. U heeft nu Wazuh draaiend!
+  </p>
+
+  <h2>Componenten apart installeren</h2>
+
+  <p>
+    Als u een gedistribueerde architectuur nodig heeft, kunt u elk component op een andere server installeren. Wazuh biedt gedetailleerde documentatie voor elk geval:
+  </p>
+
+  <ul>
+    <li><a href="https://documentation.wazuh.com/current/installation-guide/wazuh-indexer/index.html" target="_blank" rel="noopener" style="color: #38b1ff;">Wazuh Indexer installeren</a></li>
+    <li><a href="https://documentation.wazuh.com/current/installation-guide/wazuh-server/index.html" target="_blank" rel="noopener" style="color: #38b1ff;">Wazuh Server installeren</a></li>
+    <li><a href="https://documentation.wazuh.com/current/installation-guide/wazuh-dashboard/index.html" target="_blank" rel="noopener" style="color: #38b1ff;">Wazuh Dashboard installeren</a></li>
+  </ul>
+
+  <p>
+    Het proces is vergelijkbaar: u downloadt specifieke scripts en voert ze op elke server uit. Het belangrijkste verschil is dat u de communicatie tussen de componenten moet configureren (IP's, certificaten, enz.).
+  </p>
+
+  <h2>Volgende stap: agents installeren</h2>
+
+  <p>
+    Met Wazuh geïnstalleerd is de volgende stap het installeren van <strong>agents</strong> op de servers en endpoints die u wilt bewaken. De agents verzamelen logs, bewaken bestanden, detecteren kwetsbaarheden en sturen al die informatie naar de Wazuh Server.
+  </p>
+
+  <p>
+    U kunt agents installeren op:
+  </p>
+
+  <ul>
+    <li>Linux-servers (Ubuntu, Debian, CentOS, Rocky, RHEL...)</li>
+    <li>Windows-servers (Server 2016, 2019, 2022)</li>
+    <li>Windows 10/11-werkstations</li>
+    <li>macOS</li>
+    <li>Docker-containers</li>
+  </ul>
+
+  <p>
+    Raadpleeg de bijbehorende gids: <a href="/nl/blog/como-instalar-agente-wazuh-en-linux" style="color: #38b1ff;">De Wazuh-agent op Linux installeren</a>
+  </p>
+
+  <h2>Aanvullende bronnen</h2>
+
+  <ul>
+    <li><a href="https://documentation.wazuh.com/current/quickstart.html" target="_blank" rel="noopener" style="color: #38b1ff;">Officiële Wazuh Quickstart-gids</a></li>
+    <li><a href="/nl/blog/que-es-wazuh-para-que-sirve">Wat is Wazuh en waarvoor dient het?</a></li>
+  </ul>
+
+  <h2>Veelgestelde vragen</h2>
+
+  <h3>Hoe lang duurt het installeren van Wazuh op Linux?</h3>
+  <p>
+    Met het alles-in-één-script duurt de volledige installatie tussen 5 en 15 minuten, afhankelijk van de snelheid van de server en de internetverbinding. Daarna heeft u de Indexer, Server en Dashboard draaiend, klaar om agents toe te voegen.
+  </p>
+
+  <h3>Wat zijn de minimale vereisten om Wazuh te installeren?</h3>
+  <p>
+    Voor een alles-in-één-opstelling is het minimum 2 CPU-kernen, 4 GB RAM en 50 GB schijf. De aanbevolen configuratie is 4 kernen, 8 GB RAM en 100 GB SSD, omdat de Indexer veel lees-/schrijfbewerkingen uitvoert.
+  </p>
+
+  <h3>Welke Linux-distributies worden ondersteund?</h3>
+  <p>
+    Het officiële script ondersteunt Ubuntu 22.04 en 24.04, Debian 11 en 12, CentOS 8 en 9, en Rocky Linux 8 en 9. Het installatieprogramma detecteert automatisch uw besturingssysteem en installeert de juiste pakketten.
+  </p>
+
+  <h3>Moet ik de alles-in-één-methode gebruiken of de componenten apart installeren?</h3>
+  <p>
+    De alles-in-één-methode plaatst alle drie de componenten op één server en is ideaal voor tests, labs en kleine bedrijven met maximaal 50-100 agents. Voor hoge beschikbaarheid of veel agents installeert u de Indexer, Server en Dashboard op aparte servers zodat elk onafhankelijk kan schalen.
+  </p>
+
+  <h3>Hoe krijg ik toegang tot het Wazuh Dashboard na de installatie?</h3>
+  <p>
+    Open https://UW_SERVER_IP in een browser en log in met de gebruiker <code>admin</code> en het automatisch gegenereerde wachtwoord dat aan het einde van de installatie wordt getoond. Bewaar dat wachtwoord veilig, want als u het kwijtraakt moet u het handmatig opnieuw instellen.
+  </p>
+
+  <hr />
+
+  <p class="text-sm text-base-600">
+    <strong>Gerelateerde artikelen:</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/nl/blog/que-es-wazuh-para-que-sirve">Wat is Wazuh en waarvoor dient het?</a></li>
+    <li><a href="/nl/blog/como-instalar-agente-wazuh-en-linux">De Wazuh-agent op Linux installeren</a></li>
+    <li><a href="/nl/blog/como-instalar-agente-wazuh-en-windows">De Wazuh-agent op Windows installeren</a></li>
+  </ul>
+  <hr />
+
+  <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 my-8">
+    <h3 class="text-accent-800 mt-0">Laat Wazuh op de juiste manier uitrollen</h3>
+    <p class="text-base-700 mb-4">
+      Dit artikel is nog maar het begin. Wij kunnen agents configureren, aangepaste regels bouwen, integreren met andere tools en veel meer als onderdeel van een professionele implementatie.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a style="color: black;" href="/nl/wazuh" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent-700 font-semibold rounded-lg border border-accent-300 hover:bg-accent-50 transition-colors">
+        Professionele implementatie
+      </a>
+    </div>
+  </div>
+
+</BlogLayout>

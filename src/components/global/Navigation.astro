@@ -147,7 +147,7 @@ const locale = getLocaleFromPath(currentPath);
         <div class="relative w-full lg:w-auto" @click.away="dropdownOpen = false">
           <button
             @click="dropdownOpen = !dropdownOpen"
-            class={`nav-link nav-link--highlight w-full lg:w-auto text-[11px] font-semibold tracking-wider uppercase transition-all duration-200 px-3 py-3 inline-flex items-center justify-between lg:justify-center gap-1.5 ${['/servicios/chatbot','/servicios/gestor-documental','/servicios/gestor-citas','/servicios/automatizacion','/servicios/desarrollo-web','/servicios/geo-posicionamiento','/servicios/concienciacion','/soporte-tecnico'].includes(currentPath) ? 'nav-link--active' : ''}`}
+            class={`nav-link nav-link--highlight w-full lg:w-auto text-[11px] font-semibold tracking-wider uppercase transition-all duration-200 px-3 py-3 inline-flex items-center justify-between lg:justify-center gap-1.5 ${['/servicios/chatbot','/servicios/gestor-documental','/servicios/gestor-citas','/servicios/automatizacion','/servicios/desarrollo-web','/servicios/geo-posicionamiento','/servicios/concienciacion','/soporte-tecnico','/ciberseguridad','/consultoria-ens','/consultoria-iso27001'].includes(currentPath) ? 'nav-link--active' : ''}`}
             :aria-expanded="dropdownOpen.toString()">
             <span>Servicios</span>
             <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="{'rotate-180': dropdownOpen}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -228,13 +228,32 @@ const locale = getLocaleFromPath(currentPath);
                 <div class="p-5" style="border-right: 1px solid rgba(255,255,255,0.06);">
                   <p class="text-[10px] font-bold uppercase tracking-widest mb-4" style="color: #f87171;">Ciberseguridad</p>
                   <div class="space-y-0.5">
+
+                    <!-- Ciberseguridad para Empresas — destacada, primera -->
+                    <div class="rounded-lg" style={`padding: 0.5rem 0.75rem 0.65rem; ${currentPath === '/ciberseguridad' ? 'background: rgba(239,68,68,0.14);' : 'background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.24);'}`}>
+                      <a href="/ciberseguridad" @click="dropdownOpen = false" class="group block rounded-lg transition-all duration-150">
+                        <div class="flex items-center gap-2">
+                          <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Ciberseguridad para Empresas</p>
+                          <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none flex-shrink-0" style="background: rgba(239,68,68,0.3); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4);">PRINCIPAL</span>
+                        </div>
+                        <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Firewall, M365, endpoints, cumplimiento ENS</p>
+                      </a>
+                      <div class="flex flex-wrap gap-1.5 mt-2">
+                        <a href="/consultoria-ens" @click="dropdownOpen = false"
+                          class="text-[10px] font-semibold px-2 py-1 rounded-md transition-colors hover:bg-white/10"
+                          style="background: rgba(255,255,255,0.05); color: #fca5a5; border: 1px solid rgba(239,68,68,0.25);">Consultoría ENS →</a>
+                        <a href="/consultoria-iso27001" @click="dropdownOpen = false"
+                          class="text-[10px] font-semibold px-2 py-1 rounded-md transition-colors hover:bg-white/10"
+                          style="background: rgba(255,255,255,0.05); color: #fca5a5; border: 1px solid rgba(239,68,68,0.25);">Consultoría ISO 27001 →</a>
+                      </div>
+                    </div>
+
+                    <!-- Subsección Wazuh -->
+                    <p class="text-[9px] font-bold uppercase tracking-wider mt-3 mb-1 px-3" style="color: rgba(248,113,113,0.55);">Wazuh</p>
                     <a href="/wazuh" @click="dropdownOpen = false"
                       class="group block px-3 py-2.5 rounded-lg transition-all duration-150 hover:bg-white/5"
-                      style={currentPath === '/wazuh' ? 'background: rgba(239,68,68,0.12);' : 'background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.22);'}>
-                      <div class="flex items-center gap-2">
-                        <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Implementación Wazuh</p>
-                        <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none flex-shrink-0" style="background: rgba(239,68,68,0.3); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4);">ENS</span>
-                      </div>
+                      style={currentPath === '/wazuh' ? 'background: rgba(239,68,68,0.12);' : ''}>
+                      <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Implementación Wazuh</p>
                       <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">SIEM y cumplimiento normativo</p>
                     </a>
                     <a href="/curso-wazuh" @click="dropdownOpen = false"
@@ -249,8 +268,9 @@ const locale = getLocaleFromPath(currentPath);
                       <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Curso Wazuh para empresas</p>
                       <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Avanzado · equipos de TI autónomos</p>
                     </a>
+
                     <a href="/servicios/concienciacion" @click="dropdownOpen = false"
-                      class="group block px-3 py-2.5 rounded-lg transition-all duration-150 hover:bg-white/5"
+                      class="group block px-3 py-2.5 rounded-lg transition-all duration-150 hover:bg-white/5 mt-1"
                       style={currentPath === '/servicios/concienciacion' ? 'background: rgba(239,68,68,0.12);' : ''}>
                       <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Concienciación</p>
                       <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Simula phishing · Forma empleados</p>
