@@ -362,14 +362,28 @@ resource: Certificados/CertificadoDigital.pfx</code></pre>
     Una vez que domines los decoders, el siguiente paso es crear <strong>reglas personalizadas</strong> que usen los campos extraídos para generar alertas. En el <a href="/curso-wazuh">Curso de Wazuh</a> cubrimos todo el flujo completo: decoders → reglas → alertas → notificaciones.
   </p>
 
-  <div style="background: linear-gradient(135deg, rgba(0, 101, 255, 0.1) 0%, rgba(0, 82, 204, 0.1) 100%); border: 1px solid rgba(0, 101, 255, 0.3); border-radius: 12px; padding: 24px; margin: 24px 0; text-align: center;">
-    <p style="color: #e5e7eb; margin-bottom: 16px;">¿Quieres aprender a crear reglas y configurar alertas por Discord/Email?</p>
-    <a
-      href="/curso-wazuh"
-      class="inline-flex items-center gap-2 px-6 py-3 font-semibold rounded-lg transition-all hover:scale-105"
-      style="background: linear-gradient(135deg, #0065ff 0%, #0052cc 100%); color: #ffffff; text-decoration: none;">
-      Ver Curso de Wazuh
-    </a>
+  <div class="relative my-10">
+    <div class="absolute -inset-px rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(99,102,241,0.3),rgba(59,130,246,0.4));filter:blur(1px);"></div>
+    <div class="relative rounded-2xl p-7 md:p-8" style="background:#0b1120;border:1px solid rgba(139,92,246,0.3);">
+      <p class="mb-3" style="color:#a5b4fc;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;max-width:none;">Contenido del curso</p>
+      <h3 class="mt-0 mb-3 text-xl md:text-2xl font-bold" style="color:#ffffff;">Aprende Wazuh de forma práctica</h3>
+      <p class="mb-6" style="color:rgba(255,255,255,0.72);">
+        Aquí has visto cómo construir un decoder desde cero. En el curso vamos más allá: reglas personalizadas, alertas por Discord/Email y el flujo completo decoders → reglas → notificaciones, con casos reales.
+      </p>
+      <div class="flex flex-col sm:flex-row flex-wrap gap-3">
+        <a href="/curso-wazuh" style="color:#ffffff;background:linear-gradient(135deg,#7c3aed,#4f46e5);"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3.5 font-bold rounded-xl no-underline transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 shadow-lg">
+          Ver el curso completo — 50€
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+        <a href="/wazuh" style="color:rgba(255,255,255,0.85);border:1px solid rgba(255,255,255,0.18);"
+          class="inline-flex items-center justify-center px-6 py-3.5 text-sm font-medium rounded-xl no-underline transition-all duration-200 hover:bg-white/5">
+          Prefiero que lo implementéis vosotros
+        </a>
+      </div>
+    </div>
   </div>
 
 </BlogLayout>

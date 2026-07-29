@@ -95,8 +95,8 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
     <li><strong>dmz</strong> - Servidores en la zona desmilitarizada</li>
   </ul>
 
-  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
-    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Tip:</strong> Un agente puede pertenecer a <strong style="color:rgba(255,255,255,0.9);">varios grupos</strong>. Por ejemplo, un servidor puede estar en el grupo "linux" y también en "webservers" y "production".</p>
+  <div style="background:rgba(139,92,246,0.08);border-left:4px solid rgba(167,139,250,0.5);padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.85);"><strong style="color:#c4b5fd;">Tip:</strong> Un agente puede pertenecer a <strong style="color:#c4b5fd;">varios grupos</strong>. Por ejemplo, un servidor puede estar en el grupo "linux" y también en "webservers" y "production".</p>
   </div>
 
   <h2>Configuración centralizada por grupo</h2>
@@ -243,8 +243,8 @@ cat /var/ossec/etc/shared/ar.conf
 # Ver todos los archivos compartidos recibidos
 ls -la /var/ossec/etc/shared/</code></pre>
 
-  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
-    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Importante:</strong> Después de modificar el <code style="color: #000000; background-color: rgba(0,0,0,0.1);">agent.conf</code> de un grupo en el servidor, los agentes reciben la nueva configuración automáticamente (puede tardar unos minutos). No es necesario reiniciar los agentes manualmente.</p>
+  <div style="background:rgba(139,92,246,0.08);border-left:4px solid rgba(167,139,250,0.5);padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.85);"><strong style="color:#c4b5fd;">Importante:</strong> Después de modificar el <code style="color: #c4b5fd; background-color: rgba(255,255,255,0.08);">agent.conf</code> de un grupo en el servidor, los agentes reciben la nueva configuración automáticamente (puede tardar unos minutos). No es necesario reiniciar los agentes manualmente.</p>
   </div>
 
 

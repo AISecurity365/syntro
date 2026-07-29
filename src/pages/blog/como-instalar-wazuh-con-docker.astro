@@ -168,8 +168,8 @@ import WazuhVersionReplacer from "../../components/WazuhVersionReplacer.astro";
     El flag <code>-d</code> ejecuta los contenedores en segundo plano (detached mode).
   </p>
 
-  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
-    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Todos los comandos juntos:</strong></p>
+  <div style="background:rgba(139,92,246,0.08);border-left:4px solid rgba(167,139,250,0.5);padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.85);"><strong style="color:#c4b5fd;">Todos los comandos juntos:</strong></p>
     <pre style="background:#0f1419;padding:16px;border-radius:8px;margin-top:12px;overflow-x:auto;"><code style="color: #e5e7eb;">git clone https://github.com/wazuh/wazuh-docker.git -b __WAZUH_VERSION__
 cd wazuh-docker/single-node/
 docker compose -f generate-indexer-certs.yml run --rm generator
@@ -201,8 +201,8 @@ docker compose up -d</code></pre>
 
   <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">docker inspect id-contenedor-server</code></pre>
 
-  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
-    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Importante:</strong> Cambia la contraseña por defecto en entornos de producción. Puedes hacerlo modificando el archivo <code style="color: #000000; background-color: rgba(0,0,0,0.1);">docker-compose.yml</code> antes de levantar los contenedores.</p>
+  <div style="background:rgba(139,92,246,0.08);border-left:4px solid rgba(167,139,250,0.5);padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.85);"><strong style="color:#c4b5fd;">Importante:</strong> Cambia la contraseña por defecto en entornos de producción. Puedes hacerlo modificando el archivo <code style="color: #c4b5fd; background-color: rgba(255,255,255,0.08);">docker-compose.yml</code> antes de levantar los contenedores.</p>
   </div>
 
   <h2>Comandos útiles</h2>
