@@ -3,7 +3,8 @@
     "allow": [
       "Bash(node -e ' *)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:4323/blog/wazuh-vs-splunk-ens)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:4321/blog/wazuh-vs-splunk-ens)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:4321/blog/wazuh-vs-splunk-ens)",
+      "mcp__supabase__get_advisors"
     ]
   }
 }

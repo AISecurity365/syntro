@@ -1,0 +1,198 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="fr"
+  title="Comment créer des règles personnalisées dans Wazuh : détecter accès et actions"
+  description="Apprenez à écrire des règles Wazuh personnalisées pour détecter les accès à des dossiers, des utilisateurs précis ou des actions Delete/Write. Exemples pratiques avec des journaux NAS et des variables dynamiques."
+  publishDate="2026-03-06"
+  author="AI Security"
+  readTime="10 min"
+  tags={["Wazuh", "Règles", "Alertes", "NAS", "SIEM", "Cybersécurité"]}
+  canonical="https://aisecurity.es/fr/blog/crear-reglas-personalizadas-wazuh"
+  faqSchema={[
+    {
+      question: "Où sont stockées les règles Wazuh personnalisées ?",
+      answer: "Les règles personnalisées se trouvent dans /var/ossec/etc/rules/local_rules.xml sur le manager Wazuh. Après avoir modifié le fichier, vous devez redémarrer le service avec systemctl restart wazuh-manager pour que les changements prennent effet."
+    },
+    {
+      question: "Quelle plage d'ID de règle utiliser pour les règles personnalisées ?",
+      answer: "Wazuh réserve les ID inférieurs à 100000 pour son jeu de règles intégré (environ 3 000 règles fournies par défaut). Attribuez toujours à vos propres règles un ID de 100000 ou plus pour éviter les collisions avec les futures mises à jour des règles officielles."
+    },
+    {
+      question: "Que signifie l'attribut level dans une règle Wazuh ?",
+      answer: "Le level définit la gravité de l'alerte de 0 à 15 : 0-3 est informatif, 4-7 est moyen, et 8-15 est critique. Par défaut, Wazuh n'envoie des alertes par e-mail qu'à partir du niveau 7, donc le level contrôle aussi quels événements déclenchent des notifications."
+    },
+    {
+      question: "Comment faire correspondre plus d'un champ dans une seule règle ?",
+      answer: "Ajoutez plusieurs balises <field name=\"...\"> dans le même bloc <rule>. Toutes doivent correspondre pour que la règle se déclenche, ce qui fonctionne comme un ET logique, par exemple pour un utilisateur précis et l'action Delete en même temps."
+    },
+    {
+      question: "Que sont les variables dynamiques dans la description d'une règle Wazuh ?",
+      answer: "Les variables dynamiques utilisent la syntaxe $(field) à l'intérieur de la balise <description>. Wazuh les remplace par la valeur réelle extraite par le décodeur, de sorte que l'alerte affiche l'IP source ou la ressource concernée au lieu d'un texte statique."
+    }
+  ]}>
+
+  <p>Les règles Wazuh personnalisées s'écrivent en XML dans <code>/var/ossec/etc/rules/local_rules.xml</code>. Chaque règle définit un ID unique (au-dessus de 100000), le niveau de gravité, le champ du journal qui doit correspondre et la description de l'alerte que vous verrez dans le dashboard.</p>
+
+  <h2>Comment créer des règles Wazuh personnalisées étape par étape ?</h2>
+
+  <p>
+    Les règles personnalisées dans Wazuh permettent de détecter des schémas précis dans vos journaux et de déclencher des alertes lorsque certaines conditions sont remplies. Dans cet article, nous voyons des exemples pratiques avec des journaux NAS : détecter l'accès à des dossiers, des utilisateurs précis et des actions comme Delete ou Write.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/fr/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Clé en main</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Besoin de Wazuh dans votre entreprise ?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Nous déployons Wazuh pour vous — ou ajoutons des configurations avancées sur mesure en prestation de conseil. Prêt pour la production et la conformité.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Consultation Wazuh →</span>
+    </a>
+  </aside>
+
+  <h2>À quoi ressemble la structure de base d'une règle ?</h2>
+
+  <p>
+    Les règles Wazuh sont définies dans des fichiers XML sous <code>/var/ossec/etc/rules/</code>. Par défaut, Wazuh fournit environ 3 000 règles intégrées utilisant des ID inférieurs à 100000 : chaque règle personnalisée que vous écrivez doit donc utiliser un ID de 100000 ou plus pour survivre aux futures mises à jour. La structure de base est :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;rule id="100071" level="10"&gt;
+  &lt;if_sid&gt;100070&lt;/if_sid&gt;
+  &lt;field name="campo"&gt;valor&lt;/field&gt;
+  &lt;description&gt;Descripción de la alerta&lt;/description&gt;
+&lt;/rule&gt;</code></pre>
+
+  <p><strong>Composants :</strong></p>
+  <ul>
+    <li><code>id</code> : identifiant unique de la règle (100000+ pour les règles personnalisées)</li>
+    <li><code>level</code> : gravité de l'alerte (0-15)</li>
+    <li><code>if_sid</code> : règle parente dont elle hérite (le décodeur)</li>
+    <li><code>field</code> : champ extrait par le décodeur à évaluer</li>
+    <li><code>description</code> : texte de l'alerte qui apparaît dans le dashboard</li>
+  </ul>
+
+  <h2>Comment détecter l'accès à un dossier précis ?</h2>
+
+  <p><strong>Journal d'entrée :</strong></p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">NAS: Users: marialopez, Source IP: 192.168.1.100, Computer name: MariaPC, Connection type: SMB, Accessed resources: Dpto_direccion/Certificados/CertificadoDigital.pfc, Action: Write</code></pre>
+
+  <p><strong>Règle :</strong></p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;rule id="100071" level="10"&gt;
+  &lt;if_sid&gt;100070&lt;/if_sid&gt;
+  &lt;field name="resource"&gt;Dpto_direccion&lt;/field&gt;
+  &lt;description&gt;Acceso a carpeta Direccion en NAS&lt;/description&gt;
+&lt;/rule&gt;</code></pre>
+
+  <p><strong>Comment ça fonctionne :</strong></p>
+  <ul>
+    <li>Hérite de la règle 100070 (le décodeur NAS générique)</li>
+    <li>Filtre sur le champ <code>resource</code> qui contient « Dpto_direccion »</li>
+    <li>Déclenche une alerte de niveau 10 chaque fois qu'un utilisateur accède à ce dossier</li>
+  </ul>
+
+  <h2>Comment faire correspondre un utilisateur et une action précis ensemble ?</h2>
+
+  <p><strong>Journal d'entrée :</strong></p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">NAS: Users: Juan, Source IP: 192.168.1.100, Computer name: MariaPC, Connection type: SMB, Accessed resources: sdsds/Certificados/CertificadoDigital.pfc, Action: Delete</code></pre>
+
+  <p><strong>Règle :</strong></p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;rule id="100072" level="10"&gt;
+  &lt;if_sid&gt;100070&lt;/if_sid&gt;
+  &lt;field name="srcusernas"&gt;Juan&lt;/field&gt;
+  &lt;field name="actionNas"&gt;Delete&lt;/field&gt;
+  &lt;description&gt;El usuario Juan ha eliminado un fichero&lt;/description&gt;
+&lt;/rule&gt;</code></pre>
+
+  <p><strong>Comment ça fonctionne :</strong></p>
+  <ul>
+    <li>Utilise <strong>deux champs</strong> pour plus de précision</li>
+    <li>Ne se déclenche que si l'utilisateur est « Juan » <strong>ET</strong> l'action est « Delete »</li>
+    <li>Utile pour auditer les actions d'utilisateurs précis</li>
+  </ul>
+
+  <h2>Comment utiliser des variables dynamiques pour l'IP et l'action ?</h2>
+
+  <p><strong>Journal d'entrée :</strong></p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">NAS: Users: marialopez, Source IP: 192.168.1.155, Computer name: MariaPC, Connection type: SMB, Accessed resources: sdsds/Certificados/CertificadoDigital.pfc, Action: Write</code></pre>
+
+  <p><strong>Règle :</strong></p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;rule id="100073" level="10"&gt;
+  &lt;if_sid&gt;100070&lt;/if_sid&gt;
+  &lt;field name="srcipNas"&gt;192.168.1.155&lt;/field&gt;
+  &lt;field name="actionNas"&gt;Write&lt;/field&gt;
+  &lt;description&gt;El equipo con la IP $(srcipNas) ha modificado el fichero $(resource)&lt;/description&gt;
+&lt;/rule&gt;</code></pre>
+
+  <p><strong>Comment ça fonctionne :</strong></p>
+  <ul>
+    <li>Filtre sur une IP source précise + l'action Write</li>
+    <li>Utilise des <strong>variables dynamiques</strong> <code>$(field)</code> dans la description</li>
+    <li>L'alerte inclura les valeurs réelles du journal : IP et ressource concernée</li>
+  </ul>
+
+  <h2>Résumé de la syntaxe</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Élément</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Utilisation</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;"><code>if_sid</code></td>
+        <td style="padding: 12px;">Hérite d'une règle parente (décodeur)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;"><code>field name="x"</code></td>
+        <td style="padding: 12px;">Filtre sur un champ extrait par le décodeur</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;"><code>$(field)</code></td>
+        <td style="padding: 12px;">Variable dynamique dans la description</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px;"><code>level</code></td>
+        <td style="padding: 12px;">Gravité : 0-3 info, 4-7 moyen, 8-15 critique</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Où ajouter les règles et comment les appliquer ?</h2>
+
+  <p>
+    Les règles personnalisées s'ajoutent dans <code>/var/ossec/etc/rules/local_rules.xml</code>. Après avoir modifié le fichier, redémarrez le manager :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">systemctl restart wazuh-manager</code></pre>
+
+  <h2>Étapes suivantes</h2>
+
+  <p>
+    Créer des décodeurs personnalisés pour extraire les champs dont vous avez besoin fait partie d'un déploiement Wazuh complet. Un décodeur transforme une ligne de journal brute en champs nommés comme <code>resource</code>, <code>srcusernas</code> ou <code>actionNas</code>, et ce n'est qu'ensuite qu'une règle comme celles ci-dessus peut filtrer dessus. Dans un projet d'audit NAS typique, nous associons un décodeur à cinq à dix règles ciblées afin que les dossiers à forte valeur, les utilisateurs privilégiés et les actions destructrices aient chacun leur propre niveau de gravité, ce qui maintient un bon rapport signal/bruit dans le dashboard. <a href="/fr/wazuh">Découvrez nos services Wazuh</a>.
+  </p>
+
+  <h2>Questions fréquentes</h2>
+
+  <h3>Où sont stockées les règles Wazuh personnalisées ?</h3>
+  <p>Les règles personnalisées se trouvent dans <code>/var/ossec/etc/rules/local_rules.xml</code> sur le manager Wazuh. Après avoir modifié le fichier, vous devez redémarrer le service avec <code>systemctl restart wazuh-manager</code> pour que les changements prennent effet.</p>
+
+  <h3>Quelle plage d'ID de règle utiliser pour les règles personnalisées ?</h3>
+  <p>Wazuh réserve les ID inférieurs à 100000 pour son jeu de règles intégré (environ 3 000 règles fournies par défaut). Attribuez toujours à vos propres règles un ID de 100000 ou plus pour éviter les collisions avec les futures mises à jour des règles officielles.</p>
+
+  <h3>Que signifie l'attribut level dans une règle Wazuh ?</h3>
+  <p>Le level définit la gravité de l'alerte de 0 à 15 : 0-3 est informatif, 4-7 est moyen, et 8-15 est critique. Par défaut, Wazuh n'envoie des alertes par e-mail qu'à partir du niveau 7, donc le level contrôle aussi quels événements déclenchent des notifications.</p>
+
+  <h3>Comment faire correspondre plus d'un champ dans une seule règle ?</h3>
+  <p>Ajoutez plusieurs balises <code>&lt;field name="..."&gt;</code> dans le même bloc <code>&lt;rule&gt;</code>. Toutes doivent correspondre pour que la règle se déclenche, ce qui fonctionne comme un ET logique, par exemple pour un utilisateur précis et l'action Delete en même temps.</p>
+
+  <h3>Que sont les variables dynamiques dans la description d'une règle Wazuh ?</h3>
+  <p>Les variables dynamiques utilisent la syntaxe <code>$(field)</code> à l'intérieur de la balise <code>&lt;description&gt;</code>. Wazuh les remplace par la valeur réelle extraite par le décodeur, de sorte que l'alerte affiche l'IP source ou la ressource concernée au lieu d'un texte statique.</p>
+
+</BlogLayout>

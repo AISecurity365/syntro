@@ -1,0 +1,198 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="nl"
+  title="Hoe maak je aangepaste regels in Wazuh: toegang en acties detecteren"
+  description="Leer hoe u aangepaste Wazuh-regels schrijft om toegang tot mappen, specifieke gebruikers of Delete/Write-acties te detecteren. Praktische voorbeelden met NAS-logs en dynamische variabelen."
+  publishDate="2026-03-06"
+  author="AI Security"
+  readTime="10 min"
+  tags={["Wazuh", "Regels", "Meldingen", "NAS", "SIEM", "Cybersecurity"]}
+  canonical="https://aisecurity.es/nl/blog/crear-reglas-personalizadas-wazuh"
+  faqSchema={[
+    {
+      question: "Waar worden aangepaste Wazuh-regels opgeslagen?",
+      answer: "Aangepaste regels staan in /var/ossec/etc/rules/local_rules.xml op de Wazuh-manager. Na het bewerken van het bestand moet u de service herstarten met systemctl restart wazuh-manager zodat de wijzigingen van kracht worden."
+    },
+    {
+      question: "Welk ID-bereik moet ik gebruiken voor aangepaste regels?",
+      answer: "Wazuh reserveert ID's onder 100000 voor zijn ingebouwde regelset (standaard worden zo'n 3.000 regels meegeleverd). Wijs uw eigen regels altijd een ID van 100000 of hoger toe om botsingen met toekomstige updates van de officiële regels te voorkomen."
+    },
+    {
+      question: "Wat betekent het level-attribuut in een Wazuh-regel?",
+      answer: "Het level bepaalt de ernst van de melding van 0 tot 15: 0-3 is informatief, 4-7 is gemiddeld, en 8-15 is kritiek. Standaard verstuurt Wazuh alleen meldingen per e-mail vanaf niveau 7, dus het level bepaalt ook welke gebeurtenissen notificaties activeren."
+    },
+    {
+      question: "Hoe laat ik meer dan één veld overeenkomen in één regel?",
+      answer: "Voeg meerdere <field name=\"...\">-tags toe binnen hetzelfde <rule>-blok. Ze moeten allemaal overeenkomen om de regel te laten afgaan, wat werkt als een logische EN, bijvoorbeeld een specifieke gebruiker en de Delete-actie tegelijk."
+    },
+    {
+      question: "Wat zijn dynamische variabelen in de beschrijving van een Wazuh-regel?",
+      answer: "Dynamische variabelen gebruiken de $(field)-syntaxis binnen de <description>-tag. Wazuh vervangt ze door de echte waarde die de decoder heeft geëxtraheerd, zodat de melding het werkelijke bron-IP of de betrokken bron toont in plaats van statische tekst."
+    }
+  ]}>
+
+  <p>Aangepaste Wazuh-regels worden in XML geschreven in <code>/var/ossec/etc/rules/local_rules.xml</code>. Elke regel definieert een uniek ID (boven 100000), het ernstniveau, het logveld dat moet overeenkomen en de beschrijving van de melding die u in het dashboard ziet.</p>
+
+  <h2>Hoe maak je aangepaste Wazuh-regels stap voor stap?</h2>
+
+  <p>
+    Met aangepaste regels in Wazuh kunt u specifieke patronen in uw logs detecteren en meldingen activeren wanneer aan bepaalde voorwaarden wordt voldaan. In dit artikel doorlopen we praktische voorbeelden met NAS-logs: het detecteren van maptoegang, specifieke gebruikers en acties zoals Delete of Write.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/nl/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Kant-en-klaar</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Wazuh nodig in uw bedrijf?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Wij rollen Wazuh voor u uit — of voegen geavanceerde configuraties op maat toe als adviesdienst. Productieklaar en compliance-klaar.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Wazuh-advies →</span>
+    </a>
+  </aside>
+
+  <h2>Hoe ziet de basisstructuur van een regel eruit?</h2>
+
+  <p>
+    Wazuh-regels worden gedefinieerd in XML-bestanden onder <code>/var/ossec/etc/rules/</code>. Standaard levert Wazuh ongeveer 3.000 ingebouwde regels met ID's onder 100000, dus elke aangepaste regel die u schrijft moet een ID van 100000 of hoger gebruiken om toekomstige updates te overleven. De basisstructuur is:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;rule id="100071" level="10"&gt;
+  &lt;if_sid&gt;100070&lt;/if_sid&gt;
+  &lt;field name="campo"&gt;valor&lt;/field&gt;
+  &lt;description&gt;Descripción de la alerta&lt;/description&gt;
+&lt;/rule&gt;</code></pre>
+
+  <p><strong>Componenten:</strong></p>
+  <ul>
+    <li><code>id</code>: unieke identificatie van de regel (100000+ voor aangepaste regels)</li>
+    <li><code>level</code>: ernst van de melding (0-15)</li>
+    <li><code>if_sid</code>: bovenliggende regel waarvan het erft (de decoder)</li>
+    <li><code>field</code>: veld dat door de decoder is geëxtraheerd om te evalueren</li>
+    <li><code>description</code>: meldingstekst die in het dashboard verschijnt</li>
+  </ul>
+
+  <h2>Hoe detecteer je toegang tot een specifieke map?</h2>
+
+  <p><strong>Ingangslog:</strong></p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">NAS: Users: marialopez, Source IP: 192.168.1.100, Computer name: MariaPC, Connection type: SMB, Accessed resources: Dpto_direccion/Certificados/CertificadoDigital.pfc, Action: Write</code></pre>
+
+  <p><strong>Regel:</strong></p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;rule id="100071" level="10"&gt;
+  &lt;if_sid&gt;100070&lt;/if_sid&gt;
+  &lt;field name="resource"&gt;Dpto_direccion&lt;/field&gt;
+  &lt;description&gt;Acceso a carpeta Direccion en NAS&lt;/description&gt;
+&lt;/rule&gt;</code></pre>
+
+  <p><strong>Hoe het werkt:</strong></p>
+  <ul>
+    <li>Erft van regel 100070 (de generieke NAS-decoder)</li>
+    <li>Filtert op het veld <code>resource</code> dat "Dpto_direccion" bevat</li>
+    <li>Activeert een melding van niveau 10 telkens als een gebruiker die map opent</li>
+  </ul>
+
+  <h2>Hoe laat je een specifieke gebruiker en actie samen overeenkomen?</h2>
+
+  <p><strong>Ingangslog:</strong></p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">NAS: Users: Juan, Source IP: 192.168.1.100, Computer name: MariaPC, Connection type: SMB, Accessed resources: sdsds/Certificados/CertificadoDigital.pfc, Action: Delete</code></pre>
+
+  <p><strong>Regel:</strong></p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;rule id="100072" level="10"&gt;
+  &lt;if_sid&gt;100070&lt;/if_sid&gt;
+  &lt;field name="srcusernas"&gt;Juan&lt;/field&gt;
+  &lt;field name="actionNas"&gt;Delete&lt;/field&gt;
+  &lt;description&gt;El usuario Juan ha eliminado un fichero&lt;/description&gt;
+&lt;/rule&gt;</code></pre>
+
+  <p><strong>Hoe het werkt:</strong></p>
+  <ul>
+    <li>Gebruikt <strong>twee velden</strong> voor meer precisie</li>
+    <li>Gaat alleen af als de gebruiker "Juan" is <strong>EN</strong> de actie "Delete" is</li>
+    <li>Handig om de acties van specifieke gebruikers te auditen</li>
+  </ul>
+
+  <h2>Hoe gebruik je dynamische variabelen voor IP en actie?</h2>
+
+  <p><strong>Ingangslog:</strong></p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">NAS: Users: marialopez, Source IP: 192.168.1.155, Computer name: MariaPC, Connection type: SMB, Accessed resources: sdsds/Certificados/CertificadoDigital.pfc, Action: Write</code></pre>
+
+  <p><strong>Regel:</strong></p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;rule id="100073" level="10"&gt;
+  &lt;if_sid&gt;100070&lt;/if_sid&gt;
+  &lt;field name="srcipNas"&gt;192.168.1.155&lt;/field&gt;
+  &lt;field name="actionNas"&gt;Write&lt;/field&gt;
+  &lt;description&gt;El equipo con la IP $(srcipNas) ha modificado el fichero $(resource)&lt;/description&gt;
+&lt;/rule&gt;</code></pre>
+
+  <p><strong>Hoe het werkt:</strong></p>
+  <ul>
+    <li>Filtert op een specifiek bron-IP + de Write-actie</li>
+    <li>Gebruikt <strong>dynamische variabelen</strong> <code>$(field)</code> in de beschrijving</li>
+    <li>De melding bevat de echte waarden uit het log: IP en betrokken bron</li>
+  </ul>
+
+  <h2>Syntaxisoverzicht</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Element</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Gebruik</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;"><code>if_sid</code></td>
+        <td style="padding: 12px;">Erft van een bovenliggende regel (decoder)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;"><code>field name="x"</code></td>
+        <td style="padding: 12px;">Filtert op een door de decoder geëxtraheerd veld</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;"><code>$(field)</code></td>
+        <td style="padding: 12px;">Dynamische variabele in de beschrijving</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px;"><code>level</code></td>
+        <td style="padding: 12px;">Ernst: 0-3 info, 4-7 gemiddeld, 8-15 kritiek</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Waar voeg je de regels toe en hoe pas je ze toe?</h2>
+
+  <p>
+    Aangepaste regels worden toegevoegd in <code>/var/ossec/etc/rules/local_rules.xml</code>. Na het bewerken van het bestand herstart u de manager:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">systemctl restart wazuh-manager</code></pre>
+
+  <h2>Volgende stappen</h2>
+
+  <p>
+    Aangepaste decoders bouwen om de velden te extraheren die u nodig heeft, maakt deel uit van een volledige Wazuh-uitrol. Een decoder zet een ruwe logregel om in benoemde velden zoals <code>resource</code>, <code>srcusernas</code> of <code>actionNas</code>, en pas daarna kan een regel zoals hierboven erop filteren. In een typisch NAS-auditproject koppelen we één decoder aan vijf tot tien gerichte regels, zodat waardevolle mappen, geprivilegieerde gebruikers en destructieve acties elk hun eigen ernstniveau krijgen, wat de signaal-ruisverhouding in het dashboard hoog houdt. <a href="/nl/wazuh">Ontdek onze Wazuh-diensten</a>.
+  </p>
+
+  <h2>Veelgestelde vragen</h2>
+
+  <h3>Waar worden aangepaste Wazuh-regels opgeslagen?</h3>
+  <p>Aangepaste regels staan in <code>/var/ossec/etc/rules/local_rules.xml</code> op de Wazuh-manager. Na het bewerken van het bestand moet u de service herstarten met <code>systemctl restart wazuh-manager</code> zodat de wijzigingen van kracht worden.</p>
+
+  <h3>Welk ID-bereik moet ik gebruiken voor aangepaste regels?</h3>
+  <p>Wazuh reserveert ID's onder 100000 voor zijn ingebouwde regelset (standaard worden zo'n 3.000 regels meegeleverd). Wijs uw eigen regels altijd een ID van 100000 of hoger toe om botsingen met toekomstige updates van de officiële regels te voorkomen.</p>
+
+  <h3>Wat betekent het level-attribuut in een Wazuh-regel?</h3>
+  <p>Het level bepaalt de ernst van de melding van 0 tot 15: 0-3 is informatief, 4-7 is gemiddeld, en 8-15 is kritiek. Standaard verstuurt Wazuh alleen meldingen per e-mail vanaf niveau 7, dus het level bepaalt ook welke gebeurtenissen notificaties activeren.</p>
+
+  <h3>Hoe laat ik meer dan één veld overeenkomen in één regel?</h3>
+  <p>Voeg meerdere <code>&lt;field name="..."&gt;</code>-tags toe binnen hetzelfde <code>&lt;rule&gt;</code>-blok. Ze moeten allemaal overeenkomen om de regel te laten afgaan, wat werkt als een logische EN, bijvoorbeeld een specifieke gebruiker en de Delete-actie tegelijk.</p>
+
+  <h3>Wat zijn dynamische variabelen in de beschrijving van een Wazuh-regel?</h3>
+  <p>Dynamische variabelen gebruiken de <code>$(field)</code>-syntaxis binnen de <code>&lt;description&gt;</code>-tag. Wazuh vervangt ze door de echte waarde die de decoder heeft geëxtraheerd, zodat de melding het werkelijke bron-IP of de betrokken bron toont in plaats van statische tekst.</p>
+
+</BlogLayout>
