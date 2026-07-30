@@ -46,7 +46,7 @@ export const TRANSLATIONS: Record<string, Locale[]> = {
   "/blog/como-instalar-agente-wazuh-en-windows": ["en", "fr", "nl"],
   "/blog/como-instalar-agente-wazuh-en-linux": ["en", "fr", "nl"],
   "/blog/configuracion-de-grupos-en-wazuh": ["en", "fr", "nl"],
-  "/blog/configurar-equipos-sin-agente-wazuh-syslog": ["en"],
+  "/blog/configurar-equipos-sin-agente-wazuh-syslog": ["en", "fr", "nl"],
   "/blog/flujo-logs-wazuh-decoders-reglas-alertas": ["en"],
   "/blog/crear-reglas-personalizadas-wazuh": ["en"],
   "/blog/configurar-alertas-correo-wazuh-postfix-gmail": ["en"],

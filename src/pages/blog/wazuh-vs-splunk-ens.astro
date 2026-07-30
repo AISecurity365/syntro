@@ -1,0 +1,179 @@
+---
+import BlogLayout from "../../layouts/BlogLayout.astro";
+
+const faqSchema = [
+  {
+    question: "¿Wazuh o Splunk vienen con los controles del ENS integrados?",
+    answer: "No, ninguno de los dos. Ambos son plataformas SIEM genéricas: recolectan logs, correlacionan eventos y generan alertas, pero no traen de fábrica un mapeo a los controles del Anexo II del Esquema Nacional de Seguridad (RD 311/2022). Ese mapeo — qué regla cubre qué control, qué evidencias guardar, cómo documentarlo para la auditoría — es trabajo de integración que hay que construir encima, sea cual sea la herramienta."
+  },
+  {
+    question: "¿Splunk cumple el Esquema Nacional de Seguridad de fábrica?",
+    answer: "No. Splunk aporta una plataforma de análisis de logs muy potente y madura, con años de recorrido en entornos empresariales grandes, pero el cumplimiento del ENS no es una casilla que se marca al instalarlo. El mapeo a controles concretos (monitorización continua, registro de actividad, gestión de incidentes) es trabajo adicional de consultoría o integración, igual que con Wazuh."
+  },
+  {
+    question: "¿Cuánto cuesta Wazuh frente a Splunk para una pyme española?",
+    answer: "Wazuh con AI Security tiene precio cerrado: Básico 999-1.499€ de implementación, Completo 1.999-3.999€, o Gestionado desde 200€/mes con hosting propio del cliente. Splunk no publica precios públicos: cotiza por volumen de datos ingeridos (GB/día) o por consumo de cómputo, y el coste real depende del contrato negociado con Splunk — para una pyme, suele escalar rápido en cuanto crece el volumen de logs."
+  },
+  {
+    question: "¿Qué SIEM recomienda AI Security para cumplir el ENS?",
+    answer: "Depende del punto de partida. Si tu empresa ya tiene Splunk desplegado y personal formado, lo razonable es construir el mapeo ENS sobre esa base en vez de migrar. Si empiezas de cero o buscas controlar el coste a largo plazo, Wazuh evita la licencia recurrente ligada al volumen de datos y ya tenemos el trabajo de compliance ENS resuelto como servicio."
+  }
+];
+---
+
+<BlogLayout
+  title="Wazuh vs Splunk: ¿cuál cumple mejor el ENS? | AI Security"
+  description="Wazuh vs Splunk para el ENS: ninguno mapea los controles de fábrica. Comparamos coste real, quién hace el trabajo de compliance y cuál conviene a tu pyme."
+  publishDate="2026-07-30"
+  author="AI Security"
+  readTime="8 min"
+  tags={["Wazuh", "Splunk", "ENS", "SIEM", "Cumplimiento Normativo", "Ciberseguridad"]}
+  canonical="https://aisecurity.es/blog/wazuh-vs-splunk-ens"
+  faqSchema={faqSchema}>
+
+  <p>
+    Ni <strong>Wazuh</strong> ni <strong>Splunk</strong> cumplen el <strong>Esquema Nacional de Seguridad (ENS)</strong> de fábrica: ambos son SIEM genéricos que recolectan logs y generan alertas, pero ninguno trae integrado el mapeo a los controles del Anexo II del RD 311/2022. La pregunta relevante no es "cuál es mejor SIEM" — Splunk es una plataforma potente y madura, Wazuh es un SIEM/XDR open source igual de capaz para este caso de uso — sino <strong>quién ya tiene hecho el trabajo de convertir ese SIEM en un ENS auditable</strong>. Con Wazuh, ese trabajo ya existe como servicio; con Splunk, normalmente lo monta el propio cliente o un integrador, coste aparte de la licencia.
+  </p>
+
+  <h2>¿Qué comparamos realmente cuando hablamos de "Wazuh vs Splunk"?</h2>
+
+  <p>
+    <strong>Wazuh</strong> es una plataforma SIEM/XDR open source: centraliza logs, monitoriza integridad de ficheros (FIM), evalúa configuración de seguridad (SCA) y detecta amenazas en tiempo real. No tiene coste de licencia.
+  </p>
+
+  <p>
+    <strong>Splunk</strong> es una plataforma de análisis de logs y seguridad propietaria, con más de una década de recorrido en entornos empresariales grandes. Su motor de búsqueda y correlación (SPL) es de los más maduros del mercado, y su ecosistema de apps (incluida Splunk Enterprise Security) es amplio. Nada de esto es discutible: técnicamente es una herramienta seria.
+  </p>
+
+  <p>
+    La diferencia no está ahí. Está en que ambas son <strong>herramientas genéricas</strong>: ninguna sabe, al instalarse, qué es el ENS ni qué controles del Anexo II tiene que cubrir tu empresa. Si nunca has oído hablar de Wazuh, tenemos una <a href="/blog/que-es-wazuh-para-que-sirve">guía completa de qué es y para qué sirve</a>.
+  </p>
+
+  <h2>¿Wazuh o Splunk cumplen el ENS de fábrica?</h2>
+
+  <p>
+    No. Es la keyword que trae a la mayoría de gente a este artículo — "SIEM para cumplir el ENS" — y la respuesta honesta es que ese SIEM no existe listo para usar. El ENS (RD 311/2022) exige controles técnicos concretos en su Anexo II: monitorización continua de sistemas (<code>op.mon</code>), registro de la actividad de usuarios (<code>op.acc.5</code>) y gestión de incidentes (<code>op.exp.8</code>), entre otros. Wazuh y Splunk pueden <em>cubrir</em> técnicamente esos controles — ambos recolectan logs, ambos pueden generar alertas de acceso, ambos permiten trazar un incidente — pero de fábrica ninguno:
+  </p>
+
+  <ul>
+    <li>Trae las reglas y decoders ya mapeados a cada control del Anexo II</li>
+    <li>Genera evidencias en el formato que pide una auditoría ENAC (para nivel medio/alto)</li>
+    <li>Documenta la correspondencia entre lo que detecta el SIEM y lo que exige la normativa</li>
+  </ul>
+
+  <p>
+    Eso es <a href="/consultoria-ens">trabajo de consultoría de adecuación ENS</a>: hay que construirlo encima del SIEM, sea cual sea el que elijas. Quien te venda un SIEM diciendo que "cumple el ENS de serie" está simplificando de más.
+  </p>
+
+  <div style="background:rgba(139,92,246,0.08);border-left:4px solid rgba(167,139,250,0.5);padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.85);"><strong style="color:#c4b5fd;">Dato concreto:</strong> el plazo transitorio del RD 311/2022 venció en mayo de 2024. Si tu empresa presta servicios a una administración pública española y todavía no tiene el ENS adecuado, la exposición no es solo técnica — puede excluirte de licitaciones.</p>
+  </div>
+
+  <h2>¿Quién hace ya el trabajo de compliance ENS: Wazuh o Splunk?</h2>
+
+  <p>
+    Aquí está la diferencia real entre las dos opciones, y es la que normalmente no se cuenta en las comparativas de features.
+  </p>
+
+  <p>
+    Con <strong>Wazuh</strong>, en AI Security ya tenemos ese mapeo hecho: reglas y decoders alineados a los controles del Anexo II, hardening previo (SCA/CIS Benchmarks), FIM configurado sobre los activos críticos y documentación lista para la auditoría. Es exactamente lo que ofrecemos en <a href="/consultoria-ens">consultoría ENS</a>, tanto en la parte técnica como en la documental (MAGERIT, políticas, plan de adecuación).
+  </p>
+
+  <p>
+    Con <strong>Splunk</strong>, ese trabajo normalmente no viene incluido en la licencia ni en el soporte estándar de Splunk. Lo suele asumir el propio equipo IT del cliente (si tiene el conocimiento normativo, que rara vez es el caso) o un integrador especializado en ENS, con un coste de consultoría independiente del coste de la plataforma. Splunk no es peor SIEM por esto — simplemente el mercado de integradores de "Splunk + ENS" en español es más pequeño y menos empaquetado que el de Wazuh, donde el propio hecho de ser open source ha generado más oferta de consultoría ENS alrededor.
+  </p>
+
+  <p>
+    Si tu equipo quiere aprender a mantener el SIEM por su cuenta una vez adecuado, también tenemos un <a href="/curso-wazuh">curso de Wazuh en español</a> centrado en instalación, reglas y configuración para el ENS — pero para la parte de adecuación normativa en sí, lo habitual es que la construya quien ya la tiene hecha.
+  </p>
+
+  <h2>¿Cuánto cuesta Wazuh frente a Splunk para una pyme?</h2>
+
+  <p>
+    Aquí sí hay una diferencia de coste medible, aunque no es el eje de esta comparativa — es la pregunta que casi siempre viene después.
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+    <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);">
+      <h4 class="text-lg font-bold mb-3 text-white">Wazuh (AI Security)</h4>
+      <ul class="space-y-2 text-sm" style="color:rgba(255,255,255,0.8);">
+        <li><strong style="color:#c4b5fd;">Básico:</strong> 999-1.499€ implementación</li>
+        <li><strong style="color:#c4b5fd;">Completo:</strong> 1.999-3.999€ implementación</li>
+        <li><strong style="color:#c4b5fd;">Gestionado:</strong> 200€/mes (hosting propio del cliente)</li>
+      </ul>
+      <p class="text-xs mt-4" style="color:rgba(255,255,255,0.5);">Precio cerrado, sin licencia recurrente ligada al volumen de datos.</p>
+    </div>
+    <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);">
+      <h4 class="text-lg font-bold mb-3 text-white">Splunk</h4>
+      <ul class="space-y-2 text-sm" style="color:rgba(255,255,255,0.8);">
+        <li>Sin lista de precios pública</li>
+        <li>Cotiza por GB/día ingerido o por cómputo (workload pricing)</li>
+        <li>Enterprise Security (módulo SIEM) es coste adicional sobre la plataforma base</li>
+      </ul>
+      <p class="text-xs mt-4" style="color:rgba(255,255,255,0.5);">Escala con el volumen de logs, no con el número de controles cubiertos.</p>
+    </div>
+  </div>
+
+  <div style="background:rgba(139,92,246,0.08);border-left:4px solid rgba(167,139,250,0.5);padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.85);"><strong style="color:#c4b5fd;">Matiz honesto sobre el precio de Splunk:</strong> Splunk no publica precios públicos de forma oficial — su web remite a cotización según volumen de datos (GB/día) o consumo de cómputo (Splunk Virtual Compute/vCPU en su modelo "workload pricing"). Estimaciones de terceros del sector sitúan implantaciones modestas (decenas de GB/día) en varias decenas de miles de euros anuales solo en licencia, con el módulo Enterprise Security como coste adicional aparte, y despliegues medianos escalando a bastante más. No son cifras oficiales de Splunk, sino estimaciones de mercado — la única cifra fiable para tu caso es una cotización directa con ellos.</p>
+  </div>
+
+  <p>
+    La diferencia de fondo: el coste de Wazuh está acotado porque no depende de cuántos GB de logs generes; el de Splunk crece con el volumen de datos ingeridos, que en un SIEM tiende a subir con el tiempo (más agentes, más retención, más fuentes).
+  </p>
+
+  <h2>¿Qué limitaciones tiene esta comparativa?</h2>
+
+  <p>
+    Si tu empresa ya tiene Splunk desplegado, con licencia contratada y personal formado en SPL, migrar a Wazuh solo para ahorrar en licencia rara vez compensa: el coste de migración, re-entrenamiento y reconstrucción de dashboards puede superar el ahorro. En ese caso, lo razonable es construir el mapeo ENS sobre el Splunk que ya tienes, no cambiar de SIEM. Esta comparativa asume que estás <strong>eligiendo</strong> SIEM ahora, no que ya tienes uno funcionando.
+  </p>
+
+  <h2>Preguntas frecuentes</h2>
+
+  <h3>¿Wazuh o Splunk vienen con los controles del ENS integrados?</h3>
+  <p>No, ninguno de los dos. Ambos son SIEM genéricos; el mapeo a los controles del Anexo II del RD 311/2022 es trabajo de integración que hay que construir encima.</p>
+
+  <h3>¿Splunk cumple el Esquema Nacional de Seguridad de fábrica?</h3>
+  <p>No. Splunk aporta la plataforma de análisis de logs — potente y madura — pero el mapeo a controles ENS concretos es trabajo adicional de consultoría, igual que con Wazuh.</p>
+
+  <h3>¿Cuánto cuesta Wazuh frente a Splunk para una pyme española?</h3>
+  <p>Wazuh con AI Security: 999-1.499€ (Básico), 1.999-3.999€ (Completo) o 200€/mes (Gestionado). Splunk no publica precios públicos y cotiza por volumen de datos ingerido; para una pyme, suele escalar rápido según crece el volumen de logs.</p>
+
+  <h3>¿Qué SIEM recomienda AI Security para cumplir el ENS?</h3>
+  <p>Depende del punto de partida: si ya tienes Splunk desplegado, construimos el mapeo ENS sobre esa base; si empiezas de cero, Wazuh evita la licencia recurrente y ya tenemos el trabajo de compliance resuelto como servicio.</p>
+
+  <hr />
+
+  <p class="text-sm text-base-600">
+    <strong>Artículo relacionado:</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/blog/que-es-wazuh-para-que-sirve">Qué es Wazuh y para qué sirve</a></li>
+  </ul>
+  <hr />
+
+  <div class="relative my-10">
+    <div class="absolute -inset-px rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(99,102,241,0.3),rgba(59,130,246,0.4));filter:blur(1px);"></div>
+    <div class="relative rounded-2xl p-7 md:p-8" style="background:#0b1120;border:1px solid rgba(139,92,246,0.3);">
+      <p class="mb-3" style="color:#a5b4fc;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;max-width:none;">Diagnóstico gratuito</p>
+      <h3 class="mt-0 mb-3 text-xl md:text-2xl font-bold" style="color:#ffffff;">¿Necesitas el ENS y no sabes por dónde empezar?</h3>
+      <p class="mb-6" style="color:rgba(255,255,255,0.72);">
+        Analizamos tu punto de partida (tengas SIEM o no) y te decimos qué controles te faltan y cuánto trabajo real supone la adecuación. Sin compromiso.
+      </p>
+      <div class="flex flex-col sm:flex-row flex-wrap gap-3">
+        <a href="/presupuesto?plan=consultoria-ens" style="color:#ffffff;background:linear-gradient(135deg,#7c3aed,#4f46e5);"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3.5 font-bold rounded-xl no-underline transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 shadow-lg">
+          Solicitar diagnóstico gratuito
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+        <a href="/curso-wazuh" style="color:rgba(255,255,255,0.85);border:1px solid rgba(255,255,255,0.18);"
+          class="inline-flex items-center justify-center px-6 py-3.5 text-sm font-medium rounded-xl no-underline transition-all duration-200 hover:bg-white/5">
+          O prefiero aprender Wazuh yo mismo
+        </a>
+      </div>
+    </div>
+  </div>
+
+</BlogLayout>

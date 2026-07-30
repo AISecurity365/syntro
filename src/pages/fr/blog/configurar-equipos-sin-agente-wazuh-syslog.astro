@@ -1,0 +1,263 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="fr"
+  title="Surveiller des appareils sans agent dans Wazuh avec Syslog"
+  description="Surveillez routeurs, switchs, NAS et appareils sans agent en utilisant rsyslog comme collecteur. Configuration complète avec templates, filtres et intégration Wazuh."
+  publishDate="2026-03-08"
+  author="AI Security"
+  readTime="8 min"
+  tags={["Wazuh", "Syslog", "rsyslog", "Sans agent", "SIEM", "Réseau"]}
+  canonical="https://aisecurity.es/fr/blog/configurar-equipos-sin-agente-wazuh-syslog"
+  faqSchema={[
+    {
+      question: "Pourquoi ne peut-on pas installer un agent Wazuh sur un routeur ou un switch ?",
+      answer: "Les équipements réseau, NAS et pare-feux fonctionnent avec un firmware fermé où l'on ne peut pas installer de logiciel tiers comme l'agent Wazuh. En revanche, ils prennent en charge le protocole Syslog : ils transmettent donc leurs journaux via le réseau vers un collecteur que l'agent Wazuh lit ensuite."
+    },
+    {
+      question: "Quel port Syslog utilise-t-il pour recevoir les journaux ?",
+      answer: "Syslog utilise le port 514, par défaut en UDP et éventuellement en TCP pour une livraison plus fiable. Dans cette configuration, rsyslog écoute sur le port 514 avec les modules imudp et imtcp activés, et le pare-feu ne doit l'autoriser que depuis les IP des appareils autorisés."
+    },
+    {
+      question: "Quel est le rôle de rsyslog dans la surveillance des appareils sans agent ?",
+      answer: "rsyslog agit comme collecteur Syslog sur un serveur Linux : il reçoit les journaux sur le port 514, applique des templates et des filtres IF pour les séparer par source, et les écrit dans des fichiers organisés sous /var/log/remote/. L'agent Wazuh local surveille ensuite ces fichiers et transmet les événements au serveur SIEM."
+    },
+    {
+      question: "Comment faire lire à Wazuh les fichiers syslog collectés ?",
+      answer: "Ajoutez un bloc localfile dans /var/ossec/etc/ossec.conf pour chaque fichier de journal distant (par exemple /var/log/remote/router.log) avec log_format syslog, puis redémarrez l'agent avec systemctl restart wazuh-agent pour qu'il commence à transmettre ces événements."
+    },
+    {
+      question: "Quels appareils peut-on surveiller sans agent ?",
+      answer: "Tout appareil prenant en charge syslog : routeurs (Cisco, MikroTik, Ubiquiti), switchs (HP, Dell, Cisco), pare-feux (pfSense, FortiGate, OPNsense), NAS (Synology, QNAP, TrueNAS), imprimantes réseau, et systèmes IoT ou hérités."
+    }
+  ]}>
+
+  <p>
+    Pour surveiller des appareils sans agent dans Wazuh (routeurs, switchs, NAS, pare-feux), configurez un serveur Linux avec <strong>rsyslog</strong> comme collecteur Syslog : l'appareil envoie ses journaux au port 514, rsyslog les organise en fichiers, et l'agent Wazuh les transmet au serveur SIEM.
+  </p>
+
+  <h2>Pourquoi certains appareils nécessitent-ils une surveillance sans agent ?</h2>
+
+  <p>
+    De nombreux éléments d'infrastructure critiques fonctionnent avec un firmware fermé où l'on ne peut tout simplement pas installer d'agent Wazuh : switchs administrables, routeurs, pare-feux, NAS et imprimantes réseau. Les laisser sans surveillance crée des angles morts, car ce sont souvent les premiers appareils qu'un attaquant sonde. Le protocole Syslog résout ce problème : pratiquement tous les équipements réseau peuvent transmettre leurs journaux via le <strong>port 514 UDP ou TCP</strong>, de sorte qu'un seul collecteur Linux exécutant <strong>rsyslog</strong> peut centraliser les événements de dizaines d'appareils sans agent et les injecter dans Wazuh via un unique agent installé.
+  </p>
+
+  <p>
+    Cette architecture décharge les équipements eux-mêmes et évolue bien : un seul collecteur peut aisément gérer le trafic syslog de toute une agence. Comme rsyslog écrit chaque source dans son propre fichier sous <code>/var/log/remote/</code>, vous conservez une séparation nette entre, par exemple, les journaux du pare-feu et ceux du NAS, ce qui facilite grandement l'écriture ultérieure de décodeurs et de règles Wazuh ciblés.
+  </p>
+
+  <h2>À quoi ressemble l'architecture de la solution ?</h2>
+
+  <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><pre style="margin:0;"><code style="color: #e5e7eb;">Appareils sans agent -----> Linux + rsyslog -----> Serveur Wazuh
+(routeurs, switchs)         (collecteur Syslog)      (SIEM)
+        |                       |
+    Port 514             /var/log/remote/</code></pre></div>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/fr/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Clé en main</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Besoin de Wazuh dans votre entreprise ?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Nous déployons Wazuh pour vous — ou ajoutons des configurations avancées sur mesure en prestation de conseil. Prêt pour la production et la conformité.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Consultation Wazuh →</span>
+    </a>
+  </aside>
+
+  <h2>Comment installer et configurer rsyslog ?</h2>
+
+  <p>
+    Sur le serveur Linux qui fera office de collecteur, installez rsyslog et activez la réception des journaux distants.
+  </p>
+
+  <div class="locked-code-block relative my-6">
+    <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;filter:blur(3px);user-select:none;pointer-events:none;">
+      <pre style="margin:0;"><code style="color: #e5e7eb;"># Installer rsyslog
+apt update && apt install rsyslog -y
+
+# Éditer /etc/rsyslog.conf et décommenter :
+module(load="imudp")
+input(type="imudp" port="514")
+module(load="imtcp")
+input(type="imtcp" port="514")
+
+# Redémarrer le service
+systemctl restart rsyslog && systemctl enable rsyslog</code></pre>
+    </div>
+    <div class="absolute inset-0 flex items-center justify-center" style="background: rgba(0,0,0,0.6); border-radius: 8px;">
+      <a href="/fr/wazuh" class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition-all hover:scale-105" style="background: linear-gradient(135deg, #0065ff 0%, #0052cc 100%); color: #ffffff;">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        Parlez à notre équipe
+      </a>
+    </div>
+  </div>
+
+  <h2>Comment configurer le pare-feu avec iptables ?</h2>
+
+  <p>
+    Autorisez les connexions au port 514 uniquement depuis les appareils autorisés pour plus de sécurité.
+  </p>
+
+  <div class="locked-code-block relative my-6">
+    <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;filter:blur(3px);user-select:none;pointer-events:none;">
+      <pre style="margin:0;"><code style="color: #e5e7eb;"># Autoriser depuis des appareils spécifiques
+iptables -A INPUT -p udp -s 192.168.1.1 --dport 514 -j ACCEPT
+iptables -A INPUT -p tcp -s 192.168.1.1 --dport 514 -j ACCEPT
+
+# Bloquer tout le reste
+iptables -A INPUT -p udp --dport 514 -j DROP
+iptables -A INPUT -p tcp --dport 514 -j DROP
+
+# Enregistrer les règles
+apt install iptables-persistent -y && netfilter-persistent save</code></pre>
+    </div>
+    <div class="absolute inset-0 flex items-center justify-center" style="background: rgba(0,0,0,0.6); border-radius: 8px;">
+      <a href="/fr/wazuh" class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition-all hover:scale-105" style="background: linear-gradient(135deg, #0065ff 0%, #0052cc 100%); color: #ffffff;">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        Parlez à notre équipe
+      </a>
+    </div>
+  </div>
+
+  <h2>Comment organiser les journaux avec des templates et des filtres ?</h2>
+
+  <p>
+    Configurez rsyslog pour stocker les journaux dans des fichiers séparés selon leur source (NAS, routeur, switch, etc.) à l'aide de templates et de filtres IF.
+  </p>
+
+  <div class="locked-code-block relative my-6">
+    <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;filter:blur(3px);user-select:none;pointer-events:none;">
+      <pre style="margin:0;"><code style="color: #e5e7eb;"># Templates pour des journaux organisés
+$template NASLogs,"/var/log/remote/nas.log"
+$template RouterLogs,"/var/log/remote/router.log"
+$template LogFormat,"%TIMESTAMP% %HOSTNAME% %msg%\n"
+
+# Filtres conditionnels
+if $fromhost-ip != '127.0.0.1' then {'{'}
+    if $msg contains "NAS:" then {'{'}
+        ?NASLogs;LogFormat
+        stop
+    {'}'}
+    if $fromhost-ip == '192.168.1.1' then {'{'}
+        ?RouterLogs;LogFormat
+        stop
+    {'}'}
+{'}'}</code></pre>
+    </div>
+    <div class="absolute inset-0 flex items-center justify-center" style="background: rgba(0,0,0,0.6); border-radius: 8px;">
+      <a href="/fr/wazuh" class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition-all hover:scale-105" style="background: linear-gradient(135deg, #0065ff 0%, #0052cc 100%); color: #ffffff;">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        Parlez à notre équipe
+      </a>
+    </div>
+  </div>
+
+  <h2>Comment intégrer les journaux syslog à Wazuh ?</h2>
+
+  <p>
+    Ajoutez les nouveaux fichiers de journaux à l'agent Wazuh pour qu'il les surveille et les transmette au serveur SIEM.
+  </p>
+
+  <div class="locked-code-block relative my-6">
+    <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;filter:blur(3px);user-select:none;pointer-events:none;">
+      <pre style="margin:0;"><code style="color: #e5e7eb;"># Éditer /var/ossec/etc/ossec.conf
+# Ajouter dans &lt;ossec_config&gt; :
+
+&lt;localfile&gt;
+  &lt;log_format&gt;syslog&lt;/log_format&gt;
+  &lt;location&gt;/var/log/remote/nas.log&lt;/location&gt;
+&lt;/localfile&gt;
+
+&lt;localfile&gt;
+  &lt;log_format&gt;syslog&lt;/log_format&gt;
+  &lt;location&gt;/var/log/remote/router.log&lt;/location&gt;
+&lt;/localfile&gt;
+
+# Redémarrer l'agent
+systemctl restart wazuh-agent</code></pre>
+    </div>
+    <div class="absolute inset-0 flex items-center justify-center" style="background: rgba(0,0,0,0.6); border-radius: 8px;">
+      <a href="/fr/wazuh" class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition-all hover:scale-105" style="background: linear-gradient(135deg, #0065ff 0%, #0052cc 100%); color: #ffffff;">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        Parlez à notre équipe
+      </a>
+    </div>
+  </div>
+
+  <h2>À quoi ressemble le flux complet des journaux ?</h2>
+
+  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <ol style="color: #000000; margin: 0;">
+      <li>L'appareil (NAS, routeur, etc.) envoie les journaux au port 514</li>
+      <li>rsyslog les reçoit et les filtre selon les règles configurées</li>
+      <li>Les journaux sont écrits dans des fichiers séparés</li>
+      <li>L'agent Wazuh surveille ces fichiers</li>
+      <li>Les journaux sont envoyés au serveur Wazuh pour analyse</li>
+    </ol>
+  </div>
+
+  <h2>Quels appareils sont compatibles avec cette méthode ?</h2>
+
+  <ul>
+    <li><strong>Routeurs</strong> : Cisco, MikroTik, Ubiquiti</li>
+    <li><strong>Switchs</strong> : HP, Dell, Cisco</li>
+    <li><strong>Pare-feux</strong> : pfSense, FortiGate, OPNsense</li>
+    <li><strong>NAS</strong> : Synology, QNAP, TrueNAS</li>
+    <li><strong>Imprimantes</strong> réseau prenant en charge syslog</li>
+    <li><strong>Appareils IoT</strong> et systèmes hérités</li>
+  </ul>
+
+  <h2>Questions fréquentes</h2>
+
+  <h3>Pourquoi ne peut-on pas installer un agent Wazuh sur un routeur ou un switch ?</h3>
+  <p>Les équipements réseau, NAS et pare-feux fonctionnent avec un firmware fermé où l'on ne peut pas installer de logiciel tiers comme l'agent Wazuh. En revanche, ils prennent en charge le protocole Syslog : ils transmettent donc leurs journaux via le réseau vers un collecteur que l'agent Wazuh lit ensuite.</p>
+
+  <h3>Quel port Syslog utilise-t-il pour recevoir les journaux ?</h3>
+  <p>Syslog utilise le port <strong>514</strong>, par défaut en UDP et éventuellement en TCP pour une livraison plus fiable. Dans cette configuration, rsyslog écoute sur le port 514 avec les modules <code>imudp</code> et <code>imtcp</code> activés, et le pare-feu ne doit l'autoriser que depuis les IP des appareils autorisés.</p>
+
+  <h3>Quel est le rôle de rsyslog dans la surveillance des appareils sans agent ?</h3>
+  <p>rsyslog agit comme collecteur Syslog sur un serveur Linux : il reçoit les journaux sur le port 514, applique des templates et des filtres IF pour les séparer par source, et les écrit dans des fichiers organisés sous <code>/var/log/remote/</code>. L'agent Wazuh local surveille ensuite ces fichiers et transmet les événements au serveur SIEM.</p>
+
+  <h3>Comment faire lire à Wazuh les fichiers syslog collectés ?</h3>
+  <p>Ajoutez un bloc <code>localfile</code> dans <code>/var/ossec/etc/ossec.conf</code> pour chaque fichier de journal distant (par exemple <code>/var/log/remote/router.log</code>) avec <code>log_format syslog</code>, puis redémarrez l'agent avec <code>systemctl restart wazuh-agent</code> pour qu'il commence à transmettre ces événements.</p>
+
+  <h3>Quels appareils peut-on surveiller sans agent ?</h3>
+  <p>Tout appareil prenant en charge syslog : routeurs (Cisco, MikroTik, Ubiquiti), switchs (HP, Dell, Cisco), pare-feux (pfSense, FortiGate, OPNsense), NAS (Synology, QNAP, TrueNAS), imprimantes réseau, et systèmes IoT ou hérités.</p>
+
+  <hr />
+
+  <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 my-8">
+    <h3 class="text-accent-800 mt-0">Obtenez la configuration complète</h3>
+    <p class="text-base-700 mb-4">
+      Notre équipe peut fournir les commandes complètes, des exemples de configuration pour chaque type d'appareil et un accompagnement étape par étape.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a style="color: black;" href="/fr/wazuh" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent-700 font-semibold rounded-lg border border-accent-300 hover:bg-accent-50 transition-colors">
+        Implémentation professionnelle
+      </a>
+    </div>
+  </div>
+
+  <p class="text-sm text-base-600">
+    <strong>Articles liés :</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/fr/blog/como-instalar-agente-wazuh-en-linux">Comment installer l'agent Wazuh sur Linux</a></li>
+    <li><a href="/fr/blog/configuracion-de-grupos-en-wazuh">Comment configurer des groupes d'agents dans Wazuh</a></li>
+  </ul>
+
+</BlogLayout>
+
+<style>
+  .locked-code-block {
+    position: relative;
+  }
+</style>

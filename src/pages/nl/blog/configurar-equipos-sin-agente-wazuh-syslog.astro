@@ -1,0 +1,263 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="nl"
+  title="Apparaten zonder agent monitoren in Wazuh met Syslog"
+  description="Monitor routers, switches, NAS en apparaten zonder agent met rsyslog als collector. Volledige configuratie met templates, filters en Wazuh-integratie."
+  publishDate="2026-03-08"
+  author="AI Security"
+  readTime="8 min"
+  tags={["Wazuh", "Syslog", "rsyslog", "Zonder agent", "SIEM", "Netwerk"]}
+  canonical="https://aisecurity.es/nl/blog/configurar-equipos-sin-agente-wazuh-syslog"
+  faqSchema={[
+    {
+      question: "Waarom kun je geen Wazuh-agent installeren op een router of switch?",
+      answer: "Netwerkapparaten, NAS-units en firewalls draaien op gesloten firmware waar u geen software van derden zoals de Wazuh-agent kunt installeren. In plaats daarvan ondersteunen ze het Syslog-protocol, dus sturen ze hun logs via het netwerk naar een collector die de Wazuh-agent vervolgens leest."
+    },
+    {
+      question: "Welke poort gebruikt Syslog om logs te ontvangen?",
+      answer: "Syslog gebruikt poort 514, standaard via UDP en optioneel via TCP voor betrouwbaardere levering. In deze opstelling luistert rsyslog op poort 514 met zowel de imudp- als imtcp-module ingeschakeld, en de firewall mag dit alleen toestaan vanaf de IP's van geautoriseerde apparaten."
+    },
+    {
+      question: "Wat is de rol van rsyslog bij het monitoren van apparaten zonder agent?",
+      answer: "rsyslog fungeert als Syslog-collector op een Linux-server: het ontvangt logs op poort 514, past templates en IF-filters toe om ze per bron te scheiden, en schrijft ze in georganiseerde bestanden onder /var/log/remote/. De lokale Wazuh-agent bewaakt vervolgens die bestanden en stuurt de gebeurtenissen naar de SIEM-server."
+    },
+    {
+      question: "Hoe laat ik Wazuh de verzamelde syslog-bestanden lezen?",
+      answer: "Voeg een localfile-blok toe in /var/ossec/etc/ossec.conf voor elk extern logbestand (bijvoorbeeld /var/log/remote/router.log) met log_format syslog, en herstart daarna de agent met systemctl restart wazuh-agent zodat hij die gebeurtenissen begint door te sturen."
+    },
+    {
+      question: "Welke apparaten kunnen zonder agent worden gemonitord?",
+      answer: "Elk apparaat met syslog-ondersteuning: routers (Cisco, MikroTik, Ubiquiti), switches (HP, Dell, Cisco), firewalls (pfSense, FortiGate, OPNsense), NAS-units (Synology, QNAP, TrueNAS), netwerkprinters, en IoT- of verouderde systemen."
+    }
+  ]}>
+
+  <p>
+    Om apparaten zonder agent in Wazuh te monitoren (routers, switches, NAS, firewalls), stelt u een Linux-server in met <strong>rsyslog</strong> als Syslog-collector: het apparaat stuurt zijn logs naar poort 514, rsyslog ordent ze in bestanden, en de Wazuh-agent stuurt ze door naar de SIEM-server.
+  </p>
+
+  <h2>Waarom hebben sommige apparaten monitoring zonder agent nodig?</h2>
+
+  <p>
+    Veel kritieke infrastructuuronderdelen draaien op gesloten firmware waar u simpelweg geen Wazuh-agent kunt installeren: managed switches, routers, firewalls, NAS-units en netwerkprinters. Ze onbewaakt laten creëert blinde vlekken, want dit zijn vaak de eerste apparaten die een aanvaller aftast. Het Syslog-protocol lost dit op: vrijwel elk netwerkapparaat kan zijn logs doorsturen via <strong>UDP- of TCP-poort 514</strong>, zodat één Linux-collector met <strong>rsyslog</strong> gebeurtenissen van tientallen apparaten zonder agent kan centraliseren en ze via één geïnstalleerde agent in Wazuh kan invoeren.
+  </p>
+
+  <p>
+    Deze architectuur ontlast de apparaten zelf en schaalt goed: één collector kan gemakkelijk het syslog-verkeer van een heel filiaal aan. Omdat rsyslog elke bron naar zijn eigen bestand schrijft onder <code>/var/log/remote/</code>, behoudt u een nette scheiding tussen bijvoorbeeld firewall-logs en NAS-logs, wat het later veel eenvoudiger maakt om gerichte Wazuh-decoders en -regels te schrijven.
+  </p>
+
+  <h2>Hoe ziet de architectuur van de oplossing eruit?</h2>
+
+  <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><pre style="margin:0;"><code style="color: #e5e7eb;">Apparaten zonder agent -----> Linux + rsyslog -----> Wazuh-server
+(routers, switches)           (Syslog-collector)      (SIEM)
+        |                       |
+    Poort 514            /var/log/remote/</code></pre></div>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/nl/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Kant-en-klaar</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Wazuh nodig in uw bedrijf?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Wij rollen Wazuh voor u uit — of voegen geavanceerde configuraties op maat toe als adviesdienst. Productieklaar en compliance-klaar.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Wazuh-advies →</span>
+    </a>
+  </aside>
+
+  <h2>Hoe installeer en configureer je rsyslog?</h2>
+
+  <p>
+    Installeer op de Linux-server die als collector zal fungeren rsyslog en schakel de ontvangst van externe logs in.
+  </p>
+
+  <div class="locked-code-block relative my-6">
+    <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;filter:blur(3px);user-select:none;pointer-events:none;">
+      <pre style="margin:0;"><code style="color: #e5e7eb;"># rsyslog installeren
+apt update && apt install rsyslog -y
+
+# /etc/rsyslog.conf bewerken en uncommenten:
+module(load="imudp")
+input(type="imudp" port="514")
+module(load="imtcp")
+input(type="imtcp" port="514")
+
+# De service herstarten
+systemctl restart rsyslog && systemctl enable rsyslog</code></pre>
+    </div>
+    <div class="absolute inset-0 flex items-center justify-center" style="background: rgba(0,0,0,0.6); border-radius: 8px;">
+      <a href="/nl/wazuh" class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition-all hover:scale-105" style="background: linear-gradient(135deg, #0065ff 0%, #0052cc 100%); color: #ffffff;">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        Praat met ons team
+      </a>
+    </div>
+  </div>
+
+  <h2>Hoe configureer je de firewall met iptables?</h2>
+
+  <p>
+    Sta verbindingen naar poort 514 alleen toe vanaf geautoriseerde apparaten voor meer veiligheid.
+  </p>
+
+  <div class="locked-code-block relative my-6">
+    <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;filter:blur(3px);user-select:none;pointer-events:none;">
+      <pre style="margin:0;"><code style="color: #e5e7eb;"># Toestaan vanaf specifieke apparaten
+iptables -A INPUT -p udp -s 192.168.1.1 --dport 514 -j ACCEPT
+iptables -A INPUT -p tcp -s 192.168.1.1 --dport 514 -j ACCEPT
+
+# Al het andere blokkeren
+iptables -A INPUT -p udp --dport 514 -j DROP
+iptables -A INPUT -p tcp --dport 514 -j DROP
+
+# De regels opslaan
+apt install iptables-persistent -y && netfilter-persistent save</code></pre>
+    </div>
+    <div class="absolute inset-0 flex items-center justify-center" style="background: rgba(0,0,0,0.6); border-radius: 8px;">
+      <a href="/nl/wazuh" class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition-all hover:scale-105" style="background: linear-gradient(135deg, #0065ff 0%, #0052cc 100%); color: #ffffff;">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        Praat met ons team
+      </a>
+    </div>
+  </div>
+
+  <h2>Hoe organiseer je logs met templates en filters?</h2>
+
+  <p>
+    Configureer rsyslog om logs op te slaan in aparte bestanden op basis van hun bron (NAS, router, switch, enz.) met behulp van templates en IF-filters.
+  </p>
+
+  <div class="locked-code-block relative my-6">
+    <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;filter:blur(3px);user-select:none;pointer-events:none;">
+      <pre style="margin:0;"><code style="color: #e5e7eb;"># Templates voor georganiseerde logs
+$template NASLogs,"/var/log/remote/nas.log"
+$template RouterLogs,"/var/log/remote/router.log"
+$template LogFormat,"%TIMESTAMP% %HOSTNAME% %msg%\n"
+
+# Voorwaardelijke filters
+if $fromhost-ip != '127.0.0.1' then {'{'}
+    if $msg contains "NAS:" then {'{'}
+        ?NASLogs;LogFormat
+        stop
+    {'}'}
+    if $fromhost-ip == '192.168.1.1' then {'{'}
+        ?RouterLogs;LogFormat
+        stop
+    {'}'}
+{'}'}</code></pre>
+    </div>
+    <div class="absolute inset-0 flex items-center justify-center" style="background: rgba(0,0,0,0.6); border-radius: 8px;">
+      <a href="/nl/wazuh" class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition-all hover:scale-105" style="background: linear-gradient(135deg, #0065ff 0%, #0052cc 100%); color: #ffffff;">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        Praat met ons team
+      </a>
+    </div>
+  </div>
+
+  <h2>Hoe integreer je de syslog-logs met Wazuh?</h2>
+
+  <p>
+    Voeg de nieuwe logbestanden toe aan de Wazuh-agent zodat hij ze bewaakt en doorstuurt naar de SIEM-server.
+  </p>
+
+  <div class="locked-code-block relative my-6">
+    <div style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;filter:blur(3px);user-select:none;pointer-events:none;">
+      <pre style="margin:0;"><code style="color: #e5e7eb;"># /var/ossec/etc/ossec.conf bewerken
+# Toevoegen binnen &lt;ossec_config&gt;:
+
+&lt;localfile&gt;
+  &lt;log_format&gt;syslog&lt;/log_format&gt;
+  &lt;location&gt;/var/log/remote/nas.log&lt;/location&gt;
+&lt;/localfile&gt;
+
+&lt;localfile&gt;
+  &lt;log_format&gt;syslog&lt;/log_format&gt;
+  &lt;location&gt;/var/log/remote/router.log&lt;/location&gt;
+&lt;/localfile&gt;
+
+# De agent herstarten
+systemctl restart wazuh-agent</code></pre>
+    </div>
+    <div class="absolute inset-0 flex items-center justify-center" style="background: rgba(0,0,0,0.6); border-radius: 8px;">
+      <a href="/nl/wazuh" class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition-all hover:scale-105" style="background: linear-gradient(135deg, #0065ff 0%, #0052cc 100%); color: #ffffff;">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        Praat met ons team
+      </a>
+    </div>
+  </div>
+
+  <h2>Hoe ziet de volledige logstroom eruit?</h2>
+
+  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <ol style="color: #000000; margin: 0;">
+      <li>Het apparaat (NAS, router, enz.) stuurt logs naar poort 514</li>
+      <li>rsyslog ontvangt en filtert ze volgens de geconfigureerde regels</li>
+      <li>De logs worden naar aparte bestanden geschreven</li>
+      <li>De Wazuh-agent bewaakt die bestanden</li>
+      <li>De logs worden ter analyse naar de Wazuh-server gestuurd</li>
+    </ol>
+  </div>
+
+  <h2>Welke apparaten zijn compatibel met deze methode?</h2>
+
+  <ul>
+    <li><strong>Routers</strong>: Cisco, MikroTik, Ubiquiti</li>
+    <li><strong>Switches</strong>: HP, Dell, Cisco</li>
+    <li><strong>Firewalls</strong>: pfSense, FortiGate, OPNsense</li>
+    <li><strong>NAS</strong>: Synology, QNAP, TrueNAS</li>
+    <li>Netwerk<strong>printers</strong> met syslog-ondersteuning</li>
+    <li><strong>IoT-apparaten</strong> en verouderde systemen</li>
+  </ul>
+
+  <h2>Veelgestelde vragen</h2>
+
+  <h3>Waarom kun je geen Wazuh-agent installeren op een router of switch?</h3>
+  <p>Netwerkapparaten, NAS-units en firewalls draaien op gesloten firmware waar u geen software van derden zoals de Wazuh-agent kunt installeren. In plaats daarvan ondersteunen ze het Syslog-protocol, dus sturen ze hun logs via het netwerk naar een collector die de Wazuh-agent vervolgens leest.</p>
+
+  <h3>Welke poort gebruikt Syslog om logs te ontvangen?</h3>
+  <p>Syslog gebruikt poort <strong>514</strong>, standaard via UDP en optioneel via TCP voor betrouwbaardere levering. In deze opstelling luistert rsyslog op poort 514 met zowel de <code>imudp</code>- als <code>imtcp</code>-module ingeschakeld, en de firewall mag dit alleen toestaan vanaf de IP's van geautoriseerde apparaten.</p>
+
+  <h3>Wat is de rol van rsyslog bij het monitoren van apparaten zonder agent?</h3>
+  <p>rsyslog fungeert als Syslog-collector op een Linux-server: het ontvangt logs op poort 514, past templates en IF-filters toe om ze per bron te scheiden, en schrijft ze in georganiseerde bestanden onder <code>/var/log/remote/</code>. De lokale Wazuh-agent bewaakt vervolgens die bestanden en stuurt de gebeurtenissen naar de SIEM-server.</p>
+
+  <h3>Hoe laat ik Wazuh de verzamelde syslog-bestanden lezen?</h3>
+  <p>Voeg een <code>localfile</code>-blok toe in <code>/var/ossec/etc/ossec.conf</code> voor elk extern logbestand (bijvoorbeeld <code>/var/log/remote/router.log</code>) met <code>log_format syslog</code>, en herstart daarna de agent met <code>systemctl restart wazuh-agent</code> zodat hij die gebeurtenissen begint door te sturen.</p>
+
+  <h3>Welke apparaten kunnen zonder agent worden gemonitord?</h3>
+  <p>Elk apparaat met syslog-ondersteuning: routers (Cisco, MikroTik, Ubiquiti), switches (HP, Dell, Cisco), firewalls (pfSense, FortiGate, OPNsense), NAS-units (Synology, QNAP, TrueNAS), netwerkprinters, en IoT- of verouderde systemen.</p>
+
+  <hr />
+
+  <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 my-8">
+    <h3 class="text-accent-800 mt-0">Ontvang de volledige configuratie</h3>
+    <p class="text-base-700 mb-4">
+      Ons team kan de volledige commando's leveren, configuratievoorbeelden voor elk apparaattype en een stapsgewijze begeleiding.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a style="color: black;" href="/nl/wazuh" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent-700 font-semibold rounded-lg border border-accent-300 hover:bg-accent-50 transition-colors">
+        Professionele implementatie
+      </a>
+    </div>
+  </div>
+
+  <p class="text-sm text-base-600">
+    <strong>Gerelateerde artikelen:</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/nl/blog/como-instalar-agente-wazuh-en-linux">Hoe installeer je de Wazuh-agent op Linux</a></li>
+    <li><a href="/nl/blog/configuracion-de-grupos-en-wazuh">Hoe configureer je agentgroepen in Wazuh</a></li>
+  </ul>
+
+</BlogLayout>
+
+<style>
+  .locked-code-block {
+    position: relative;
+  }
+</style>
