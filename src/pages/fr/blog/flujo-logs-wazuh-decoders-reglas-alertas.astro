@@ -1,0 +1,214 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="fr"
+  title="Flux des journaux dans Wazuh : décodeurs, règles et alertes"
+  description="Comprenez comment Wazuh traite les journaux : pré-décodeur, décodeur, règles et alertes. Configurez des notifications par e-mail, Discord ou Slack."
+  publishDate="2026-03-04"
+  author="AI Security"
+  readTime="12 min"
+  tags={["Wazuh", "Décodeurs", "Règles", "Alertes", "SIEM", "Journaux"]}
+  canonical="https://aisecurity.es/fr/blog/flujo-logs-wazuh-decoders-reglas-alertas"
+  faqSchema={[
+    {
+      question: "Quelles sont les phases par lesquelles passe un journal dans Wazuh ?",
+      answer: "Un journal passe par le pré-décodeur (extrait le timestamp, le hostname et le programme), le décodeur (extrait des champs spécifiques comme l'utilisateur, l'IP et le port avec des regex), les règles (évalue l'événement et attribue un niveau de gravité de 0 à 15), l'indexation (le stocke s'il dépasse le seuil) et la génération d'alertes (notifie par e-mail, Discord, Slack et d'autres canaux)."
+    },
+    {
+      question: "Quelle est la différence entre le pré-décodeur et le décodeur ?",
+      answer: "Le pré-décodeur normalise le journal et extrait les champs de base communs à presque toute entrée : timestamp, hostname et nom du programme. Le décodeur analyse ensuite le corps du message avec des expressions régulières pour extraire des variables spécifiques comme l'utilisateur, l'IP source, le port ou l'action."
+    },
+    {
+      question: "Que signifient les niveaux de gravité des règles Wazuh ?",
+      answer: "Wazuh attribue à chaque événement correspondant un niveau de 0 à 15. Les niveaux 0-3 sont informatifs et généralement non indexés, 4-7 sont des événements intéressants qui sont indexés, 8-11 sont des alertes importantes, et 12-15 sont des événements critiques nécessitant une action immédiate."
+    },
+    {
+      question: "Où sont stockés les décodeurs, les règles et les réglages d'alertes ?",
+      answer: "Les décodeurs se trouvent dans /var/ossec/etc/decoders/, les règles dans /var/ossec/etc/rules/, et les intégrations d'alertes se configurent dans le /var/ossec/etc/ossec.conf du manager à l'aide du bloc integration."
+    },
+    {
+      question: "Vers quels canaux Wazuh peut-il envoyer des alertes ?",
+      answer: "Wazuh peut notifier par e-mail (SMTP configuré dans ossec.conf), Discord et Slack via des intégrations webhook, TheHive pour créer des cas automatiquement, et PagerDuty pour l'escalade des incidents."
+    }
+  ]}>
+
+  <p>Lorsqu'un journal arrive à Wazuh, il passe par quatre phases : <strong>pré-décodeur</strong> (extrait la date et le programme), <strong>décodeur</strong> (extrait les champs avec des regex), <strong>règles</strong> (vérifie si l'événement est pertinent) et <strong>génération d'alertes</strong> (si la règle correspond, Wazuh notifie par e-mail, Discord ou Slack).</p>
+
+  <h2>Comment les journaux circulent-ils dans Wazuh, de l'entrée à l'alerte ?</h2>
+
+  <p>
+    Lorsqu'un journal entre dans Wazuh, il passe par plusieurs phases de traitement jusqu'à devenir une alerte visible dans le dashboard ou envoyée par e-mail/Discord/Slack. Comprendre ce flux est essentiel pour créer des règles personnalisées et configurer des alertes efficaces.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/fr/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Clé en main</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Besoin de Wazuh dans votre entreprise ?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Nous déployons Wazuh pour vous — ou ajoutons des configurations avancées sur mesure en prestation de conseil. Prêt pour la production et la conformité.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Consultation Wazuh →</span>
+    </a>
+  </aside>
+
+  <h2>À quoi ressemble le flux de traitement des journaux ?</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="background: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</span>
+        <span style="color: #e5e7eb;"><strong>Le journal entre</strong> → Wazuh reçoit le journal de l'agent ou de syslog</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="background: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</span>
+        <span style="color: #e5e7eb;"><strong>Pré-décodeur</strong> → Extrait le timestamp, le hostname, le programme</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="background: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</span>
+        <span style="color: #e5e7eb;"><strong>Décodeur</strong> → Extrait des variables spécifiques (utilisateur, IP, action)</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="background: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">4</span>
+        <span style="color: #e5e7eb;"><strong>Règles</strong> → Évalue si cela correspond à une règle et attribue un niveau</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="background: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">5</span>
+        <span style="color: #e5e7eb;"><strong>Indexation</strong> → Stocké dans la base de données s'il dépasse le seuil</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="background: #10b981; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">6</span>
+        <span style="color: #e5e7eb;"><strong>Alerte</strong> → Envoie une notification selon la configuration</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>Que fait le pré-décodeur (phase 1) ?</h2>
+
+  <p>
+    La première phase de traitement. Le pré-décodeur extrait les champs de base du journal :
+  </p>
+
+  <ul>
+    <li><strong>Timestamp</strong> : date et heure de l'événement</li>
+    <li><strong>Hostname</strong> : nom de la machine qui génère le journal</li>
+    <li><strong>Programme</strong> : application qui génère le journal (sshd, apache, etc.)</li>
+  </ul>
+
+  <p>
+    Il normalise le format afin que le décodeur puisse travailler avec un journal structuré.
+  </p>
+
+  <h2>Qu'extrait le décodeur (phase 2) ?</h2>
+
+  <p>
+    Il analyse le contenu du journal et extrait des variables spécifiques à l'aide d'expressions régulières. Par exemple, à partir d'un journal SSH :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">Feb 14 12:30:45 server sshd[1234]: Failed password for admin from 192.168.1.100 port 22 ssh2</code></pre>
+
+  <p>Le décodeur extrait :</p>
+
+  <ul>
+    <li><strong>Utilisateur</strong> : admin</li>
+    <li><strong>IP source</strong> : 192.168.1.100</li>
+    <li><strong>Port</strong> : 22</li>
+    <li><strong>Résultat</strong> : Failed (tentative échouée)</li>
+  </ul>
+
+  <h2>Comment les règles évaluent-elles l'événement (phase 3) ?</h2>
+
+  <p>
+    Les règles évaluent les champs extraits par le décodeur. Si le journal correspond à une règle, un événement est généré avec un <strong>niveau de gravité (0-15)</strong>.
+  </p>
+
+  <ul>
+    <li><strong>Niveau 0-3</strong> : informatif, généralement non indexé</li>
+    <li><strong>Niveau 4-7</strong> : événements intéressants, indexés</li>
+    <li><strong>Niveau 8-11</strong> : alertes importantes</li>
+    <li><strong>Niveau 12-15</strong> : critique, nécessite une action immédiate</li>
+  </ul>
+
+  <p>
+    Les règles peuvent hériter d'autres règles parentes avec <code>if_sid</code>, ce qui permet de construire des hiérarchies de détection.
+  </p>
+
+  <h2>Quand les événements sont-ils indexés (phase 4) ?</h2>
+
+  <p>
+    Les événements qui dépassent le seuil de niveau configuré sont indexés dans la base de données (Elasticsearch/OpenSearch) et apparaissent dans le dashboard Wazuh.
+  </p>
+
+  <h2>Comment les alertes sont-elles générées et envoyées (phase 5) ?</h2>
+
+  <p>
+    Selon la configuration, les événements peuvent déclencher des alertes via différents canaux :
+  </p>
+
+  <ul>
+    <li><strong>E-mail</strong> : SMTP configuré dans ossec.conf</li>
+    <li><strong>Discord</strong> : intégration webhook</li>
+    <li><strong>Slack</strong> : intégration webhook</li>
+    <li><strong>TheHive</strong> : créer des cas automatiquement</li>
+    <li><strong>PagerDuty</strong> : escalade des incidents</li>
+  </ul>
+
+  <p>
+    La configuration des alertes se fait dans l'<code>ossec.conf</code> du manager, à l'aide du bloc <code>&lt;integration&gt;</code>.
+  </p>
+
+  <h2>À quoi ressemble le flux complet en un coup d'œil ?</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Phase</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Fonction</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Emplacement</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">Pré-décodeur</td>
+        <td style="padding: 12px;">Extrait les champs de base</td>
+        <td style="padding: 12px;">/var/ossec/etc/decoders/</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">Décodeur</td>
+        <td style="padding: 12px;">Extrait des variables spécifiques</td>
+        <td style="padding: 12px;">/var/ossec/etc/decoders/</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">Règles</td>
+        <td style="padding: 12px;">Évalue et attribue un niveau</td>
+        <td style="padding: 12px;">/var/ossec/etc/rules/</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px;">Alertes</td>
+        <td style="padding: 12px;">Notifie via un canal</td>
+        <td style="padding: 12px;">/var/ossec/etc/ossec.conf</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Questions fréquentes</h2>
+
+  <h3>Quelles sont les phases par lesquelles passe un journal dans Wazuh ?</h3>
+  <p>Un journal passe par le <strong>pré-décodeur</strong> (extrait le timestamp, le hostname et le programme), le <strong>décodeur</strong> (extrait des champs spécifiques comme l'utilisateur, l'IP et le port avec des regex), les <strong>règles</strong> (évalue l'événement et attribue un niveau de gravité de 0 à 15), l'<strong>indexation</strong> (le stocke s'il dépasse le seuil) et la <strong>génération d'alertes</strong> (notifie par e-mail, Discord, Slack et d'autres canaux).</p>
+
+  <h3>Quelle est la différence entre le pré-décodeur et le décodeur ?</h3>
+  <p>Le pré-décodeur normalise le journal et extrait les champs de base communs à presque toute entrée : timestamp, hostname et nom du programme. Le décodeur analyse ensuite le corps du message avec des expressions régulières pour extraire des variables spécifiques comme l'utilisateur, l'IP source, le port ou l'action.</p>
+
+  <h3>Que signifient les niveaux de gravité des règles Wazuh ?</h3>
+  <p>Wazuh attribue à chaque événement correspondant un niveau de <strong>0 à 15</strong>. Les niveaux 0-3 sont informatifs et généralement non indexés, 4-7 sont des événements intéressants qui sont indexés, 8-11 sont des alertes importantes, et 12-15 sont des événements critiques nécessitant une action immédiate.</p>
+
+  <h3>Où sont stockés les décodeurs, les règles et les réglages d'alertes ?</h3>
+  <p>Les décodeurs se trouvent dans <code>/var/ossec/etc/decoders/</code>, les règles dans <code>/var/ossec/etc/rules/</code>, et les intégrations d'alertes se configurent dans le <code>/var/ossec/etc/ossec.conf</code> du manager à l'aide du bloc <code>&lt;integration&gt;</code>.</p>
+
+  <h3>Vers quels canaux Wazuh peut-il envoyer des alertes ?</h3>
+  <p>Wazuh peut notifier par e-mail (SMTP configuré dans ossec.conf), Discord et Slack via des intégrations webhook, TheHive pour créer des cas automatiquement, et PagerDuty pour l'escalade des incidents.</p>
+
+  <h2>Étapes suivantes</h2>
+
+  <p>
+    Notre équipe peut vous aider à créer des décodeurs et des règles personnalisés, et à mettre en place des intégrations avec Discord et Slack dans le cadre d'un déploiement professionnel de Wazuh. <a href="/fr/wazuh">Découvrez l'implémentation professionnelle</a>.
+  </p>
+
+</BlogLayout>

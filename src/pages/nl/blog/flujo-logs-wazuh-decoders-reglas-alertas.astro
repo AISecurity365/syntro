@@ -1,0 +1,214 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="nl"
+  title="Logstroom in Wazuh: decoders, regels en meldingen"
+  description="Begrijp hoe Wazuh logs verwerkt: pre-decoder, decoder, regels en meldingen. Configureer notificaties via e-mail, Discord of Slack."
+  publishDate="2026-03-04"
+  author="AI Security"
+  readTime="12 min"
+  tags={["Wazuh", "Decoders", "Regels", "Meldingen", "SIEM", "Logs"]}
+  canonical="https://aisecurity.es/nl/blog/flujo-logs-wazuh-decoders-reglas-alertas"
+  faqSchema={[
+    {
+      question: "Welke fasen doorloopt een log in Wazuh?",
+      answer: "Een log doorloopt de pre-decoder (haalt timestamp, hostname en programma eruit), de decoder (haalt specifieke velden zoals gebruiker, IP en poort eruit met regex), de regels (evalueert de gebeurtenis en kent een ernstniveau van 0 tot 15 toe), de indexering (slaat op als het de drempel overschrijdt) en het genereren van meldingen (notificeert via e-mail, Discord, Slack en andere kanalen)."
+    },
+    {
+      question: "Wat is het verschil tussen de pre-decoder en de decoder?",
+      answer: "De pre-decoder normaliseert het log en haalt basisvelden eruit die vrijwel elke regel gemeen heeft: timestamp, hostname en programmanaam. De decoder analyseert vervolgens de berichtinhoud met reguliere expressies om specifieke variabelen eruit te halen, zoals de gebruiker, het bron-IP, de poort of de actie."
+    },
+    {
+      question: "Wat betekenen de ernstniveaus van Wazuh-regels?",
+      answer: "Wazuh kent elke overeenkomende gebeurtenis een niveau van 0 tot 15 toe. Niveaus 0-3 zijn informatief en worden meestal niet geïndexeerd, 4-7 zijn interessante gebeurtenissen die worden geïndexeerd, 8-11 zijn belangrijke meldingen, en 12-15 zijn kritieke gebeurtenissen die onmiddellijke actie vereisen."
+    },
+    {
+      question: "Waar worden decoders, regels en meldingsinstellingen opgeslagen?",
+      answer: "Decoders staan in /var/ossec/etc/decoders/, regels in /var/ossec/etc/rules/, en meldingsintegraties worden geconfigureerd in de /var/ossec/etc/ossec.conf van de manager met het integration-blok."
+    },
+    {
+      question: "Naar welke kanalen kan Wazuh meldingen sturen?",
+      answer: "Wazuh kan notificeren via e-mail (SMTP geconfigureerd in ossec.conf), Discord en Slack via webhook-integraties, TheHive om automatisch cases aan te maken, en PagerDuty voor incident-escalatie."
+    }
+  ]}>
+
+  <p>Wanneer een log Wazuh bereikt, doorloopt het vier fasen: <strong>pre-decoder</strong> (haalt de datum en het programma eruit), <strong>decoder</strong> (haalt velden eruit met regex), <strong>regels</strong> (controleert of de gebeurtenis relevant is) en <strong>het genereren van meldingen</strong> (als de regel overeenkomt, notificeert Wazuh via e-mail, Discord of Slack).</p>
+
+  <h2>Hoe stromen logs door Wazuh, van binnenkomst tot melding?</h2>
+
+  <p>
+    Wanneer een log Wazuh binnenkomt, doorloopt het meerdere verwerkingsfasen totdat het een melding wordt die zichtbaar is in het dashboard of verstuurd via e-mail/Discord/Slack. Deze stroom begrijpen is essentieel om aangepaste regels te maken en effectieve meldingen te configureren.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/nl/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Kant-en-klaar</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Wazuh nodig in uw bedrijf?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Wij rollen Wazuh voor u uit — of voegen geavanceerde configuraties op maat toe als adviesdienst. Productieklaar en compliance-klaar.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Wazuh-advies →</span>
+    </a>
+  </aside>
+
+  <h2>Hoe ziet de logverwerkingsstroom eruit?</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="background: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</span>
+        <span style="color: #e5e7eb;"><strong>Het log komt binnen</strong> → Wazuh ontvangt het log van de agent of syslog</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="background: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</span>
+        <span style="color: #e5e7eb;"><strong>Pre-decoder</strong> → Haalt timestamp, hostname, programma eruit</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="background: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</span>
+        <span style="color: #e5e7eb;"><strong>Decoder</strong> → Haalt specifieke variabelen eruit (gebruiker, IP, actie)</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="background: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">4</span>
+        <span style="color: #e5e7eb;"><strong>Regels</strong> → Evalueert of het overeenkomt met een regel en kent een niveau toe</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="background: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">5</span>
+        <span style="color: #e5e7eb;"><strong>Indexering</strong> → Opgeslagen in de database als het de drempel overschrijdt</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="background: #10b981; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">6</span>
+        <span style="color: #e5e7eb;"><strong>Melding</strong> → Stuurt een notificatie volgens de configuratie</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>Wat doet de pre-decoder (fase 1)?</h2>
+
+  <p>
+    De eerste verwerkingsfase. De pre-decoder haalt de basisvelden uit het log:
+  </p>
+
+  <ul>
+    <li><strong>Timestamp</strong>: datum en tijd van de gebeurtenis</li>
+    <li><strong>Hostname</strong>: naam van de machine die het log genereert</li>
+    <li><strong>Programma</strong>: applicatie die het log genereert (sshd, apache, enz.)</li>
+  </ul>
+
+  <p>
+    Het normaliseert het formaat zodat de decoder met een gestructureerd log kan werken.
+  </p>
+
+  <h2>Wat haalt de decoder eruit (fase 2)?</h2>
+
+  <p>
+    Analyseert de loginhoud en haalt specifieke variabelen eruit met reguliere expressies. Bijvoorbeeld, uit een SSH-log:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">Feb 14 12:30:45 server sshd[1234]: Failed password for admin from 192.168.1.100 port 22 ssh2</code></pre>
+
+  <p>De decoder haalt eruit:</p>
+
+  <ul>
+    <li><strong>Gebruiker</strong>: admin</li>
+    <li><strong>Bron-IP</strong>: 192.168.1.100</li>
+    <li><strong>Poort</strong>: 22</li>
+    <li><strong>Resultaat</strong>: Failed (mislukte poging)</li>
+  </ul>
+
+  <h2>Hoe evalueren de regels de gebeurtenis (fase 3)?</h2>
+
+  <p>
+    De regels evalueren de door de decoder geëxtraheerde velden. Als het log overeenkomt met een regel, wordt een gebeurtenis gegenereerd met een <strong>ernstniveau (0-15)</strong>.
+  </p>
+
+  <ul>
+    <li><strong>Niveau 0-3</strong>: informatief, meestal niet geïndexeerd</li>
+    <li><strong>Niveau 4-7</strong>: interessante gebeurtenissen, geïndexeerd</li>
+    <li><strong>Niveau 8-11</strong>: belangrijke meldingen</li>
+    <li><strong>Niveau 12-15</strong>: kritiek, vereist onmiddellijke actie</li>
+  </ul>
+
+  <p>
+    Regels kunnen erven van andere bovenliggende regels met <code>if_sid</code>, waarmee u detectiehiërarchieën kunt opbouwen.
+  </p>
+
+  <h2>Wanneer worden gebeurtenissen geïndexeerd (fase 4)?</h2>
+
+  <p>
+    Gebeurtenissen die de geconfigureerde niveaudrempel overschrijden, worden geïndexeerd in de database (Elasticsearch/OpenSearch) en verschijnen in het Wazuh-dashboard.
+  </p>
+
+  <h2>Hoe worden meldingen gegenereerd en verstuurd (fase 5)?</h2>
+
+  <p>
+    Afhankelijk van de configuratie kunnen gebeurtenissen meldingen activeren via verschillende kanalen:
+  </p>
+
+  <ul>
+    <li><strong>E-mail</strong>: SMTP geconfigureerd in ossec.conf</li>
+    <li><strong>Discord</strong>: webhook-integratie</li>
+    <li><strong>Slack</strong>: webhook-integratie</li>
+    <li><strong>TheHive</strong>: automatisch cases aanmaken</li>
+    <li><strong>PagerDuty</strong>: incident-escalatie</li>
+  </ul>
+
+  <p>
+    De meldingsconfiguratie gebeurt in de <code>ossec.conf</code> van de manager, met het blok <code>&lt;integration&gt;</code>.
+  </p>
+
+  <h2>Hoe ziet de volledige stroom er in één oogopslag uit?</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Fase</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Functie</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Locatie</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">Pre-decoder</td>
+        <td style="padding: 12px;">Haalt basisvelden eruit</td>
+        <td style="padding: 12px;">/var/ossec/etc/decoders/</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">Decoder</td>
+        <td style="padding: 12px;">Haalt specifieke variabelen eruit</td>
+        <td style="padding: 12px;">/var/ossec/etc/decoders/</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">Regels</td>
+        <td style="padding: 12px;">Evalueert en kent een niveau toe</td>
+        <td style="padding: 12px;">/var/ossec/etc/rules/</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px;">Meldingen</td>
+        <td style="padding: 12px;">Notificeert via een kanaal</td>
+        <td style="padding: 12px;">/var/ossec/etc/ossec.conf</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Veelgestelde vragen</h2>
+
+  <h3>Welke fasen doorloopt een log in Wazuh?</h3>
+  <p>Een log doorloopt de <strong>pre-decoder</strong> (haalt timestamp, hostname en programma eruit), de <strong>decoder</strong> (haalt specifieke velden zoals gebruiker, IP en poort eruit met regex), de <strong>regels</strong> (evalueert de gebeurtenis en kent een ernstniveau van 0 tot 15 toe), de <strong>indexering</strong> (slaat op als het de drempel overschrijdt) en het <strong>genereren van meldingen</strong> (notificeert via e-mail, Discord, Slack en andere kanalen).</p>
+
+  <h3>Wat is het verschil tussen de pre-decoder en de decoder?</h3>
+  <p>De pre-decoder normaliseert het log en haalt basisvelden eruit die vrijwel elke regel gemeen heeft: timestamp, hostname en programmanaam. De decoder analyseert vervolgens de berichtinhoud met reguliere expressies om specifieke variabelen eruit te halen, zoals de gebruiker, het bron-IP, de poort of de actie.</p>
+
+  <h3>Wat betekenen de ernstniveaus van Wazuh-regels?</h3>
+  <p>Wazuh kent elke overeenkomende gebeurtenis een niveau van <strong>0 tot 15</strong> toe. Niveaus 0-3 zijn informatief en worden meestal niet geïndexeerd, 4-7 zijn interessante gebeurtenissen die worden geïndexeerd, 8-11 zijn belangrijke meldingen, en 12-15 zijn kritieke gebeurtenissen die onmiddellijke actie vereisen.</p>
+
+  <h3>Waar worden decoders, regels en meldingsinstellingen opgeslagen?</h3>
+  <p>Decoders staan in <code>/var/ossec/etc/decoders/</code>, regels in <code>/var/ossec/etc/rules/</code>, en meldingsintegraties worden geconfigureerd in de <code>/var/ossec/etc/ossec.conf</code> van de manager met het blok <code>&lt;integration&gt;</code>.</p>
+
+  <h3>Naar welke kanalen kan Wazuh meldingen sturen?</h3>
+  <p>Wazuh kan notificeren via e-mail (SMTP geconfigureerd in ossec.conf), Discord en Slack via webhook-integraties, TheHive om automatisch cases aan te maken, en PagerDuty voor incident-escalatie.</p>
+
+  <h2>Volgende stappen</h2>
+
+  <p>
+    Ons team kan u helpen aangepaste decoders en regels te maken, en integraties met Discord en Slack op te zetten als onderdeel van een professionele Wazuh-uitrol. <a href="/nl/wazuh">Ontdek de professionele implementatie</a>.
+  </p>
+
+</BlogLayout>
