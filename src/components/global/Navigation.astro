@@ -229,24 +229,32 @@ const locale = getLocaleFromPath(currentPath);
                   <p class="text-[10px] font-bold uppercase tracking-widest mb-4" style="color: #f87171;">Ciberseguridad</p>
                   <div class="space-y-0.5">
 
-                    <!-- Ciberseguridad para Empresas — destacada, primera -->
-                    <div class="rounded-lg" style={`padding: 0.5rem 0.75rem 0.65rem; ${currentPath === '/ciberseguridad' ? 'background: rgba(239,68,68,0.14);' : 'background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.24);'}`}>
-                      <a href="/ciberseguridad" @click="dropdownOpen = false" class="group block rounded-lg transition-all duration-150">
-                        <div class="flex items-center gap-2">
-                          <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Ciberseguridad para Empresas</p>
-                          <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none flex-shrink-0" style="background: rgba(239,68,68,0.3); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4);">PRINCIPAL</span>
-                        </div>
-                        <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Firewall, M365, endpoints, cumplimiento ENS</p>
-                      </a>
-                      <div class="flex flex-wrap gap-1.5 mt-2">
-                        <a href="/consultoria-ens" @click="dropdownOpen = false"
-                          class="text-[10px] font-semibold px-2 py-1 rounded-md transition-colors hover:bg-white/10"
-                          style="background: rgba(255,255,255,0.05); color: #fca5a5; border: 1px solid rgba(239,68,68,0.25);">Consultoría ENS →</a>
-                        <a href="/consultoria-iso27001" @click="dropdownOpen = false"
-                          class="text-[10px] font-semibold px-2 py-1 rounded-md transition-colors hover:bg-white/10"
-                          style="background: rgba(255,255,255,0.05); color: #fca5a5; border: 1px solid rgba(239,68,68,0.25);">Consultoría ISO 27001 →</a>
+                    <!-- Ciberseguridad para Empresas — destacada, primera, caja propia -->
+                    <a href="/ciberseguridad" @click="dropdownOpen = false"
+                      class="group block px-3 py-2.5 rounded-lg transition-all duration-150"
+                      style={currentPath === '/ciberseguridad' ? 'background: rgba(239,68,68,0.14);' : 'background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.24);'}>
+                      <div class="flex items-center gap-2">
+                        <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Ciberseguridad para Empresas</p>
+                        <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none flex-shrink-0" style="background: rgba(239,68,68,0.3); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4);">PRINCIPAL</span>
                       </div>
-                    </div>
+                      <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Firewall, M365, endpoints, protección integral</p>
+                    </a>
+
+                    <!-- Consultoría ENS — caja propia, separada -->
+                    <a href="/consultoria-ens" @click="dropdownOpen = false"
+                      class="group block px-3 py-2.5 rounded-lg transition-all duration-150 hover:bg-white/5"
+                      style={currentPath === '/consultoria-ens' ? 'background: rgba(239,68,68,0.12);' : ''}>
+                      <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Consultoría ENS</p>
+                      <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Esquema Nacional de Seguridad</p>
+                    </a>
+
+                    <!-- Consultoría ISO 27001 — caja propia, separada -->
+                    <a href="/consultoria-iso27001" @click="dropdownOpen = false"
+                      class="group block px-3 py-2.5 rounded-lg transition-all duration-150 hover:bg-white/5"
+                      style={currentPath === '/consultoria-iso27001' ? 'background: rgba(239,68,68,0.12);' : ''}>
+                      <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Consultoría ISO 27001</p>
+                      <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Certificación SGSI</p>
+                    </a>
 
                     <a href="/servicios/concienciacion" @click="dropdownOpen = false"
                       class="group block px-3 py-2.5 rounded-lg transition-all duration-150 hover:bg-white/5 mt-1"
