@@ -1,0 +1,283 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="nl"
+  title="Hoe configureer je agentgroepen in Wazuh"
+  description="Leer hoe u uw agents in groepen organiseert (Windows, Linux, databases) en gecentraliseerde ossec.conf-configuraties naar elke agent in de groep pusht."
+  publishDate="2026-02-26"
+  author="AI Security"
+  readTime="10 min"
+  tags={["Wazuh", "Groepen", "Configuratie", "SIEM", "Beheer", "Cybersecurity"]}
+  canonical="https://aisecurity.es/nl/blog/configuracion-de-grupos-en-wazuh"
+  faqSchema={[
+    {
+      question: "Waarvoor dienen groepen in Wazuh?",
+      answer: "Met groepen kunt u agents organiseren op type of functie (Windows, Linux, databases, webservers) en in één keer een gecentraliseerde configuratie op allemaal toepassen. In plaats van elke agent afzonderlijk te bewerken, definieert u de configuratie één keer op groepsniveau en ontvangt elke agent in de groep deze automatisch."
+    },
+    {
+      question: "Kan één agent tot meer dan één groep behoren?",
+      answer: "Ja. Een agent kan tegelijk tot meerdere groepen behoren. Een server kan bijvoorbeeld in de groep linux zitten en ook in webservers en production, waarbij hij de samengevoegde configuratie van allemaal erft."
+    },
+    {
+      question: "Waar worden groepsconfiguraties opgeslagen op de Wazuh-server?",
+      answer: "Groepsconfiguraties staan onder /var/ossec/etc/shared/, met één submap per groep (default, windows, linux, databases, enz.). Elke groepsmap bevat een agent.conf-bestand met de configuratie die naar zijn agents wordt gepusht."
+    },
+    {
+      question: "Moeten agents worden herstart na het wijzigen van de agent.conf van een groep?",
+      answer: "Nee. Nadat u de agent.conf van een groep op de server heeft gewijzigd, ontvangen de agents de nieuwe configuratie automatisch. De propagatie duurt meestal enkele minuten en er is geen handmatige herstart van de agents nodig."
+    },
+    {
+      question: "Hoe wijs ik een agent tijdens de installatie aan een groep toe?",
+      answer: "Gebruik de omgevingsvariabele WAZUH_AGENT_GROUP in het installatiecommando, bijvoorbeeld WAZUH_AGENT_GROUP=\"linux\". Om meerdere groepen tegelijk toe te wijzen, scheidt u ze met komma's, zoals WAZUH_AGENT_GROUP=\"linux,webservers,production\"."
+    }
+  ]}>
+
+  <p>Met groepen in Wazuh kunt u een gecentraliseerde <code>ossec.conf</code>-configuratie in één keer op meerdere agents toepassen. Maak een groep aan via het dashboard of met de CLI, wijs agents toe, en de server verdeelt de configuratie automatisch zonder elke machine afzonderlijk aan te raken.</p>
+
+  <h2>Wat zijn groepen in Wazuh en waarvoor dienen ze?</h2>
+
+  <p>
+    In deze gids laat ik u zien <strong>hoe u groepen in Wazuh configureert</strong> om uw agents te organiseren en gecentraliseerde configuraties toe te passen. Groepen zijn essentieel wanneer u veel agents van verschillende types beheert (Windows, Linux, databases, webservers, enz.).
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/nl/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Kant-en-klaar</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Wazuh nodig in uw bedrijf?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Wij rollen Wazuh voor u uit — of voegen geavanceerde configuraties op maat toe als adviesdienst. Productieklaar en compliance-klaar.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Wazuh-advies →</span>
+    </a>
+  </aside>
+
+  <h2>Waarvoor dienen Wazuh-groepen?</h2>
+
+  <p>
+    Met groepen in Wazuh kunt u <strong>agents organiseren</strong> op basis van hun type of functie en specifieke configuraties op elke groep toepassen. Dit is essentieel om omgevingen met veel agents efficiënt te beheren.
+  </p>
+
+  <p>
+    In plaats van elke agent afzonderlijk te configureren, definieert u de configuratie één keer op groepsniveau en ontvangt elke agent die tot die groep behoort deze automatisch.
+  </p>
+
+  <h2>Welke groepen kun je maken per systeemtype?</h2>
+
+  <p>
+    Enkele typische voorbeelden van groepen die u kunt maken:
+  </p>
+
+  <ul>
+    <li><strong>windows</strong> - Alle Windows-machines (desktops, servers)</li>
+    <li><strong>linux</strong> - Linux-servers en -machines</li>
+    <li><strong>databases</strong> - Databaseservers (MySQL, PostgreSQL, MongoDB)</li>
+    <li><strong>webservers</strong> - Webservers (Apache, Nginx, IIS)</li>
+    <li><strong>production</strong> - Productiesystemen (strengere monitoring)</li>
+    <li><strong>development</strong> - Ontwikkel-/testsystemen</li>
+    <li><strong>dmz</strong> - Servers in de gedemilitariseerde zone</li>
+  </ul>
+
+  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Tip:</strong> een agent kan tot <strong style="color:rgba(255,255,255,0.9);">meerdere groepen</strong> behoren. Een server kan bijvoorbeeld in de groep "linux" zitten en ook in "webservers" en "production".</p>
+  </div>
+
+  <h2>Hoe werkt gecentraliseerde configuratie per groep?</h2>
+
+  <p>
+    Het grootste voordeel van groepen is dat u een <code>ossec.conf</code>-configuratie kunt definiëren die automatisch wordt toegepast op <strong>elke agent in de groep</strong>. Wanneer u de groepsconfiguratie op de server wijzigt, ontvangen alle agents deze. In productieomgevingen met <strong>50 tot 100 agents</strong> verandert dit wat tientallen handmatige bewerkingen zouden zijn in één enkele wijziging, en de propagatie is meestal binnen enkele minuten na de volgende check-in van de agent voltooid.
+  </p>
+
+  <h3>Waar staan de groepsconfiguraties op de Wazuh-server?</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">/var/ossec/etc/shared/</code></pre>
+
+  <p>
+    In deze map vindt u een submap voor elke groep:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">/var/ossec/etc/shared/default/      # Standaardgroep (alle agents)
+/var/ossec/etc/shared/windows/      # groep windows
+/var/ossec/etc/shared/linux/        # groep linux
+/var/ossec/etc/shared/databases/    # groep databases
+/var/ossec/etc/shared/webservers/   # groep webservers</code></pre>
+
+  <h3>Wat is het bestand agent.conf?</h3>
+
+  <p>
+    Elke groep heeft een <code>agent.conf</code>-bestand met de configuratie die naar de agents in die groep wordt gepusht:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">/var/ossec/etc/shared/linux/agent.conf</code></pre>
+
+  <h2>Voorbeeld van agent.conf voor de Linux-groep</h2>
+
+  <p>
+    Typische configuratie voor Linux-servers die Apache-logs en kritieke mappen bewaakt:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;agent_config&gt;
+  &lt;!-- Apache-logs bewaken --&gt;
+  &lt;localfile&gt;
+    &lt;log_format&gt;apache&lt;/log_format&gt;
+    &lt;location&gt;/var/log/apache2/error.log&lt;/location&gt;
+  &lt;/localfile&gt;
+
+  &lt;localfile&gt;
+    &lt;log_format&gt;apache&lt;/log_format&gt;
+    &lt;location&gt;/var/log/apache2/access.log&lt;/location&gt;
+  &lt;/localfile&gt;
+
+  &lt;!-- Nginx-logs bewaken --&gt;
+  &lt;localfile&gt;
+    &lt;log_format&gt;syslog&lt;/log_format&gt;
+    &lt;location&gt;/var/log/nginx/error.log&lt;/location&gt;
+  &lt;/localfile&gt;
+
+  &lt;!-- File Integrity Monitoring --&gt;
+  &lt;syscheck&gt;
+    &lt;frequency&gt;300&lt;/frequency&gt;
+    &lt;directories check_all="yes"&gt;/etc&lt;/directories&gt;
+    &lt;directories check_all="yes"&gt;/var/www&lt;/directories&gt;
+    &lt;directories check_all="yes"&gt;/usr/bin&lt;/directories&gt;
+  &lt;/syscheck&gt;
+&lt;/agent_config&gt;</code></pre>
+
+  <h2>Voorbeeld van agent.conf voor de Databases-groep</h2>
+
+  <p>
+    Configuratie voor databaseservers (MySQL/MariaDB):
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;agent_config&gt;
+  &lt;!-- MySQL-logs --&gt;
+  &lt;localfile&gt;
+    &lt;log_format&gt;syslog&lt;/log_format&gt;
+    &lt;location&gt;/var/log/mysql/error.log&lt;/location&gt;
+  &lt;/localfile&gt;
+
+  &lt;!-- PostgreSQL-logs --&gt;
+  &lt;localfile&gt;
+    &lt;log_format&gt;syslog&lt;/log_format&gt;
+    &lt;location&gt;/var/log/postgresql/postgresql-*.log&lt;/location&gt;
+  &lt;/localfile&gt;
+
+  &lt;!-- DB-configuratiebestanden bewaken --&gt;
+  &lt;syscheck&gt;
+    &lt;frequency&gt;300&lt;/frequency&gt;
+    &lt;directories check_all="yes"&gt;/etc/mysql&lt;/directories&gt;
+    &lt;directories check_all="yes"&gt;/etc/postgresql&lt;/directories&gt;
+  &lt;/syscheck&gt;
+&lt;/agent_config&gt;</code></pre>
+
+  <h2>Hoe maak je groepen aan vanuit het Dashboard?</h2>
+
+  <p>
+    U kunt groepen aanmaken en beheren vanuit de webinterface van Wazuh:
+  </p>
+
+  <ol>
+    <li>Open het Wazuh Dashboard</li>
+    <li>Ga naar <strong>Management → Groups</strong></li>
+    <li>Klik op <strong>Add new group</strong></li>
+    <li>Voer de groepsnaam in (bijv.: "webservers")</li>
+    <li>Sla de groep op</li>
+  </ol>
+
+  <h2>Hoe wijs je agents aan groepen toe?</h2>
+
+  <p>
+    Agents kunnen op twee manieren aan groepen worden toegewezen:
+  </p>
+
+  <h3>1. Tijdens de installatie van de agent</h3>
+
+  <p>
+    Met behulp van de omgevingsvariabele <code>WAZUH_AGENT_GROUP</code>:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># Linux - toewijzen aan de groep "linux"
+WAZUH_MANAGER="192.168.1.100" WAZUH_AGENT_GROUP="linux" apt-get install wazuh-agent
+
+# Linux - toewijzen aan meerdere groepen
+WAZUH_MANAGER="192.168.1.100" WAZUH_AGENT_GROUP="linux,webservers,production" apt-get install wazuh-agent</code></pre>
+
+  <h3>2. Vanuit het Dashboard (reeds geïnstalleerde agents)</h3>
+
+  <ol>
+    <li>Ga naar <strong>Agents</strong></li>
+    <li>Selecteer de agent</li>
+    <li>Zoek op het informatietabblad naar <strong>Groups</strong></li>
+    <li>Wijs de gewenste groepen toe</li>
+  </ol>
+
+  <h2>Hoe controleer je de configuratie die een agent heeft ontvangen?</h2>
+
+  <p>
+    Om te controleren welke configuratie een Linux-agent van zijn groep heeft ontvangen, meldt u zich aan bij de agent en voert u uit:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># De gedeelde configuratie bekijken die van de server is ontvangen
+cat /var/ossec/etc/shared/agent.conf
+
+# Informatie over de toegewezen groep bekijken
+cat /var/ossec/etc/shared/ar.conf
+
+# Alle ontvangen gedeelde bestanden bekijken
+ls -la /var/ossec/etc/shared/</code></pre>
+
+  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Belangrijk:</strong> na het wijzigen van de <code style="color: #000000; background-color: rgba(0,0,0,0.1);">agent.conf</code> van een groep op de server ontvangen de agents de nieuwe configuratie automatisch (dit kan enkele minuten duren). Het is niet nodig om de agents handmatig te herstarten.</p>
+  </div>
+
+  <h2>Veelgestelde vragen</h2>
+
+  <h3>Waarvoor dienen groepen in Wazuh?</h3>
+  <p>Met groepen kunt u agents organiseren op type of functie (Windows, Linux, databases, webservers) en in één keer een gecentraliseerde configuratie op allemaal toepassen. In plaats van elke agent afzonderlijk te bewerken, definieert u de configuratie één keer op groepsniveau en ontvangt elke agent in de groep deze automatisch.</p>
+
+  <h3>Kan één agent tot meer dan één groep behoren?</h3>
+  <p>Ja. Een agent kan tegelijk tot meerdere groepen behoren. Een server kan bijvoorbeeld in de groep <strong>linux</strong> zitten en ook in <strong>webservers</strong> en <strong>production</strong>, waarbij hij de samengevoegde configuratie van allemaal erft.</p>
+
+  <h3>Waar worden groepsconfiguraties opgeslagen op de Wazuh-server?</h3>
+  <p>Groepsconfiguraties staan onder <code>/var/ossec/etc/shared/</code>, met één submap per groep (default, windows, linux, databases, enz.). Elke groepsmap bevat een <code>agent.conf</code>-bestand met de configuratie die naar zijn agents wordt gepusht.</p>
+
+  <h3>Moeten agents worden herstart na het wijzigen van de agent.conf van een groep?</h3>
+  <p>Nee. Nadat u de <code>agent.conf</code> van een groep op de server heeft gewijzigd, ontvangen de agents de nieuwe configuratie automatisch. De propagatie duurt meestal enkele minuten en er is geen handmatige herstart van de agents nodig.</p>
+
+  <h3>Hoe wijs ik een agent tijdens de installatie aan een groep toe?</h3>
+  <p>Gebruik de omgevingsvariabele <code>WAZUH_AGENT_GROUP</code> in het installatiecommando, bijvoorbeeld <code>WAZUH_AGENT_GROUP="linux"</code>. Om meerdere groepen tegelijk toe te wijzen, scheidt u ze met komma's, zoals <code>WAZUH_AGENT_GROUP="linux,webservers,production"</code>.</p>
+
+  <h2>Aanvullende bronnen</h2>
+
+  <ul>
+    <li><a href="https://documentation.wazuh.com/current/user-manual/agent/agent-management/grouping-agents.html" target="_blank" rel="noopener" style="color: #38b1ff;">Officiële documentatie: agents groeperen</a></li>
+    <li><a href="https://documentation.wazuh.com/current/user-manual/reference/centralized-configuration.html" target="_blank" rel="noopener" style="color: #38b1ff;">Gecentraliseerde configuratie</a></li>
+    <li><a href="/nl/blog/como-instalar-agente-wazuh-en-linux">De agent op Linux installeren</a></li>
+    <li><a href="/nl/blog/como-instalar-agente-wazuh-en-windows">De agent op Windows installeren</a></li>
+  </ul>
+
+  <hr />
+
+  <p class="text-sm text-base-600">
+    <strong>Gerelateerde artikelen:</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/nl/blog/como-instalar-wazuh-en-linux">Hoe installeer je Wazuh op Linux (Ubuntu 24.04)</a></li>
+    <li><a href="/nl/blog/como-instalar-agente-wazuh-en-linux">Hoe installeer je de Wazuh-agent op Linux</a></li>
+    <li><a href="/nl/blog/como-instalar-agente-wazuh-en-windows">Hoe installeer je de Wazuh-agent op Windows</a></li>
+    <li><a href="/nl/blog/que-es-wazuh-para-que-sirve">Wat is Wazuh en waarvoor dient het?</a></li>
+  </ul>
+  <hr />
+
+  <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 my-8">
+    <h3 class="text-accent-800 mt-0">Leer Wazuh in de praktijk</h3>
+    <p class="text-base-700 mb-4">
+      Leer groepen configureren, aangepaste regels maken, integreren met andere tools en veel meer.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a style="color: black;" href="/nl/wazuh" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent-700 font-semibold rounded-lg border border-accent-300 hover:bg-accent-50 transition-colors">
+        Professionele implementatie
+      </a>
+    </div>
+  </div>
+
+</BlogLayout>

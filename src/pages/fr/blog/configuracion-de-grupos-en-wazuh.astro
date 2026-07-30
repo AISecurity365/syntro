@@ -1,0 +1,283 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="fr"
+  title="Comment configurer des groupes d'agents dans Wazuh"
+  description="Apprenez à organiser vos agents en groupes (Windows, Linux, bases de données) et à pousser des configurations ossec.conf centralisées vers chaque agent du groupe."
+  publishDate="2026-02-26"
+  author="AI Security"
+  readTime="10 min"
+  tags={["Wazuh", "Groupes", "Configuration", "SIEM", "Gestion", "Cybersécurité"]}
+  canonical="https://aisecurity.es/fr/blog/configuracion-de-grupos-en-wazuh"
+  faqSchema={[
+    {
+      question: "À quoi servent les groupes dans Wazuh ?",
+      answer: "Les groupes permettent d'organiser les agents par type ou fonction (Windows, Linux, bases de données, serveurs web) et d'appliquer une configuration centralisée à tous en une fois. Au lieu de modifier chaque agent individuellement, vous définissez la configuration une seule fois au niveau du groupe et chaque agent du groupe la reçoit automatiquement."
+    },
+    {
+      question: "Un même agent peut-il appartenir à plusieurs groupes ?",
+      answer: "Oui. Un agent peut appartenir à plusieurs groupes en même temps. Par exemple, un serveur peut être dans le groupe linux et aussi dans webservers et production, en héritant de la configuration fusionnée de tous."
+    },
+    {
+      question: "Où sont stockées les configurations de groupe sur le serveur Wazuh ?",
+      answer: "Les configurations de groupe se trouvent dans /var/ossec/etc/shared/, avec un sous-dossier par groupe (default, windows, linux, databases, etc.). Chaque dossier de groupe contient un fichier agent.conf avec la configuration poussée vers ses agents."
+    },
+    {
+      question: "Faut-il redémarrer les agents après avoir modifié l'agent.conf d'un groupe ?",
+      answer: "Non. Après avoir modifié l'agent.conf d'un groupe sur le serveur, les agents reçoivent la nouvelle configuration automatiquement. La propagation prend généralement quelques minutes et aucun redémarrage manuel des agents n'est nécessaire."
+    },
+    {
+      question: "Comment assigner un agent à un groupe lors de l'installation ?",
+      answer: "Utilisez la variable d'environnement WAZUH_AGENT_GROUP dans la commande d'installation, par exemple WAZUH_AGENT_GROUP=\"linux\". Pour assigner plusieurs groupes à la fois, séparez-les par des virgules, comme WAZUH_AGENT_GROUP=\"linux,webservers,production\"."
+    }
+  ]}>
+
+  <p>Les groupes dans Wazuh permettent d'appliquer une configuration <code>ossec.conf</code> centralisée à plusieurs agents en une fois. Créez un groupe depuis le dashboard ou avec la CLI, assignez des agents, et le serveur distribue automatiquement la configuration sans toucher à chaque machine individuellement.</p>
+
+  <h2>Qu'est-ce que les groupes dans Wazuh et à quoi servent-ils ?</h2>
+
+  <p>
+    Dans ce guide, je vais vous montrer <strong>comment configurer des groupes dans Wazuh</strong> pour organiser vos agents et appliquer des configurations centralisées. Les groupes sont essentiels lorsque vous gérez de nombreux agents de types différents (Windows, Linux, bases de données, serveurs web, etc.).
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/fr/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Clé en main</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Besoin de Wazuh dans votre entreprise ?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Nous déployons Wazuh pour vous — ou ajoutons des configurations avancées sur mesure en prestation de conseil. Prêt pour la production et la conformité.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Consultation Wazuh →</span>
+    </a>
+  </aside>
+
+  <h2>À quoi servent les groupes Wazuh ?</h2>
+
+  <p>
+    Les groupes dans Wazuh permettent d'<strong>organiser les agents</strong> selon leur type ou leur fonction et d'appliquer des configurations spécifiques à chaque groupe. C'est essentiel pour gérer efficacement des environnements comptant de nombreux agents.
+  </p>
+
+  <p>
+    Au lieu de configurer chaque agent individuellement, vous définissez la configuration une seule fois au niveau du groupe et chaque agent appartenant à ce groupe la reçoit automatiquement.
+  </p>
+
+  <h2>Quels groupes pouvez-vous créer par type de système ?</h2>
+
+  <p>
+    Quelques exemples typiques de groupes que vous pouvez créer :
+  </p>
+
+  <ul>
+    <li><strong>windows</strong> - Toutes les machines Windows (postes, serveurs)</li>
+    <li><strong>linux</strong> - Serveurs et machines Linux</li>
+    <li><strong>databases</strong> - Serveurs de bases de données (MySQL, PostgreSQL, MongoDB)</li>
+    <li><strong>webservers</strong> - Serveurs web (Apache, Nginx, IIS)</li>
+    <li><strong>production</strong> - Systèmes de production (surveillance plus stricte)</li>
+    <li><strong>development</strong> - Systèmes de développement/test</li>
+    <li><strong>dmz</strong> - Serveurs dans la zone démilitarisée</li>
+  </ul>
+
+  <div style="background:rgba(16,185,129,0.12);border-left:4px solid #10b981;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Astuce :</strong> un agent peut appartenir à <strong style="color:rgba(255,255,255,0.9);">plusieurs groupes</strong>. Par exemple, un serveur peut être dans le groupe « linux » et aussi dans « webservers » et « production ».</p>
+  </div>
+
+  <h2>Comment fonctionne la configuration centralisée par groupe ?</h2>
+
+  <p>
+    Le principal avantage des groupes est que vous pouvez définir une configuration <code>ossec.conf</code> qui est automatiquement appliquée à <strong>chaque agent du groupe</strong>. Lorsque vous modifiez la configuration du groupe sur le serveur, tous les agents la reçoivent. Dans les environnements de production comptant <strong>50 à 100 agents</strong>, cela transforme ce qui serait des dizaines de modifications manuelles en un seul changement, et la propagation se termine généralement en quelques minutes lors du prochain check-in de l'agent.
+  </p>
+
+  <h3>Où se trouvent les configurations de groupe sur le serveur Wazuh ?</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">/var/ossec/etc/shared/</code></pre>
+
+  <p>
+    À l'intérieur de ce dossier, vous trouverez un sous-dossier pour chaque groupe :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">/var/ossec/etc/shared/default/      # Groupe par défaut (tous les agents)
+/var/ossec/etc/shared/windows/      # groupe windows
+/var/ossec/etc/shared/linux/        # groupe linux
+/var/ossec/etc/shared/databases/    # groupe databases
+/var/ossec/etc/shared/webservers/   # groupe webservers</code></pre>
+
+  <h3>Qu'est-ce que le fichier agent.conf ?</h3>
+
+  <p>
+    Chaque groupe possède un fichier <code>agent.conf</code> contenant la configuration qui sera poussée vers les agents de ce groupe :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">/var/ossec/etc/shared/linux/agent.conf</code></pre>
+
+  <h2>Exemple d'agent.conf pour le groupe Linux</h2>
+
+  <p>
+    Configuration typique pour des serveurs Linux qui surveille les journaux Apache et les répertoires critiques :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;agent_config&gt;
+  &lt;!-- Surveiller les journaux Apache --&gt;
+  &lt;localfile&gt;
+    &lt;log_format&gt;apache&lt;/log_format&gt;
+    &lt;location&gt;/var/log/apache2/error.log&lt;/location&gt;
+  &lt;/localfile&gt;
+
+  &lt;localfile&gt;
+    &lt;log_format&gt;apache&lt;/log_format&gt;
+    &lt;location&gt;/var/log/apache2/access.log&lt;/location&gt;
+  &lt;/localfile&gt;
+
+  &lt;!-- Surveiller les journaux Nginx --&gt;
+  &lt;localfile&gt;
+    &lt;log_format&gt;syslog&lt;/log_format&gt;
+    &lt;location&gt;/var/log/nginx/error.log&lt;/location&gt;
+  &lt;/localfile&gt;
+
+  &lt;!-- Surveillance de l'intégrité des fichiers --&gt;
+  &lt;syscheck&gt;
+    &lt;frequency&gt;300&lt;/frequency&gt;
+    &lt;directories check_all="yes"&gt;/etc&lt;/directories&gt;
+    &lt;directories check_all="yes"&gt;/var/www&lt;/directories&gt;
+    &lt;directories check_all="yes"&gt;/usr/bin&lt;/directories&gt;
+  &lt;/syscheck&gt;
+&lt;/agent_config&gt;</code></pre>
+
+  <h2>Exemple d'agent.conf pour le groupe Databases</h2>
+
+  <p>
+    Configuration pour des serveurs de bases de données (MySQL/MariaDB) :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;agent_config&gt;
+  &lt;!-- Journaux MySQL --&gt;
+  &lt;localfile&gt;
+    &lt;log_format&gt;syslog&lt;/log_format&gt;
+    &lt;location&gt;/var/log/mysql/error.log&lt;/location&gt;
+  &lt;/localfile&gt;
+
+  &lt;!-- Journaux PostgreSQL --&gt;
+  &lt;localfile&gt;
+    &lt;log_format&gt;syslog&lt;/log_format&gt;
+    &lt;location&gt;/var/log/postgresql/postgresql-*.log&lt;/location&gt;
+  &lt;/localfile&gt;
+
+  &lt;!-- Surveiller les fichiers de configuration des BD --&gt;
+  &lt;syscheck&gt;
+    &lt;frequency&gt;300&lt;/frequency&gt;
+    &lt;directories check_all="yes"&gt;/etc/mysql&lt;/directories&gt;
+    &lt;directories check_all="yes"&gt;/etc/postgresql&lt;/directories&gt;
+  &lt;/syscheck&gt;
+&lt;/agent_config&gt;</code></pre>
+
+  <h2>Comment créer des groupes depuis le Dashboard ?</h2>
+
+  <p>
+    Vous pouvez créer et gérer les groupes depuis l'interface web de Wazuh :
+  </p>
+
+  <ol>
+    <li>Ouvrez le Wazuh Dashboard</li>
+    <li>Allez dans <strong>Management → Groups</strong></li>
+    <li>Cliquez sur <strong>Add new group</strong></li>
+    <li>Saisissez le nom du groupe (ex. : « webservers »)</li>
+    <li>Enregistrez le groupe</li>
+  </ol>
+
+  <h2>Comment assigner des agents à des groupes ?</h2>
+
+  <p>
+    Les agents peuvent être assignés à des groupes de deux façons :
+  </p>
+
+  <h3>1. Lors de l'installation de l'agent</h3>
+
+  <p>
+    En utilisant la variable d'environnement <code>WAZUH_AGENT_GROUP</code> :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># Linux - assigner au groupe "linux"
+WAZUH_MANAGER="192.168.1.100" WAZUH_AGENT_GROUP="linux" apt-get install wazuh-agent
+
+# Linux - assigner à plusieurs groupes
+WAZUH_MANAGER="192.168.1.100" WAZUH_AGENT_GROUP="linux,webservers,production" apt-get install wazuh-agent</code></pre>
+
+  <h3>2. Depuis le Dashboard (agents déjà installés)</h3>
+
+  <ol>
+    <li>Allez dans <strong>Agents</strong></li>
+    <li>Sélectionnez l'agent</li>
+    <li>Dans l'onglet d'information, trouvez <strong>Groups</strong></li>
+    <li>Assignez les groupes souhaités</li>
+  </ol>
+
+  <h2>Comment vérifier la configuration reçue par un agent ?</h2>
+
+  <p>
+    Pour vérifier quelle configuration un agent Linux a reçue de son groupe, connectez-vous à l'agent et exécutez :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;"># Voir la configuration partagée reçue du serveur
+cat /var/ossec/etc/shared/agent.conf
+
+# Voir les informations sur le groupe assigné
+cat /var/ossec/etc/shared/ar.conf
+
+# Voir tous les fichiers partagés reçus
+ls -la /var/ossec/etc/shared/</code></pre>
+
+  <div style="background:rgba(245,158,11,0.12);border-left:4px solid #f59e0b;padding:1rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.9);"><strong style="color:rgba(255,255,255,0.9);">Important :</strong> après avoir modifié l'<code style="color: #000000; background-color: rgba(0,0,0,0.1);">agent.conf</code> d'un groupe sur le serveur, les agents reçoivent la nouvelle configuration automatiquement (cela peut prendre quelques minutes). Il n'est pas nécessaire de redémarrer les agents manuellement.</p>
+  </div>
+
+  <h2>Questions fréquentes</h2>
+
+  <h3>À quoi servent les groupes dans Wazuh ?</h3>
+  <p>Les groupes permettent d'organiser les agents par type ou fonction (Windows, Linux, bases de données, serveurs web) et d'appliquer une configuration centralisée à tous en une fois. Au lieu de modifier chaque agent individuellement, vous définissez la configuration une seule fois au niveau du groupe et chaque agent du groupe la reçoit automatiquement.</p>
+
+  <h3>Un même agent peut-il appartenir à plusieurs groupes ?</h3>
+  <p>Oui. Un agent peut appartenir à plusieurs groupes en même temps. Par exemple, un serveur peut être dans le groupe <strong>linux</strong> et aussi dans <strong>webservers</strong> et <strong>production</strong>, en héritant de la configuration fusionnée de tous.</p>
+
+  <h3>Où sont stockées les configurations de groupe sur le serveur Wazuh ?</h3>
+  <p>Les configurations de groupe se trouvent dans <code>/var/ossec/etc/shared/</code>, avec un sous-dossier par groupe (default, windows, linux, databases, etc.). Chaque dossier de groupe contient un fichier <code>agent.conf</code> avec la configuration poussée vers ses agents.</p>
+
+  <h3>Faut-il redémarrer les agents après avoir modifié l'agent.conf d'un groupe ?</h3>
+  <p>Non. Après avoir modifié l'<code>agent.conf</code> d'un groupe sur le serveur, les agents reçoivent la nouvelle configuration automatiquement. La propagation prend généralement quelques minutes et aucun redémarrage manuel des agents n'est nécessaire.</p>
+
+  <h3>Comment assigner un agent à un groupe lors de l'installation ?</h3>
+  <p>Utilisez la variable d'environnement <code>WAZUH_AGENT_GROUP</code> dans la commande d'installation, par exemple <code>WAZUH_AGENT_GROUP="linux"</code>. Pour assigner plusieurs groupes à la fois, séparez-les par des virgules, comme <code>WAZUH_AGENT_GROUP="linux,webservers,production"</code>.</p>
+
+  <h2>Ressources supplémentaires</h2>
+
+  <ul>
+    <li><a href="https://documentation.wazuh.com/current/user-manual/agent/agent-management/grouping-agents.html" target="_blank" rel="noopener" style="color: #38b1ff;">Documentation officielle : regrouper les agents</a></li>
+    <li><a href="https://documentation.wazuh.com/current/user-manual/reference/centralized-configuration.html" target="_blank" rel="noopener" style="color: #38b1ff;">Configuration centralisée</a></li>
+    <li><a href="/fr/blog/como-instalar-agente-wazuh-en-linux">Installer l'agent sur Linux</a></li>
+    <li><a href="/fr/blog/como-instalar-agente-wazuh-en-windows">Installer l'agent sur Windows</a></li>
+  </ul>
+
+  <hr />
+
+  <p class="text-sm text-base-600">
+    <strong>Articles liés :</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/fr/blog/como-instalar-wazuh-en-linux">Comment installer Wazuh sur Linux (Ubuntu 24.04)</a></li>
+    <li><a href="/fr/blog/como-instalar-agente-wazuh-en-linux">Comment installer l'agent Wazuh sur Linux</a></li>
+    <li><a href="/fr/blog/como-instalar-agente-wazuh-en-windows">Comment installer l'agent Wazuh sur Windows</a></li>
+    <li><a href="/fr/blog/que-es-wazuh-para-que-sirve">Qu'est-ce que Wazuh et à quoi ça sert ?</a></li>
+  </ul>
+  <hr />
+
+  <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 my-8">
+    <h3 class="text-accent-800 mt-0">Apprenez Wazuh en pratique</h3>
+    <p class="text-base-700 mb-4">
+      Apprenez à configurer des groupes, créer des règles personnalisées, intégrer d'autres outils et bien plus encore.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a style="color: black;" href="/fr/wazuh" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent-700 font-semibold rounded-lg border border-accent-300 hover:bg-accent-50 transition-colors">
+        Implémentation professionnelle
+      </a>
+    </div>
+  </div>
+
+</BlogLayout>

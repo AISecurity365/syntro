@@ -13,6 +13,7 @@
 
 | Estado | Idea / título de trabajo | Pilar | Plataformas objetivo | Notas / ángulo |
 |--------|--------------------------|-------|----------------------|----------------|
+| ✅ | Wazuh vs Splunk: ¿cuál cumple mejor el ENS? | **SEO puro — fuera del sistema de pilares** | Blog únicamente (seo-specialist, no `/contenido`) | No hay componente IA real; forzarlo en Pilar 2 sería postizo. Hueco real: ni Splunk ni QRadar traen mapeo ENS de fábrica — ese trabajo de integración es justo el diferenciador de AI Security. Splunk primero (más volumen/reconocimiento de marca); QRadar como 2ª pieza (ángulo sector público — Ministerio de Defensa ya usa Wazuh, venta QRadar a Palo Alto 2024). Evitar ángulo "Wazuh gana en todo": SIXE (competidor ES) ya publicó Wazuh vs Splunk/QRadar en inglés con sesgo comercial detectable — no copiar ese enfoque. Siguiente paso: delegar en `seo-specialist` keyword research ES ("wazuh vs splunk", "wazuh splunk ens") antes de escribir. Reutilización suelta posible en X/LinkedIn (dato ENS o tabla de coste en euros), no pack completo. |
 | 💡 | _(ejemplo)_ Las 5 automatizaciones de IA que de verdad ahorran horas en una PyME | P1 | Blog, Medium, X, YT | Con números reales; desmontar el hype |
 
 <!-- Añadir filas arriba. Mantener el ejemplo como plantilla o borrarlo cuando haya ideas reales. -->
