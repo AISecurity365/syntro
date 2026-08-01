@@ -312,6 +312,171 @@
           "discoveryTotal": 12
         }
       ]
+    },
+    {
+      "date": "2026-08-01T09:10:15.400Z",
+      "results": [
+        {
+          "provider": "deepseek",
+          "id": "u-es-1",
+          "type": "unbranded",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-es-2",
+          "type": "unbranded",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-es-3",
+          "type": "unbranded",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-es-4",
+          "type": "unbranded",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-es-5",
+          "type": "unbranded",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-es-6",
+          "type": "unbranded",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-en-1",
+          "type": "unbranded",
+          "lang": "en",
+          "mentioned": false,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-en-2",
+          "type": "unbranded",
+          "lang": "en",
+          "mentioned": false,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "u-en-3",
+          "type": "unbranded",
+          "lang": "en",
+          "mentioned": false,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "b-es-1",
+          "type": "branded",
+          "lang": "es",
+          "mentioned": true,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": "AI Security (aisecurity.es) es una empresa española de ciberseguridad que ofrece solucione"
+        },
+        {
+          "provider": "deepseek",
+          "id": "b-es-2",
+          "type": "branded",
+          "lang": "es",
+          "mentioned": true,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": "No se puede afirmar de forma tajante que **“AI Security”** sea una buena o mala opción para implantar **Wazuh gestionado** en una pyme"
+        },
+        {
+          "provider": "deepseek",
+          "id": "b-en-1",
+          "type": "branded",
+          "lang": "en",
+          "mentioned": true,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": "AI Security (aisecurity.es) offers professional services around **Wazuh deployment and man"
+        },
+        {
+          "provider": "deepseek",
+          "id": "c-es-1",
+          "type": "comparative",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "c-es-2",
+          "type": "comparative",
+          "lang": "es",
+          "mentioned": false,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": null
+        },
+        {
+          "provider": "deepseek",
+          "id": "c-en-1",
+          "type": "comparative",
+          "lang": "en",
+          "mentioned": false,
+          "recommended": false,
+          "disclaimed": false,
+          "snippet": null
+        }
+      ],
+      "summary": [
+        {
+          "provider": "deepseek",
+          "total": 15,
+          "mentioned": 3,
+          "recommended": 0,
+          "discovery": 0,
+          "discoveryTotal": 12
+        }
+      ]
     }
   ]
 }
