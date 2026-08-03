@@ -13,7 +13,6 @@ const canonical = "https://aisecurity.es/calculadora-it";
     <div class="calc-dotgrid absolute inset-0 pointer-events-none"></div>
     <div class="absolute pointer-events-none" style="top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(139,92,246,0.1),transparent 65%);border-radius:50%;"></div>
     <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
-      <p style="font-size:0.72rem;letter-spacing:0.18em;color:#818cf8;margin-bottom:1.25rem;font-family:monospace;text-transform:uppercase;">Calculadora · Alicante / Comunidad Valenciana · Gratuita</p>
       <h1 class="font-bold mb-4 leading-tight" style="font-size:clamp(1.9rem,3.2vw,3.2rem);letter-spacing:-0.02em;color:#f0f9ff;">
         ¿Estás pagando un precio justo<br/>por tu IT y ciberseguridad?
       </h1>
@@ -88,11 +87,8 @@ const canonical = "https://aisecurity.es/calculadora-it";
               </div>
 
               <div class="calc-field">
-                <label class="calc-label">Facturación anual <span style="font-size:0.7rem;color:#475569;font-weight:normal;">(opcional)</span></label>
-                <div class="flex items-center gap-4">
-                  <input type="range" id="f-revenue" min="0" max="5000000" step="50000" value="0" class="calc-range flex-1">
-                  <span id="f-revenue-val" class="calc-range-val">No indicar</span>
-                </div>
+                <label class="calc-label">Facturación anual (€) <span style="font-size:0.7rem;color:#475569;font-weight:normal;">(opcional)</span></label>
+                <input type="number" id="f-revenue" min="0" step="1000" placeholder="Ej: 500000" class="calc-input">
                 <p style="font-size:0.71rem;color:#475569;margin-top:0.4rem;line-height:1.5;">Si lo indicas, calculamos si tu inversión IT es coherente con tu tamaño. Referencia: 5–10% de la facturación.</p>
               </div>
             </div>
@@ -580,12 +576,6 @@ const canonical = "https://aisecurity.es/calculadora-it";
     }
     bindRange('f-employees', 'f-employees-val', v => v + ' personas');
     bindRange('f-devices',   'f-devices-val',   v => v + ' equipos');
-    bindRange('f-revenue',   'f-revenue-val',   v => {
-      const n = parseInt(v);
-      if (n === 0) return 'No indicar';
-      if (n >= 1000000) return (n/1000000).toFixed(1) + ' M€';
-      return Math.round(n/1000) + 'k €';
-    });
     bindRange('f-it-monthly','f-it-monthly-val', v => v + ' €/mes');
     bindRange('f-it-hours',  'f-it-hours-val',   v => v + ' h/mes');
     bindRange('f-it-rate',   'f-it-rate-val',    v => v + ' €/h');
@@ -935,11 +925,11 @@ const canonical = "https://aisecurity.es/calculadora-it";
             const benchHigh = Math.round(revenue * 0.10 / 12);
             const totalNow = Math.round(totalCurrent);
             const status = totalNow === 0 ? '' : totalNow < benchLow ? ' — <span style="color:#fcd34d;">por debajo del mínimo recomendado</span>' : totalNow > benchHigh ? ' — <span style="color:#fcd34d;">por encima del rango</span>' : ' — <span style="color:#86efac;">dentro del rango</span>';
-            return \`<div style="background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.12);border-radius:8px;padding:0.9rem 1.1rem;margin-bottom:1rem;">
-              <p style="font-size:0.78rem;color:#94a3b8;line-height:1.6;margin:0;">
-                📊 <strong style="color:#a5b4fc;">Referencia por facturación:</strong> con \${revLabel} anuales, la inversión IT recomendada es <strong style="color:#e2e8f0;">\${benchLow}–\${benchHigh} €/mes</strong> (5–10%). Tu gasto declarado: <strong style="color:#e2e8f0;">\${totalNow > 0 ? totalNow + ' €/mes' : 'sin datos'}</strong>\${status}.
-              </p>
-            </div>\`;
+            return '<div style="background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.12);border-radius:8px;padding:0.9rem 1.1rem;margin-bottom:1rem;">'
+              + '<p style="font-size:0.78rem;color:#94a3b8;line-height:1.6;margin:0;">'
+              + '📊 <strong style="color:#a5b4fc;">Referencia por facturación:</strong> con ' + revLabel + ' anuales, la inversión IT recomendada es <strong style="color:#e2e8f0;">' + benchLow + '–' + benchHigh + ' €/mes</strong> (5–10%). Tu gasto declarado: <strong style="color:#e2e8f0;">' + (totalNow > 0 ? totalNow + ' €/mes' : 'sin datos') + '</strong>' + status + '.'
+              + '</p>'
+              + '</div>';
           })() : ''}
 
           <!-- Disclaimer -->
