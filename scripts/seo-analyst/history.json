@@ -101,5 +101,54 @@
     "ga4": {
       "sessions": 219
     }
+  },
+  {
+    "fecha": "2026-07-31",
+    "conclusion": "La visibilidad crece (6967 impresiones, +13%) y GA4 sube a 317 sesiones, pero GSC cae a 69 clics con peor posición (10.8 vs 8.5), señal de que no se capitaliza el interés en Wazuh. Sigue sin aplicarse la optimización del blog estrella ni la sustitución del popup, así que la palanca principal sigue siendo convertir el tráfico informativo de Wazuh en CTAs hacia /wazuh y /curso-wazuh.",
+    "comentarios": [
+      "Aplica ya el title propuesto en /blog/que-es-wazuh-para-que-sirve ('Wazuh para Empresas: SIEM Open Source que Cumple ENS [Guía 2026]') y añade un CTA visible a /wazuh al inicio: 1989 impresiones, 11 clics, CTR 0.6%.",
+      "El popup ✕ sigue robando conversión con 16 clics de cierre en blogs Wazuh; sustitúyelo por un banner fijo a /wazuh o /curso-wazuh sin opción de cierre o con frecuencia limitada.",
+      "La query 'wazuh' (1374 impresiones, 2 clics, pos 6.4) es la mayor oportunidad: optimiza el snippet de /wazuh para esa intención comercial — un CTR del 1% supondría ~14 clics/semana.",
+      "Refuerza /curso-wazuh con enlaces contextuales desde todos los blogs de instalación y desde el menú: impresiones 68 y solo 2 clics, aunque su CTR potencial es alto."
+    ],
+    "campanas": [
+      {
+        "nombre": "Wazuh",
+        "valoracion": "empeora – 0 clics en S4 y caída de impresiones; el producto prioritario no está captando la demanda existente."
+      },
+      {
+        "nombre": "Curso Wazuh",
+        "valoracion": "estable – impresiones suben (68) pero clics bajan (2); necesita visibilidad desde blogs."
+      },
+      {
+        "nombre": "Consultoría IA",
+        "valoracion": "estable – sin clics ni impacto en el objetivo Wazuh/cursos."
+      },
+      {
+        "nombre": "Ciberseguridad",
+        "valoracion": "estable – solo 6 impresiones, irrelevante para el objetivo."
+      },
+      {
+        "nombre": "Consultoría ENS",
+        "valoracion": "mejora – página nueva empieza a generar impresiones (78) y primer clic; monitorizar."
+      },
+      {
+        "nombre": "Consultoría ISO 27001",
+        "valoracion": "estable – 51 impresiones sin clics; todavía sin tracción."
+      },
+      {
+        "nombre": "Internacional (EN/FR/NL)",
+        "valoracion": "mejora – 25 clics y 2130 impresiones, pero necesita CTAs hacia /wazuh y cursos para monetizar."
+      }
+    ],
+    "gsc": {
+      "clicks": 69,
+      "impr": 6967,
+      "ctr": 0.99,
+      "pos": 10.8
+    },
+    "ga4": {
+      "sessions": 317
+    }
   }
 ]
