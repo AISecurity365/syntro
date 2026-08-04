@@ -1,0 +1,219 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="fr"
+  title="Surveiller les certificats numériques avec Wazuh FIM (ISO 27001 et ENS)"
+  description="Lab pratique : configurez le FIM pour détecter les changements des certificats .pfx, .p12 et .cer. Respectez ISO 27001 A.8.24 et ENS mp.com.3 avec des alertes personnalisées."
+  publishDate="2026-03-03"
+  author="AI Security"
+  readTime="10 min"
+  tags={["Wazuh", "FIM", "Certificats", "ISO 27001", "ENS", "Conformité", "Cybersécurité"]}
+  canonical="https://aisecurity.es/fr/blog/monitorizar-certificados-wazuh-fim"
+  faqSchema={[
+    {
+      question: "Qu'est-ce que le FIM dans Wazuh et comment protège-t-il les certificats ?",
+      answer: "Le FIM (File Integrity Monitoring) est le module syscheck. Il calcule un hash SHA256 et enregistre les permissions, le propriétaire et la taille de chaque fichier surveillé, puis alerte dès que l'un de ces éléments change ou que le fichier est supprimé, ce qui permet de protéger les certificats .pfx, .p12, .cer et .key."
+    },
+    {
+      question: "Comment activer la surveillance en temps réel des certificats sous Windows ?",
+      answer: "Dans l'ossec.conf de l'agent Windows, ajoutez une entrée <directories> avec realtime=\"yes\", check_all=\"yes\" et report_changes=\"yes\" pointant vers le chemin du certificat, puis redémarrez l'agent avec Restart-Service WazuhSvc. Avec scan_on_start et une fréquence de 300 secondes, vous obtenez aussi des scans de référence périodiques."
+    },
+    {
+      question: "Pourquoi la règle de suppression de certificat utilise-t-elle le niveau 13 ?",
+      answer: "Le niveau 13 est l'une des gravités les plus élevées de l'échelle 0-15 de Wazuh, réservée aux événements critiques. Supprimer un certificat cryptographique peut casser l'authentification ou la signature et correspond à la technique MITRE ATT&CK T1485 (Data Destruction), ce qui justifie l'alerte de plus haute priorité."
+    },
+    {
+      question: "Quels cadres de conformité cette configuration couvre-t-elle ?",
+      answer: "Surveiller l'intégrité des certificats couvre ISO 27001 A.8.24, ENS mp.com.3, PCI-DSS 11.5 et RGPD article 5.1.f. La règle personnalisée porte aussi des tags de groupe de conformité pour le RGPD, HIPAA 164.312.c.1 et PCI-DSS afin que la preuve soit étiquetée automatiquement."
+    },
+    {
+      question: "Quelles informations le dashboard FIM affiche-t-il après un changement ?",
+      answer: "Le dashboard Endpoint Security → File Integrity Monitoring affiche le type d'événement (ajouté, modifié ou supprimé), le chemin complet du fichier, le hash SHA256 avant et après, l'utilisateur qui a agi, l'horodatage exact et tout changement de permissions."
+    }
+  ]}>
+
+  <p>Pour surveiller les certificats numériques avec Wazuh FIM, configurez le module <code>syscheck</code> pour surveiller les chemins où sont stockés les fichiers <code>.pfx</code>, <code>.p12</code> et <code>.cer</code>. Toute modification ou suppression déclenche une alerte immédiate et satisfait ISO 27001 A.8.24 et ENS mp.com.3.</p>
+
+  <h2>Comment détecter les changements des certificats numériques avec Wazuh FIM ?</h2>
+
+  <p>
+    Dans ce lab pratique, nous modifions et supprimons un certificat sous Windows pour voir comment le <strong>FIM (File Integrity Monitoring)</strong> détecte les changements et quelles informations il fait remonter dans le dashboard Wazuh.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/fr/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Clé en main</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Besoin de Wazuh dans votre entreprise ?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Nous déployons Wazuh pour vous — ou ajoutons des configurations avancées sur mesure en prestation de conseil. Prêt pour la production et la conformité.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Consultation Wazuh →</span>
+    </a>
+  </aside>
+
+  <h2>Pourquoi la surveillance des certificats est-elle obligatoire selon ISO 27001 et ENS ?</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <h3 style="color: #60a5fa; margin-top: 0;">ISO 27001 - Contrôle A.8.24</h3>
+    <p style="color: #e5e7eb;">
+      Les <strong>certificats cryptographiques</strong> doivent être protégés, contrôlés et audités. Tout changement les concernant doit être journalisé.
+    </p>
+
+    <h3 style="color: #60a5fa;">ENS - Mesure mp.com.3</h3>
+    <p style="color: #e5e7eb; margin-bottom: 0;">
+      Protection de l'authenticité et de l'intégrité : les mécanismes cryptographiques doivent être <strong>protégés contre toute modification non autorisée</strong>.
+    </p>
+  </div>
+
+  <p>
+    <strong>En pratique :</strong> si un auditeur vous demande si vous contrôlez qui peut toucher vos certificats et si vous conservez un registre de toute modification, la réponse doit être oui. Ce lab est exactement cette démonstration.
+  </p>
+
+  <h2>Comment configurer syscheck sur l'agent Windows ?</h2>
+
+  <p>
+    Éditez le fichier <code>ossec.conf</code> de l'agent Windows :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;syscheck&gt;
+
+  &lt;frequency&gt;300&lt;/frequency&gt;
+  &lt;scan_on_start&gt;yes&lt;/scan_on_start&gt;
+
+  &lt;!-- Surveillance du certificat d'entreprise --&gt;
+  &lt;directories realtime="yes"
+               check_all="yes"
+               report_changes="yes"&gt;C:\Users\Administrador\Documents\Certificados\CertificadoEmpresa.pfx&lt;/directories&gt;
+
+  &lt;!-- Magasin de certificats Windows --&gt;
+  &lt;windows_registry&gt;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SystemCertificates&lt;/windows_registry&gt;
+  &lt;windows_registry&gt;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography&lt;/windows_registry&gt;
+
+&lt;/syscheck&gt;</code></pre>
+
+  <p><strong>Explication :</strong></p>
+  <ul>
+    <li><code>realtime="yes"</code> : détecte les changements instantanément</li>
+    <li><code>check_all="yes"</code> : vérifie le hash, les permissions, le propriétaire et la taille</li>
+    <li><code>report_changes="yes"</code> : active l'analyse VirusTotal si elle est intégrée</li>
+    <li><code>windows_registry</code> : surveille le magasin de certificats du système</li>
+  </ul>
+
+  <p>Redémarrez le service de l'agent sous Windows :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">Restart-Service WazuhSvc</code></pre>
+
+  <h2>Comment écrire une règle personnalisée pour les certificats critiques ?</h2>
+
+  <p>
+    Sur le serveur Wazuh, éditez le fichier de règles locales :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">nano /var/ossec/etc/rules/local_rules.xml</code></pre>
+
+  <p>Ajoutez cette règle :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;group name="syscheck,certificate_monitor,"&gt;
+
+  &lt;rule id="100200" level="13"&gt;
+    &lt;if_sid&gt;553&lt;/if_sid&gt;
+    &lt;field name="syscheck.path"&gt;\.pfx$|\.p12$|\.cer$|\.key$&lt;/field&gt;
+    &lt;description&gt;CRITICO: Certificado digital eliminado - $(syscheck.path)&lt;/description&gt;
+    &lt;mitre&gt;
+      &lt;id&gt;T1485&lt;/id&gt;
+    &lt;/mitre&gt;
+    &lt;group&gt;certificate,integrity,gdpr_II_5.1.f,hipaa_164.312.c.1,pci_dss_11.5,&lt;/group&gt;
+  &lt;/rule&gt;
+
+&lt;/group&gt;</code></pre>
+
+  <p><strong>Explication :</strong></p>
+  <ul>
+    <li><code>if_sid 553</code> : se déclenche quand le FIM détecte un fichier supprimé</li>
+    <li><code>level="13"</code> : niveau critique (priorité maximale)</li>
+    <li><code>syscheck.path</code> : filtre sur les extensions de certificat (.pfx, .p12, .cer, .key)</li>
+    <li><code>MITRE T1485</code> : Data Destruction</li>
+    <li><code>group</code> : tags de conformité pour le RGPD, HIPAA et PCI-DSS</li>
+  </ul>
+
+  <p>Redémarrez le manager :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">systemctl restart wazuh-manager</code></pre>
+
+  <h2>Quelles informations le dashboard FIM fournit-il ?</h2>
+
+  <p>
+    Lorsqu'un certificat est modifié ou supprimé, le dashboard <strong>Endpoint Security → File Integrity Monitoring</strong> affiche :
+  </p>
+
+  <ul>
+    <li><strong>Événement</strong> : ajouté, modifié ou supprimé</li>
+    <li><strong>Chemin complet</strong> du fichier concerné</li>
+    <li><strong>Hash SHA256</strong> avant et après (si modifié)</li>
+    <li><strong>Utilisateur</strong> qui a effectué l'action</li>
+    <li><strong>Horodatage exact</strong></li>
+    <li><strong>Changements de permissions</strong>, le cas échéant</li>
+  </ul>
+
+  <h2>Résumé de conformité</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Réglementation</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Contrôle</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Couverture</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">ISO 27001</td>
+        <td style="padding: 12px;">A.8.24</td>
+        <td style="padding: 12px;">Gestion des certificats cryptographiques</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">ENS</td>
+        <td style="padding: 12px;">mp.com.3</td>
+        <td style="padding: 12px;">Protection de l'authenticité et de l'intégrité</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">PCI-DSS</td>
+        <td style="padding: 12px;">11.5</td>
+        <td style="padding: 12px;">Surveillance de l'intégrité</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px;">RGPD</td>
+        <td style="padding: 12px;">Art. 5.1.f</td>
+        <td style="padding: 12px;">Intégrité et confidentialité</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Comment l'alerte de certificat parvient-elle à l'équipe de réponse ?</h2>
+
+  <p>
+    La règle de niveau 13 se déclenche à l'instant où le FIM détecte qu'un fichier <code>.pfx</code>, <code>.p12</code>, <code>.cer</code> ou <code>.key</code> a été supprimé. Comme Wazuh envoie par défaut un e-mail pour toute alerte de niveau 7 et plus, un événement critique de niveau 13 est remis immédiatement à la boîte de sécurité, et le tag MITRE <code>T1485</code> permet à vos requêtes de threat hunting de le regrouper avec d'autres activités de destruction de données. Avec <code>realtime="yes"</code>, la notification arrive généralement quelques secondes après la suppression, et le scan de référence périodique de 300 secondes sert de filet de sécurité au cas où un événement en temps réel serait manqué. C'est cette combinaison qui transforme « nous pensons que nos certificats sont protégés » en preuve auditable.
+  </p>
+
+  <h2>Étapes suivantes</h2>
+
+  <p>
+    Un déploiement Wazuh complet couvre aussi des dashboards comme Configuration Assessment, Malware Detection et Threat Hunting. <a href="/fr/wazuh">Découvrez nos services Wazuh</a>.
+  </p>
+
+  <h2>Questions fréquentes</h2>
+
+  <h3>Qu'est-ce que le FIM dans Wazuh et comment protège-t-il les certificats ?</h3>
+  <p>Le FIM (File Integrity Monitoring) est le module <code>syscheck</code>. Il calcule un hash SHA256 et enregistre les permissions, le propriétaire et la taille de chaque fichier surveillé, puis alerte dès que l'un de ces éléments change ou que le fichier est supprimé, ce qui permet de protéger les certificats <code>.pfx</code>, <code>.p12</code>, <code>.cer</code> et <code>.key</code>.</p>
+
+  <h3>Comment activer la surveillance en temps réel des certificats sous Windows ?</h3>
+  <p>Dans l'<code>ossec.conf</code> de l'agent Windows, ajoutez une entrée <code>&lt;directories&gt;</code> avec <code>realtime="yes"</code>, <code>check_all="yes"</code> et <code>report_changes="yes"</code> pointant vers le chemin du certificat, puis redémarrez l'agent avec <code>Restart-Service WazuhSvc</code>. Avec <code>scan_on_start</code> et une fréquence de 300 secondes, vous obtenez aussi des scans de référence périodiques.</p>
+
+  <h3>Pourquoi la règle de suppression de certificat utilise-t-elle le niveau 13 ?</h3>
+  <p>Le niveau 13 est l'une des gravités les plus élevées de l'échelle 0-15 de Wazuh, réservée aux événements critiques. Supprimer un certificat cryptographique peut casser l'authentification ou la signature et correspond à la technique MITRE ATT&amp;CK T1485 (Data Destruction), ce qui justifie l'alerte de plus haute priorité.</p>
+
+  <h3>Quels cadres de conformité cette configuration couvre-t-elle ?</h3>
+  <p>Surveiller l'intégrité des certificats couvre ISO 27001 A.8.24, ENS mp.com.3, PCI-DSS 11.5 et RGPD article 5.1.f. La règle personnalisée porte aussi des tags de groupe de conformité pour le RGPD, HIPAA 164.312.c.1 et PCI-DSS afin que la preuve soit étiquetée automatiquement.</p>
+
+  <h3>Quelles informations le dashboard FIM affiche-t-il après un changement ?</h3>
+  <p>Le dashboard Endpoint Security → File Integrity Monitoring affiche le type d'événement (ajouté, modifié ou supprimé), le chemin complet du fichier, le hash SHA256 avant et après, l'utilisateur qui a agi, l'horodatage exact et tout changement de permissions.</p>
+
+</BlogLayout>

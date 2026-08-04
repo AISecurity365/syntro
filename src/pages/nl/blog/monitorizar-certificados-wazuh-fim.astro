@@ -1,0 +1,219 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="nl"
+  title="Digitale certificaten monitoren met Wazuh FIM (ISO 27001 en ENS)"
+  description="Praktijklab: configureer FIM om wijzigingen aan .pfx-, .p12- en .cer-certificaten te detecteren. Voldoe aan ISO 27001 A.8.24 en ENS mp.com.3 met aangepaste meldingen."
+  publishDate="2026-03-03"
+  author="AI Security"
+  readTime="10 min"
+  tags={["Wazuh", "FIM", "Certificaten", "ISO 27001", "ENS", "Compliance", "Cybersecurity"]}
+  canonical="https://aisecurity.es/nl/blog/monitorizar-certificados-wazuh-fim"
+  faqSchema={[
+    {
+      question: "Wat is FIM in Wazuh en hoe beschermt het certificaten?",
+      answer: "FIM (File Integrity Monitoring) is de syscheck-module. Het berekent een SHA256-hash en registreert de rechten, eigenaar en grootte van elk bewaakt bestand, en waarschuwt telkens als een van die zaken verandert of het bestand wordt verwijderd, waarmee u .pfx-, .p12-, .cer- en .key-certificaten kunt beschermen."
+    },
+    {
+      question: "Hoe schakel ik realtime certificaatmonitoring in op Windows?",
+      answer: "Voeg in de ossec.conf van de Windows-agent een <directories>-item toe met realtime=\"yes\", check_all=\"yes\" en report_changes=\"yes\" dat naar het certificaatpad wijst, en herstart de agent met Restart-Service WazuhSvc. Met scan_on_start en een frequentie van 300 seconden krijgt u ook periodieke baseline-scans."
+    },
+    {
+      question: "Waarom gebruikt de regel voor certificaatverwijdering niveau 13?",
+      answer: "Niveau 13 is een van de hoogste ernstgraden op de 0-15-schaal van Wazuh, gereserveerd voor kritieke gebeurtenissen. Het verwijderen van een cryptografisch certificaat kan authenticatie of ondertekening breken en komt overeen met MITRE ATT&CK-techniek T1485 (Data Destruction), wat de melding met de hoogste prioriteit rechtvaardigt."
+    },
+    {
+      question: "Welke compliance-kaders dekt deze configuratie?",
+      answer: "Het monitoren van certificaatintegriteit dekt ISO 27001 A.8.24, ENS mp.com.3, PCI-DSS 11.5 en AVG artikel 5.1.f. De aangepaste regel draagt ook compliance-groepstags voor AVG, HIPAA 164.312.c.1 en PCI-DSS zodat het bewijs automatisch wordt gelabeld."
+    },
+    {
+      question: "Welke informatie toont het FIM-dashboard na een wijziging?",
+      answer: "Het dashboard Endpoint Security → File Integrity Monitoring toont het gebeurtenistype (toegevoegd, gewijzigd of verwijderd), het volledige bestandspad, de SHA256-hash voor en na, de gebruiker die handelde, de exacte tijdstempel en eventuele wijzigingen van rechten."
+    }
+  ]}>
+
+  <p>Om digitale certificaten te monitoren met Wazuh FIM, configureert u de <code>syscheck</code>-module om de paden te bewaken waar <code>.pfx</code>-, <code>.p12</code>- en <code>.cer</code>-bestanden worden opgeslagen. Elke wijziging of verwijdering activeert een onmiddellijke melding en voldoet aan ISO 27001 A.8.24 en ENS mp.com.3.</p>
+
+  <h2>Hoe detecteer je wijzigingen aan digitale certificaten met Wazuh FIM?</h2>
+
+  <p>
+    In dit praktijklab wijzigen en verwijderen we een certificaat op Windows om te zien hoe <strong>FIM (File Integrity Monitoring)</strong> de wijzigingen detecteert en welke informatie het in het Wazuh-dashboard toont.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/nl/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Kant-en-klaar</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Wazuh nodig in uw bedrijf?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Wij rollen Wazuh voor u uit — of voegen geavanceerde configuraties op maat toe als adviesdienst. Productieklaar en compliance-klaar.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Wazuh-advies →</span>
+    </a>
+  </aside>
+
+  <h2>Waarom is certificaatmonitoring verplicht onder ISO 27001 en ENS?</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <h3 style="color: #60a5fa; margin-top: 0;">ISO 27001 - Control A.8.24</h3>
+    <p style="color: #e5e7eb;">
+      <strong>Cryptografische certificaten</strong> moeten worden beschermd, gecontroleerd en geauditeerd. Elke wijziging eraan moet worden gelogd.
+    </p>
+
+    <h3 style="color: #60a5fa;">ENS - Maatregel mp.com.3</h3>
+    <p style="color: #e5e7eb; margin-bottom: 0;">
+      Bescherming van authenticiteit en integriteit: cryptografische mechanismen moeten <strong>beschermd zijn tegen ongeautoriseerde wijziging</strong>.
+    </p>
+  </div>
+
+  <p>
+    <strong>In de praktijk:</strong> als een auditor vraagt of u controleert wie uw certificaten mag aanraken en of u een register bijhoudt van elke wijziging, moet het antwoord ja zijn. Dit lab is precies die demonstratie.
+  </p>
+
+  <h2>Hoe configureer je syscheck op de Windows-agent?</h2>
+
+  <p>
+    Bewerk het bestand <code>ossec.conf</code> van de Windows-agent:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;syscheck&gt;
+
+  &lt;frequency&gt;300&lt;/frequency&gt;
+  &lt;scan_on_start&gt;yes&lt;/scan_on_start&gt;
+
+  &lt;!-- Monitoring van het bedrijfscertificaat --&gt;
+  &lt;directories realtime="yes"
+               check_all="yes"
+               report_changes="yes"&gt;C:\Users\Administrador\Documents\Certificados\CertificadoEmpresa.pfx&lt;/directories&gt;
+
+  &lt;!-- Windows-certificaatarchief --&gt;
+  &lt;windows_registry&gt;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SystemCertificates&lt;/windows_registry&gt;
+  &lt;windows_registry&gt;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography&lt;/windows_registry&gt;
+
+&lt;/syscheck&gt;</code></pre>
+
+  <p><strong>Uitleg:</strong></p>
+  <ul>
+    <li><code>realtime="yes"</code>: detecteert wijzigingen direct</li>
+    <li><code>check_all="yes"</code>: verifieert hash, rechten, eigenaar en grootte</li>
+    <li><code>report_changes="yes"</code>: activeert VirusTotal-analyse indien geïntegreerd</li>
+    <li><code>windows_registry</code>: bewaakt het certificaatarchief van het systeem</li>
+  </ul>
+
+  <p>Herstart de agentservice op Windows:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">Restart-Service WazuhSvc</code></pre>
+
+  <h2>Hoe schrijf je een aangepaste regel voor kritieke certificaten?</h2>
+
+  <p>
+    Bewerk op de Wazuh-server het bestand met lokale regels:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">nano /var/ossec/etc/rules/local_rules.xml</code></pre>
+
+  <p>Voeg deze regel toe:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;group name="syscheck,certificate_monitor,"&gt;
+
+  &lt;rule id="100200" level="13"&gt;
+    &lt;if_sid&gt;553&lt;/if_sid&gt;
+    &lt;field name="syscheck.path"&gt;\.pfx$|\.p12$|\.cer$|\.key$&lt;/field&gt;
+    &lt;description&gt;CRITICO: Certificado digital eliminado - $(syscheck.path)&lt;/description&gt;
+    &lt;mitre&gt;
+      &lt;id&gt;T1485&lt;/id&gt;
+    &lt;/mitre&gt;
+    &lt;group&gt;certificate,integrity,gdpr_II_5.1.f,hipaa_164.312.c.1,pci_dss_11.5,&lt;/group&gt;
+  &lt;/rule&gt;
+
+&lt;/group&gt;</code></pre>
+
+  <p><strong>Uitleg:</strong></p>
+  <ul>
+    <li><code>if_sid 553</code>: gaat af wanneer FIM een verwijderd bestand detecteert</li>
+    <li><code>level="13"</code>: kritiek niveau (hoogste prioriteit)</li>
+    <li><code>syscheck.path</code>: filtert op certificaatextensies (.pfx, .p12, .cer, .key)</li>
+    <li><code>MITRE T1485</code>: Data Destruction</li>
+    <li><code>group</code>: compliance-tags voor AVG, HIPAA en PCI-DSS</li>
+  </ul>
+
+  <p>Herstart de manager:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">systemctl restart wazuh-manager</code></pre>
+
+  <h2>Welke informatie levert het FIM-dashboard?</h2>
+
+  <p>
+    Wanneer een certificaat wordt gewijzigd of verwijderd, toont het dashboard <strong>Endpoint Security → File Integrity Monitoring</strong>:
+  </p>
+
+  <ul>
+    <li><strong>Gebeurtenis</strong>: toegevoegd, gewijzigd of verwijderd</li>
+    <li><strong>Volledig pad</strong> van het betrokken bestand</li>
+    <li><strong>SHA256-hash</strong> voor en na (indien gewijzigd)</li>
+    <li><strong>Gebruiker</strong> die de actie uitvoerde</li>
+    <li><strong>Exacte tijdstempel</strong></li>
+    <li><strong>Wijzigingen van rechten</strong>, indien van toepassing</li>
+  </ul>
+
+  <h2>Compliance-samenvatting</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Regelgeving</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Control</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Dekking</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">ISO 27001</td>
+        <td style="padding: 12px;">A.8.24</td>
+        <td style="padding: 12px;">Beheer van cryptografische certificaten</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">ENS</td>
+        <td style="padding: 12px;">mp.com.3</td>
+        <td style="padding: 12px;">Bescherming van authenticiteit en integriteit</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">PCI-DSS</td>
+        <td style="padding: 12px;">11.5</td>
+        <td style="padding: 12px;">Integriteitsmonitoring</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px;">AVG</td>
+        <td style="padding: 12px;">Art. 5.1.f</td>
+        <td style="padding: 12px;">Integriteit en vertrouwelijkheid</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Hoe bereikt de certificaatmelding het responsteam?</h2>
+
+  <p>
+    De regel van niveau 13 gaat af op het moment dat FIM detecteert dat een <code>.pfx</code>-, <code>.p12</code>-, <code>.cer</code>- of <code>.key</code>-bestand is verwijderd. Omdat Wazuh standaard een e-mail verstuurt voor elke melding van niveau 7 en hoger, wordt een kritieke gebeurtenis van niveau 13 onmiddellijk aan de beveiligingsmailbox bezorgd, en met de MITRE-tag <code>T1485</code> kunnen uw threat-hunting-query's die groeperen met andere activiteit rond gegevensvernietiging. Met <code>realtime="yes"</code> komt de notificatie doorgaans binnen enkele seconden na de verwijdering, en de periodieke baseline-scan van 300 seconden fungeert als vangnet voor het geval een realtime gebeurtenis wordt gemist. Die combinatie verandert "we denken dat onze certificaten beschermd zijn" in auditeerbaar bewijs.
+  </p>
+
+  <h2>Volgende stappen</h2>
+
+  <p>
+    Een volledige Wazuh-uitrol dekt ook dashboards zoals Configuration Assessment, Malware Detection en Threat Hunting. <a href="/nl/wazuh">Ontdek onze Wazuh-diensten</a>.
+  </p>
+
+  <h2>Veelgestelde vragen</h2>
+
+  <h3>Wat is FIM in Wazuh en hoe beschermt het certificaten?</h3>
+  <p>FIM (File Integrity Monitoring) is de <code>syscheck</code>-module. Het berekent een SHA256-hash en registreert de rechten, eigenaar en grootte van elk bewaakt bestand, en waarschuwt telkens als een van die zaken verandert of het bestand wordt verwijderd, waarmee u <code>.pfx</code>-, <code>.p12</code>-, <code>.cer</code>- en <code>.key</code>-certificaten kunt beschermen.</p>
+
+  <h3>Hoe schakel ik realtime certificaatmonitoring in op Windows?</h3>
+  <p>Voeg in de <code>ossec.conf</code> van de Windows-agent een <code>&lt;directories&gt;</code>-item toe met <code>realtime="yes"</code>, <code>check_all="yes"</code> en <code>report_changes="yes"</code> dat naar het certificaatpad wijst, en herstart de agent met <code>Restart-Service WazuhSvc</code>. Met <code>scan_on_start</code> en een frequentie van 300 seconden krijgt u ook periodieke baseline-scans.</p>
+
+  <h3>Waarom gebruikt de regel voor certificaatverwijdering niveau 13?</h3>
+  <p>Niveau 13 is een van de hoogste ernstgraden op de 0-15-schaal van Wazuh, gereserveerd voor kritieke gebeurtenissen. Het verwijderen van een cryptografisch certificaat kan authenticatie of ondertekening breken en komt overeen met MITRE ATT&amp;CK-techniek T1485 (Data Destruction), wat de melding met de hoogste prioriteit rechtvaardigt.</p>
+
+  <h3>Welke compliance-kaders dekt deze configuratie?</h3>
+  <p>Het monitoren van certificaatintegriteit dekt ISO 27001 A.8.24, ENS mp.com.3, PCI-DSS 11.5 en AVG artikel 5.1.f. De aangepaste regel draagt ook compliance-groepstags voor AVG, HIPAA 164.312.c.1 en PCI-DSS zodat het bewijs automatisch wordt gelabeld.</p>
+
+  <h3>Welke informatie toont het FIM-dashboard na een wijziging?</h3>
+  <p>Het dashboard Endpoint Security → File Integrity Monitoring toont het gebeurtenistype (toegevoegd, gewijzigd of verwijderd), het volledige bestandspad, de SHA256-hash voor en na, de gebruiker die handelde, de exacte tijdstempel en eventuele wijzigingen van rechten.</p>
+
+</BlogLayout>
