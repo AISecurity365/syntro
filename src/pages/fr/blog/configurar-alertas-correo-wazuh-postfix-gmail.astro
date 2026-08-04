@@ -1,0 +1,317 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="fr"
+  title="Configurer les alertes e-mail dans Wazuh avec Postfix et Gmail/Microsoft"
+  description="Configurez les alertes e-mail dans Wazuh avec Postfix et Gmail/Microsoft 365. Couvre la conformité ISO 27001 (A.5.24-A.5.26) et ENS (op.mon.1, op.mon.3)."
+  publishDate="2026-03-06"
+  author="AI Security"
+  readTime="12 min"
+  tags={["Wazuh", "Alertes", "Postfix", "Gmail", "SMTP", "E-mail", "ENS", "ISO 27001"]}
+  canonical="https://aisecurity.es/fr/blog/configurar-alertas-correo-wazuh-postfix-gmail"
+  faqSchema={[
+    {
+      question: "Pourquoi Wazuh a-t-il besoin de Postfix pour envoyer des alertes e-mail ?",
+      answer: "Le client mail interne de Wazuh ne relaie que vers un serveur SMTP local. Postfix fait office de relais local (smtp_server localhost) et transmet le message à Gmail ou Microsoft 365 via le port 587 avec TLS, en gérant l'authentification SASL que Wazuh ne peut pas effectuer lui-même."
+    },
+    {
+      question: "Ai-je besoin d'un mot de passe d'application pour le SMTP de Gmail ?",
+      answer: "Oui. Gmail bloque le mot de passe habituel de votre compte pour le SMTP. Vous devez activer la validation en deux étapes puis générer un mot de passe d'application de 16 caractères sur myaccount.google.com/apppasswords, que vous stockez dans /etc/postfix/sasl_passwd."
+    },
+    {
+      question: "Quel serveur SMTP et quel port utiliser pour Gmail et Microsoft 365 ?",
+      answer: "Les deux fournisseurs utilisent le port 587 avec STARTTLS. Gmail utilise smtp.gmail.com:587 et Microsoft 365 utilise smtp.office365.com:587. Vous définissez cette valeur comme relayhost dans /etc/postfix/main.cf."
+    },
+    {
+      question: "À partir de quel niveau d'alerte Wazuh envoie-t-il des e-mails par défaut ?",
+      answer: "Par défaut, Wazuh envoie un e-mail pour les alertes de niveau 7 et plus. Vous pouvez remplacer ce comportement par règle avec un bloc <email_alerts> qui cible un rule_id précis, de sorte qu'une règle de niveau inférieur puisse aussi notifier un destinataire dédié."
+    },
+    {
+      question: "Quels contrôles ISO 27001 et ENS les alertes e-mail couvrent-elles ?",
+      answer: "Les alertes e-mail soutiennent les contrôles ISO 27001:2022 A.5.24, A.5.25, A.5.26, A.8.15 et A.8.16, ainsi que les mesures ENS (RD 311/2022) op.mon.1, op.mon.3, op.exp.7 et op.exp.9, toutes liées à la détection, la notification et la journalisation des incidents."
+    }
+  ]}>
+
+  <p>
+    Pour configurer les alertes e-mail dans Wazuh, vous devez installer <strong>Postfix</strong> comme relais SMTP local et le connecter à Gmail ou Microsoft 365 à l'aide d'un mot de passe d'application. Vous définissez ensuite dans <code>ossec.conf</code> quelles règles déclenchent l'e-mail et qui est le destinataire.
+  </p>
+
+  <h2>Pourquoi Wazuh a-t-il besoin de Postfix pour envoyer des e-mails ?</h2>
+
+  <p>
+    Wazuh peut envoyer des alertes e-mail lorsque des règles précises se déclenchent. Pour cela, vous avez besoin d'un serveur de messagerie local (Postfix) qui relaie via le service SMTP de Gmail ou Microsoft 365. Dans cet article, nous configurons tout étape par étape.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/fr/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Clé en main</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Besoin de Wazuh dans votre entreprise ?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Nous déployons Wazuh pour vous — ou ajoutons des configurations avancées sur mesure en prestation de conseil. Prêt pour la production et la conformité.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Consultation Wazuh →</span>
+    </a>
+  </aside>
+
+  <h2>Comment créer le mot de passe d'application dans Gmail ?</h2>
+
+  <p>
+    Gmail ne permet pas d'utiliser votre mot de passe habituel pour le SMTP. Vous avez besoin d'un <strong>mot de passe d'application</strong> :
+  </p>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <h3 style="color: #60a5fa; margin-top: 0;">Prérequis</h3>
+    <p style="color: #e5e7eb; margin-bottom: 0;">
+      Vous devez avoir activé la <strong>validation en deux étapes</strong> sur votre compte Google. Sans elle, vous ne pouvez pas créer de mots de passe d'application.
+    </p>
+  </div>
+
+  <ol>
+    <li>Allez sur <a href="https://myaccount.google.com/security" target="_blank" rel="noopener">myaccount.google.com/security</a></li>
+    <li>Activez la <strong>validation en deux étapes</strong> si ce n'est pas déjà fait</li>
+    <li>Allez directement sur <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener"><strong>Mots de passe des applications</strong></a></li>
+    <li>Saisissez un nom descriptif (ex. « Wazuh SIEM ») et cliquez sur « Créer »</li>
+    <li>Enregistrez le mot de passe de <strong>16 caractères</strong> qu'il génère (sans espaces)</li>
+  </ol>
+
+  <h2>Comment installer et configurer Postfix ?</h2>
+
+  <p>Installez Postfix et les modules SASL pour l'authentification :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">apt update && apt install -y postfix libsasl2-modules</code></pre>
+
+  <p>Pendant l'installation, sélectionnez <strong>« Internet Site »</strong> et saisissez le nom de votre serveur.</p>
+
+  <h3>Comment configurer le relais vers Gmail ?</h3>
+
+  <p>Éditez <code>/etc/postfix/main.cf</code> et ajoutez à la fin :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">relayhost = [smtp.gmail.com]:587
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noanonymous
+smtp_tls_security_level = encrypt
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt</code></pre>
+
+  <h3>Comment créer le fichier d'identifiants ?</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">nano /etc/postfix/sasl_passwd</code></pre>
+
+  <p>Ajoutez cette ligne (avec votre e-mail et votre mot de passe d'application) :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">[smtp.gmail.com]:587 tucuenta@gmail.com:contraseña_de_16_caracteres</code></pre>
+
+  <p>Sécurisez le fichier et générez le hash :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">chmod 600 /etc/postfix/sasl_passwd
+postmap /etc/postfix/sasl_passwd
+systemctl restart postfix</code></pre>
+
+  <h2>Comment configurer Postfix avec Microsoft 365 ?</h2>
+
+  <p>Si vous utilisez Microsoft au lieu de Gmail, changez le relayhost :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">relayhost = [smtp.office365.com]:587</code></pre>
+
+  <p>Et dans <code>/etc/postfix/sasl_passwd</code> :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">[smtp.office365.com]:587 tucuenta@tudominio.com:tu_contraseña</code></pre>
+
+  <h2>Comment configurer les alertes e-mail dans Wazuh ?</h2>
+
+  <p>Sur le serveur Wazuh, éditez <code>/var/ossec/etc/ossec.conf</code> et configurez les alertes e-mail :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;global&gt;
+  &lt;email_notification&gt;yes&lt;/email_notification&gt;
+  &lt;smtp_server&gt;localhost&lt;/smtp_server&gt;
+  &lt;email_from&gt;wazuh@tuservidor.com&lt;/email_from&gt;
+&lt;/global&gt;</code></pre>
+
+  <h3>Comment envoyer des alertes par règle à différents destinataires ?</h3>
+
+  <p>Vous pouvez envoyer des alertes précises à différents destinataires selon la règle :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;!-- Alerte pour la règle 100072 : l'utilisateur Juan supprime un fichier --&gt;
+&lt;email_alerts&gt;
+  &lt;email_to&gt;ResponsableDeInformacion@tudominio.com&lt;/email_to&gt;
+  &lt;rule_id&gt;100072&lt;/rule_id&gt;
+  &lt;format&gt;full&lt;/format&gt;
+&lt;/email_alerts&gt;
+
+&lt;!-- Alerte pour la règle 100073 : une IP précise modifie un fichier --&gt;
+&lt;email_alerts&gt;
+  &lt;email_to&gt;sistemasTI@tudominio.com&lt;/email_to&gt;
+  &lt;rule_id&gt;100073&lt;/rule_id&gt;
+  &lt;format&gt;full&lt;/format&gt;
+&lt;/email_alerts&gt;</code></pre>
+
+  <p><strong>Explication :</strong></p>
+  <ul>
+    <li><code>email_to</code> : le destinataire de l'e-mail</li>
+    <li><code>rule_id</code> : ID de la règle qui déclenche l'alerte</li>
+    <li><code>format</code> : « full » inclut tous les détails de l'événement</li>
+  </ul>
+
+  <p>Redémarrez le manager :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">systemctl restart wazuh-manager</code></pre>
+
+  <h2>Comment tester que l'envoi d'e-mails fonctionne ?</h2>
+
+  <p>Vérifiez que Postfix envoie correctement :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">echo "Prueba de Wazuh" | mail -s "Test Postfix" tucorreo@ejemplo.com</code></pre>
+
+  <p>Consultez le journal de Postfix :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">tail -f /var/log/mail.log</code></pre>
+
+  <h2>Résumé</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Fournisseur</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Serveur SMTP</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Port</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">Gmail</td>
+        <td style="padding: 12px;">smtp.gmail.com</td>
+        <td style="padding: 12px;">587</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px;">Microsoft 365</td>
+        <td style="padding: 12px;">smtp.office365.com</td>
+        <td style="padding: 12px;">587</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Quels contrôles ISO 27001:2022 cette configuration couvre-t-elle ?</h2>
+
+  <p>
+    Configurer les alertes e-mail dans Wazuh contribue directement à la conformité avec plusieurs contrôles de l'<strong>Annexe A de l'ISO 27001:2022</strong> :
+  </p>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Contrôle</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Nom</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Comment les alertes aident</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.5.24</td>
+        <td style="padding: 12px;">Planification et préparation de la gestion des incidents</td>
+        <td style="padding: 12px;">Notification immédiate à l'équipe responsable lorsqu'un incident survient</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.5.25</td>
+        <td style="padding: 12px;">Évaluation et décision sur les incidents</td>
+        <td style="padding: 12px;">Les informations détaillées de l'e-mail permettent d'évaluer rapidement la gravité</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.5.26</td>
+        <td style="padding: 12px;">Réponse aux incidents de sécurité de l'information</td>
+        <td style="padding: 12px;">Temps de réponse plus court grâce aux alertes en temps réel</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.8.15</td>
+        <td style="padding: 12px;">Journalisation</td>
+        <td style="padding: 12px;">Les e-mails font office d'enregistrement secondaire des événements critiques</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.8.16</td>
+        <td style="padding: 12px;">Activités de surveillance</td>
+        <td style="padding: 12px;">Surveillance active avec notification automatique aux responsables</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Quelles mesures ENS le système d'alertes e-mail couvre-t-il ?</h2>
+
+  <p>
+    Pour les organisations soumises à l'<strong>ENS espagnol (RD 311/2022)</strong>, les alertes e-mail sont essentielles pour se conformer à :
+  </p>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #fbbf24;">Mesure</td>
+        <td style="padding: 12px; font-weight: bold; color: #fbbf24;">Nom</td>
+        <td style="padding: 12px; font-weight: bold; color: #fbbf24;">Comment les alertes aident</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.mon.1</td>
+        <td style="padding: 12px;">Détection d'intrusion</td>
+        <td style="padding: 12px;">Notification immédiate lorsqu'une activité suspecte est détectée</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.mon.3</td>
+        <td style="padding: 12px;">Surveillance</td>
+        <td style="padding: 12px;">Système de surveillance active avec escalade vers les responsables</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.exp.7</td>
+        <td style="padding: 12px;">Gestion des incidents</td>
+        <td style="padding: 12px;">Processus de notification automatisé pour la gestion des incidents</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.exp.9</td>
+        <td style="padding: 12px;">Journalisation de la gestion des incidents</td>
+        <td style="padding: 12px;">Les e-mails fournissent une preuve documentaire des alertes générées</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); border: 2px solid #6366f1; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <div style="display: flex; align-items: flex-start; gap: 16px;">
+      <div style="background: #6366f1; border-radius: 50%; padding: 8px; flex-shrink: 0;">
+        <svg style="width: 24px; height: 24px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div>
+        <h4 style="color: #a5b4fc; margin: 0 0 8px 0; font-weight: bold;">Temps de réponse ENS</h4>
+        <p style="color: #c7d2fe; margin: 0;">
+          L'ENS fixe des temps de réponse maximaux selon la catégorie du système. Les alertes e-mail vous aident à respecter <code style="background: #312e81; padding: 2px 6px; border-radius: 4px;">op.mon.3</code> en garantissant que le personnel de sécurité est notifié <strong>en temps réel</strong>, réduisant considérablement le temps de détection et de réponse.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Pourquoi les alertes e-mail sont-elles importantes dans Wazuh ?</h2>
+
+  <ul>
+    <li><strong>Réponse rapide</strong> : l'équipe de sécurité reçoit des notifications immédiates sans surveiller constamment le dashboard</li>
+    <li><strong>Escalade automatique</strong> : vous pouvez router les alertes vers différentes personnes selon le type d'incident</li>
+    <li><strong>Preuve documentaire</strong> : les e-mails font office d'enregistrement secondaire pour les audits</li>
+    <li><strong>Disponibilité 24/7</strong> : les alertes arrivent même quand personne ne surveille activement</li>
+    <li><strong>Conformité réglementaire</strong> : démontre l'existence d'un système opérationnel de notification des incidents</li>
+  </ul>
+
+  <h2>Étapes suivantes</h2>
+
+  <p>
+    Envoyer des alertes vers Discord et Slack via des webhooks est une autre option à mettre en place. Un raffinement courant consiste à conserver l'e-mail pour les événements de haute gravité (niveau 12+ comme la règle 100072, « un utilisateur supprime un fichier ») tout en routant les alertes de niveau 8-11 vers un canal de chat, afin que la boîte de réception reste réservée aux événements qui exigent réellement une action humaine. En pratique, ce routage réduit le temps moyen entre détection et réponse de plusieurs heures à quelques minutes, ce qui est exactement la preuve qu'un auditeur ENS ou ISO 27001 s'attend à voir. <a href="/fr/wazuh">Découvrez nos services Wazuh</a>.
+  </p>
+
+  <h2>Questions fréquentes</h2>
+
+  <h3>Pourquoi Wazuh a-t-il besoin de Postfix pour envoyer des alertes e-mail ?</h3>
+  <p>Le client mail interne de Wazuh ne relaie que vers un serveur SMTP local. Postfix fait office de relais local (<code>smtp_server localhost</code>) et transmet le message à Gmail ou Microsoft 365 via le port 587 avec TLS, en gérant l'authentification SASL que Wazuh ne peut pas effectuer lui-même.</p>
+
+  <h3>Ai-je besoin d'un mot de passe d'application pour le SMTP de Gmail ?</h3>
+  <p>Oui. Gmail bloque le mot de passe habituel de votre compte pour le SMTP. Vous devez activer la validation en deux étapes puis générer un mot de passe d'application de 16 caractères sur <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener">myaccount.google.com/apppasswords</a>, que vous stockez dans <code>/etc/postfix/sasl_passwd</code>.</p>
+
+  <h3>Quel serveur SMTP et quel port utiliser pour Gmail et Microsoft 365 ?</h3>
+  <p>Les deux fournisseurs utilisent le port 587 avec STARTTLS. Gmail utilise <code>smtp.gmail.com:587</code> et Microsoft 365 utilise <code>smtp.office365.com:587</code>. Vous définissez cette valeur comme <code>relayhost</code> dans <code>/etc/postfix/main.cf</code>.</p>
+
+  <h3>À partir de quel niveau d'alerte Wazuh envoie-t-il des e-mails par défaut ?</h3>
+  <p>Par défaut, Wazuh envoie un e-mail pour les alertes de niveau 7 et plus. Vous pouvez remplacer ce comportement par règle avec un bloc <code>&lt;email_alerts&gt;</code> qui cible un <code>rule_id</code> précis, de sorte qu'une règle de niveau inférieur puisse aussi notifier un destinataire dédié.</p>
+
+  <h3>Quels contrôles ISO 27001 et ENS les alertes e-mail couvrent-elles ?</h3>
+  <p>Les alertes e-mail soutiennent les contrôles ISO 27001:2022 A.5.24, A.5.25, A.5.26, A.8.15 et A.8.16, ainsi que les mesures ENS (RD 311/2022) op.mon.1, op.mon.3, op.exp.7 et op.exp.9, toutes liées à la détection, la notification et la journalisation des incidents.</p>
+
+</BlogLayout>

@@ -1,0 +1,317 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="nl"
+  title="E-mailmeldingen in Wazuh configureren met Postfix en Gmail/Microsoft"
+  description="Configureer e-mailmeldingen in Wazuh met Postfix en Gmail/Microsoft 365. Dekt naleving van ISO 27001 (A.5.24-A.5.26) en ENS (op.mon.1, op.mon.3)."
+  publishDate="2026-03-06"
+  author="AI Security"
+  readTime="12 min"
+  tags={["Wazuh", "Meldingen", "Postfix", "Gmail", "SMTP", "E-mail", "ENS", "ISO 27001"]}
+  canonical="https://aisecurity.es/nl/blog/configurar-alertas-correo-wazuh-postfix-gmail"
+  faqSchema={[
+    {
+      question: "Waarom heeft Wazuh Postfix nodig om e-mailmeldingen te versturen?",
+      answer: "De interne mailclient van Wazuh relayt alleen naar een lokale SMTP-server. Postfix fungeert als die lokale relay (smtp_server localhost) en stuurt het bericht door naar Gmail of Microsoft 365 via poort 587 met TLS, waarbij het de SASL-authenticatie afhandelt die Wazuh zelf niet kan uitvoeren."
+    },
+    {
+      question: "Heb ik een app-wachtwoord nodig voor Gmail SMTP?",
+      answer: "Ja. Gmail blokkeert het gewone wachtwoord van uw account voor SMTP. U moet tweestapsverificatie inschakelen en vervolgens een app-wachtwoord van 16 tekens genereren op myaccount.google.com/apppasswords, dat u opslaat in /etc/postfix/sasl_passwd."
+    },
+    {
+      question: "Welke SMTP-server en poort moet ik gebruiken voor Gmail en Microsoft 365?",
+      answer: "Beide providers gebruiken poort 587 met STARTTLS. Gmail gebruikt smtp.gmail.com:587 en Microsoft 365 gebruikt smtp.office365.com:587. U stelt deze waarde in als relayhost in /etc/postfix/main.cf."
+    },
+    {
+      question: "Vanaf welk meldingsniveau verstuurt Wazuh standaard e-mails?",
+      answer: "Standaard verstuurt Wazuh een e-mail voor meldingen van niveau 7 en hoger. U kunt dit per regel overschrijven met een <email_alerts>-blok dat een specifiek rule_id target, zodat zelfs een regel van een lager niveau een specifieke ontvanger kan notificeren."
+    },
+    {
+      question: "Welke ISO 27001- en ENS-controls dekken de e-mailmeldingen?",
+      answer: "E-mailmeldingen ondersteunen de ISO 27001:2022-controls A.5.24, A.5.25, A.5.26, A.8.15 en A.8.16, en de ENS-maatregelen (RD 311/2022) op.mon.1, op.mon.3, op.exp.7 en op.exp.9, allemaal gerelateerd aan detectie, notificatie en logging van incidenten."
+    }
+  ]}>
+
+  <p>
+    Om e-mailmeldingen in Wazuh te configureren, moet u <strong>Postfix</strong> installeren als lokale SMTP-relay en die verbinden met Gmail of Microsoft 365 met een app-wachtwoord. Vervolgens bepaalt u in <code>ossec.conf</code> welke regels de e-mail activeren en wie de ontvanger is.
+  </p>
+
+  <h2>Waarom heeft Wazuh Postfix nodig om e-mail te versturen?</h2>
+
+  <p>
+    Wazuh kan e-mailmeldingen versturen wanneer specifieke regels afgaan. Daarvoor heeft u een lokale mailserver (Postfix) nodig die relayt via de SMTP-dienst van Gmail of Microsoft 365. In dit artikel stellen we alles stap voor stap in.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/nl/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Kant-en-klaar</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Wazuh nodig in uw bedrijf?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Wij rollen Wazuh voor u uit — of voegen geavanceerde configuraties op maat toe als adviesdienst. Productieklaar en compliance-klaar.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Wazuh-advies →</span>
+    </a>
+  </aside>
+
+  <h2>Hoe maak je het app-wachtwoord aan in Gmail?</h2>
+
+  <p>
+    Gmail staat niet toe dat u uw gewone wachtwoord gebruikt voor SMTP. U heeft een <strong>app-wachtwoord</strong> nodig:
+  </p>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <h3 style="color: #60a5fa; margin-top: 0;">Vereiste</h3>
+    <p style="color: #e5e7eb; margin-bottom: 0;">
+      U moet <strong>tweestapsverificatie</strong> hebben ingeschakeld op uw Google-account. Zonder deze kunt u geen app-wachtwoorden aanmaken.
+    </p>
+  </div>
+
+  <ol>
+    <li>Ga naar <a href="https://myaccount.google.com/security" target="_blank" rel="noopener">myaccount.google.com/security</a></li>
+    <li>Schakel <strong>tweestapsverificatie</strong> in als u dat nog niet heeft gedaan</li>
+    <li>Ga direct naar <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener"><strong>App-wachtwoorden</strong></a></li>
+    <li>Typ een beschrijvende naam (bijv. "Wazuh SIEM") en klik op "Maken"</li>
+    <li>Bewaar het wachtwoord van <strong>16 tekens</strong> dat het genereert (zonder spaties)</li>
+  </ol>
+
+  <h2>Hoe installeer en configureer je Postfix?</h2>
+
+  <p>Installeer Postfix en de SASL-modules voor authenticatie:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">apt update && apt install -y postfix libsasl2-modules</code></pre>
+
+  <p>Selecteer tijdens de installatie <strong>"Internet Site"</strong> en voer de naam van uw server in.</p>
+
+  <h3>Hoe configureer je de relay naar Gmail?</h3>
+
+  <p>Bewerk <code>/etc/postfix/main.cf</code> en voeg aan het einde toe:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">relayhost = [smtp.gmail.com]:587
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noanonymous
+smtp_tls_security_level = encrypt
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt</code></pre>
+
+  <h3>Hoe maak je het inloggegevensbestand aan?</h3>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">nano /etc/postfix/sasl_passwd</code></pre>
+
+  <p>Voeg deze regel toe (met uw e-mail en app-wachtwoord):</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">[smtp.gmail.com]:587 tucuenta@gmail.com:contraseña_de_16_caracteres</code></pre>
+
+  <p>Beveilig het bestand en genereer de hash:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">chmod 600 /etc/postfix/sasl_passwd
+postmap /etc/postfix/sasl_passwd
+systemctl restart postfix</code></pre>
+
+  <h2>Hoe configureer je Postfix met Microsoft 365?</h2>
+
+  <p>Als u Microsoft in plaats van Gmail gebruikt, wijzig dan de relayhost:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">relayhost = [smtp.office365.com]:587</code></pre>
+
+  <p>En in <code>/etc/postfix/sasl_passwd</code>:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">[smtp.office365.com]:587 tucuenta@tudominio.com:tu_contraseña</code></pre>
+
+  <h2>Hoe configureer je e-mailmeldingen in Wazuh?</h2>
+
+  <p>Bewerk op de Wazuh-server <code>/var/ossec/etc/ossec.conf</code> en configureer de e-mailmeldingen:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;global&gt;
+  &lt;email_notification&gt;yes&lt;/email_notification&gt;
+  &lt;smtp_server&gt;localhost&lt;/smtp_server&gt;
+  &lt;email_from&gt;wazuh@tuservidor.com&lt;/email_from&gt;
+&lt;/global&gt;</code></pre>
+
+  <h3>Hoe stuur je meldingen per regel naar verschillende ontvangers?</h3>
+
+  <p>U kunt specifieke meldingen naar verschillende ontvangers sturen, afhankelijk van de regel:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;!-- Melding voor regel 100072: gebruiker Juan verwijdert een bestand --&gt;
+&lt;email_alerts&gt;
+  &lt;email_to&gt;ResponsableDeInformacion@tudominio.com&lt;/email_to&gt;
+  &lt;rule_id&gt;100072&lt;/rule_id&gt;
+  &lt;format&gt;full&lt;/format&gt;
+&lt;/email_alerts&gt;
+
+&lt;!-- Melding voor regel 100073: specifiek IP wijzigt een bestand --&gt;
+&lt;email_alerts&gt;
+  &lt;email_to&gt;sistemasTI@tudominio.com&lt;/email_to&gt;
+  &lt;rule_id&gt;100073&lt;/rule_id&gt;
+  &lt;format&gt;full&lt;/format&gt;
+&lt;/email_alerts&gt;</code></pre>
+
+  <p><strong>Uitleg:</strong></p>
+  <ul>
+    <li><code>email_to</code>: de e-mailontvanger</li>
+    <li><code>rule_id</code>: ID van de regel die de melding activeert</li>
+    <li><code>format</code>: "full" bevat alle details van de gebeurtenis</li>
+  </ul>
+
+  <p>Herstart de manager:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">systemctl restart wazuh-manager</code></pre>
+
+  <h2>Hoe test je of de e-mailbezorging werkt?</h2>
+
+  <p>Controleer of Postfix correct verstuurt:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">echo "Prueba de Wazuh" | mail -s "Test Postfix" tucorreo@ejemplo.com</code></pre>
+
+  <p>Bekijk het Postfix-log:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">tail -f /var/log/mail.log</code></pre>
+
+  <h2>Samenvatting</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Provider</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">SMTP-server</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Poort</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">Gmail</td>
+        <td style="padding: 12px;">smtp.gmail.com</td>
+        <td style="padding: 12px;">587</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px;">Microsoft 365</td>
+        <td style="padding: 12px;">smtp.office365.com</td>
+        <td style="padding: 12px;">587</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Welke ISO 27001:2022-controls dekt deze configuratie?</h2>
+
+  <p>
+    E-mailmeldingen in Wazuh configureren draagt direct bij aan naleving van verschillende controls uit <strong>Bijlage A van ISO 27001:2022</strong>:
+  </p>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Control</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Naam</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Hoe meldingen helpen</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.5.24</td>
+        <td style="padding: 12px;">Planning en voorbereiding van incidentbeheer</td>
+        <td style="padding: 12px;">Onmiddellijke notificatie aan het verantwoordelijke team wanneer een incident zich voordoet</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.5.25</td>
+        <td style="padding: 12px;">Beoordeling van en besluit over incidenten</td>
+        <td style="padding: 12px;">De gedetailleerde informatie in de e-mail laat u de ernst snel beoordelen</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.5.26</td>
+        <td style="padding: 12px;">Reactie op informatiebeveiligingsincidenten</td>
+        <td style="padding: 12px;">Kortere reactietijd dankzij realtime meldingen</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.8.15</td>
+        <td style="padding: 12px;">Logging</td>
+        <td style="padding: 12px;">E-mails fungeren als secundaire registratie van kritieke gebeurtenissen</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.8.16</td>
+        <td style="padding: 12px;">Monitoringactiviteiten</td>
+        <td style="padding: 12px;">Actieve monitoring met automatische notificatie aan de verantwoordelijken</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Welke ENS-maatregelen dekt het e-mailmeldingssysteem?</h2>
+
+  <p>
+    Voor organisaties die onderworpen zijn aan het Spaanse <strong>ENS (RD 311/2022)</strong> zijn e-mailmeldingen essentieel om te voldoen aan:
+  </p>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #fbbf24;">Maatregel</td>
+        <td style="padding: 12px; font-weight: bold; color: #fbbf24;">Naam</td>
+        <td style="padding: 12px; font-weight: bold; color: #fbbf24;">Hoe meldingen helpen</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.mon.1</td>
+        <td style="padding: 12px;">Inbraakdetectie</td>
+        <td style="padding: 12px;">Onmiddellijke notificatie wanneer verdachte activiteit wordt gedetecteerd</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.mon.3</td>
+        <td style="padding: 12px;">Bewaking</td>
+        <td style="padding: 12px;">Actief bewakingssysteem met escalatie naar de verantwoordelijken</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.exp.7</td>
+        <td style="padding: 12px;">Incidentbeheer</td>
+        <td style="padding: 12px;">Geautomatiseerd notificatieproces voor incidentbeheer</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.exp.9</td>
+        <td style="padding: 12px;">Logging van incidentbeheer</td>
+        <td style="padding: 12px;">E-mails leveren documentair bewijs van de gegenereerde meldingen</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); border: 2px solid #6366f1; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <div style="display: flex; align-items: flex-start; gap: 16px;">
+      <div style="background: #6366f1; border-radius: 50%; padding: 8px; flex-shrink: 0;">
+        <svg style="width: 24px; height: 24px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div>
+        <h4 style="color: #a5b4fc; margin: 0 0 8px 0; font-weight: bold;">ENS-reactietijden</h4>
+        <p style="color: #c7d2fe; margin: 0;">
+          Het ENS stelt maximale reactietijden vast op basis van de categorie van het systeem. E-mailmeldingen helpen u te voldoen aan <code style="background: #312e81; padding: 2px 6px; border-radius: 4px;">op.mon.3</code> door te garanderen dat het beveiligingspersoneel <strong>in realtime</strong> wordt genotificeerd, wat de detectie- en reactietijd drastisch verkort.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Waarom zijn e-mailmeldingen belangrijk in Wazuh?</h2>
+
+  <ul>
+    <li><strong>Snelle reactie</strong>: het beveiligingsteam ontvangt onmiddellijke notificaties zonder het dashboard constant te controleren</li>
+    <li><strong>Automatische escalatie</strong>: u kunt meldingen naar verschillende personen routeren afhankelijk van het type incident</li>
+    <li><strong>Documentair bewijs</strong>: e-mails fungeren als secundaire registratie voor audits</li>
+    <li><strong>24/7 beschikbaarheid</strong>: meldingen komen binnen, zelfs wanneer niemand actief monitort</li>
+    <li><strong>Naleving van regelgeving</strong>: toont aan dat er een operationeel systeem voor incidentnotificatie bestaat</li>
+  </ul>
+
+  <h2>Volgende stappen</h2>
+
+  <p>
+    Meldingen naar Discord en Slack sturen via webhooks is een andere optie die het opzetten waard is. Een gangbare verfijning is om e-mail te behouden voor gebeurtenissen met hoge ernst (niveau 12+ zoals regel 100072, "een gebruiker verwijdert een bestand") en meldingen van niveau 8-11 naar een chatkanaal te routeren, zodat de inbox gereserveerd blijft voor gebeurtenissen die echt menselijke actie vereisen. In de praktijk verkort deze routering de gemiddelde tijd tussen detectie en reactie van uren naar minuten, precies het bewijs dat een ENS- of ISO 27001-auditor verwacht te zien. <a href="/nl/wazuh">Ontdek onze Wazuh-diensten</a>.
+  </p>
+
+  <h2>Veelgestelde vragen</h2>
+
+  <h3>Waarom heeft Wazuh Postfix nodig om e-mailmeldingen te versturen?</h3>
+  <p>De interne mailclient van Wazuh relayt alleen naar een lokale SMTP-server. Postfix fungeert als die lokale relay (<code>smtp_server localhost</code>) en stuurt het bericht door naar Gmail of Microsoft 365 via poort 587 met TLS, waarbij het de SASL-authenticatie afhandelt die Wazuh zelf niet kan uitvoeren.</p>
+
+  <h3>Heb ik een app-wachtwoord nodig voor Gmail SMTP?</h3>
+  <p>Ja. Gmail blokkeert het gewone wachtwoord van uw account voor SMTP. U moet tweestapsverificatie inschakelen en vervolgens een app-wachtwoord van 16 tekens genereren op <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener">myaccount.google.com/apppasswords</a>, dat u opslaat in <code>/etc/postfix/sasl_passwd</code>.</p>
+
+  <h3>Welke SMTP-server en poort moet ik gebruiken voor Gmail en Microsoft 365?</h3>
+  <p>Beide providers gebruiken poort 587 met STARTTLS. Gmail gebruikt <code>smtp.gmail.com:587</code> en Microsoft 365 gebruikt <code>smtp.office365.com:587</code>. U stelt deze waarde in als <code>relayhost</code> in <code>/etc/postfix/main.cf</code>.</p>
+
+  <h3>Vanaf welk meldingsniveau verstuurt Wazuh standaard e-mails?</h3>
+  <p>Standaard verstuurt Wazuh een e-mail voor meldingen van niveau 7 en hoger. U kunt dit per regel overschrijven met een <code>&lt;email_alerts&gt;</code>-blok dat een specifiek <code>rule_id</code> target, zodat zelfs een regel van een lager niveau een specifieke ontvanger kan notificeren.</p>
+
+  <h3>Welke ISO 27001- en ENS-controls dekken de e-mailmeldingen?</h3>
+  <p>E-mailmeldingen ondersteunen de ISO 27001:2022-controls A.5.24, A.5.25, A.5.26, A.8.15 en A.8.16, en de ENS-maatregelen (RD 311/2022) op.mon.1, op.mon.3, op.exp.7 en op.exp.9, allemaal gerelateerd aan detectie, notificatie en logging van incidenten.</p>
+
+</BlogLayout>
