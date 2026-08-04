@@ -1,0 +1,231 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="nl"
+  title="Wazuh- en VirusTotal-integratie: geautomatiseerde malware-analyse"
+  description="Stel Wazuh in om verdachte bestanden automatisch te scannen tegen 70+ antivirusengines via de VirusTotal-API. Stapsgewijze gids met FIM en EICAR."
+  publishDate="2026-03-03"
+  author="AI Security"
+  readTime="8 min"
+  tags={["Wazuh", "VirusTotal", "Malware", "FIM", "SIEM", "Cybersecurity", "Integraties"]}
+  canonical="https://aisecurity.es/nl/blog/integracion-wazuh-virustotal"
+  faqSchema={[
+    {
+      question: "Hoe werkt de Wazuh- en VirusTotal-integratie?",
+      answer: "FIM (File Integrity Monitoring) detecteert nieuwe of gewijzigde bestanden in de bewaakte mappen en berekent hun SHA256-hash. De VirusTotal-integratie, geconfigureerd op de Wazuh Manager met uw API-sleutel, stuurt die hash naar VirusTotal, dat hem controleert tegen meer dan 70 antivirusengines. Als een engine het bestand als kwaadaardig markeert, activeert Wazuh regel 87105 in het Malware Detection-dashboard binnen 30 tot 60 seconden."
+    },
+    {
+      question: "Wat zijn de limieten van de gratis VirusTotal-API?",
+      answer: "De gratis VirusTotal-API staat 4 verzoeken per minuut en 500 verzoeken per dag toe. Daarom schakelt u report_changes=\"yes\" alleen in op mappen met hoog risico zoals /tmp en /root, zodat u het dagquotum niet in enkele uren opgebruikt. Sinds oktober 2025 begint het betaalde Lite-plan bij $5.000 per jaar, maar voor labs en middelgrote omgevingen volstaat de gratis versie mits chirurgisch geconfigureerd."
+    },
+    {
+      question: "Welke Wazuh-regel-ID's activeren de VirusTotal-lookup?",
+      answer: "Regel 550 gaat af wanneer FIM een nieuw bestand detecteert en regel 554 wanneer het een gewijzigd bestand detecteert. Beide worden aangehaald in het <integration>-blok met rule_id 550,554, zodat elke wijziging in een bewaakte map de hash naar VirusTotal stuurt. De resulterende VirusTotal-melding is regel 87105."
+    },
+    {
+      question: "Wat is het EICAR-bestand en waarom gebruik je het om de integratie te testen?",
+      answer: "Het EICAR-testbestand is een industriestandaard-string die elke antivirusengine opzettelijk als kwaadaardig markeert, hoewel hij volledig ongevaarlijk is. Ermee valideert u de volledige detectieketen (FIM, VirusTotal, dashboardmelding) zonder echte malware te gebruiken. Na het aanmaken in /tmp en het bevestigen van de melding verwijdert u het bestand gewoon."
+    },
+    {
+      question: "Welke mappen moeten bestanden naar VirusTotal sturen?",
+      answer: "Alleen mappen waar malware doorgaans terechtkomt, zoals /tmp en /root, zouden report_changes=\"yes\" moeten gebruiken en VirusTotal moeten bereiken. Systeemmappen zoals /etc en /bin veranderen om legitieme redenen (updates, configuratie) en zouden uw API-quotum verspillen, dus die moeten gewone FIM gebruiken zonder de VirusTotal-lookup."
+    }
+  ]}>
+
+  <p>Om Wazuh met VirusTotal te integreren, schakelt u FIM in om belangrijke mappen te bewaken, voegt u de integratie met uw VirusTotal-API-sleutel toe in <code>ossec.conf</code>, en Wazuh stuurt automatisch de hash van elk nieuw of gewijzigd bestand naar de 70+ antivirusengines van VirusTotal.</p>
+
+  <h2>Hoe werkt de Wazuh FIM- en VirusTotal-integratie?</h2>
+
+  <p>
+    <strong>FIM (File Integrity Monitoring)</strong> detecteert nieuwe of gewijzigde bestanden, maar weet niet of ze kwaadaardig zijn. <strong>VirusTotal</strong> analyseert hashes tegen meer dan 70 antivirusengines. Door ze te integreren, stuurt Wazuh automatisch elk verdacht bestand naar VirusTotal en krijgt u meldingen direct in het dashboard.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/nl/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Kant-en-klaar</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Wazuh nodig in uw bedrijf?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Wij rollen Wazuh voor u uit — of voegen geavanceerde configuraties op maat toe als adviesdienst. Productieklaar en compliance-klaar.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Wazuh-advies →</span>
+    </a>
+  </aside>
+
+  <h2>Wat zijn de limieten van de gratis API?</h2>
+
+  <p>
+    Voordat u iets configureert, leer de limieten kennen, want ze bepalen welke mappen u bewaakt:
+  </p>
+
+  <ul>
+    <li><strong>4 verzoeken/minuut</strong></li>
+    <li><strong>500 verzoeken/dag</strong></li>
+  </ul>
+
+  <p>
+    Als u te veel drukke mappen bewaakt, gebruikt u de limiet binnen enkele uren op. De oplossing: wees <strong>chirurgisch</strong> over welke mappen bestanden naar VirusTotal sturen met het attribuut <code>report_changes</code>.
+  </p>
+
+  <p>
+    <strong>Premium API:</strong> sinds oktober 2025 begint het Lite-plan bij $5.000/jaar. Voor labs en middelgrote omgevingen volstaat de gratis API mits goed geconfigureerd.
+  </p>
+
+  <h2>Stap 1: de API-sleutel verkrijgen</h2>
+
+  <ol>
+    <li>Ga naar <a href="https://www.virustotal.com" target="_blank" rel="noopener">virustotal.com</a></li>
+    <li>Maak een gratis account aan als u er nog geen heeft</li>
+    <li>Klik op uw avatar → <strong>API key</strong></li>
+    <li>Kopieer de sleutel</li>
+  </ol>
+
+  <h2>Stap 2: de integratie configureren op de Manager</h2>
+
+  <p>
+    Bewerk het configuratiebestand van de Wazuh-server:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">nano /var/ossec/etc/ossec.conf</code></pre>
+
+  <p>
+    Voeg dit blok toe vóór de sluitende tag <code>&lt;/ossec_config&gt;</code>:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;integration&gt;
+  &lt;name&gt;virustotal&lt;/name&gt;
+  &lt;api_key&gt;TU_API_KEY_AQUI&lt;/api_key&gt;
+  &lt;rule_id&gt;550,554&lt;/rule_id&gt;
+  &lt;alert_format&gt;json&lt;/alert_format&gt;
+&lt;/integration&gt;</code></pre>
+
+  <p><strong>Uitleg:</strong></p>
+  <ul>
+    <li><code>rule_id 550</code>: nieuw bestand gedetecteerd door FIM</li>
+    <li><code>rule_id 554</code>: gewijzigd bestand</li>
+    <li>Telkens als FIM iets detecteert in een bewaakte map, stuurt het de SHA256-hash naar VirusTotal</li>
+  </ul>
+
+  <p>Herstart de manager:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">systemctl restart wazuh-manager
+systemctl status wazuh-manager</code></pre>
+
+  <p>Bekijk het integratielog:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">tail -f /var/ossec/logs/integrations.log</code></pre>
+
+  <h2>Stap 3: hoe configureer je FIM op de Agent?</h2>
+
+  <p>
+    Bewerk op de agent <code>/var/ossec/etc/ossec.conf</code> en bepaal welke mappen FIM bewaakt. <strong>Alleen mappen met <code>report_changes="yes"</code></strong> sturen hashes naar VirusTotal:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;syscheck&gt;
+  &lt;!-- Volledige scan eenmaal per dag --&gt;
+  &lt;frequency&gt;86400&lt;/frequency&gt;
+  &lt;scan_on_start&gt;yes&lt;/scan_on_start&gt;
+
+  &lt;!-- Mappen met HOOG RISICO: bewaakt MET VirusTotal --&gt;
+  &lt;directories realtime="yes" check_all="yes" report_changes="yes"&gt;/tmp&lt;/directories&gt;
+  &lt;directories realtime="yes" check_all="yes" report_changes="yes"&gt;/root&lt;/directories&gt;
+&lt;/syscheck&gt;</code></pre>
+
+  <p><strong>Onderbouwing:</strong></p>
+  <ul>
+    <li><code>/tmp</code>, <code>/root</code>: waar malware doorgaans terechtkomt → <strong>ja, VirusTotal</strong></li>
+    <li><code>/etc</code>, <code>/bin</code>: systeemwijzigingen, geen malware → gewone FIM, geen VirusTotal</li>
+  </ul>
+
+  <p>Herstart de agent:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">systemctl restart wazuh-agent</code></pre>
+
+  <h2>Stap 4: hoe test je met een EICAR-bestand?</h2>
+
+  <p>
+    Het <strong>EICAR-testbestand</strong> is een standaard om antivirus te testen zonder echte malware. Elke engine markeert het opzettelijk als kwaadaardig.
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">echo 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*' > /tmp/eicar_test.txt</code></pre>
+
+  <p>
+    FIM detecteert het nieuwe bestand → activeert regel 550 → stuurt de hash naar VirusTotal → u ontvangt een melding.
+  </p>
+
+  <p>
+    Ga binnen 30-60 seconden naar het dashboard: <strong>Endpoint Security → Malware Detection</strong>
+  </p>
+
+  <p><strong>U ziet:</strong></p>
+  <ul>
+    <li><strong>Rule ID:</strong> 87105 (VirusTotal: Alert)</li>
+    <li><strong>Bestand:</strong> /tmp/eicar_test.txt</li>
+    <li><strong>Positives:</strong> aantal engines dat het markeerde</li>
+    <li><strong>Permalink:</strong> directe link naar de analyse op virustotal.com</li>
+  </ul>
+
+  <p>Ruim op na de test:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">rm /tmp/eicar_test.txt</code></pre>
+
+  <h2>Samenvatting</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Component</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Configuratie</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">Manager</td>
+        <td style="padding: 12px;"><code>&lt;integration&gt;</code> met API-sleutel en rule_id 550,554</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">FIM van de agent</td>
+        <td style="padding: 12px;"><code>report_changes="yes"</code> alleen op mappen met hoog risico</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">API-limieten</td>
+        <td style="padding: 12px;">4 verz./min, 500 verz./dag (gratis versie)</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px;">Melding</td>
+        <td style="padding: 12px;">Rule ID 87105 in Malware Detection</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Hoe houd je de integratie op termijn houdbaar?</h2>
+
+  <p>
+    De meest voorkomende fout is <code>report_changes="yes"</code> inschakelen op te brede mappen en de 500 dagelijkse verzoeken vóór de lunch opgebruiken. Een goed afgestemde opstelling stuurt doorgaans minder dan 50 hashes per dag, wat ruim binnen het gratis quotum blijft. Wanneer een echte detectie afgaat, bereikt de melding het dashboard in ongeveer 30 tot 60 seconden en bevat het een directe VirusTotal-permalink die toont hoeveel van de 70+ engines het bestand markeerden, waardevol bewijs tijdens een incident.
+  </p>
+
+  <p>
+    Voor productieomgevingen raden we aan deze integratie te koppelen aan een geautomatiseerde active response, zodat een bestand dat door meerdere engines wordt gemarkeerd automatisch in quarantaine wordt geplaatst of de agent wordt geïsoleerd, in plaats van te wachten tot een analist reageert. Dat verandert een passieve detectie in een indammingsactie gemeten in seconden in plaats van uren.
+  </p>
+
+  <h2>Veelgestelde vragen</h2>
+
+  <h3>Hoe werkt de Wazuh- en VirusTotal-integratie?</h3>
+  <p>FIM (File Integrity Monitoring) detecteert nieuwe of gewijzigde bestanden in de bewaakte mappen en berekent hun SHA256-hash. De VirusTotal-integratie, geconfigureerd op de Wazuh Manager met uw API-sleutel, stuurt die hash naar VirusTotal, dat hem controleert tegen meer dan 70 antivirusengines. Als een engine het bestand als kwaadaardig markeert, activeert Wazuh regel 87105 in het Malware Detection-dashboard binnen 30 tot 60 seconden.</p>
+
+  <h3>Wat zijn de limieten van de gratis VirusTotal-API?</h3>
+  <p>De gratis VirusTotal-API staat 4 verzoeken per minuut en 500 verzoeken per dag toe. Daarom schakelt u <code>report_changes="yes"</code> alleen in op mappen met hoog risico zoals <code>/tmp</code> en <code>/root</code>, zodat u het dagquotum niet in enkele uren opgebruikt. Sinds oktober 2025 begint het betaalde Lite-plan bij $5.000 per jaar, maar voor labs en middelgrote omgevingen volstaat de gratis versie mits chirurgisch geconfigureerd.</p>
+
+  <h3>Welke Wazuh-regel-ID's activeren de VirusTotal-lookup?</h3>
+  <p>Regel 550 gaat af wanneer FIM een nieuw bestand detecteert en regel 554 wanneer het een gewijzigd bestand detecteert. Beide worden aangehaald in het <code>&lt;integration&gt;</code>-blok met <code>rule_id 550,554</code>, zodat elke wijziging in een bewaakte map de hash naar VirusTotal stuurt. De resulterende VirusTotal-melding is regel 87105.</p>
+
+  <h3>Wat is het EICAR-bestand en waarom gebruik je het om de integratie te testen?</h3>
+  <p>Het EICAR-testbestand is een industriestandaard-string die elke antivirusengine opzettelijk als kwaadaardig markeert, hoewel hij volledig ongevaarlijk is. Ermee valideert u de volledige detectieketen (FIM, VirusTotal, dashboardmelding) zonder echte malware te gebruiken. Na het aanmaken in <code>/tmp</code> en het bevestigen van de melding verwijdert u het bestand gewoon.</p>
+
+  <h3>Welke mappen moeten bestanden naar VirusTotal sturen?</h3>
+  <p>Alleen mappen waar malware doorgaans terechtkomt, zoals <code>/tmp</code> en <code>/root</code>, zouden <code>report_changes="yes"</code> moeten gebruiken en VirusTotal moeten bereiken. Systeemmappen zoals <code>/etc</code> en <code>/bin</code> veranderen om legitieme redenen (updates, configuratie) en zouden uw API-quotum verspillen, dus die moeten gewone FIM gebruiken zonder de VirusTotal-lookup.</p>
+
+  <h2>Volgende stappen</h2>
+
+  <p>
+    We behandelen meer integraties zoals Slack, TheHive en geautomatiseerde active responses als onderdeel van onze beheerde Wazuh-dienst. <a href="/nl/wazuh">Ontdek onze Wazuh-dienst</a>.
+  </p>
+
+</BlogLayout>

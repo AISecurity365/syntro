@@ -1,0 +1,231 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="fr"
+  title="Intégration Wazuh et VirusTotal : analyse automatisée des malwares"
+  description="Configurez Wazuh pour analyser automatiquement les fichiers suspects avec plus de 70 moteurs antivirus via l'API VirusTotal. Guide étape par étape avec FIM et EICAR."
+  publishDate="2026-03-03"
+  author="AI Security"
+  readTime="8 min"
+  tags={["Wazuh", "VirusTotal", "Malware", "FIM", "SIEM", "Cybersécurité", "Intégrations"]}
+  canonical="https://aisecurity.es/fr/blog/integracion-wazuh-virustotal"
+  faqSchema={[
+    {
+      question: "Comment fonctionne l'intégration Wazuh et VirusTotal ?",
+      answer: "Le FIM (File Integrity Monitoring) détecte les fichiers nouveaux ou modifiés dans les répertoires surveillés et calcule leur hash SHA256. L'intégration VirusTotal, configurée sur le Wazuh Manager avec votre clé API, envoie ce hash à VirusTotal, qui le vérifie face à plus de 70 moteurs antivirus. Si un moteur signale le fichier comme malveillant, Wazuh déclenche la règle 87105 dans le dashboard Malware Detection en 30 à 60 secondes."
+    },
+    {
+      question: "Quelles sont les limites de l'API VirusTotal gratuite ?",
+      answer: "L'API VirusTotal gratuite autorise 4 requêtes par minute et 500 requêtes par jour. Pour cette raison, n'activez report_changes=\"yes\" que sur les répertoires à haut risque comme /tmp et /root, afin de ne pas épuiser le quota quotidien en quelques heures. Depuis octobre 2025, le plan payant Lite démarre à 5 000 $ par an, mais pour les labos et les environnements de taille moyenne, l'offre gratuite suffit si elle est configurée avec précision."
+    },
+    {
+      question: "Quels ID de règle Wazuh déclenchent la vérification VirusTotal ?",
+      answer: "La règle 550 se déclenche quand le FIM détecte un nouveau fichier et la règle 554 quand il détecte un fichier modifié. Les deux sont référencées dans le bloc <integration> avec rule_id 550,554, de sorte que tout changement dans un répertoire surveillé envoie le hash à VirusTotal. L'alerte VirusTotal résultante est la règle 87105."
+    },
+    {
+      question: "Qu'est-ce que le fichier EICAR et pourquoi l'utiliser pour tester l'intégration ?",
+      answer: "Le fichier de test EICAR est une chaîne standard du secteur que tout moteur antivirus signale intentionnellement comme malveillante, bien qu'elle soit totalement inoffensive. Il permet de valider toute la chaîne de détection (FIM, VirusTotal, alerte dashboard) sans utiliser de vrai malware. Après l'avoir créé dans /tmp et confirmé l'alerte, il suffit de supprimer le fichier."
+    },
+    {
+      question: "Quels répertoires doivent envoyer des fichiers à VirusTotal ?",
+      answer: "Seuls les répertoires où atterrit généralement le malware, comme /tmp et /root, doivent utiliser report_changes=\"yes\" et atteindre VirusTotal. Les répertoires système comme /etc et /bin changent pour des raisons légitimes (mises à jour, configuration) et gaspilleraient votre quota d'API : ils doivent donc utiliser le FIM classique sans la vérification VirusTotal."
+    }
+  ]}>
+
+  <p>Pour intégrer Wazuh à VirusTotal, activez le FIM pour surveiller les répertoires clés, ajoutez l'intégration avec votre clé API VirusTotal dans <code>ossec.conf</code>, et Wazuh enverra automatiquement le hash de chaque fichier nouveau ou modifié aux 70+ moteurs antivirus de VirusTotal.</p>
+
+  <h2>Comment fonctionne l'intégration Wazuh FIM et VirusTotal ?</h2>
+
+  <p>
+    Le <strong>FIM (File Integrity Monitoring)</strong> détecte les fichiers nouveaux ou modifiés, mais ne sait pas s'ils sont malveillants. <strong>VirusTotal</strong> analyse les hashs face à plus de 70 moteurs antivirus. En les intégrant, Wazuh envoie automatiquement chaque fichier suspect à VirusTotal et vous obtenez des alertes directement dans le dashboard.
+  </p>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/fr/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Clé en main</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Besoin de Wazuh dans votre entreprise ?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Nous déployons Wazuh pour vous — ou ajoutons des configurations avancées sur mesure en prestation de conseil. Prêt pour la production et la conformité.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Consultation Wazuh →</span>
+    </a>
+  </aside>
+
+  <h2>Quelles sont les limites de l'API gratuite ?</h2>
+
+  <p>
+    Avant de configurer quoi que ce soit, familiarisez-vous avec les limites car elles déterminent quels répertoires surveiller :
+  </p>
+
+  <ul>
+    <li><strong>4 requêtes/minute</strong></li>
+    <li><strong>500 requêtes/jour</strong></li>
+  </ul>
+
+  <p>
+    Si vous surveillez trop de répertoires actifs, vous épuiserez la limite en quelques heures. La solution : soyez <strong>chirurgical</strong> sur les répertoires qui envoient des fichiers à VirusTotal à l'aide de l'attribut <code>report_changes</code>.
+  </p>
+
+  <p>
+    <strong>API Premium :</strong> depuis octobre 2025, le plan Lite démarre à 5 000 $/an. Pour les labos et les environnements de taille moyenne, l'API gratuite suffit si elle est bien configurée.
+  </p>
+
+  <h2>Étape 1 : obtenir la clé API</h2>
+
+  <ol>
+    <li>Allez sur <a href="https://www.virustotal.com" target="_blank" rel="noopener">virustotal.com</a></li>
+    <li>Créez un compte gratuit si vous n'en avez pas</li>
+    <li>Cliquez sur votre avatar → <strong>API key</strong></li>
+    <li>Copiez la clé</li>
+  </ol>
+
+  <h2>Étape 2 : configurer l'intégration sur le Manager</h2>
+
+  <p>
+    Éditez le fichier de configuration du serveur Wazuh :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">nano /var/ossec/etc/ossec.conf</code></pre>
+
+  <p>
+    Ajoutez ce bloc avant la balise fermante <code>&lt;/ossec_config&gt;</code> :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;integration&gt;
+  &lt;name&gt;virustotal&lt;/name&gt;
+  &lt;api_key&gt;TU_API_KEY_AQUI&lt;/api_key&gt;
+  &lt;rule_id&gt;550,554&lt;/rule_id&gt;
+  &lt;alert_format&gt;json&lt;/alert_format&gt;
+&lt;/integration&gt;</code></pre>
+
+  <p><strong>Explication :</strong></p>
+  <ul>
+    <li><code>rule_id 550</code> : nouveau fichier détecté par le FIM</li>
+    <li><code>rule_id 554</code> : fichier modifié</li>
+    <li>Chaque fois que le FIM détecte quelque chose dans un répertoire surveillé, il envoie le hash SHA256 à VirusTotal</li>
+  </ul>
+
+  <p>Redémarrez le manager :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">systemctl restart wazuh-manager
+systemctl status wazuh-manager</code></pre>
+
+  <p>Consultez le journal des intégrations :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">tail -f /var/ossec/logs/integrations.log</code></pre>
+
+  <h2>Étape 3 : comment configurer le FIM sur l'Agent ?</h2>
+
+  <p>
+    Sur l'agent, éditez <code>/var/ossec/etc/ossec.conf</code> et définissez les répertoires surveillés par le FIM. <strong>Seuls les répertoires avec <code>report_changes="yes"</code></strong> enverront des hashs à VirusTotal :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;syscheck&gt;
+  &lt;!-- Scan complet une fois par jour --&gt;
+  &lt;frequency&gt;86400&lt;/frequency&gt;
+  &lt;scan_on_start&gt;yes&lt;/scan_on_start&gt;
+
+  &lt;!-- Répertoires À HAUT RISQUE : surveillés AVEC VirusTotal --&gt;
+  &lt;directories realtime="yes" check_all="yes" report_changes="yes"&gt;/tmp&lt;/directories&gt;
+  &lt;directories realtime="yes" check_all="yes" report_changes="yes"&gt;/root&lt;/directories&gt;
+&lt;/syscheck&gt;</code></pre>
+
+  <p><strong>Justification :</strong></p>
+  <ul>
+    <li><code>/tmp</code>, <code>/root</code> : là où atterrit généralement le malware → <strong>oui, VirusTotal</strong></li>
+    <li><code>/etc</code>, <code>/bin</code> : changements système, pas du malware → FIM classique, sans VirusTotal</li>
+  </ul>
+
+  <p>Redémarrez l'agent :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">systemctl restart wazuh-agent</code></pre>
+
+  <h2>Étape 4 : comment tester avec un fichier EICAR ?</h2>
+
+  <p>
+    Le <strong>fichier de test EICAR</strong> est un standard pour tester l'antivirus sans vrai malware. Chaque moteur le signale intentionnellement comme malveillant.
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">echo 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*' > /tmp/eicar_test.txt</code></pre>
+
+  <p>
+    Le FIM détecte le nouveau fichier → déclenche la règle 550 → envoie le hash à VirusTotal → vous recevez une alerte.
+  </p>
+
+  <p>
+    En 30 à 60 secondes, rendez-vous dans le dashboard : <strong>Endpoint Security → Malware Detection</strong>
+  </p>
+
+  <p><strong>Vous verrez :</strong></p>
+  <ul>
+    <li><strong>Rule ID :</strong> 87105 (VirusTotal : Alert)</li>
+    <li><strong>Fichier :</strong> /tmp/eicar_test.txt</li>
+    <li><strong>Positives :</strong> nombre de moteurs qui l'ont signalé</li>
+    <li><strong>Permalink :</strong> lien direct vers l'analyse sur virustotal.com</li>
+  </ul>
+
+  <p>Nettoyez après le test :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">rm /tmp/eicar_test.txt</code></pre>
+
+  <h2>Résumé</h2>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Composant</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Configuration</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">Manager</td>
+        <td style="padding: 12px;"><code>&lt;integration&gt;</code> avec clé API et rule_id 550,554</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">FIM de l'agent</td>
+        <td style="padding: 12px;"><code>report_changes="yes"</code> uniquement sur les répertoires à haut risque</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">Limites API</td>
+        <td style="padding: 12px;">4 req/min, 500 req/jour (offre gratuite)</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px;">Alerte</td>
+        <td style="padding: 12px;">Rule ID 87105 dans Malware Detection</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Comment rendre l'intégration durable dans le temps ?</h2>
+
+  <p>
+    L'erreur la plus courante est d'activer <code>report_changes="yes"</code> sur des répertoires trop larges et d'épuiser les 500 requêtes quotidiennes avant midi. Une configuration bien réglée envoie généralement moins de 50 hashs par jour, laissant une grande marge dans le quota gratuit. Lorsqu'une vraie détection se déclenche, l'alerte parvient au dashboard en 30 à 60 secondes environ et inclut un permalien VirusTotal direct indiquant combien des 70+ moteurs ont signalé le fichier, une preuve précieuse lors d'un incident.
+  </p>
+
+  <p>
+    Pour les environnements de production, nous recommandons d'associer cette intégration à une réponse active automatisée, afin qu'un fichier signalé par plusieurs moteurs soit mis en quarantaine ou que l'agent soit isolé automatiquement, plutôt que d'attendre la réaction d'un analyste. Cela transforme une détection passive en action de confinement mesurée en secondes plutôt qu'en heures.
+  </p>
+
+  <h2>Questions fréquentes</h2>
+
+  <h3>Comment fonctionne l'intégration Wazuh et VirusTotal ?</h3>
+  <p>Le FIM (File Integrity Monitoring) détecte les fichiers nouveaux ou modifiés dans les répertoires surveillés et calcule leur hash SHA256. L'intégration VirusTotal, configurée sur le Wazuh Manager avec votre clé API, envoie ce hash à VirusTotal, qui le vérifie face à plus de 70 moteurs antivirus. Si un moteur signale le fichier comme malveillant, Wazuh déclenche la règle 87105 dans le dashboard Malware Detection en 30 à 60 secondes.</p>
+
+  <h3>Quelles sont les limites de l'API VirusTotal gratuite ?</h3>
+  <p>L'API VirusTotal gratuite autorise 4 requêtes par minute et 500 requêtes par jour. Pour cette raison, n'activez <code>report_changes="yes"</code> que sur les répertoires à haut risque comme <code>/tmp</code> et <code>/root</code>, afin de ne pas épuiser le quota quotidien en quelques heures. Depuis octobre 2025, le plan payant Lite démarre à 5 000 $ par an, mais pour les labos et les environnements de taille moyenne, l'offre gratuite suffit si elle est configurée avec précision.</p>
+
+  <h3>Quels ID de règle Wazuh déclenchent la vérification VirusTotal ?</h3>
+  <p>La règle 550 se déclenche quand le FIM détecte un nouveau fichier et la règle 554 quand il détecte un fichier modifié. Les deux sont référencées dans le bloc <code>&lt;integration&gt;</code> avec <code>rule_id 550,554</code>, de sorte que tout changement dans un répertoire surveillé envoie le hash à VirusTotal. L'alerte VirusTotal résultante est la règle 87105.</p>
+
+  <h3>Qu'est-ce que le fichier EICAR et pourquoi l'utiliser pour tester l'intégration ?</h3>
+  <p>Le fichier de test EICAR est une chaîne standard du secteur que tout moteur antivirus signale intentionnellement comme malveillante, bien qu'elle soit totalement inoffensive. Il permet de valider toute la chaîne de détection (FIM, VirusTotal, alerte dashboard) sans utiliser de vrai malware. Après l'avoir créé dans <code>/tmp</code> et confirmé l'alerte, il suffit de supprimer le fichier.</p>
+
+  <h3>Quels répertoires doivent envoyer des fichiers à VirusTotal ?</h3>
+  <p>Seuls les répertoires où atterrit généralement le malware, comme <code>/tmp</code> et <code>/root</code>, doivent utiliser <code>report_changes="yes"</code> et atteindre VirusTotal. Les répertoires système comme <code>/etc</code> et <code>/bin</code> changent pour des raisons légitimes (mises à jour, configuration) et gaspilleraient votre quota d'API : ils doivent donc utiliser le FIM classique sans la vérification VirusTotal.</p>
+
+  <h2>Étapes suivantes</h2>
+
+  <p>
+    Nous couvrons d'autres intégrations comme Slack, TheHive et des réponses actives automatisées dans le cadre de notre service Wazuh infogéré. <a href="/fr/wazuh">Découvrez notre service Wazuh</a>.
+  </p>
+
+</BlogLayout>

@@ -52,7 +52,7 @@ export const TRANSLATIONS: Record<string, Locale[]> = {
   "/blog/configurar-alertas-correo-wazuh-postfix-gmail": ["en", "fr", "nl"],
   "/blog/detectar-instalaciones-software-windows-wazuh": ["en", "fr", "nl"],
   "/blog/monitorizar-certificados-wazuh-fim": ["en", "fr", "nl"],
-  "/blog/integracion-wazuh-virustotal": ["en"],
+  "/blog/integracion-wazuh-virustotal": ["en", "fr", "nl"],
   "/blog/panel-vulnerability-detection-wazuh": ["en"],
   "/blog/investigar-ataque-ssh-wazuh-discover": ["en"],
   "/blog/monitorizacion-de-contenedores-docker-con-wazuh": ["en"],
