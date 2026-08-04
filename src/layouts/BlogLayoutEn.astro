@@ -269,44 +269,72 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
 })();
 </script>
 
-<script>
-  // Botón de copiar en cada bloque de código
-  document.addEventListener('DOMContentLoaded', () => {
-    const codeBlocks = document.querySelectorAll('article pre');
-    codeBlocks.forEach((block) => {
-      const codeElement = block.querySelector('code');
-      if (codeElement) {
-        (codeElement as HTMLElement).style.color = '#64abd3';
+<script is:inline>
+  // Terminal-style code blocks: header bar with dots + language badge + copy button
+  window.addEventListener('load', function () {
+    var pres = document.querySelectorAll('article pre');
+
+    pres.forEach(function (pre) {
+      if (pre.classList.contains('mc-pre')) return;
+
+      var codeEl = pre.querySelector('code');
+      if (codeEl) codeEl.style.color = '#64abd3';
+      var text = codeEl ? codeEl.textContent : '';
+
+      var lang = 'bash';
+      var classMatch = codeEl ? codeEl.className.match(/language-(\w+)/) : null;
+      if (classMatch) {
+        lang = classMatch[1];
+      } else if (/Invoke-WebRequest|PowerShell|msiexec/i.test(text)) {
+        lang = 'powershell';
       }
-      const copyButton = document.createElement('button');
-      copyButton.textContent = '📋 Copy code';
-      copyButton.className = 'copy-button';
-      copyButton.setAttribute('aria-label', 'Copy code');
-      copyButton.addEventListener('click', async () => {
-        const code = block.querySelector('code');
-        const text = code?.textContent || '';
-        try {
-          await navigator.clipboard.writeText(text);
-          copyButton.textContent = '✓ Copied!';
-          copyButton.classList.add('copied');
-          setTimeout(() => {
-            copyButton.textContent = '📋 Copy code';
-            copyButton.classList.remove('copied');
-          }, 2000);
-        } catch (err) {
-          console.error('Copy error:', err);
-        }
+
+      pre.classList.add('mc-pre');
+      pre.style.position = 'relative';
+      pre.style.paddingTop = '48px';
+
+      var header = document.createElement('div');
+      header.className = 'mc-header';
+
+      var dots = document.createElement('span');
+      dots.className = 'mc-dots';
+      dots.innerHTML = '<span></span><span></span><span></span>';
+
+      var langEl = document.createElement('span');
+      langEl.className = 'mc-lang';
+      langEl.textContent = lang;
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'mc-copy';
+      btn.setAttribute('aria-label', 'Copy code');
+      btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Copy</span>';
+
+      header.appendChild(dots);
+      header.appendChild(langEl);
+      header.appendChild(btn);
+      pre.insertBefore(header, pre.firstChild);
+
+      btn.addEventListener('click', function () {
+        navigator.clipboard.writeText(text).then(function () {
+          btn.classList.add('copied');
+          btn.querySelector('span').textContent = 'Copied!';
+          setTimeout(function () {
+            btn.classList.remove('copied');
+            btn.querySelector('span').textContent = 'Copy';
+          }, 1800);
+        });
       });
-      block.parentNode?.insertBefore(copyButton, block.nextSibling);
     });
-    const inlineCodes = document.querySelectorAll('article :not(pre) > code');
-    inlineCodes.forEach((code) => {
-      (code as HTMLElement).style.color = '#64abd3';
+
+    // Inline code color (outside pre)
+    document.querySelectorAll('article :not(pre) > code').forEach(function (code) {
+      code.style.color = '#64abd3';
     });
   });
 </script>
 
-<style>
+<style is:global>
   article img { margin: 2rem auto; }
   article pre { overflow-x: auto; padding: 1.5rem; }
   article pre::before {
@@ -323,21 +351,61 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
   article h2 { background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), transparent); padding-left: 0.75rem; margin-left: -0.75rem; }
   article ul li, article ol li { padding-left: 0.5rem; }
   article ul li::marker { color: rgba(59, 130, 246, 0.7); }
-  .copy-button {
-    padding: 0.625rem 1rem;
-    margin-top: -0.5rem;
-    margin-bottom: 1.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 0.5rem;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
+
+  article pre.mc-pre {
+    border: 1px solid rgba(139,92,246,0.25) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.28);
   }
-  .copy-button:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.9); transform: translateX(4px); }
-  .copy-button:active { transform: translateX(2px); }
-  .copy-button.copied { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: rgba(16, 185, 129, 0.9); }
-  .copy-button.copied:hover { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); }
+  .mc-header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0 14px;
+    background: rgba(255,255,255,0.035);
+    border-bottom: 1px solid rgba(139,92,246,0.18);
+    border-radius: 12px 12px 0 0;
+    box-sizing: border-box;
+  }
+  .mc-dots { display: flex; gap: 6px; flex-shrink: 0; }
+  .mc-dots span {
+    width: 9px; height: 9px; border-radius: 50%; display: block;
+    background: rgba(167,139,250,0.35);
+  }
+  .mc-lang {
+    flex: 1;
+    font-family: monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+  .mc-copy {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.75);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    font-family: inherit;
+  }
+  .mc-copy:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border-color: rgba(255,255,255,0.25);
+  }
+  .mc-copy.copied {
+    background: rgba(16,185,129,0.15);
+    border-color: rgba(16,185,129,0.4);
+    color: #6ee7b7;
+  }
 </style>
