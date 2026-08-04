@@ -1,0 +1,287 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="fr"
+  title="Comment détecter les installations et désinstallations de logiciels sous Windows avec Wazuh"
+  description="Créez des règles Wazuh pour détecter les installations et désinstallations de logiciels sous Windows (Event IDs 11707 et 11724). Conformité ISO 27001 et ENS incluse."
+  publishDate="2026-03-06"
+  author="AI Security"
+  readTime="8 min"
+  tags={["Wazuh", "Windows", "Règles", "Logiciels", "Audit", "SIEM", "ENS", "ISO 27001"]}
+  canonical="https://aisecurity.es/fr/blog/detectar-instalaciones-software-windows-wazuh"
+  faqSchema={[
+    {
+      question: "Quels Event ID Windows signalent une installation ou une désinstallation de logiciel ?",
+      answer: "Windows Installer (MsiInstaller) écrit l'Event ID 11707 dans le journal Application lors d'une installation réussie et l'Event ID 11724 lors d'une désinstallation réussie. Les deux événements incluent le nom du produit, que Wazuh expose via le champ win.eventdata.data."
+    },
+    {
+      question: "Pourquoi attribuer un niveau de gravité plus élevé aux désinstallations qu'aux installations ?",
+      answer: "Dans les règles d'exemple, la règle d'installation utilise le niveau 8 et celle de désinstallation le niveau 12. Les désinstallations méritent un niveau plus élevé car supprimer un logiciel peut signifier qu'un attaquant désactive l'antivirus ou les outils de sécurité, masque son activité ou prépare le déploiement d'un malware."
+    },
+    {
+      question: "Ai-je besoin d'un décodeur personnalisé pour détecter les événements logiciels ?",
+      answer: "Non. Les événements arrivent déjà analysés dans le canal d'événements Windows, il suffit donc de filtrer sur win.system.eventID avec if_group windows. Deux petites règles dans local_rules.xml suffisent ; aucun décodeur personnalisé n'est nécessaire."
+    },
+    {
+      question: "Quels contrôles ISO 27001:2022 cette surveillance couvre-t-elle ?",
+      answer: "Elle correspond à A.8.19 (installation de logiciels sur les systèmes opérationnels), A.8.9 (gestion de la configuration), A.8.15 (journalisation), A.8.16 (activités de surveillance) et A.5.36 (conformité aux politiques et normes)."
+    },
+    {
+      question: "Combien de temps dois-je conserver ces journaux pour la conformité ENS ?",
+      answer: "L'ENS exige une conservation minimale des journaux de 2 ans. Les mesures op.mon.1 et op.mon.2 sont obligatoires à partir du niveau MOYEN de l'ENS, et ces règles Wazuh les satisfont automatiquement tout en conservant des preuves auditables."
+    }
+  ]}>
+
+  <p>
+    Wazuh détecte les installations et désinstallations de logiciels sous Windows en capturant les <strong>Event ID 11707 et 11724</strong> du journal Application. Ajouter seulement deux règles personnalisées dans <code>local_rules.xml</code> suffit à recevoir des alertes en temps réel avec le nom du logiciel, la machine et l'utilisateur concernés.
+  </p>
+
+  <h2>Quels Event ID Windows ces actions génèrent-elles ?</h2>
+
+  <p>
+    Windows Installer écrit des événements dans le journal Application chaque fois qu'un logiciel est installé ou désinstallé :
+  </p>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Event ID</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Action</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Description</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">11707</td>
+        <td style="padding: 12px;">Installation</td>
+        <td style="padding: 12px;">Logiciel installé avec succès</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px;">11724</td>
+        <td style="padding: 12px;">Désinstallation</td>
+        <td style="padding: 12px;">Logiciel supprimé du système</td>
+      </tr>
+    </table>
+  </div>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/fr/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Clé en main</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Besoin de Wazuh dans votre entreprise ?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Nous déployons Wazuh pour vous — ou ajoutons des configurations avancées sur mesure en prestation de conseil. Prêt pour la production et la conformité.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Consultation Wazuh →</span>
+    </a>
+  </aside>
+
+  <h2>Comment écrire la règle pour détecter les installations ?</h2>
+
+  <p>
+    Ajoutez cette règle dans <code>/var/ossec/etc/rules/local_rules.xml</code> :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;rule id="100200" level="8"&gt;
+  &lt;if_group&gt;windows&lt;/if_group&gt;
+  &lt;field name="win.system.eventID"&gt;^11707$&lt;/field&gt;
+  &lt;description&gt;Software instalado en Windows: $(win.eventdata.data)&lt;/description&gt;
+  &lt;options&gt;no_full_log&lt;/options&gt;
+  &lt;group&gt;software_install,policy_violation&lt;/group&gt;
+&lt;/rule&gt;</code></pre>
+
+  <p><strong>Explication :</strong></p>
+  <ul>
+    <li><code>if_group windows</code> : s'applique uniquement aux événements Windows</li>
+    <li><code>win.system.eventID</code> : filtre sur l'Event ID 11707</li>
+    <li><code>$(win.eventdata.data)</code> : inclut le nom du logiciel dans l'alerte</li>
+    <li><code>level="8"</code> : gravité moyenne-élevée</li>
+    <li><code>no_full_log</code> : exclut le journal complet (réduit la taille)</li>
+  </ul>
+
+  <h2>Comment écrire la règle pour détecter les désinstallations ?</h2>
+
+  <p>
+    Les désinstallations peuvent être plus critiques (suppression d'un logiciel de sécurité, par exemple) :
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;rule id="100201" level="12"&gt;
+  &lt;if_group&gt;windows&lt;/if_group&gt;
+  &lt;field name="win.system.eventID"&gt;^11724$&lt;/field&gt;
+  &lt;description&gt;Software desinstalado en Windows: $(win.eventdata.data)&lt;/description&gt;
+  &lt;options&gt;no_full_log&lt;/options&gt;
+  &lt;group&gt;software_uninstall,policy_violation&lt;/group&gt;
+&lt;/rule&gt;</code></pre>
+
+  <p><strong>Remarque :</strong> le niveau 12 est plus élevé car désinstaller un logiciel peut indiquer :</p>
+  <ul>
+    <li>La suppression d'un antivirus ou d'outils de sécurité</li>
+    <li>Un utilisateur qui tente de masquer son activité</li>
+    <li>La préparation à l'installation d'un logiciel malveillant</li>
+  </ul>
+
+  <h2>Comment appliquer les règles dans Wazuh ?</h2>
+
+  <p>Redémarrez le manager pour les appliquer :</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">systemctl restart wazuh-manager</code></pre>
+
+  <h2>Quelles informations verrez-vous dans le dashboard Wazuh ?</h2>
+
+  <p>
+    Lorsqu'un utilisateur installe ou désinstalle un logiciel, vous verrez des alertes dans le dashboard avec :
+  </p>
+
+  <ul>
+    <li><strong>Nom du logiciel</strong> concerné</li>
+    <li><strong>Machine</strong> où cela s'est produit</li>
+    <li><strong>Utilisateur</strong> qui a effectué l'action</li>
+    <li><strong>Horodatage exact</strong></li>
+  </ul>
+
+  <h2>Pour quels cas d'usage cette surveillance est-elle utile ?</h2>
+
+  <ul>
+    <li><strong>Conformité réglementaire</strong> : auditer les changements de logiciels (ISO 27001, ENS)</li>
+    <li><strong>Détection des menaces</strong> : alerter si l'antivirus est désinstallé</li>
+    <li><strong>Contrôle des politiques</strong> : détecter les installations non autorisées</li>
+    <li><strong>Inventaire logiciel</strong> : conserver un registre des changements</li>
+  </ul>
+
+  <h2>Quels contrôles ISO 27001:2022 cette configuration couvre-t-elle ?</h2>
+
+  <p>
+    Surveiller les installations et désinstallations de logiciels avec Wazuh vous aide à respecter plusieurs contrôles de l'<strong>Annexe A de l'ISO 27001:2022</strong> :
+  </p>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Contrôle</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Nom</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Comment Wazuh aide</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.8.19</td>
+        <td style="padding: 12px;">Installation de logiciels sur les systèmes opérationnels</td>
+        <td style="padding: 12px;">Détecte toute installation en temps réel pour vérifier si elle est autorisée</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.8.9</td>
+        <td style="padding: 12px;">Gestion de la configuration</td>
+        <td style="padding: 12px;">Enregistre les changements de configuration du système (logiciels installés/supprimés)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.8.15</td>
+        <td style="padding: 12px;">Journalisation</td>
+        <td style="padding: 12px;">Stocke les journaux d'événements avec date, utilisateur et machine concernée</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.8.16</td>
+        <td style="padding: 12px;">Activités de surveillance</td>
+        <td style="padding: 12px;">Surveillance continue avec alertes automatiques sur les changements</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.5.36</td>
+        <td style="padding: 12px;">Conformité aux politiques et normes</td>
+        <td style="padding: 12px;">Preuve auditable que les logiciels autorisés sont contrôlés</td>
+      </tr>
+    </table>
+  </div>
+
+  <p><strong>Avantage clé :</strong> les règles Wazuh génèrent automatiquement des preuves documentaires pour les audits ISO 27001, démontrant qu'il existe un contrôle actif sur les logiciels installés sur vos systèmes.</p>
+
+  <h2>Quelles mesures ENS cette surveillance satisfait-elle ?</h2>
+
+  <p>
+    Pour les organismes du secteur public espagnol ou les prestataires travaillant avec l'administration, l'<strong>ENS (RD 311/2022)</strong> exige des mesures précises que cette surveillance aide à satisfaire :
+  </p>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #fbbf24;">Mesure</td>
+        <td style="padding: 12px; font-weight: bold; color: #fbbf24;">Nom</td>
+        <td style="padding: 12px; font-weight: bold; color: #fbbf24;">Comment Wazuh aide</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.exp.1</td>
+        <td style="padding: 12px;">Inventaire des actifs</td>
+        <td style="padding: 12px;">Enregistrement automatique des changements de logiciels sur chaque machine</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.exp.8</td>
+        <td style="padding: 12px;">Journalisation de l'activité des utilisateurs</td>
+        <td style="padding: 12px;">Capture quel utilisateur a installé/désinstallé un logiciel et quand</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.mon.1</td>
+        <td style="padding: 12px;">Détection d'intrusion</td>
+        <td style="padding: 12px;">Détecte les logiciels non autorisés pouvant indiquer une compromission</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.mon.2</td>
+        <td style="padding: 12px;">Système de métriques</td>
+        <td style="padding: 12px;">Dashboard centralisé avec des statistiques d'installation</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">mp.sw.1</td>
+        <td style="padding: 12px;">Développement d'applications</td>
+        <td style="padding: 12px;">Contrôle des outils de développement installés</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">mp.sw.2</td>
+        <td style="padding: 12px;">Acceptation et mise en service</td>
+        <td style="padding: 12px;">Preuve que les logiciels déployés sont autorisés</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); border: 2px solid #6366f1; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <div style="display: flex; align-items: flex-start; gap: 16px;">
+      <div style="background: #6366f1; border-radius: 50%; padding: 8px; flex-shrink: 0;">
+        <svg style="width: 24px; height: 24px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div>
+        <h4 style="color: #a5b4fc; margin: 0 0 8px 0; font-weight: bold;">Niveau de catégorisation ENS</h4>
+        <p style="color: #c7d2fe; margin: 0;">
+          Les mesures <code style="background: #312e81; padding: 2px 6px; border-radius: 4px;">op.mon.1</code> et <code style="background: #312e81; padding: 2px 6px; border-radius: 4px;">op.mon.2</code> sont <strong>obligatoires à partir du niveau MOYEN</strong> de l'ENS. Avec ces règles Wazuh, vous satisfaites ces exigences automatiquement et avec une documentation complète.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Pourquoi utiliser Wazuh pour la conformité réglementaire ?</h2>
+
+  <ul>
+    <li><strong>Preuves automatiques</strong> : chaque alerte est enregistrée avec horodatage, utilisateur et machine</li>
+    <li><strong>Rétention configurable</strong> : vous pouvez conserver les journaux aussi longtemps que la réglementation l'exige (l'ENS exige un minimum de 2 ans)</li>
+    <li><strong>Dashboards pour les audits</strong> : des rapports visuels prêts à présenter aux auditeurs</li>
+    <li><strong>Alertes en temps réel</strong> : vous n'attendez pas un audit pour détecter une non-conformité</li>
+    <li><strong>Intégration SIEM</strong> : corrèle les événements logiciels avec d'autres alertes de sécurité</li>
+    <li><strong>Coût de licence nul</strong> : Wazuh est open source, idéal pour les PME au budget limité</li>
+  </ul>
+
+  <h2>Étapes suivantes</h2>
+
+  <p>
+    Créer des décodeurs personnalisés pour vos propres journaux d'application est une autre partie d'un déploiement Wazuh complet. Une fois que les installations et désinstallations remontent, un raffinement utile consiste à ajouter une règle de liste blanche qui abaisse le niveau pour les produits approuvés (votre navigateur standard, l'outil de mise à jour de votre antivirus) afin que l'alerte de désinstallation de niveau 12 soit réservée aux suppressions réellement suspectes. Comme Wazuh est open source, sans coût de licence, ce type de contrôle des politiques s'étend à des centaines d'agents Windows sans frais par poste, ce qui convient aux PME qui doivent tout de même prouver leur conformité ISO 27001 et ENS aux auditeurs. <a href="/fr/wazuh">Découvrez nos services Wazuh</a>.
+  </p>
+
+  <h2>Questions fréquentes</h2>
+
+  <h3>Quels Event ID Windows signalent une installation ou une désinstallation de logiciel ?</h3>
+  <p>Windows Installer (MsiInstaller) écrit l'Event ID 11707 dans le journal Application lors d'une installation réussie et l'Event ID 11724 lors d'une désinstallation réussie. Les deux événements incluent le nom du produit, que Wazuh expose via le champ <code>win.eventdata.data</code>.</p>
+
+  <h3>Pourquoi attribuer un niveau de gravité plus élevé aux désinstallations qu'aux installations ?</h3>
+  <p>Dans les règles d'exemple, la règle d'installation utilise le niveau 8 et celle de désinstallation le niveau 12. Les désinstallations méritent un niveau plus élevé car supprimer un logiciel peut signifier qu'un attaquant désactive l'antivirus ou les outils de sécurité, masque son activité ou prépare le déploiement d'un malware.</p>
+
+  <h3>Ai-je besoin d'un décodeur personnalisé pour détecter les événements logiciels ?</h3>
+  <p>Non. Les événements arrivent déjà analysés dans le canal d'événements Windows, il suffit donc de filtrer sur <code>win.system.eventID</code> avec <code>if_group windows</code>. Deux petites règles dans <code>local_rules.xml</code> suffisent ; aucun décodeur personnalisé n'est nécessaire.</p>
+
+  <h3>Quels contrôles ISO 27001:2022 cette surveillance couvre-t-elle ?</h3>
+  <p>Elle correspond à A.8.19 (installation de logiciels sur les systèmes opérationnels), A.8.9 (gestion de la configuration), A.8.15 (journalisation), A.8.16 (activités de surveillance) et A.5.36 (conformité aux politiques et normes).</p>
+
+  <h3>Combien de temps dois-je conserver ces journaux pour la conformité ENS ?</h3>
+  <p>L'ENS exige une conservation minimale des journaux de 2 ans. Les mesures op.mon.1 et op.mon.2 sont obligatoires à partir du niveau MOYEN de l'ENS, et ces règles Wazuh les satisfont automatiquement tout en conservant des preuves auditables.</p>
+
+</BlogLayout>

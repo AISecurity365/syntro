@@ -1,0 +1,287 @@
+---
+import BlogLayout from "../../../layouts/BlogLayoutIntl.astro";
+---
+
+<BlogLayout
+  locale="nl"
+  title="Software-installaties en -verwijderingen op Windows detecteren met Wazuh"
+  description="Maak Wazuh-regels om software-installaties en -verwijderingen op Windows te detecteren (Event IDs 11707 en 11724). Naleving van ISO 27001 en ENS inbegrepen."
+  publishDate="2026-03-06"
+  author="AI Security"
+  readTime="8 min"
+  tags={["Wazuh", "Windows", "Regels", "Software", "Audit", "SIEM", "ENS", "ISO 27001"]}
+  canonical="https://aisecurity.es/nl/blog/detectar-instalaciones-software-windows-wazuh"
+  faqSchema={[
+    {
+      question: "Welke Windows Event ID's duiden op een software-installatie of -verwijdering?",
+      answer: "Windows Installer (MsiInstaller) schrijft Event ID 11707 naar het Application-log bij een geslaagde installatie en Event ID 11724 bij een geslaagde verwijdering. Beide gebeurtenissen bevatten de productnaam, die Wazuh weergeeft via het veld win.eventdata.data."
+    },
+    {
+      question: "Waarom een hoger ernstniveau toekennen aan verwijderingen dan aan installaties?",
+      answer: "In de voorbeeldregels gebruikt de installatieregel niveau 8 en de verwijderingsregel niveau 12. Verwijderingen verdienen een hoger niveau omdat het verwijderen van software kan betekenen dat een aanvaller de antivirus of beveiligingstools uitschakelt, activiteit verbergt of zich voorbereidt om malware uit te rollen."
+    },
+    {
+      question: "Heb ik een aangepaste decoder nodig om software-gebeurtenissen te detecteren?",
+      answer: "Nee. De gebeurtenissen komen al geparseerd binnen in het Windows-gebeurteniskanaal, dus u filtert alleen op win.system.eventID met if_group windows. Twee kleine regels in local_rules.xml zijn genoeg; er is geen aangepaste decoder nodig."
+    },
+    {
+      question: "Welke ISO 27001:2022-controls dekt deze monitoring?",
+      answer: "Het komt overeen met A.8.19 (installatie van software op operationele systemen), A.8.9 (configuratiebeheer), A.8.15 (logging), A.8.16 (monitoringactiviteiten) en A.5.36 (naleving van beleid en normen)."
+    },
+    {
+      question: "Hoe lang moet ik deze logs bewaren voor ENS-naleving?",
+      answer: "Het ENS vereist een minimale logbewaring van 2 jaar. De maatregelen op.mon.1 en op.mon.2 zijn verplicht vanaf het MIDDEN-niveau van het ENS, en deze Wazuh-regels voldoen daar automatisch aan terwijl ze auditeerbaar bewijs bewaren."
+    }
+  ]}>
+
+  <p>
+    Wazuh detecteert software-installaties en -verwijderingen op Windows door de <strong>Event ID's 11707 en 11724</strong> uit het Application-log vast te leggen. Het toevoegen van slechts twee aangepaste regels in <code>local_rules.xml</code> is genoeg om realtime meldingen te ontvangen met de softwarenaam, de machine en de betrokken gebruiker.
+  </p>
+
+  <h2>Welke Windows Event ID's genereren deze acties?</h2>
+
+  <p>
+    Windows Installer schrijft gebeurtenissen naar het Application-log telkens als software wordt geïnstalleerd of verwijderd:
+  </p>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Event ID</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Actie</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Beschrijving</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px;">11707</td>
+        <td style="padding: 12px;">Installatie</td>
+        <td style="padding: 12px;">Software succesvol geïnstalleerd</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px;">11724</td>
+        <td style="padding: 12px;">Verwijdering</td>
+        <td style="padding: 12px;">Software van het systeem verwijderd</td>
+      </tr>
+    </table>
+  </div>
+
+  <aside class="not-prose" style="margin:2.5rem 0;">
+    <a href="/nl/wazuh" style="display:block;padding:1.5rem;border-radius:16px;background:rgba(255,255,255,0.035);border:1px solid rgba(96,165,250,0.35);text-decoration:none;">
+      <span style="display:inline-block;font-size:0.72rem;font-weight:700;padding:5px 11px;border-radius:9999px;margin-bottom:0.9rem;color:#bfdbfe;background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.35);">🛠️ Kant-en-klaar</span>
+      <div style="font-size:1.18rem;font-weight:800;color:#f0f6ff;margin-bottom:0.5rem;">Wazuh nodig in uw bedrijf?</div>
+      <div style="font-size:0.9rem;line-height:1.55;color:rgba(240,246,255,0.66);margin-bottom:1rem;">Wij rollen Wazuh voor u uit — of voegen geavanceerde configuraties op maat toe als adviesdienst. Productieklaar en compliance-klaar.</div>
+      <span style="display:inline-flex;padding:0.7rem 1.3rem;border-radius:0.7rem;font-weight:700;font-size:0.9rem;color:#0a0f1a;background:#60a5fa;">Wazuh-advies →</span>
+    </a>
+  </aside>
+
+  <h2>Hoe schrijf je de regel om installaties te detecteren?</h2>
+
+  <p>
+    Voeg deze regel toe in <code>/var/ossec/etc/rules/local_rules.xml</code>:
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;rule id="100200" level="8"&gt;
+  &lt;if_group&gt;windows&lt;/if_group&gt;
+  &lt;field name="win.system.eventID"&gt;^11707$&lt;/field&gt;
+  &lt;description&gt;Software instalado en Windows: $(win.eventdata.data)&lt;/description&gt;
+  &lt;options&gt;no_full_log&lt;/options&gt;
+  &lt;group&gt;software_install,policy_violation&lt;/group&gt;
+&lt;/rule&gt;</code></pre>
+
+  <p><strong>Uitleg:</strong></p>
+  <ul>
+    <li><code>if_group windows</code>: geldt alleen voor Windows-gebeurtenissen</li>
+    <li><code>win.system.eventID</code>: filtert op Event ID 11707</li>
+    <li><code>$(win.eventdata.data)</code>: neemt de softwarenaam op in de melding</li>
+    <li><code>level="8"</code>: middelhoge ernst</li>
+    <li><code>no_full_log</code>: sluit het volledige log uit (verkleint de omvang)</li>
+  </ul>
+
+  <h2>Hoe schrijf je de regel om verwijderingen te detecteren?</h2>
+
+  <p>
+    Verwijderingen kunnen kritieker zijn (het verwijderen van beveiligingssoftware bijvoorbeeld):
+  </p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">&lt;rule id="100201" level="12"&gt;
+  &lt;if_group&gt;windows&lt;/if_group&gt;
+  &lt;field name="win.system.eventID"&gt;^11724$&lt;/field&gt;
+  &lt;description&gt;Software desinstalado en Windows: $(win.eventdata.data)&lt;/description&gt;
+  &lt;options&gt;no_full_log&lt;/options&gt;
+  &lt;group&gt;software_uninstall,policy_violation&lt;/group&gt;
+&lt;/rule&gt;</code></pre>
+
+  <p><strong>Opmerking:</strong> niveau 12 is hoger omdat het verwijderen van software kan wijzen op:</p>
+  <ul>
+    <li>Het verwijderen van een antivirus of beveiligingstools</li>
+    <li>Een gebruiker die zijn activiteit probeert te verbergen</li>
+    <li>Voorbereiding op de installatie van kwaadaardige software</li>
+  </ul>
+
+  <h2>Hoe pas je de regels toe in Wazuh?</h2>
+
+  <p>Herstart de manager om ze toe te passen:</p>
+
+  <pre style="background:#0f1419;padding:16px;border-radius:8px;overflow-x:auto;"><code style="color: #e5e7eb;">systemctl restart wazuh-manager</code></pre>
+
+  <h2>Welke informatie zie je in het Wazuh-dashboard?</h2>
+
+  <p>
+    Wanneer een gebruiker software installeert of verwijdert, ziet u meldingen in het dashboard met:
+  </p>
+
+  <ul>
+    <li><strong>Naam van de betrokken software</strong></li>
+    <li><strong>Machine</strong> waar het gebeurde</li>
+    <li><strong>Gebruiker</strong> die de actie uitvoerde</li>
+    <li><strong>Exacte tijdstempel</strong></li>
+  </ul>
+
+  <h2>Voor welke use cases is deze monitoring nuttig?</h2>
+
+  <ul>
+    <li><strong>Naleving van regelgeving</strong>: softwarewijzigingen auditen (ISO 27001, ENS)</li>
+    <li><strong>Dreigingsdetectie</strong>: waarschuwen als de antivirus wordt verwijderd</li>
+    <li><strong>Beleidscontrole</strong>: ongeautoriseerde installaties detecteren</li>
+    <li><strong>Software-inventaris</strong>: een register van wijzigingen bijhouden</li>
+  </ul>
+
+  <h2>Welke ISO 27001:2022-controls dekt deze configuratie?</h2>
+
+  <p>
+    Het monitoren van software-installaties en -verwijderingen met Wazuh helpt u te voldoen aan verschillende controls uit <strong>Bijlage A van ISO 27001:2022</strong>:
+  </p>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Control</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Naam</td>
+        <td style="padding: 12px; font-weight: bold; color: #60a5fa;">Hoe Wazuh helpt</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.8.19</td>
+        <td style="padding: 12px;">Installatie van software op operationele systemen</td>
+        <td style="padding: 12px;">Detecteert elke installatie in realtime om te verifiëren of deze geautoriseerd is</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.8.9</td>
+        <td style="padding: 12px;">Configuratiebeheer</td>
+        <td style="padding: 12px;">Registreert wijzigingen in de systeemconfiguratie (software geïnstalleerd/verwijderd)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.8.15</td>
+        <td style="padding: 12px;">Logging</td>
+        <td style="padding: 12px;">Slaat gebeurtenislogs op met datum, gebruiker en betrokken machine</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.8.16</td>
+        <td style="padding: 12px;">Monitoringactiviteiten</td>
+        <td style="padding: 12px;">Continue monitoring met automatische meldingen bij wijzigingen</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; color: #34d399; font-weight: bold;">A.5.36</td>
+        <td style="padding: 12px;">Naleving van beleid en normen</td>
+        <td style="padding: 12px;">Auditeerbaar bewijs dat toegestane software wordt gecontroleerd</td>
+      </tr>
+    </table>
+  </div>
+
+  <p><strong>Belangrijk voordeel:</strong> Wazuh-regels genereren automatisch documentair bewijs voor ISO 27001-audits en tonen aan dat er actieve controle is over de software die op uw systemen is geïnstalleerd.</p>
+
+  <h2>Welke ENS-maatregelen voldoet deze monitoring aan?</h2>
+
+  <p>
+    Voor Spaanse publieke organisaties of leveranciers die met de overheid werken, vereist het <strong>ENS (RD 311/2022)</strong> specifieke maatregelen waaraan deze monitoring helpt te voldoen:
+  </p>
+
+  <div style="background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%); border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; color: #e5e7eb;">
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; font-weight: bold; color: #fbbf24;">Maatregel</td>
+        <td style="padding: 12px; font-weight: bold; color: #fbbf24;">Naam</td>
+        <td style="padding: 12px; font-weight: bold; color: #fbbf24;">Hoe Wazuh helpt</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.exp.1</td>
+        <td style="padding: 12px;">Activa-inventaris</td>
+        <td style="padding: 12px;">Automatische registratie van softwarewijzigingen op elke machine</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.exp.8</td>
+        <td style="padding: 12px;">Logging van gebruikersactiviteit</td>
+        <td style="padding: 12px;">Legt vast welke gebruiker software installeerde/verwijderde en wanneer</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.mon.1</td>
+        <td style="padding: 12px;">Inbraakdetectie</td>
+        <td style="padding: 12px;">Detecteert ongeautoriseerde software die op een compromittering kan wijzen</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">op.mon.2</td>
+        <td style="padding: 12px;">Metrieksysteem</td>
+        <td style="padding: 12px;">Gecentraliseerd dashboard met installatiestatistieken</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #2d3748;">
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">mp.sw.1</td>
+        <td style="padding: 12px;">Applicatieontwikkeling</td>
+        <td style="padding: 12px;">Controle over welke ontwikkeltools zijn geïnstalleerd</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; color: #f472b6; font-weight: bold;">mp.sw.2</td>
+        <td style="padding: 12px;">Acceptatie en ingebruikname</td>
+        <td style="padding: 12px;">Bewijs dat uitgerolde software geautoriseerd is</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); border: 2px solid #6366f1; border-radius: 12px; padding: 24px; margin: 24px 0;">
+    <div style="display: flex; align-items: flex-start; gap: 16px;">
+      <div style="background: #6366f1; border-radius: 50%; padding: 8px; flex-shrink: 0;">
+        <svg style="width: 24px; height: 24px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div>
+        <h4 style="color: #a5b4fc; margin: 0 0 8px 0; font-weight: bold;">ENS-categorisatieniveau</h4>
+        <p style="color: #c7d2fe; margin: 0;">
+          De maatregelen <code style="background: #312e81; padding: 2px 6px; border-radius: 4px;">op.mon.1</code> en <code style="background: #312e81; padding: 2px 6px; border-radius: 4px;">op.mon.2</code> zijn <strong>verplicht vanaf het MIDDEN-niveau</strong> van het ENS. Met deze Wazuh-regels voldoet u automatisch en met volledige documentatie aan die eisen.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Waarom Wazuh gebruiken voor naleving van regelgeving?</h2>
+
+  <ul>
+    <li><strong>Automatisch bewijs</strong>: elke melding wordt vastgelegd met tijdstempel, gebruiker en machine</li>
+    <li><strong>Configureerbare bewaring</strong>: u kunt logs zo lang bewaren als de regelgeving vereist (het ENS eist minimaal 2 jaar)</li>
+    <li><strong>Dashboards voor audits</strong>: visuele rapporten klaar om aan auditoren te presenteren</li>
+    <li><strong>Realtime meldingen</strong>: u wacht niet op een audit om non-conformiteit te detecteren</li>
+    <li><strong>SIEM-integratie</strong>: correleert software-gebeurtenissen met andere beveiligingsmeldingen</li>
+    <li><strong>Geen licentiekosten</strong>: Wazuh is open source, ideaal voor mkb met een beperkt budget</li>
+  </ul>
+
+  <h2>Volgende stappen</h2>
+
+  <p>
+    Aangepaste decoders bouwen voor uw eigen applicatielogs is een ander onderdeel van een volledige Wazuh-uitrol. Zodra installaties en verwijderingen binnenkomen, is een nuttige verfijning het toevoegen van een allow-list-regel die het niveau verlaagt voor goedgekeurde producten (uw standaardbrowser, de updater van uw antivirus) zodat de verwijderingsmelding van niveau 12 gereserveerd blijft voor werkelijk verdachte verwijderingen. Omdat Wazuh open source is, zonder licentiekosten, schaalt dit soort beleidscontrole naar honderden Windows-agents zonder kosten per endpoint, wat past bij mkb-bedrijven die toch hun ISO 27001- en ENS-naleving aan auditoren moeten bewijzen. <a href="/nl/wazuh">Ontdek onze Wazuh-diensten</a>.
+  </p>
+
+  <h2>Veelgestelde vragen</h2>
+
+  <h3>Welke Windows Event ID's duiden op een software-installatie of -verwijdering?</h3>
+  <p>Windows Installer (MsiInstaller) schrijft Event ID 11707 naar het Application-log bij een geslaagde installatie en Event ID 11724 bij een geslaagde verwijdering. Beide gebeurtenissen bevatten de productnaam, die Wazuh weergeeft via het veld <code>win.eventdata.data</code>.</p>
+
+  <h3>Waarom een hoger ernstniveau toekennen aan verwijderingen dan aan installaties?</h3>
+  <p>In de voorbeeldregels gebruikt de installatieregel niveau 8 en de verwijderingsregel niveau 12. Verwijderingen verdienen een hoger niveau omdat het verwijderen van software kan betekenen dat een aanvaller de antivirus of beveiligingstools uitschakelt, activiteit verbergt of zich voorbereidt om malware uit te rollen.</p>
+
+  <h3>Heb ik een aangepaste decoder nodig om software-gebeurtenissen te detecteren?</h3>
+  <p>Nee. De gebeurtenissen komen al geparseerd binnen in het Windows-gebeurteniskanaal, dus u filtert alleen op <code>win.system.eventID</code> met <code>if_group windows</code>. Twee kleine regels in <code>local_rules.xml</code> zijn genoeg; er is geen aangepaste decoder nodig.</p>
+
+  <h3>Welke ISO 27001:2022-controls dekt deze monitoring?</h3>
+  <p>Het komt overeen met A.8.19 (installatie van software op operationele systemen), A.8.9 (configuratiebeheer), A.8.15 (logging), A.8.16 (monitoringactiviteiten) en A.5.36 (naleving van beleid en normen).</p>
+
+  <h3>Hoe lang moet ik deze logs bewaren voor ENS-naleving?</h3>
+  <p>Het ENS vereist een minimale logbewaring van 2 jaar. De maatregelen op.mon.1 en op.mon.2 zijn verplicht vanaf het MIDDEN-niveau van het ENS, en deze Wazuh-regels voldoen daar automatisch aan terwijl ze auditeerbaar bewijs bewaren.</p>
+
+</BlogLayout>
