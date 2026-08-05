@@ -89,8 +89,28 @@ Patrón usado en el proyecto: `/contacto-migracion?plan=X` pre-rellena el servic
 
 ## Versión EN
 
-El post EN va en la estructura i18n `/en` (ver memoria `project_i18n_en`). Añadir a
+El post EN va en `src/pages/en/blog/<slug>.astro` usando **`BlogLayoutEn`** (no `BlogLayout`),
+dentro de la estructura i18n `/en` (ver memoria `project_i18n_en`). Añadir a
 `TRANSLATED_PATHS` y hreflang. No es traducción literal: adaptar ejemplos al mercado EN.
+
+### Estándar visual EN (ago 2026) — igual que ES, mismo componente compartido
+
+`BlogLayoutEn.astro` y `BlogLayout.astro` usan el **mismo diseño de bloques de código**:
+cabecera tipo terminal con puntos + badge de lenguaje (detectado desde `language-xxx` en el
+`<code>`, o heurística bash/powershell) + botón **"Copy"/"Copiar"** integrado (clases
+`mc-pre` / `mc-header` / `mc-dots` / `mc-lang` / `mc-copy`). **Nunca** volver al patrón viejo
+de un botón flotante "📋 Copy code" debajo del bloque — quedaba peor y ya no se usa en ningún
+post. Al escribir código en un post, basta con `<pre><code class="language-bash">…</code></pre>`;
+el layout añade la cabecera y el copiado automáticamente vía script — no hay que montarlo a mano.
+
+### CTA de Wazuh en EN
+
+Los posts de Wazuh en inglés usan `<WazuhEnCtaBlock />` (`src/components/blog/WazuhEnCtaBlock.astro`),
+colocado **pronto** (justo tras el párrafo de respuesta directa, antes del primer `<h2>` — no al
+final) para que tenga protagonismo. Enlaza a la waitlist del curso EN + a `/en/wazuh` (consultoría).
+Además, sigue la regla 4bis de `docs/seo/README.md`: **1 enlace contextual en prosa** a `/en/wazuh`
+en el punto de fricción del artículo (p. ej. "si aún no tienes Wazuh instalado…") — el curso no se
+traduce, así que el contextual EN siempre apunta al servicio, nunca a un curso.
 
 ## Publicación
 
@@ -103,5 +123,5 @@ proyecto ya hacen `git add -A` + commit + push. Tras el push de una página nuev
 - [ ] Añadido al array de `index.astro` (mismo commit).
 - [ ] Respuesta directa en primer párrafo + H2 en pregunta + FAQ JSON-LD.
 - [ ] 1 CTA al final, enlaces internos.
-- [ ] Versión EN en `/en` + hreflang.
+- [ ] Versión EN en `/en` con `BlogLayoutEn` + hreflang (si es de Wazuh: `<WazuhEnCtaBlock />` pronto + 1 contextual a `/en/wazuh`).
 - [ ] `astro check` sin errores.
