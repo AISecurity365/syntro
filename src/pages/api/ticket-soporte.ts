@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
+import { saveLead } from '../../lib/leads';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
@@ -36,6 +37,17 @@ export const POST: APIRoute = async ({ request }) => {
     };
 
     const tipoTexto = tiposMap[tipo] || tipo;
+
+    // Guardar en el CRM de leads (no bloquea el envio de emails si falla)
+    await saveLead({
+      source: 'ticket-soporte',
+      name: nombre,
+      company: empresa,
+      email,
+      phone: telefono,
+      message: descripcion,
+      extra: { tipo: tipoTexto, anydesk },
+    });
 
     // Email HTML para el usuario (confirmación)
     const userEmailHtml = `

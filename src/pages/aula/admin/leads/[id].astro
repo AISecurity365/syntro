@@ -1,0 +1,194 @@
+---
+import AulaLayout from '../../../../layouts/AulaLayout.astro';
+import { createServerClient } from '../../../../lib/supabase';
+
+const user = Astro.locals.user;
+
+const ADMIN_EMAIL = 'julen.sistemas@gmail.com';
+
+if (!user || user.email !== ADMIN_EMAIL) {
+  return Astro.redirect('/aula');
+}
+
+const { id } = Astro.params;
+const supabaseAdmin = createServerClient();
+
+const { data: lead, error: leadError } = await supabaseAdmin
+  .from('leads')
+  .select('*')
+  .eq('id', id)
+  .single();
+
+if (leadError || !lead) {
+  return Astro.redirect('/aula/admin/leads');
+}
+
+const { data: notesData } = await supabaseAdmin
+  .from('lead_notes')
+  .select('*')
+  .eq('lead_id', id)
+  .order('created_at', { ascending: false });
+
+const notes = notesData || [];
+
+const SOURCE_LABELS: Record<string, string> = {
+  'contacto': 'Contacto general',
+  'migracion': 'Migración/Presupuesto',
+  'demo-wazuh': 'Demo Wazuh',
+  'te-llamamos': 'Te llamamos',
+  'ticket-soporte': 'Ticket soporte',
+  'reunion': 'Reunión',
+  'partner': 'Partner LATAM',
+  'passbolt': 'Passbolt',
+  'inscripcion-curso-wazuh': 'Inscripción curso Wazuh',
+  'lista-espera-wazuh-en': 'Lista espera Wazuh EN',
+  'lista-espera-techai-boost': 'Lista espera TechIA Boost',
+  'lista-espera-seo-geo': 'Lista espera SEO+GEO',
+};
+
+const extra = (lead.extra && typeof lead.extra === 'object') ? lead.extra : {};
+const extraEntries = Object.entries(extra).filter(([, v]) => v !== null && v !== undefined && v !== '');
+
+function formatDateTime(dateStr: string | null): string {
+  if (!dateStr) return '-';
+  return new Date(dateStr).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+const updated = Astro.url.searchParams.get('updated') === '1';
+---
+
+<AulaLayout title={`Lead: ${lead.name || lead.email || lead.id} - Admin`}>
+  <div class="mb-6">
+    <a href="/aula/admin/leads" class="text-sm transition-colors hover:opacity-80" style="color: #60a5fa;">← Volver al listado</a>
+  </div>
+
+  {updated && (
+    <div class="rounded-xl p-4 mb-6" style="background-color: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; color: #86efac;">
+      Guardado correctamente.
+    </div>
+  )}
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Columna izquierda: datos del lead -->
+    <div class="lg:col-span-1 space-y-4">
+      <div class="rounded-xl p-6" style="background-color: #1a1f26; border: 1px solid #2d3748;">
+        <h1 class="text-xl font-bold mb-1" style="color: #ffffff;">{lead.name || 'Sin nombre'}</h1>
+        {lead.company && <p class="text-sm mb-4" style="color: #9ca3af;">{lead.company}</p>}
+
+        <div class="space-y-3 text-sm">
+          <div>
+            <p style="color: #6b7280;">Origen</p>
+            <p style="color: #e5e7eb;">{SOURCE_LABELS[lead.source] || lead.source}</p>
+          </div>
+          <div>
+            <p style="color: #6b7280;">Idioma</p>
+            <p style="color: #e5e7eb;">{lead.lang === 'en' ? '🇬🇧 English' : '🇪🇸 Español'}</p>
+          </div>
+          {lead.email && (
+            <div>
+              <p style="color: #6b7280;">Email</p>
+              <p style="color: #e5e7eb;"><a href={`mailto:${lead.email}`} style="color: #60a5fa;">{lead.email}</a></p>
+            </div>
+          )}
+          {lead.phone && (
+            <div>
+              <p style="color: #6b7280;">Teléfono</p>
+              <p style="color: #e5e7eb;"><a href={`tel:${lead.phone}`} style="color: #60a5fa;">{lead.phone}</a></p>
+            </div>
+          )}
+          {lead.plan && (
+            <div>
+              <p style="color: #6b7280;">Plan / Servicio</p>
+              <p style="color: #e5e7eb;">{lead.plan}</p>
+            </div>
+          )}
+          {lead.message && (
+            <div>
+              <p style="color: #6b7280;">Mensaje</p>
+              <p class="whitespace-pre-wrap" style="color: #e5e7eb;">{lead.message}</p>
+            </div>
+          )}
+          <div>
+            <p style="color: #6b7280;">Recibido</p>
+            <p style="color: #e5e7eb;">{formatDateTime(lead.created_at)}</p>
+          </div>
+
+          {extraEntries.length > 0 && (
+            <div class="pt-3 border-t" style="border-color: #2d3748;">
+              <p class="mb-2" style="color: #6b7280;">Detalles adicionales</p>
+              <div class="space-y-1.5">
+                {extraEntries.map(([k, v]) => (
+                  <p style="color: #9ca3af;"><span style="color: #6b7280;">{k}:</span> {String(v)}</p>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna derecha: seguimiento -->
+    <div class="lg:col-span-2 space-y-4">
+      <!-- Formulario de seguimiento -->
+      <div class="rounded-xl p-6" style="background-color: #1a1f26; border: 1px solid #2d3748;">
+        <h2 class="text-lg font-bold mb-4" style="color: #ffffff;">Registrar seguimiento</h2>
+        <form method="post" action="/api/aula/admin/lead-action" class="space-y-4">
+          <input type="hidden" name="lead_id" value={lead.id} />
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs mb-1" style="color: #9ca3af;">Estado</label>
+              <select name="status" class="w-full rounded-lg px-3 py-2 text-sm" style="background-color: #0f1419; color: #e5e7eb; border: 1px solid #2d3748;">
+                <option value="nuevo" selected={lead.status === 'nuevo'}>Nuevo</option>
+                <option value="contactado" selected={lead.status === 'contactado'}>Contactado</option>
+                <option value="convertido" selected={lead.status === 'convertido'}>Convertido</option>
+                <option value="descartado" selected={lead.status === 'descartado'}>Descartado</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs mb-1" style="color: #9ca3af;">Próximo seguimiento (opcional)</label>
+              <input
+                type="date"
+                name="next_follow_up_date"
+                value={lead.next_follow_up_date || ''}
+                class="w-full rounded-lg px-3 py-2 text-sm"
+                style="background-color: #0f1419; color: #e5e7eb; border: 1px solid #2d3748;"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs mb-1" style="color: #9ca3af;">Nota (ej. "Contactado por teléfono, interesado en plan X")</label>
+            <textarea
+              name="note"
+              rows="3"
+              class="w-full rounded-lg px-3 py-2 text-sm"
+              style="background-color: #0f1419; color: #e5e7eb; border: 1px solid #2d3748;"
+              placeholder="Escribe una nota sobre esta interacción..."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors hover:opacity-80" style="background-color: #0065ff; color: #ffffff;">
+            Guardar
+          </button>
+        </form>
+      </div>
+
+      <!-- Historial de notas -->
+      <div class="rounded-xl p-6" style="background-color: #1a1f26; border: 1px solid #2d3748;">
+        <h2 class="text-lg font-bold mb-4" style="color: #ffffff;">Historial ({notes.length})</h2>
+        {notes.length === 0 && (
+          <p class="text-sm" style="color: #6b7280;">Todavía no hay notas de seguimiento para este lead.</p>
+        )}
+        <div class="space-y-4">
+          {notes.map((n: any) => (
+            <div class="pl-4 py-2" style="border-left: 2px solid #2d3748;">
+              <p class="text-xs mb-1" style="color: #6b7280;">{formatDateTime(n.created_at)}</p>
+              <p class="text-sm whitespace-pre-wrap" style="color: #e5e7eb;">{n.note}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</AulaLayout>

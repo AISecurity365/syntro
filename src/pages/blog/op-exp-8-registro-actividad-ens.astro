@@ -1,0 +1,242 @@
+---
+import BlogLayout from "../../layouts/BlogLayout.astro";
+
+const faqSchema = [
+  {
+    question: "¿op.exp.8 aplica en el nivel básico del ENS?",
+    answer: "Sí. op.exp.8 (registro de la actividad) es una de las medidas que ya exige el nivel básico del ENS, sin refuerzos adicionales. A partir del nivel medio se le suman los refuerzos R1 (revisión periódica), R2 (sincronización de tiempo), R3 (retención de registros) y R4 (control de acceso); el nivel alto añade además R5 (análisis automático). No es una medida que aparezca solo en niveles altos — aplica desde el primer día."
+  },
+  {
+    question: "¿Qué es la sincronización horaria (R2) y por qué la exige el ENS?",
+    answer: "R2 exige que todos los sistemas que generan registros de actividad tengan su reloj sincronizado contra una misma fuente horaria, normalmente vía NTP. Sin eso, si un incidente toca tres servidores con relojes desviados unos minutos entre sí, es imposible reconstruir en qué orden ocurrieron los eventos — y esa reconstrucción cronológica es exactamente lo que pide una auditoría cuando investiga un incidente."
+  },
+  {
+    question: "¿Cuánto tiempo hay que retener los registros de actividad (R3)?",
+    answer: "El RD 311/2022 no fija un número universal de meses válido para toda organización: exige que el periodo de retención se defina y documente en la política de seguridad, de forma coherente con el nivel de riesgo y el marco normativo sectorial que aplique (por ejemplo, el propio ENS remite a las guías CCN-STIC para dimensionarlo). Lo que falla en auditoría no suele ser la duración elegida, sino no tener ningún periodo definido y dejar que la retención dependa de la rotación por defecto del sistema de logs."
+  },
+  {
+    question: "¿Qué añade el refuerzo R5 (análisis automático) en el nivel alto?",
+    answer: "R5 exige que el registro no se limite a almacenarse a la espera de una revisión manual (R1), sino que exista análisis automático — correlación de eventos, reglas que generen alertas cuando aparecen patrones anómalos. Es la diferencia entre tener un archivo de logs y tener un SIEM: en el nivel alto, un histórico de registros sin ningún motor de correlación detrás no cubre R5, aunque cumpla R1-R4."
+  }
+];
+---
+
+<BlogLayout
+  title="op.exp.8 ENS: Registro de la Actividad, qué exige y cómo cumplirlo"
+  description="op.exp.8 del ENS exige registrar la actividad de usuarios y sistemas. Qué evidencias pide la auditoría y cómo lograrlo con Wazuh u otras opciones."
+  publishDate="2026-08-04"
+  author="AI Security"
+  readTime="9 min"
+  tags={["Wazuh", "ENS", "op.exp", "SIEM", "Cumplimiento Normativo", "Ciberseguridad"]}
+  canonical="https://aisecurity.es/blog/op-exp-8-registro-actividad-ens"
+  faqSchema={faqSchema}>
+
+  <p>
+    <strong>op.exp.8 (Registro de la actividad)</strong> es la medida del Anexo II del <strong>Esquema Nacional de Seguridad</strong> (RD 311/2022) que obliga a dejar constancia de qué usuario o entidad hizo qué, cuándo y con qué resultado, en cada sistema dentro del alcance. Aplica ya en el <strong>nivel básico</strong>, y a partir del <strong>nivel medio</strong> se le suman cuatro refuerzos progresivos (R1 a R4); en el <strong>nivel alto</strong> se añade un quinto (R5). Es, de las medidas del marco operacional, la que más exigencia acumula por niveles — y también una de las que más falla en auditoría por dar por hecho que "tener logs" es lo mismo que "cumplir op.exp.8".
+  </p>
+
+  <h2>¿Qué exige exactamente op.exp.8?</h2>
+
+  <p>
+    op.exp.8 pertenece a la familia <strong>op.exp</strong> (Explotación) del marco operacional del Anexo II. En su forma base — la que ya exige el nivel básico — pide que cada registro de actividad capture, como mínimo, cuatro campos: <strong>identificador del usuario o entidad</strong> que actúa, <strong>fecha y hora</strong> del evento, <strong>qué evento</strong> ocurrió y <strong>el resultado</strong> (éxito o fracaso). Esto es notablemente más exigente que en la versión anterior del ENS: el RD 311/2022 elevó el listón de lo que se considera un registro de actividad válido, y muchas implantaciones antiguas que se dieron por buenas en su día ya no cubren el texto actual.
+  </p>
+
+  <p>
+    A partir de ahí, la exigencia crece por refuerzos que se acumulan según el nivel de la información y los servicios tratados:
+  </p>
+
+  <div class="overflow-x-auto my-6">
+    <table class="w-full text-sm" style="border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.15);">
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Nivel</th>
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Refuerzos exigidos</th>
+        </tr>
+      </thead>
+      <tbody style="color:rgba(255,255,255,0.8);">
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;font-weight:bold;">Bajo</td>
+          <td style="padding:10px;">op.exp.8 base: usuario/entidad, fecha/hora, evento, resultado</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;font-weight:bold;">Medio</td>
+          <td style="padding:10px;">+ R1 (revisión periódica) + R2 (sincronización horaria) + R3 (retención) + R4 (control de acceso)</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;font-weight:bold;">Alto</td>
+          <td style="padding:10px;">+ R5 (análisis automático), sobre todo lo anterior</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>En lenguaje llano, qué pide cada refuerzo:</p>
+
+  <ul>
+    <li><strong>R1 — Revisión periódica:</strong> alguien tiene que mirar los registros con una cadencia definida. No basta con que existan; tiene que haber evidencia de que se revisan (informes, actas, tickets de revisión).</li>
+    <li><strong>R2 — Sincronización de tiempo:</strong> todos los sistemas que generan registros deben tener el reloj sincronizado contra una fuente común, normalmente NTP. Sin esto, correlacionar eventos entre servidores distintos es prácticamente imposible.</li>
+    <li><strong>R3 — Retención de registros:</strong> el periodo durante el que se conservan los registros debe estar definido y documentado en la política de seguridad, no depender de la rotación por defecto del sistema.</li>
+    <li><strong>R4 — Control de acceso a los registros:</strong> quién puede leer o modificar los logs debe estar restringido y controlado — un registro que cualquiera puede editar no sirve como evidencia.</li>
+    <li><strong>R5 — Análisis automático:</strong> exclusivo del nivel alto. El registro no se limita a almacenarse para revisión manual (R1); tiene que haber correlación o análisis automatizado que genere alertas ante patrones anómalos.</li>
+  </ul>
+
+  <h2>¿Qué evidencia concreta pediría un auditor?</h2>
+
+  <p>
+    Un auditor ENS no se conforma con ver que "hay logs". Pide, como mínimo, tres cosas: que los campos exigidos estén realmente presentes en cada registro, que la hora de cada evento sea fiable, y que exista un criterio de retención documentado — no implícito.
+  </p>
+
+  <p>
+    Sobre R2, la sincronización horaria es el fallo típico que se pasa por alto: es fácil desplegar un SIEM y olvidarse de que el reloj del propio servidor no está sincronizado con NTP. El resultado es que los logs se generan con marca de tiempo, pero esa marca no es de fiar cuando hay que reconstruir la secuencia de un incidente que toca varios sistemas. Un auditor puede pedir directamente la configuración del cliente NTP de cada activo, o un log de deriva horaria, como evidencia de R2.
+  </p>
+
+  <p>
+    Sobre R3, "retención" en la práctica significa tres cosas a la vez: un periodo definido por escrito en la política de seguridad, una configuración técnica que efectivamente conserve los registros ese tiempo (no siete días por defecto porque nadie tocó la rotación de logs), y una forma de demostrar que no se han borrado antes de tiempo. Que el sistema "guarde logs indefinidamente" no cumple R3 si nadie decidió ni documentó ese periodo — la ausencia de un criterio explícito es justo lo que suele fallar, no la duración en sí.
+  </p>
+
+  <div style="background:rgba(139,92,246,0.08);border-left:4px solid rgba(167,139,250,0.5);padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.85);"><strong style="color:#c4b5fd;">Dato concreto:</strong> op.exp.8 es la medida del marco operacional con más refuerzos progresivos de todo el bloque op.exp — cinco (R1-R5), frente a los uno o dos refuerzos típicos de otras medidas de la misma familia. Eso refleja que el legislador considera el registro de actividad una de las evidencias forenses más críticas del Anexo II.</p>
+  </div>
+
+  <h2>¿Qué se puede sacar de Wazuh para op.exp.8?</h2>
+
+  <p>
+    Wazuh no "activa" op.exp.8 con un interruptor, pero sí cubre técnicamente cada uno de sus componentes si se configura con ese objetivo:
+  </p>
+
+  <p><strong>Auditoría de actividad en Linux (auditd).</strong> El agente de Wazuh puede leer directamente el log de <code>auditd</code>, que es el subsistema estándar del kernel Linux para trazar acciones de usuarios (autenticación, cambios en ficheros críticos, comandos ejecutados con privilegios). Se configuran reglas en auditd:</p>
+
+  <pre><code># /etc/audit/rules.d/audit.rules
+-w /etc/passwd -p wa -k identity
+-w /etc/shadow -p wa -k identity
+-a always,exit -F arch=b64 -S execve -k exec_commands</code></pre>
+
+  <p>Y en el agente, en <code>/var/ossec/etc/ossec.conf</code>:</p>
+
+  <pre><code>&lt;localfile&gt;
+  &lt;log_format&gt;audit&lt;/log_format&gt;
+  &lt;location&gt;/var/log/audit/audit.log&lt;/location&gt;
+&lt;/localfile&gt;</code></pre>
+
+  <p>Wazuh trae decoders y reglas ya preparados para el grupo <code>audit</code>, que extraen usuario, comando, resultado (éxito/fracaso) y timestamp — exactamente los cuatro campos base de op.exp.8.</p>
+
+  <p><strong>Auditoría de actividad en Windows (Sysmon).</strong> En Windows, la política de auditoría avanzada nativa junto con <strong>Sysmon</strong> aporta el detalle de proceso, usuario y resultado que exige la medida. Se ingesta vía canal de eventos:</p>
+
+  <pre><code>&lt;localfile&gt;
+  &lt;log_format&gt;eventchannel&lt;/log_format&gt;
+  &lt;location&gt;Microsoft-Windows-Sysmon/Operational&lt;/location&gt;
+&lt;/localfile&gt;
+
+&lt;localfile&gt;
+  &lt;log_format&gt;eventchannel&lt;/log_format&gt;
+  &lt;location&gt;Security&lt;/location&gt;
+&lt;/localfile&gt;</code></pre>
+
+  <p>Ya tenemos un caso práctico sobre cómo estas mismas fuentes sirven para <a href="/blog/detectar-instalaciones-software-windows-wazuh">detectar instalaciones de software en Windows con Wazuh</a>, que es en realidad un subconjunto de esta misma medida.</p>
+
+  <p><strong>R2 — sincronización de tiempo como evidencia.</strong> Wazuh no verifica por sí solo que el reloj del sistema operativo sea correcto: confía en la marca de tiempo que le entrega el agente. La evidencia de R2 se construye a nivel de sistema operativo (cliente NTP activo en cada agente) y se puede auditar con una política <strong>SCA</strong> (Security Configuration Assessment) de Wazuh que compruebe que el servicio de sincronización horaria (<code>chronyd</code>/<code>ntpd</code>/Windows Time) está activo — el propio informe SCA sirve como evidencia documental ante el auditor.</p>
+
+  <p><strong>R3 — retención en Wazuh Indexer.</strong> El backend de Wazuh (Wazuh Indexer, basado en OpenSearch) no borra alertas automáticamente por defecto; sin una política explícita, los índices crecen sin límite o dependen de la rotación manual. Para dejar constancia de un periodo de retención definido, se configura una política ISM (Index State Management):</p>
+
+  <pre><code>PUT _plugins/_ism/policies/wazuh_retencion_ens
+&#123;
+  "policy": &#123;
+    "description": "Retencion alertas op.exp.8 - ENS nivel medio",
+    "default_state": "hot",
+    "states": [
+      &#123;
+        "name": "hot",
+        "actions": [],
+        "transitions": [
+          &#123; "state_name": "delete", "conditions": &#123; "min_index_age": "395d" &#125; &#125;
+        ]
+      &#125;,
+      &#123; "name": "delete", "actions": [&#123; "delete": &#123;&#125; &#125;] &#125;
+    ]
+  &#125;
+&#125;</code></pre>
+
+  <p>Ese "395d" no es un valor mágico del ENS — es un ejemplo; el periodo real debe salir de la política de seguridad de tu organización (ver la FAQ sobre R3 más abajo).</p>
+
+  <p><strong>Consultar los campos exigidos para una auditoría.</strong> Desde el propio Wazuh Indexer se puede extraer un extracto con los campos que pide op.exp.8 (usuario, fecha/hora, evento, resultado) filtrado por rango de fechas:</p>
+
+  <pre><code>GET wazuh-alerts-*/_search
+&#123;
+  "query": &#123;
+    "bool": &#123;
+      "filter": [
+        &#123; "range": &#123; "@timestamp": &#123; "gte": "now-90d" &#125; &#125; &#125;,
+        &#123; "term": &#123; "rule.groups": "audit" &#125; &#125;
+      ]
+    &#125;
+  &#125;,
+  "_source": ["@timestamp", "agent.name", "data.srcuser", "data.audit.exe", "data.audit.success"]
+&#125;</code></pre>
+
+  <p>Ese tipo de extracto, con rango de fechas acotado y campos concretos, es justo el formato que un auditor pide ver — no el dashboard completo, sino la evidencia puntual de un periodo.</p>
+
+  <h2>¿Qué alternativas hay a Wazuh para cubrir op.exp.8?</h2>
+
+  <p>Wazuh no es la única forma de cumplir esta medida. Con honestidad, las alternativas más habituales:</p>
+
+  <ul>
+    <li><strong>Graylog:</strong> plataforma de gestión de logs (open source con capa enterprise de pago) sobre Elasticsearch/OpenSearch. Cubre bien la captura, búsqueda y retención (R3) con políticas de índice nativas, y tiene un sistema de roles razonable para R4. Le falta, de fábrica, la correlación de amenazas que exige R5 en nivel alto — hay que construirla con "pipelines" propios o combinarla con otra herramienta.</li>
+    <li><strong>Stack ELK sin Wazuh</strong> (Filebeat/Winlogbeat + Logstash + Elasticsearch + Kibana): máxima flexibilidad, pero cero reglas de auditoría preconstruidas. Hay que decodificar auditd/Sysmon a mano y montar la correlación desde cero — es la misma situación que ya vimos al <a href="/blog/wazuh-vs-splunk-ens">comparar Wazuh con Splunk para el ENS</a>: ninguna herramienta genérica trae op.exp.8 resuelto de fábrica, pero el punto de partida de trabajo manual es mayor con un ELK "a pelo" que con Wazuh, que ya trae decoders de auditd y Sysmon.</li>
+    <li><strong>Reenvío nativo a un colector central</strong> (rsyslog/journald en Linux, Windows Event Forwarding con un colector WEC en Windows): es la opción más barata — no añade ninguna pieza de software nueva, solo centraliza lo que el sistema operativo ya genera. Cubre bien R3 y R4 si el colector está bien asegurado, pero no aporta nada de R1 (hay que construir la revisión periódica a mano, sin dashboards) ni de R5 (no hay correlación, solo almacenamiento).</li>
+    <li><strong>Splunk:</strong> motor de correlación (SPL) de los más maduros del mercado, cubre R5 sin problema técnico. El coste escala con el volumen de datos ingeridos — precisamente el factor que dispara el volumen de logs que exige op.exp.8 — y no trae el mapeo a la medida de fábrica, igual que el resto.</li>
+  </ul>
+
+  <p>Ninguna opción "cumple op.exp.8" simplemente por instalarse. La diferencia está en cuánto trabajo de configuración falta para llegar del log crudo a los cinco refuerzos, y ahí Wazuh parte con ventaja porque ya trae los decoders de auditd y Sysmon construidos — el resto (NTP, retención ISM, control de acceso, revisión periódica) hay que configurarlo igual con cualquier herramienta de la lista.</p>
+
+  <h2>¿Qué limitación tiene este enfoque?</h2>
+
+  <p>
+    Registrar mucho no es lo mismo que registrar bien. Es tentador activar todo lo auditable y dejar que el SIEM acumule terabytes de eventos, pero un histórico enorme sin R1 (nadie lo revisa) ni R3 bien dimensionado (retención indefinida por omisión, no por decisión) no pasa una auditoría real — y además tiene un coste de almacenamiento que crece mes a mes sin que nadie lo haya presupuestado. Antes de activar auditoría exhaustiva en todos los activos, conviene decidir qué eventos son realmente relevantes para op.exp.8, cuánto tiempo se van a retener y quién los va a revisar — en ese orden.
+  </p>
+
+  <h2>Preguntas frecuentes</h2>
+
+  <h3>¿op.exp.8 aplica en el nivel básico del ENS?</h3>
+  <p>Sí. op.exp.8 (registro de la actividad) es una de las medidas que ya exige el nivel básico del ENS, sin refuerzos adicionales. A partir del nivel medio se le suman R1-R4; el nivel alto añade R5.</p>
+
+  <h3>¿Qué es la sincronización horaria (R2) y por qué la exige el ENS?</h3>
+  <p>R2 exige que todos los sistemas que generan registros tengan el reloj sincronizado contra una misma fuente, normalmente NTP. Sin eso, reconstruir la secuencia de un incidente que toca varios sistemas es imposible — y esa reconstrucción es justo lo que pide una auditoría.</p>
+
+  <h3>¿Cuánto tiempo hay que retener los registros de actividad (R3)?</h3>
+  <p>El RD 311/2022 no fija un número universal de meses; exige que el periodo de retención se defina y documente en la política de seguridad, coherente con el nivel de riesgo. Lo que suele fallar en auditoría es no tener ningún periodo definido, no la duración concreta elegida.</p>
+
+  <h3>¿Qué añade el refuerzo R5 (análisis automático) en el nivel alto?</h3>
+  <p>R5 exige que el registro no se limite a almacenarse a la espera de revisión manual (R1), sino que exista correlación o análisis automatizado que genere alertas ante patrones anómalos — la diferencia entre un archivo de logs y un SIEM en funcionamiento.</p>
+
+  <hr />
+
+  <p class="text-sm text-base-600">
+    <strong>Artículos relacionados:</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/blog/detectar-instalaciones-software-windows-wazuh">Detectar instalaciones de software en Windows con Wazuh</a></li>
+    <li><a href="/blog/wazuh-vs-splunk-ens">Wazuh vs Splunk: ¿cuál cumple mejor el ENS?</a></li>
+  </ul>
+  <hr />
+
+  <div class="relative my-10">
+    <div class="absolute -inset-px rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(99,102,241,0.3),rgba(59,130,246,0.4));filter:blur(1px);"></div>
+    <div class="relative rounded-2xl p-7 md:p-8" style="background:#0b1120;border:1px solid rgba(139,92,246,0.3);">
+      <p class="mb-3" style="color:#a5b4fc;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;max-width:none;">Diagnóstico gratuito</p>
+      <h3 class="mt-0 mb-3 text-xl md:text-2xl font-bold" style="color:#ffffff;">¿Estás revisando op.exp.8 y otras medidas del Anexo II?</h3>
+      <p class="mb-6" style="color:rgba(255,255,255,0.72);">
+        Revisamos en qué punto está tu organización respecto al registro de actividad y al resto de controles técnicos del ENS, y qué evidencias te faltan antes de la auditoría.
+      </p>
+      <div class="flex flex-col sm:flex-row flex-wrap gap-3">
+        <a href="/consultoria-ens" style="color:#ffffff;background:linear-gradient(135deg,#7c3aed,#4f46e5);"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3.5 font-bold rounded-xl no-underline transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 shadow-lg">
+          Solicitar diagnóstico ENS
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</BlogLayout>

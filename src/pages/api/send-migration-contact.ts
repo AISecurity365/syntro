@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
+import { saveLead } from '../../lib/leads';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
@@ -27,6 +28,19 @@ export const POST: APIRoute = async ({ request }) => {
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
+
+    // Guardar en el CRM de leads (no bloquea el envio de emails si falla)
+    await saveLead({
+      source: 'migracion',
+      lang,
+      name: nombre,
+      company: empresa,
+      email,
+      phone: telefono,
+      message: mensaje,
+      plan,
+      extra: { wordpress_url },
+    });
 
     // Mapeo de planes y servicios
     const planesMap: Record<string, string> = {

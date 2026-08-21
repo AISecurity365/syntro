@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
+import { saveLead } from '../../lib/leads';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
@@ -22,6 +23,16 @@ export const POST: APIRoute = async ({ request }) => {
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
+
+    // Guardar en el CRM de leads (no bloquea el envio de emails si falla)
+    await saveLead({
+      source: 'partner',
+      name: nombre,
+      email,
+      phone: telefono,
+      message: mensaje,
+      extra: { pais, perfil, experiencia },
+    });
 
     // ─── Email de confirmación al partner ───
     const partnerEmailHtml = `

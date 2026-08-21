@@ -1,0 +1,220 @@
+---
+import AulaLayout from '../../../layouts/AulaLayout.astro';
+import { createServerClient } from '../../../lib/supabase';
+
+const user = Astro.locals.user;
+
+const ADMIN_EMAIL = 'julen.sistemas@gmail.com';
+
+if (!user || user.email !== ADMIN_EMAIL) {
+  return Astro.redirect('/aula');
+}
+
+const supabaseAdmin = createServerClient();
+
+const statusFilter = Astro.url.searchParams.get('status') || '';
+const langFilter = Astro.url.searchParams.get('lang') || '';
+const sourceFilter = Astro.url.searchParams.get('source') || '';
+
+let query = supabaseAdmin.from('leads').select('*').order('created_at', { ascending: false });
+
+if (statusFilter) query = query.eq('status', statusFilter);
+if (langFilter) query = query.eq('lang', langFilter);
+if (sourceFilter) query = query.eq('source', sourceFilter);
+
+const { data: leadsData, error } = await query;
+const leads = leadsData || [];
+
+// Stats sobre el total (sin filtrar) para las tarjetas superiores
+const { data: allLeadsData } = await supabaseAdmin.from('leads').select('status, lang, next_follow_up_date');
+const allLeads = allLeadsData || [];
+
+const totalLeads = allLeads.length;
+const nuevos = allLeads.filter((l) => l.status === 'nuevo').length;
+const contactados = allLeads.filter((l) => l.status === 'contactado').length;
+const convertidos = allLeads.filter((l) => l.status === 'convertido').length;
+
+const today = new Date().toISOString().split('T')[0];
+const vencidos = allLeads.filter((l) => l.next_follow_up_date && l.next_follow_up_date <= today && l.status !== 'convertido' && l.status !== 'descartado').length;
+
+const SOURCE_LABELS: Record<string, string> = {
+  'contacto': 'Contacto general',
+  'migracion': 'Migración/Presupuesto',
+  'demo-wazuh': 'Demo Wazuh',
+  'te-llamamos': 'Te llamamos',
+  'ticket-soporte': 'Ticket soporte',
+  'reunion': 'Reunión',
+  'partner': 'Partner LATAM',
+  'passbolt': 'Passbolt',
+  'inscripcion-curso-wazuh': 'Inscripción curso Wazuh',
+  'lista-espera-wazuh-en': 'Lista espera Wazuh EN',
+  'lista-espera-techai-boost': 'Lista espera TechIA Boost',
+  'lista-espera-seo-geo': 'Lista espera SEO+GEO',
+};
+
+const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
+  'nuevo': { label: 'Nuevo', color: '#60a5fa', bg: 'rgba(59, 130, 246, 0.15)' },
+  'contactado': { label: 'Contactado', color: '#fbbf24', bg: 'rgba(245, 158, 11, 0.15)' },
+  'convertido': { label: 'Convertido', color: '#4ade80', bg: 'rgba(34, 197, 94, 0.15)' },
+  'descartado': { label: 'Descartado', color: '#9ca3af', bg: 'rgba(107, 114, 128, 0.15)' },
+};
+
+function formatDate(dateStr: string | null): string {
+  if (!dateStr) return '-';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function formatDateOnly(dateStr: string | null): string {
+  if (!dateStr) return '-';
+  const date = new Date(dateStr + 'T00:00:00');
+  return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+---
+
+<AulaLayout title="CRM de Leads - Admin">
+  <div class="mb-8">
+    <div class="flex items-center justify-between flex-wrap gap-3">
+      <div>
+        <h1 class="text-3xl font-bold" style="color: #ffffff;">CRM de Leads</h1>
+        <p class="mt-2" style="color: #9ca3af;">Interesados que han contactado a través de los formularios del sitio</p>
+      </div>
+      <a href="/aula/admin" class="px-4 py-2 rounded-lg transition-colors hover:opacity-80" style="background-color: #374151; color: #e5e7eb;">
+        Volver al admin del curso
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+    <div class="rounded-xl p-5" style="background-color: #1a1f26; border: 1px solid #2d3748;">
+      <p class="text-sm" style="color: #9ca3af;">Total</p>
+      <p class="text-2xl font-bold" style="color: #ffffff;">{totalLeads}</p>
+    </div>
+    <div class="rounded-xl p-5" style="background-color: #1a1f26; border: 1px solid #2d3748;">
+      <p class="text-sm" style="color: #9ca3af;">Nuevos</p>
+      <p class="text-2xl font-bold" style="color: #60a5fa;">{nuevos}</p>
+    </div>
+    <div class="rounded-xl p-5" style="background-color: #1a1f26; border: 1px solid #2d3748;">
+      <p class="text-sm" style="color: #9ca3af;">Contactados</p>
+      <p class="text-2xl font-bold" style="color: #fbbf24;">{contactados}</p>
+    </div>
+    <div class="rounded-xl p-5" style="background-color: #1a1f26; border: 1px solid #2d3748;">
+      <p class="text-sm" style="color: #9ca3af;">Convertidos</p>
+      <p class="text-2xl font-bold" style="color: #4ade80;">{convertidos}</p>
+    </div>
+    <div class="rounded-xl p-5" style={vencidos > 0 ? "background-color: #1a1f26; border: 1px solid #ef4444;" : "background-color: #1a1f26; border: 1px solid #2d3748;"}>
+      <p class="text-sm" style="color: #9ca3af;">Seguimiento vencido</p>
+      <p class="text-2xl font-bold" style={vencidos > 0 ? "color: #f87171;" : "color: #ffffff;"}>{vencidos}</p>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <form method="get" class="rounded-xl p-4 mb-6 flex flex-wrap items-end gap-4" style="background-color: #1a1f26; border: 1px solid #2d3748;">
+    <div>
+      <label class="block text-xs mb-1" style="color: #9ca3af;">Estado</label>
+      <select name="status" class="rounded-lg px-3 py-2 text-sm" style="background-color: #0f1419; color: #e5e7eb; border: 1px solid #2d3748;">
+        <option value="" selected={statusFilter === ''}>Todos</option>
+        <option value="nuevo" selected={statusFilter === 'nuevo'}>Nuevo</option>
+        <option value="contactado" selected={statusFilter === 'contactado'}>Contactado</option>
+        <option value="convertido" selected={statusFilter === 'convertido'}>Convertido</option>
+        <option value="descartado" selected={statusFilter === 'descartado'}>Descartado</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-xs mb-1" style="color: #9ca3af;">Idioma</label>
+      <select name="lang" class="rounded-lg px-3 py-2 text-sm" style="background-color: #0f1419; color: #e5e7eb; border: 1px solid #2d3748;">
+        <option value="" selected={langFilter === ''}>Todos</option>
+        <option value="es" selected={langFilter === 'es'}>Español</option>
+        <option value="en" selected={langFilter === 'en'}>English</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-xs mb-1" style="color: #9ca3af;">Origen</label>
+      <select name="source" class="rounded-lg px-3 py-2 text-sm" style="background-color: #0f1419; color: #e5e7eb; border: 1px solid #2d3748;">
+        <option value="" selected={sourceFilter === ''}>Todos</option>
+        {Object.entries(SOURCE_LABELS).map(([value, label]) => (
+          <option value={value} selected={sourceFilter === value}>{label}</option>
+        ))}
+      </select>
+    </div>
+    <button type="submit" class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors hover:opacity-80" style="background-color: #0065ff; color: #ffffff;">
+      Filtrar
+    </button>
+    {(statusFilter || langFilter || sourceFilter) && (
+      <a href="/aula/admin/leads" class="px-4 py-2 rounded-lg text-sm transition-colors hover:opacity-80" style="background-color: #374151; color: #e5e7eb;">
+        Limpiar filtros
+      </a>
+    )}
+  </form>
+
+  {error && (
+    <div class="rounded-xl p-4 mb-6" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #fca5a5;">
+      Error al cargar leads: {error.message}. ¿Has ejecutado <code>supabase-leads-schema.sql</code> en Supabase?
+    </div>
+  )}
+
+  <!-- Tabla -->
+  <div class="rounded-xl overflow-hidden" style="background-color: #1a1f26; border: 1px solid #2d3748;">
+    <div class="p-4 border-b" style="border-color: #2d3748;">
+      <h2 class="text-lg font-bold" style="color: #ffffff;">{leads.length} lead{leads.length !== 1 ? 's' : ''}</h2>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr style="background-color: #0f1419;">
+            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #9ca3af;">Estado</th>
+            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #9ca3af;">Idioma</th>
+            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #9ca3af;">Origen</th>
+            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #9ca3af;">Nombre / Empresa</th>
+            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #9ca3af;">Contacto</th>
+            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #9ca3af;">Recibido</th>
+            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #9ca3af;">Próximo seguimiento</th>
+            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #9ca3af;"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y" style="border-color: #2d3748;">
+          {leads.length === 0 && (
+            <tr>
+              <td colspan="8" class="px-4 py-8 text-center text-sm" style="color: #6b7280;">No hay leads que coincidan con estos filtros.</td>
+            </tr>
+          )}
+          {leads.map((lead: any) => {
+            const st = STATUS_LABELS[lead.status] || STATUS_LABELS['nuevo'];
+            const overdue = lead.next_follow_up_date && lead.next_follow_up_date <= today && lead.status !== 'convertido' && lead.status !== 'descartado';
+            return (
+              <tr class="hover:bg-white/5 transition-colors">
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium" style={`background-color: ${st.bg}; color: ${st.color};`}>
+                    {st.label}
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-sm" style="color: #9ca3af;">{lead.lang === 'en' ? '🇬🇧 EN' : '🇪🇸 ES'}</td>
+                <td class="px-4 py-3 text-sm" style="color: #e5e7eb;">{SOURCE_LABELS[lead.source] || lead.source}</td>
+                <td class="px-4 py-3 text-sm" style="color: #ffffff;">
+                  {lead.name || '-'}
+                  {lead.company && <span style="color: #9ca3af;"> · {lead.company}</span>}
+                </td>
+                <td class="px-4 py-3 text-sm" style="color: #9ca3af;">
+                  {lead.email && <div>{lead.email}</div>}
+                  {lead.phone && <div>{lead.phone}</div>}
+                </td>
+                <td class="px-4 py-3 text-sm" style="color: #9ca3af;">{formatDate(lead.created_at)}</td>
+                <td class="px-4 py-3 text-sm" style={overdue ? "color: #f87171; font-weight: 600;" : "color: #9ca3af;"}>
+                  {formatDateOnly(lead.next_follow_up_date)}
+                  {overdue && ' ⚠️'}
+                </td>
+                <td class="px-4 py-3 text-sm">
+                  <a href={`/aula/admin/leads/${lead.id}`} class="font-medium transition-colors hover:opacity-80" style="color: #60a5fa;">
+                    Ver →
+                  </a>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</AulaLayout>

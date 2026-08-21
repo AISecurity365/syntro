@@ -119,6 +119,17 @@ Video YouTube → visita /wazuh → ve demo + pricing → solicita reunión
 
 ---
 
+## CRM de leads comerciales (ago 2026)
+
+- **Ubicación:** `/aula/admin/leads` (enlazado desde `/aula/admin`, admin-gated con el mismo `ADMIN_EMAIL` hardcodeado).
+- **Qué es:** panel tipo CRM sencillo para los ~12 formularios comerciales del sitio que antes SOLO enviaban un email (contacto, migracion/presupuesto, demo Wazuh, te-llamamos, ticket soporte, reunion, partner LATAM, passbolt, inscripcion curso Wazuh, listas de espera Wazuh EN/TechIA Boost/SEO+GEO) — no quedaba ningun registro en base de datos de esos leads.
+- **Como funciona:** cada endpoint llama a `saveLead()` (`src/lib/leads.ts`) justo despues de validar el formulario, que inserta en la tabla `leads` de Supabase sin romper el envio de emails si falla (try/catch silencioso). Esquema en `supabase-leads-schema.sql` (ejecutar a mano en el SQL Editor de Supabase, igual que `supabase-schema.sql`).
+- **Seguimiento:** cada lead tiene `status` (nuevo/contactado/convertido/descartado), `next_follow_up_date` y un historial de notas en `lead_notes` (tabla hija). Filtros en la lista por estado/idioma/origen.
+- **Fuera de alcance a proposito:** NO incluye historico anterior a su creacion (solo emails, sin BD — habria que minar Gmail para reconstruirlo, se decidio no hacerlo) y NO incluye `course_users` (usuarios/pagos del curso Wazuh, que ya tenian su propio panel en `/aula/admin` desde antes).
+- **Nota tecnica:** `SUPABASE_URL`/`SUPABASE_ANON_KEY` (sin prefijo `PUBLIC_`) faltaban en `.env` local — el codigo ya las esperaba (`lib/supabase.ts`, `middleware.ts`) pero solo estaban en Vercel. Se anadieron en local para poder probar; revisar que sigan en Vercel si se toca el entorno.
+
+---
+
 ## URLs del Sitio
 
 - **Producción**: https://aisecurity.es

@@ -1,0 +1,183 @@
+---
+import BlogLayout from "../../layouts/BlogLayout.astro";
+
+const faqSchema = [
+  {
+    question: "¿op.exp.3 aplica en el nivel básico del ENS?",
+    answer: "Sí. A diferencia de otras medidas del Anexo II que solo entran en juego a partir de categoría media, el RD 311/2022 extendió op.exp.3 (Gestión de la configuración de seguridad) también a la categoría básica. En básica se exige el control tal cual; en media se añade el refuerzo R1 (mantenimiento regular de la línea base); en alta, R2 (responsabilidad limitada de quién puede modificarla) y R3 (copias de seguridad de la configuración)."
+  },
+  {
+    question: "¿Qué diferencia hay entre op.exp.2 y op.exp.3?",
+    answer: "op.exp.2 (Configuración de seguridad) es la medida que exige fijar la línea base: qué configuración segura debe tener cada sistema antes de entrar en producción (hardening inicial). op.exp.3 (Gestión de la configuración de seguridad) es la medida que exige mantener esa línea base en el tiempo — verificarla periódicamente, controlar los cambios y reaccionar cuando algo se desvía. Una fija el punto de partida; la otra vigila que no se degrade."
+  },
+  {
+    question: "¿El SCA de Wazuh corrige automáticamente las desviaciones?",
+    answer: "No. El módulo SCA (Security Configuration Assessment) de Wazuh detecta y reporta el porcentaje de cumplimiento contra un benchmark (CIS, por ejemplo) y genera histórico de escaneos, pero no aplica remediación automática — eso es una diferencia clave frente a herramientas de compliance-as-code como Ansible o Chef, que si se configuran para ello sí pueden revertir el cambio no autorizado sin intervención humana."
+  },
+  {
+    question: "¿Qué pasa si el % de cumplimiento SCA baja después de una actualización?",
+    answer: "Es la situación exacta que op.exp.3 obliga a gestionar: el escaneo periódico detecta la desviación, pero corregirla y dejar constancia de cuándo y cómo se corrigió es un paso organizativo aparte. Un auditor no pregunta solo por el % actual, sino por el registro de qué se hizo la última vez que el % bajó."
+  }
+];
+---
+
+<BlogLayout
+  title="op.exp.3 ENS: Configuración Segura — qué exige y cómo cumplirla"
+  description="op.exp.3 del ENS exige mantener la configuración segura y detectar cambios. Qué exige la norma y cómo demostrarlo con Wazuh SCA u otras vías."
+  publishDate="2026-08-04"
+  author="AI Security"
+  readTime="9 min"
+  tags={["Wazuh", "ENS", "op.exp", "SCA", "Cumplimiento Normativo", "Ciberseguridad"]}
+  canonical="https://aisecurity.es/blog/op-exp-3-gestion-configuracion-segura-ens"
+  faqSchema={faqSchema}>
+
+  <p>
+    <strong>op.exp.3 (Gestión de la configuración de seguridad)</strong> es la medida del Anexo II del <strong>Esquema Nacional de Seguridad</strong> (RD 311/2022) que obliga a mantener operativa en el tiempo la línea base de configuración segura fijada en op.exp.2 — mediante verificación periódica, control de cambios y reacción documentada ante desviaciones. Aplica desde categoría <strong>básica</strong>, con refuerzos progresivos R1 (media) y R2-R3 (alta). No es gestión de vulnerabilidades ni inventario de CVEs — eso corresponde a op.exp.4 — sino vigilar que la configuración segura ya establecida no se degrade con el tiempo.
+  </p>
+
+  <h2>¿Qué exige exactamente op.exp.3?</h2>
+
+  <p>
+    El punto de partida es op.exp.2: antes de poner un sistema en producción, hay que haberlo configurado con una <strong>línea base de seguridad</strong> (servicios innecesarios deshabilitados, cuentas por defecto eliminadas, parámetros de hardening aplicados). op.exp.3 entra después: exige que esa configuración siga siendo la que se fijó, no la que ha ido quedando tras meses de cambios, parches y manos distintas tocando el sistema.
+  </p>
+
+  <p>
+    En la práctica, op.exp.3 se traduce en tres obligaciones concretas:
+  </p>
+
+  <ul>
+    <li><strong>Verificación continua:</strong> comprobar periódicamente que la configuración real de cada sistema coincide con la línea base aprobada.</li>
+    <li><strong>Control de cambios:</strong> cualquier modificación de la configuración de seguridad debe quedar registrada y, en los niveles superiores, autorizada.</li>
+    <li><strong>Reacción ante desviaciones:</strong> cuando la verificación detecta que algo se ha desviado (un puerto abierto que no debería estarlo, un servicio reactivado), tiene que haber un proceso — no solo una alerta — que lleve a corregirlo.</li>
+  </ul>
+
+  <p>
+    La aplicación por categoría, según el Anexo II del RD 311/2022:
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+    <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);">
+      <h4 class="text-lg font-bold mb-3 text-white">Básica</h4>
+      <p class="text-sm" style="color:rgba(255,255,255,0.8);">op.exp.3 tal cual: verificación y control de la configuración segura de los sistemas.</p>
+    </div>
+    <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);">
+      <h4 class="text-lg font-bold mb-3 text-white">Media</h4>
+      <p class="text-sm" style="color:rgba(255,255,255,0.8);">op.exp.3 + <strong style="color:#c4b5fd;">R1</strong>: mantenimiento regular, con una periodicidad establecida y documentada para las verificaciones.</p>
+    </div>
+    <div class="rounded-xl p-6" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);">
+      <h4 class="text-lg font-bold mb-3 text-white">Alta</h4>
+      <p class="text-sm" style="color:rgba(255,255,255,0.8);">op.exp.3 + R1 + <strong style="color:#c4b5fd;">R2</strong> (responsabilidad limitada: quién puede modificar la configuración) + <strong style="color:#c4b5fd;">R3</strong> (copias de seguridad de la configuración antes de cada cambio).</p>
+    </div>
+  </div>
+
+  <div style="background:rgba(139,92,246,0.08);border-left:4px solid rgba(167,139,250,0.5);padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.85);"><strong style="color:#c4b5fd;">Dato concreto:</strong> a diferencia de otras medidas op.exp que solo entran a partir de categoría media, el RD 311/2022 amplió op.exp.3 también a la categoría básica. Si tu organización se declaró básica pensando que se libraba de esta medida, no es el caso.</p>
+  </div>
+
+  <h2>¿Qué evidencia pediría un auditor para op.exp.3?</h2>
+
+  <p>
+    En una auditoría de certificación (o de renovación) sobre el ENS, op.exp.3 no se acredita con una declaración de intenciones. El auditor va a pedir, como mínimo, tres tipos de evidencia:
+  </p>
+
+  <ul>
+    <li><strong>Histórico de verificaciones periódicas:</strong> fechas de cada comprobación de la línea base, no solo la más reciente. Un único escaneo no demuestra "gestión", demuestra una foto puntual.</li>
+    <li><strong>Porcentaje de cumplimiento contra un benchmark:</strong> idealmente frente a un estándar reconocido (CIS Benchmarks, por ejemplo), con la evolución de ese porcentaje en el tiempo.</li>
+    <li><strong>Registro de corrección de desviaciones:</strong> cuándo se detectó un cambio no autorizado o una configuración que se había desviado, quién lo corrigió, y cuándo. Esta es la evidencia que más se pasa por alto — tener el escaneo no basta si no hay traza de qué se hizo con el resultado.</li>
+  </ul>
+
+  <p>
+    Sin estos tres elementos, op.exp.3 queda como una medida "implementada" solo de nombre.
+  </p>
+
+  <h2>¿Qué se puede sacar de Wazuh para op.exp.3?</h2>
+
+  <p>
+    Wazuh cubre las dos piezas técnicas centrales de op.exp.3 con dos módulos distintos, que conviene no confundir entre sí:
+  </p>
+
+  <p>
+    El módulo <strong>SCA (Security Configuration Assessment)</strong> escanea la configuración de cada agente contra un benchmark — normalmente <strong>CIS Benchmarks</strong> para el sistema operativo o servicio en cuestión — y devuelve un porcentaje de cumplimiento, con el detalle de qué controles pasan y cuáles fallan. Ejecutado con periodicidad programada, genera exactamente el histórico de verificaciones que pide un auditor:
+  </p>
+
+  <pre><code class="language-yaml"># ossec.conf — agente, escaneo SCA programado cada 12h
+&lt;sca&gt;
+  enabled="yes"
+  scan_on_start="yes"
+  interval="12h"
+  &lt;policies&gt;
+    &lt;policy&gt;cis_debian12.yml&lt;/policy&gt;
+  &lt;/policies&gt;
+&lt;/sca&gt;</code></pre>
+
+  <p>
+    El módulo <strong>FIM (File Integrity Monitoring)</strong> cubre la otra mitad: control de cambios y detección de desviaciones. Configurado sobre los ficheros de configuración crítica (<code>/etc/ssh/sshd_config</code>, políticas de firewall, ficheros de servicios expuestos), genera una alerta en el momento en que alguien modifica esa configuración fuera del proceso de cambio establecido — que es, literalmente, lo que exige el control de cambios de op.exp.3.
+  </p>
+
+  <pre><code class="language-yaml"># ossec.conf — FIM sobre configuración crítica
+&lt;syscheck&gt;
+  &lt;directories check_all="yes" report_changes="yes"&gt;/etc/ssh,/etc/firewalld&lt;/directories&gt;
+&lt;/syscheck&gt;</code></pre>
+
+  <p>
+    En conjunto: SCA aporta la verificación continua y el % de cumplimiento; FIM aporta la detección de cambios no autorizados. Entre los dos queda cubierta la parte técnica de op.exp.3 — la reacción ante la desviación sigue siendo un paso humano.
+  </p>
+
+  <h2>¿Qué alternativas existen a Wazuh para esta medida?</h2>
+
+  <p>
+    op.exp.3 no exige una herramienta concreta, solo un resultado. Estas son las alternativas más habituales, con sus diferencias reales:
+  </p>
+
+  <ul>
+    <li><strong>OpenSCAP:</strong> herramienta open source con el mismo enfoque de compliance scanning que el SCA de Wazuh, basada en el estándar SCAP y perfiles como los de CIS o STIG. La diferencia práctica es operativa: OpenSCAP no trae por defecto la parte de agentes distribuidos, histórico centralizado y alertas en tiempo real que sí tiene Wazuh — hay que orquestar los escaneos (cron, Ansible) y centralizar los informes por tu cuenta.</li>
+    <li><strong>Compliance-as-code (Ansible, Chef, Puppet):</strong> aquí el enfoque cambia de detección a <strong>enforcement</strong>. En vez de escanear y alertar sobre una desviación, un playbook de Ansible (o una receta de Chef) puede aplicar la configuración correcta de forma recurrente y revertir automáticamente un cambio no autorizado la siguiente vez que se ejecute. Va un paso más allá que Wazuh o OpenSCAP, a cambio de más trabajo de mantenimiento de las propias recetas/playbooks.</li>
+    <li><strong>Qualys / Tenable (CSPM comercial):</strong> plataformas de cumplimiento y gestión de postura de seguridad con soporte comercial, dashboards de compliance más pulidos out-of-the-box y cobertura amplia de benchmarks. El coste es de licencia recurrente, normalmente por activo gestionado, frente al coste cerrado o nulo de licencia de Wazuh/OpenSCAP.</li>
+  </ul>
+
+  <p>
+    La elección real suele depender de si tu organización quiere solo <strong>detectar</strong> desviaciones (Wazuh SCA, OpenSCAP) o además <strong>corregirlas automáticamente</strong> (Ansible/Chef/Puppet), y de si prefiere coste cerrado (open source) o soporte comercial con licencia recurrente (Qualys/Tenable).
+  </p>
+
+  <h2>¿Qué limitación tiene automatizar op.exp.3 con estas herramientas?</h2>
+
+  <p>
+    Un informe de SCA con 95% de cumplimiento no significa que op.exp.3 esté resuelto. Significa que la herramienta ha detectado que el 5% restante no cumple la línea base — y ese 5% sigue ahí hasta que alguien lo revisa y lo corrige. La parte técnica (escanear, alertar) la resuelve cualquiera de las herramientas anteriores; la parte que realmente cumple la norma — quién revisa ese informe, quién decide si la desviación es aceptable o hay que corregirla, y en qué plazo — es un proceso organizativo que ninguna herramienta ejecuta sola. Wazuh, OpenSCAP y Qualys generan el dato; op.exp.3 exige además la gestión de ese dato.
+  </p>
+
+  <hr />
+
+  <p class="text-sm text-base-600">
+    <strong>Artículo relacionado:</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/blog/wazuh-vs-splunk-ens">Wazuh vs Splunk: ¿cuál cumple mejor el ENS?</a></li>
+    <li><a href="/blog/que-es-wazuh-para-que-sirve">Qué es Wazuh y para qué sirve</a></li>
+  </ul>
+  <hr />
+
+  <div class="relative my-10">
+    <div class="absolute -inset-px rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(99,102,241,0.3),rgba(59,130,246,0.4));filter:blur(1px);"></div>
+    <div class="relative rounded-2xl p-7 md:p-8" style="background:#0b1120;border:1px solid rgba(139,92,246,0.3);">
+      <p class="mb-3" style="color:#a5b4fc;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;max-width:none;">Diagnóstico gratuito</p>
+      <h3 class="mt-0 mb-3 text-xl md:text-2xl font-bold" style="color:#ffffff;">¿Necesitas acreditar op.exp.3 y no sabes qué evidencia falta?</h3>
+      <p class="mb-6" style="color:rgba(255,255,255,0.72);">
+        Revisamos tu configuración actual, qué controles del Anexo II te faltan y cómo montar la verificación continua con Wazuh u otra herramienta que ya tengas. Sin compromiso.
+      </p>
+      <div class="flex flex-col sm:flex-row flex-wrap gap-3">
+        <a href="/presupuesto?plan=consultoria-ens" style="color:#ffffff;background:linear-gradient(135deg,#7c3aed,#4f46e5);"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3.5 font-bold rounded-xl no-underline transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 shadow-lg">
+          Solicitar diagnóstico gratuito
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+        <a href="/consultoria-ens" style="color:rgba(255,255,255,0.85);border:1px solid rgba(255,255,255,0.18);"
+          class="inline-flex items-center justify-center px-6 py-3.5 text-sm font-medium rounded-xl no-underline transition-all duration-200 hover:bg-white/5">
+          Ver consultoría ENS completa
+        </a>
+      </div>
+    </div>
+  </div>
+
+</BlogLayout>

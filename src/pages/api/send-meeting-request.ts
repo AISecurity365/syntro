@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
+import { saveLead } from '../../lib/leads';
 import { createCalendarEvent, isValidTimeSlot, formatDate } from '../../lib/google-calendar';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
@@ -146,6 +147,25 @@ export const POST: APIRoute = async ({ request }) => {
         // Continue without calendar event - don't fail the whole request
       }
     }
+
+    // Guardar en el CRM de leads (no bloquea el envio de emails si falla)
+    await saveLead({
+      source: 'reunion',
+      lang,
+      name: nombre,
+      company: empresa,
+      email,
+      phone: telefono,
+      message: mensaje,
+      extra: {
+        servicios: servicioTexto,
+        empleados: empleadosTexto,
+        presupuesto: presupuestoTexto,
+        selectedDate,
+        selectedTime,
+        meetLink: calendarEvent?.meetLink,
+      },
+    });
 
     // Email HTML para el usuario (confirmación)
     const userEmailHtml = `

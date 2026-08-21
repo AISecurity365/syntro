@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
+import { saveLead } from '../../lib/leads';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -21,6 +22,8 @@ export const POST: APIRoute = async ({ request }) => {
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
+
+    await saveLead({ source: 'passbolt', email });
 
     // Enviar notificación por email a info@aisecurity.es
     const resendApiKey = import.meta.env.RESEND_API_KEY;

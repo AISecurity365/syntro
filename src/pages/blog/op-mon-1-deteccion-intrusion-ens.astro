@@ -1,0 +1,191 @@
+---
+import BlogLayout from "../../layouts/BlogLayout.astro";
+
+const faqSchema = [
+  {
+    question: "¿op.mon.1 aplica a todas las categorías del ENS?",
+    answer: "Sí, pero con exigencia creciente. En categoría Básica basta con tener un mecanismo de detección de intrusión activo. En Media se añade el refuerzo R1 (detección basada en reglas/firmas). En Alta se añade además R2 (procedimientos de respuesta formalizados ante lo que detecta el sistema). No es una medida que se activa solo en niveles altos: op.mon.1 base es obligatoria desde el escalón más bajo del ENS."
+  },
+  {
+    question: "¿Qué diferencia hay entre IDS e IPS a efectos del ENS?",
+    answer: "Un IDS (Intrusion Detection System) detecta y alerta, pero no bloquea por sí solo: alguien tiene que actuar sobre la alerta. Un IPS (Intrusion Prevention System) además puede bloquear el tráfico o la acción automáticamente. El Anexo II no exige un IPS específicamente para op.mon.1 base — un IDS bien configurado y revisado cubre la medida — pero si tu organización es categoría Alta, el refuerzo R2 (procedimientos de respuesta) es mucho más fácil de demostrar si parte de esa respuesta está automatizada, que es justo lo que aporta un IPS o un Active Response tipo Wazuh."
+  },
+  {
+    question: "¿Sirve un antivirus como detección de intrusión?",
+    answer: "No, no por sí solo. Un antivirus/EDR detecta malware conocido en el endpoint, pero op.mon.1 pide detección de intrusión a nivel de red y/o host basada en firmas y/o análisis de anomalías — es decir, comportamiento anómalo, tráfico sospechoso, patrones de ataque, no solo firmas de malware. Un EDR moderno (como Microsoft Defender for Endpoint) puede cubrir la parte de host si incluye detección de comportamiento, pero normalmente hace falta complementarlo con visibilidad de red (IDS/IPS o un SIEM que correlacione ambas fuentes) para cubrir la medida completa."
+  }
+];
+---
+
+<BlogLayout
+  title="op.mon.1 ENS: Detección de Intrusión — qué exige y cómo cumplirla"
+  description="op.mon.1 del Anexo II del ENS exige detección de intrusión activa. Qué evidencia pide el auditor y cómo cubrirlo con Wazuh u otras herramientas."
+  publishDate="2026-08-04"
+  author="AI Security"
+  readTime="9 min"
+  tags={["Wazuh", "ENS", "op.mon", "SIEM", "Cumplimiento Normativo", "Ciberseguridad"]}
+  canonical="https://aisecurity.es/blog/op-mon-1-deteccion-intrusion-ens"
+  faqSchema={faqSchema}>
+
+  <p>
+    <strong>op.mon.1 (Detección de intrusión)</strong> es la medida del Anexo II del <strong>Esquema Nacional de Seguridad (RD 311/2022)</strong>, dentro de la familia <code>op.mon</code> de monitorización del sistema, que exige tener un mecanismo activo de detección de intrusión — un IDS/IPS basado en firmas y/o análisis de anomalías, a nivel de red y/o host — en las tres categorías (Básica, Media y Alta), con dos refuerzos que se añaden según sube la categoría: <strong>R1</strong> (detección basada en reglas, desde Media) y <strong>R2</strong> (procedimientos de respuesta formalizados, desde Alta). No basta con "tener un firewall": hace falta un sistema que analice tráfico o comportamiento y genere alertas trazables.
+  </p>
+
+  <h2>¿Qué exige exactamente op.mon.1 del Anexo II del ENS?</h2>
+
+  <p>
+    La familia <code>op.mon</code> agrupa las medidas de monitorización del sistema dentro del marco operacional del ENS. <code>op.mon.1</code> es la primera y exige un mecanismo de <strong>detección de intrusión</strong> capaz de identificar actividad anómala o maliciosa, ya sea a nivel de red (tráfico), de host (comportamiento en el propio sistema) o ambos. La norma no impone un producto concreto — puede ser firmas conocidas de ataques, análisis de anomalías de comportamiento, o una combinación de ambos.
+  </p>
+
+  <p>
+    Lo que sí cambia es el nivel de exigencia según la categoría del sistema:
+  </p>
+
+  <ul>
+    <li><strong>Categoría Básica:</strong> op.mon.1 a secas — mecanismo de detección de intrusión activo, sin refuerzos adicionales.</li>
+    <li><strong>Categoría Media:</strong> op.mon.1 + <strong>R1</strong> — además de detectar, la detección tiene que apoyarse en <strong>reglas</strong> (firmas actualizadas, patrones conocidos de ataque), no solo en heurísticas genéricas.</li>
+    <li><strong>Categoría Alta:</strong> op.mon.1 + R1 + <strong>R2</strong> — además de detectar con reglas, la organización tiene que tener <strong>procedimientos de respuesta</strong> formalizados: qué se hace cuando salta una alerta, quién actúa, en qué plazo, y cómo queda documentado.</li>
+  </ul>
+
+  <p>
+    En otras palabras: Básica pide "que exista el radar", Media pide "que el radar tenga un catálogo de amenazas actualizado", y Alta pide "que además haya un protocolo escrito de qué hacer cuando el radar suena".
+  </p>
+
+  <h2>¿Qué evidencia pediría un auditor para dar por cumplida esta medida?</h2>
+
+  <p>
+    En una auditoría de certificación o de seguimiento del ENS, op.mon.1 no se da por buena con una captura de pantalla del dashboard el día de la visita. Lo que normalmente se pide:
+  </p>
+
+  <ul>
+    <li><strong>Configuración documentada</strong> del mecanismo de detección: qué producto, dónde está desplegado (red, host o ambos), qué cubre y qué no.</li>
+    <li><strong>Evidencia de que las firmas/reglas están actualizadas</strong> — no vale un IDS instalado hace dos años con el catálogo de firmas congelado (esto es justo lo que exige R1 en Media/Alta).</li>
+    <li><strong>Histórico de alertas reales</strong>, no una prueba sintética el día de la auditoría: logs con timestamp, origen, tipo de evento detectado.</li>
+    <li><strong>Trazabilidad de la respuesta</strong> (obligatorio en Alta por R2): quién revisó cada alerta relevante, qué acción se tomó, en qué plazo. Un procedimiento sin evidencia de que se ha seguido en la práctica no convence a un auditor.</li>
+    <li><strong>Retención de logs</strong> acorde a lo que exige el ENS para las medidas de monitorización (habitualmente un mínimo de 2 años, según la categoría).</li>
+  </ul>
+
+  <p>
+    El error más común que vemos en <a href="/consultoria-ens">consultoría ENS</a> no es no tener herramienta — es tener un IDS/IPS instalado sin nadie revisando las alertas, lo cual falla exactamente en el punto que un auditor va a mirar primero: la evidencia de que la detección genera una reacción real.
+  </p>
+
+  <div style="background:rgba(139,92,246,0.08);border-left:4px solid rgba(167,139,250,0.5);padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.85);"><strong style="color:#c4b5fd;">Dato concreto:</strong> op.mon.1 no vive sola. Suele auditarse junto a <code>op.exp.8</code> (registro de actividad) porque la trazabilidad de "quién actuó ante una alerta" necesita ambos registros cruzados — el de la detección y el de la actividad del usuario que respondió.</p>
+  </div>
+
+  <h2>¿Cómo cubre Wazuh op.mon.1, R1 y R2?</h2>
+
+  <p>
+    <strong>Wazuh</strong> es una plataforma SIEM/XDR open source que cubre las tres capas de esta medida sin necesidad de sumar productos distintos (más detalle en <a href="/wazuh">qué es Wazuh</a>):
+  </p>
+
+  <ul>
+    <li><strong>op.mon.1 base:</strong> el motor de reglas y decoders de Wazuh analiza logs de red, sistema y aplicaciones en tiempo real y genera alertas ante patrones sospechosos — cubre la detección tanto a nivel de host (vía el agente instalado en cada equipo) como de red (vía syslog de firewalls, IDS externos o Wazuh integrado con Suricata).</li>
+    <li><strong>R1 (detección basada en reglas):</strong> el ruleset de Wazuh viene con miles de reglas basadas en firmas conocidas — fuerza bruta SSH, escaneos de puertos, escalada de privilegios, persistencia — y se actualiza con el propio producto. Muchas de esas reglas ya vienen mapeadas a técnicas <strong>MITRE ATT&CK</strong>, lo que facilita justificar ante el auditor que la detección "basada en reglas" no es genérica sino trazable a patrones de ataque documentados.</li>
+    <li><strong>R2 (procedimientos de respuesta):</strong> aquí es donde Wazuh aporta algo que un IDS pasivo no tiene de serie: <strong>Active Response</strong>. Cuando una regla de alta severidad se dispara, Wazuh puede ejecutar automáticamente una acción — bloquear la IP de origen, aislar el host — y ese log de ejecución es en sí mismo la evidencia de que existe un procedimiento de respuesta activo, no solo escrito en un documento.</li>
+  </ul>
+
+  <p>
+    Ejemplo real: una alerta de fuerza bruta por SSH (rule ID 5712 del ruleset por defecto, mapeada a la técnica MITRE ATT&CK T1110 — Brute Force):
+  </p>
+
+  <pre><code class="language-json">&#123;
+  "rule": &#123;
+    "id": "5712",
+    "level": 10,
+    "description": "sshd: brute force trying to get access to the system.",
+    "mitre": &#123; "id": ["T1110"], "tactic": ["Credential Access"] &#125;,
+    "groups": ["authentication_failures", "pci_dss_10.2.4", "syslog", "sshd"]
+  &#125;,
+  "agent": &#123; "name": "srv-web-01", "ip": "10.0.4.22" &#125;,
+  "data": &#123; "srcip": "185.220.101.47" &#125;
+&#125;</code></pre>
+
+  <p>
+    Y la regla de Active Response que convierte esa alerta en una acción de respuesta ejecutada (evidencia de R2), configurada en <code>ossec.conf</code>:
+  </p>
+
+  <pre><code class="language-xml">&lt;active-response&gt;
+  &lt;disabled&gt;no&lt;/disabled&gt;
+  &lt;command&gt;firewall-drop&lt;/command&gt;
+  &lt;location&gt;local&lt;/location&gt;
+  &lt;rules_id&gt;5712&lt;/rules_id&gt;
+  &lt;timeout&gt;600&lt;/timeout&gt;
+&lt;/active-response&gt;</code></pre>
+
+  <p>
+    El log resultante de esa ejecución (IP bloqueada, timestamp, regla que lo disparó) es exactamente el tipo de evidencia que un auditor de categoría Alta pide para R2. Si quieres ver otro ejemplo práctico de cómo una regla concreta de Wazuh se traduce en evidencia de auditoría — en ese caso para detectar instalaciones de software en Windows —, tenemos <a href="/blog/detectar-instalaciones-software-windows-wazuh">un caso paso a paso</a> que toca op.mon.1 de pasada.
+  </p>
+
+  <h2>¿Qué alternativas a Wazuh existen para cubrir op.mon.1?</h2>
+
+  <p>
+    Wazuh no es la única vía, y ser honestos aquí importa más que vender una única solución:
+  </p>
+
+  <ul>
+    <li><strong>Suricata / Snort:</strong> NIDS/NIPS dedicados, especializados en análisis de tráfico de red en tiempo real con firmas (reglas ET Open, Emerging Threats). Cubren muy bien la parte de red de op.mon.1 y R1, pero no dan visibilidad de host ni gestión de logs por sí solos — normalmente se integran con un SIEM (Wazuh puede ingerir alertas de Suricata directamente) para tener también R2 y trazabilidad centralizada.</li>
+    <li><strong>Microsoft Defender for Endpoint / Sentinel:</strong> buena opción si tu organización ya vive en el ecosistema Microsoft 365/Azure. Defender for Endpoint cubre bien la detección de comportamiento a nivel de host (EDR), y Sentinel añade correlación tipo SIEM y respuesta automatizada (playbooks) para R2. El coste es por licencia y crece con el número de endpoints/GB ingeridos, y la curva de aprendizaje de KQL (su lenguaje de consultas) no es trivial para un equipo pequeño.</li>
+    <li><strong>Firewall NGFW con IPS integrado (Fortinet, Palo Alto):</strong> cubre bien la detección de intrusión a nivel de red en el perímetro, con firmas actualizadas por el fabricante (R1) y capacidad de bloqueo automático (aporta parte de R2 en el perímetro). Es una opción sólida si el punto de entrada principal de riesgo es la red externa, pero no sustituye visibilidad a nivel de host ni correlación de logs de aplicaciones — para eso sigue haciendo falta un SIEM encima.</li>
+  </ul>
+
+  <p>
+    Ninguna de las tres es "peor" que Wazuh de forma general — depende de qué visibilidad necesitas (red vs. host vs. ambas) y de qué stack ya tienes desplegado. La ventaja práctica de Wazuh para el ENS concretamente es que cubre red + host + correlación + respuesta en una sola plataforma sin licencia recurrente, lo cual simplifica la evidencia que hay que presentar en auditoría porque no está repartida entre tres consolas distintas.
+  </p>
+
+  <h2>¿Qué limitación tiene un IDS/IPS por sí solo?</h2>
+
+  <p>
+    Un mecanismo de detección de intrusión mal afinado no cumple mejor la medida por generar más alertas — al contrario. Sin tuning (ajustar umbrales, silenciar falsos positivos conocidos, priorizar por severidad real), un IDS/IPS produce cientos de alertas diarias de bajo valor, y el equipo termina ignorando la consola entera por <strong>fatiga de alertas</strong>. Eso es un fallo de op.mon.1 en la práctica aunque la herramienta esté técnicamente instalada y actualizada: la norma no pide "tener el producto", pide que la detección funcione y se traduzca en respuesta real. La herramienta es condición necesaria, no suficiente — hace falta alguien revisando y afinando las reglas de forma continua.
+  </p>
+
+  <p>
+    Si estás en esta fase de implementación del ENS y quieres que te ayudemos con el mapeo completo de los controles del Anexo II — no solo op.mon.1 — puedes ver cómo lo planteamos en <a href="/consultoria-ens">consultoría de adecuación ENS</a>.
+  </p>
+
+  <h2>Preguntas frecuentes</h2>
+
+  <h3>¿op.mon.1 aplica a todas las categorías del ENS?</h3>
+  <p>Sí, pero con exigencia creciente: Básica pide el mecanismo de detección activo; Media añade R1 (detección basada en reglas); Alta añade además R2 (procedimientos de respuesta formalizados).</p>
+
+  <h3>¿Qué diferencia hay entre IDS e IPS a efectos del ENS?</h3>
+  <p>Un IDS detecta y alerta; un IPS además puede bloquear automáticamente. op.mon.1 base no exige IPS específicamente, pero en categoría Alta el refuerzo R2 es más fácil de demostrar con una respuesta automatizada tipo IPS o Active Response.</p>
+
+  <h3>¿Sirve un antivirus como detección de intrusión?</h3>
+  <p>No por sí solo. Un antivirus/EDR cubre malware conocido en el endpoint, pero op.mon.1 pide detección de intrusión de red y/o host basada en firmas y/o anomalías — normalmente hace falta complementarlo con visibilidad de red o un SIEM que correlacione ambas fuentes.</p>
+
+  <hr />
+
+  <p class="text-sm text-base-600">
+    <strong>Artículo relacionado:</strong>
+  </p>
+  <ul class="text-sm">
+    <li><a href="/blog/detectar-instalaciones-software-windows-wazuh">Detectar instalaciones y desinstalaciones de software en Windows con Wazuh</a></li>
+  </ul>
+  <hr />
+
+  <div class="relative my-10">
+    <div class="absolute -inset-px rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(99,102,241,0.3),rgba(59,130,246,0.4));filter:blur(1px);"></div>
+    <div class="relative rounded-2xl p-7 md:p-8" style="background:#0b1120;border:1px solid rgba(139,92,246,0.3);">
+      <p class="mb-3" style="color:#a5b4fc;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;max-width:none;">Diagnóstico gratuito</p>
+      <h3 class="mt-0 mb-3 text-xl md:text-2xl font-bold" style="color:#ffffff;">¿Estás mapeando el Anexo II del ENS y no sabes por dónde seguir?</h3>
+      <p class="mb-6" style="color:rgba(255,255,255,0.72);">
+        Analizamos tu punto de partida (tengas SIEM o no) y te decimos qué controles te faltan, incluido op.mon.1, y cuánto trabajo real supone la adecuación. Sin compromiso.
+      </p>
+      <div class="flex flex-col sm:flex-row flex-wrap gap-3">
+        <a href="/presupuesto?plan=consultoria-ens" style="color:#ffffff;background:linear-gradient(135deg,#7c3aed,#4f46e5);"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3.5 font-bold rounded-xl no-underline transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 shadow-lg">
+          Solicitar diagnóstico gratuito
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+        <a href="/curso-wazuh" style="color:rgba(255,255,255,0.85);border:1px solid rgba(255,255,255,0.18);"
+          class="inline-flex items-center justify-center px-6 py-3.5 text-sm font-medium rounded-xl no-underline transition-all duration-200 hover:bg-white/5">
+          O prefiero aprender Wazuh yo mismo
+        </a>
+      </div>
+    </div>
+  </div>
+
+</BlogLayout>

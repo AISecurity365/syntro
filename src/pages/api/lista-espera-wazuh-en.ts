@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
+import { saveLead } from '../../lib/leads';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
@@ -18,6 +19,8 @@ export const POST: APIRoute = async ({ request }) => {
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
+
+    await saveLead({ source: 'lista-espera-wazuh-en', lang: 'en', email, extra: { source } });
 
     const fecha = new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid' });
 

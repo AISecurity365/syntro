@@ -10,7 +10,18 @@
       "WebFetch(domain:nexens.es)",
       "WebFetch(domain:www.boe.es)",
       "WebFetch(domain:summumsistemas.es)",
-      "WebFetch(domain:noticias.juridicas.com)"
+      "WebFetch(domain:noticias.juridicas.com)",
+      "WebFetch(domain:ens.ccn.cni.es)",
+      "WebFetch(domain:www.ccn-cert.cni.es)",
+      "WebFetch(domain:media.telefonicatech.com)",
+      "WebFetch(domain:www.audidat.com)",
+      "Bash(curl -s -o /tmp/en_threat.html -w \"HTTP %{http_code}\\\\n\" http://localhost:4321/en/blog/ia-threat-hunting-wazuh)",
+      "Read(//tmp/**)",
+      "Bash(curl -s -o /dev/null -w \"4321: %{http_code}\\\\n\" http://localhost:4321/ --max-time 3)",
+      "Bash(sleep 5; cat /tmp/devserver2.log)",
+      "WebFetch(domain:www.iberley.es)",
+      "Bash(python3 -c ' *)",
+      "Bash(pnpm add *)"
     ]
   }
 }
