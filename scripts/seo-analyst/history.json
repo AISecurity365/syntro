@@ -150,5 +150,54 @@
     "ga4": {
       "sessions": 317
     }
+  },
+  {
+    "fecha": "2026-08-21",
+    "conclusion": "El tráfico global cae en la última semana (64 clics vs 85, -25%) y las sesiones pasan de 317 a 220, confirmando una tendencia negativa que no se capitaliza: las impresiones siguen ahí pero el CTR no mejora. La palanca principal sigue siendo optimizar los snippets y CTAs de los contenidos de Wazuh hacia /wazuh y /curso-wazuh, especialmente en el blog 'qué es wazuh' y en las páginas en inglés que más clics aportan.",
+    "comentarios": [
+      "El title propuesto para /blog/que-es-wazuh-para-que-sirve sigue sin aplicarse (CTR 0.8% con 356 impresiones). Aplica 'Wazuh para Empresas: SIEM Open Source que Cumple ENS [Guía 2026]' y añade un CTA visible a /wazuh al inicio del artículo.",
+      "La query 'wazuh' (294 impresiones, 4 clics, pos 6.9) es la mayor oportunidad comercial: mejora el snippet de /wazuh con un título tipo 'Implementación Wazuh para Empresas · SIEM/ENS en 2-3 semanas' para captar esa intención.",
+      "Las páginas en inglés generan más clics que las españolas (/en/blog/configurar-alertas-correo... 11 clics, /en/blog/como-instalar-agente... 4 clics), pero no tienen CTAs hacia /wazuh o curso-wazuh: añade banners traducidos al inglés en esos blogs.",
+      "El curso-wazuh sube impresiones (88) y su CTA 'Ver temario completo gratis' recibe 4 clics: refuerza enlaces contextuales en los posts de instalación, que son los que más tráfico cualificado traen."
+    ],
+    "campanas": [
+      {
+        "nombre": "Wazuh",
+        "valoracion": "empeora – solo 1 clic en S4 a pesar de 43 impresiones; no captura la demanda de la query 'wazuh'."
+      },
+      {
+        "nombre": "Curso Wazuh",
+        "valoracion": "estable – impresiones al alza (88) pero clics bajos (2); necesita más enlaces contextuales desde blogs."
+      },
+      {
+        "nombre": "Consultoría IA",
+        "valoracion": "empeora – 0 impresiones en S4; sin impacto en el objetivo Wazuh/cursos."
+      },
+      {
+        "nombre": "Ciberseguridad",
+        "valoracion": "estable – sin clics y con impresiones testimoniales; irrelevante."
+      },
+      {
+        "nombre": "Consultoría ENS",
+        "valoracion": "empeora – 258 impresiones pero 0 clics en S4; el CTR 0 indica que el snippet no engancha."
+      },
+      {
+        "nombre": "Consultoría ISO 27001",
+        "valoracion": "empeora – 100 impresiones y 0 clics; sin tracción."
+      },
+      {
+        "nombre": "Internacional (EN/FR/NL)",
+        "valoracion": "estable – 29 clics en S4, pero sin CTAs hacia los productos prioritarios; se está desperdiciando tráfico."
+      }
+    ],
+    "gsc": {
+      "clicks": 64,
+      "impr": 5066,
+      "ctr": 1.26,
+      "pos": 11.8
+    },
+    "ga4": {
+      "sessions": 220
+    }
   }
 ]
