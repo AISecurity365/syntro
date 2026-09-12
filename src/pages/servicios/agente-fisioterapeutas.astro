@@ -75,10 +75,12 @@ const benefits = [
             <div class="panel-heading">Reserva en la web de tu clínica <small>Widget de ejemplo</small></div>
             <form id="booking">
               <div class="form-row"><label class="field">Servicio<select id="service"><option>Primera visita · 45 min</option><option>Sesión de fisioterapia · 50 min</option><option>Seguimiento · 30 min</option></select></label><label class="field">Profesional<select id="professional"><option>Laura</option><option>Marcos</option><option>Sin preferencia</option></select></label></div>
-              <p class="availability">Selecciona un día y una hora</p>
-              <div id="days" class="days" aria-label="Días de ejemplo"></div>
-              <div class="times" aria-label="Horas de ejemplo"><button type="button" data-time="09:00" aria-pressed="false">09:00</button><button type="button" data-time="11:30" aria-pressed="false">11:30</button><button type="button" data-time="16:30" aria-pressed="false">16:30</button><button type="button" data-time="18:00" aria-pressed="false">18:00</button></div>
-              <button type="submit" class="primary wide">Probar reserva <span aria-hidden="true">↗</span></button>
+              <div class="calendar-head"><button type="button" id="month-prev" aria-label="Mes anterior">‹</button><strong id="calendar-month" aria-live="polite"></strong><button type="button" id="month-next" aria-label="Mes siguiente">›</button></div>
+              <div class="weekdays" aria-hidden="true"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+              <div id="days" class="days" aria-label="Seleccionar fecha"></div>
+              <p class="calendar-legend">● Disponible <span>○ Sin atención · Fechas pasadas deshabilitadas</span></p>
+              <p id="slots-title" class="availability" aria-live="polite">Elige un día para ver los horarios</p>
+              <div id="booking-times" class="booking-times" aria-label="Horarios simulados"></div><button type="submit" class="primary wide">Probar reserva <span aria-hidden="true">↗</span></button>
               <p id="booking-result" role="status" class="booking-result">Elige tu cita para ver la confirmación.</p>
             </form>
             <p class="demo-note">Disponibilidad simulada. No se crea ninguna cita real.</p>
@@ -175,6 +177,15 @@ const benefits = [
   .faq{background:#dfe8f2}.faq h2{color:#253e5b}.faq .eyebrow{color:#526b89!important}.faq-grid>div>p{color:#536b84}.faq details{background:#f5f8fc;border:1px solid #c6d5e6;border-radius:11px;margin-bottom:10px;padding:18px 20px}.faq summary{color:#294564}.faq summary span{color:#597fae}.faq details p{color:#536b84}
   @media(max-width:1000px){.benefit-grid{grid-template-columns:repeat(3,1fr);gap:14px}.benefit-grid article{padding:20px}.benefit-visual{margin:-20px -20px 20px;padding:18px}}
   @media(max-width:760px){.benefit-grid{grid-template-columns:1fr}.benefit-visual{height:160px}.section-intro,.section-intro .eyebrow{text-align:center}.workspace{box-shadow:0 18px 45px #07142333}.steps{padding:5px 18px}.tabs{margin-inline:16px}.hero-grid{gap:38px}}
+
+  .calendar-head{display:flex;align-items:center;justify-content:space-between;margin:2px 0 15px}.calendar-head strong{color:#294564;font-size:14px;text-transform:capitalize}
+  .calendar-head button{border:1px solid #bdcce0;background:#f9fbfe;border-radius:7px;color:#355479;font-size:23px;width:32px;height:32px;cursor:pointer}.calendar-head button:disabled{opacity:.35;cursor:default}
+  .weekdays,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.weekdays{text-align:center;font-size:10px;color:#526b89;margin-bottom:8px}
+  .days :global(button){padding:6px 0;min-height:34px;position:relative}.days :global(button:disabled){color:#7a899b;background:transparent;border-color:transparent;cursor:default}.days :global(button[aria-current=date]){border:1px dashed #7a8da8}
+  .calendar-legend{font-size:9px;color:#365d91!important;margin:10px 0 16px!important}.calendar-legend span{color:#687c93;margin-left:10px}
+  .booking-times{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:10px 0 18px}.booking-times :global(button){border:1px solid #b2c4db;background:#f9fbfe;border-radius:8px;color:#355479;padding:8px 2px;cursor:pointer}
+  .booking-times :global(button span){display:block;font-size:12px}.booking-times :global(button small){display:block;font-size:9px;margin-top:3px}.booking-times :global(button:disabled){background:#e1e7ef;color:#6b7b90;border-color:#d2dae5;cursor:not-allowed}.booking-times :global(button:disabled span){text-decoration:line-through}
+  .booking-times :global(button[aria-pressed=true]){background:#355f9f;border-color:#355f9f;color:#fff}.days :global(button:focus-visible),.booking-times :global(button:focus-visible){outline:2px solid #355f9f;outline-offset:2px}
 </style>
 <script>
   // Guided examples only: browser speech matches the displayed transcript.
@@ -266,25 +277,51 @@ const benefits = [
   });
   document.querySelector('#call-scenario')!.addEventListener('change',stopCall);
   window.addEventListener('pagehide',stopCall);
-  let selectedDate='',selectedTime='';
+  const today=new Date(); today.setHours(0,0,0,0);
+  let monthOffset=0, selectedDate:Date|null=null, selectedTime='';
   const days=document.querySelector('#days')!;
   const result=document.querySelector('#booking-result')!;
-  const resetResult=()=>{result.textContent='Elige tu cita para ver la confirmación.';};
-  for(let i=1;i<=5;i++){
-    const date=new Date();date.setDate(date.getDate()+i);
-    const button=document.createElement('button');button.type='button';
-    const label=date.toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
-    button.textContent=date.toLocaleDateString('es-ES',{weekday:'short',day:'numeric'});button.setAttribute('aria-label',label);button.setAttribute('aria-pressed','false');
-    button.addEventListener('click',()=>{days.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false'));button.setAttribute('aria-pressed','true');selectedDate=label;resetResult();});days.append(button);
+  const times=document.querySelector('#booking-times')!;
+  const serviceSelect=document.querySelector<HTMLSelectElement>('#service')!;
+  const professionalSelect=document.querySelector<HTMLSelectElement>('#professional')!;
+  const resetResult=()=>{selectedTime='';result.textContent='Selecciona un horario disponible para continuar.';};
+  function renderTimes(){
+    resetResult();times.replaceChildren();
+    if(!selectedDate){document.querySelector('#slots-title')!.textContent='Elige un día para ver los horarios';return;}
+    document.querySelector('#slots-title')!.textContent='Horarios · '+selectedDate.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'short'});
+    const offset=selectedDate.getDate()+serviceSelect.selectedIndex+professionalSelect.selectedIndex;
+    const hours=serviceSelect.selectedIndex===2?['09:00','09:30','10:00','10:30','16:00','16:30','17:00','17:30']:['09:00','10:00','11:00','12:00','16:00','17:00','18:00','19:00'];
+    hours.forEach((time,index)=>{
+      const occupied=(index+offset)%3===0;
+      const button=document.createElement('button');button.type='button';button.disabled=occupied;button.dataset.time=time;button.setAttribute('aria-pressed','false');button.setAttribute('aria-label',time+(occupied?' ocupado':' disponible'));
+      const label=document.createElement('span');label.textContent=time;const status=document.createElement('small');status.textContent=occupied?'Ocupado':'Disponible';button.append(label,status);
+      button.addEventListener('click',()=>{times.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false'));button.setAttribute('aria-pressed','true');selectedTime=time;result.textContent='Cita seleccionada. Pulsa Probar reserva para confirmar el ejemplo.';});times.append(button);
+    });
   }
-  document.querySelectorAll<HTMLButtonElement>('[data-time]').forEach(button=>button.addEventListener('click',()=>{
-    document.querySelectorAll('[data-time]').forEach(b=>b.setAttribute('aria-pressed','false'));button.setAttribute('aria-pressed','true');selectedTime=button.dataset.time!;resetResult();
-  }));
-  document.querySelector('#booking')!.addEventListener('change',resetResult);
+  function renderMonth(){
+    const first=new Date(today.getFullYear(),today.getMonth()+monthOffset,1);
+    document.querySelector('#calendar-month')!.textContent=first.toLocaleDateString('es-ES',{month:'long',year:'numeric'});
+    document.querySelector<HTMLButtonElement>('#month-prev')!.disabled=monthOffset===0;
+    days.replaceChildren();
+    const blanks=(first.getDay()+6)%7;
+    for(let i=0;i<blanks;i++){const blank=document.createElement('span');blank.setAttribute('aria-hidden','true');days.append(blank);}
+    const count=new Date(first.getFullYear(),first.getMonth()+1,0).getDate();
+    for(let day=1;day<=count;day++){
+      const date=new Date(first.getFullYear(),first.getMonth(),day);
+      const disabled=date<=today||date.getDay()===0||date.getDay()===6;
+      const button=document.createElement('button');button.type='button';button.textContent=String(day);button.disabled=disabled;
+      button.setAttribute('aria-label',date.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+(disabled?' · no disponible':''));
+      button.setAttribute('aria-pressed',String(selectedDate?.getTime()===date.getTime()));
+      if(date.getTime()===today.getTime())button.setAttribute('aria-current','date');
+      button.addEventListener('click',()=>{selectedDate=date;renderMonth();renderTimes();});days.append(button);
+    }
+  }
+  document.querySelector('#month-prev')!.addEventListener('click',()=>{if(monthOffset>0)monthOffset--;selectedDate=null;renderMonth();renderTimes();});
+  document.querySelector('#month-next')!.addEventListener('click',()=>{monthOffset++;selectedDate=null;renderMonth();renderTimes();});
+  serviceSelect.addEventListener('change',renderTimes);professionalSelect.addEventListener('change',renderTimes);
   document.querySelector('#booking')!.addEventListener('submit',e=>{
-    e.preventDefault();if(!selectedDate||!selectedTime){result.textContent='Selecciona un día y una hora para continuar.';return;}
-    const person=document.querySelector<HTMLSelectElement>('#professional')!.value;
-    const service=document.querySelector<HTMLSelectElement>('#service')!.value;
-    result.textContent='✓ Reserva de ejemplo: '+service+' · '+selectedDate+' a las '+selectedTime+' · '+person+'. No se ha creado una cita real.';
+    e.preventDefault();if(!selectedDate||!selectedTime){result.textContent='Selecciona un día y un horario disponible para continuar.';return;}
+    result.textContent='✓ Reserva de ejemplo: '+serviceSelect.value+' · '+selectedDate.toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})+' a las '+selectedTime+' · '+professionalSelect.value+'. No se ha creado una cita real.';
   });
+  renderMonth();
 </script>
