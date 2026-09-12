@@ -1,1385 +1,257 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-
-const title = "Agente IA para Fisioterapeutas - Atención Multicanal 24/7 | AI Security";
-const description = "Asistente virtual especializado para clínicas de fisioterapia. Atiende pacientes por llamada, WhatsApp y web. Gestiona citas, consultas y seguimientos automáticamente.";
+const title = "IA para fisioterapeutas: citas y atención | AI Security";
+const description = "Agente IA para clínicas de fisioterapia: atiende llamadas y WhatsApp, gestiona citas y ofrece reservas web. Descubre las demos y adáptalo a tu clínica.";
 const canonical = "https://aisecurity.es/servicios/agente-fisioterapeutas";
+const contact = "/presupuesto?plan=Agente-IA-Fisioterapeutas";
+const faqs = [
+  { q: "¿Qué puede hacer el agente IA para una clínica de fisioterapia?", a: "Puede atender consultas sobre horarios y servicios, recoger solicitudes de cita, gestionar cambios y enviar confirmaciones según las reglas de tu clínica. Las decisiones clínicas quedan en manos de los profesionales." },
+  { q: "¿Pueden elegir con qué fisioterapeuta reservar?", a: "Sí. La reserva web permite seleccionar el servicio y el profesional. Configuramos la duración de las sesiones y la disponibilidad de cada miembro del equipo." },
+  { q: "¿Se integra con la agenda que ya utilizamos?", a: "Primero revisamos tu calendario o software de gestión y sus posibilidades de integración. Te indicamos qué se puede conectar antes de preparar la propuesta." },
+  { q: "¿Tengo que contratar llamadas, WhatsApp y web juntos?", a: "No. Puedes empezar por el canal que más necesita tu clínica y ampliar después. El alcance y el presupuesto se adaptan a los canales y las integraciones elegidas." },
+  { q: "¿Las demos de esta página crean citas reales?", a: "No. Son ejemplos simulados con datos ficticios. Puedes probar los canales sin enviar datos de pacientes ni reservar una cita real." },
+];
+const benefits = [
+  { n:"01", title:"Atiende sin interrumpir la sesión", text:"Responde a las preguntas habituales mientras tu equipo está con un paciente. Las consultas que necesitan una persona se derivan a la clínica." },
+  { n:"02", title:"Una agenda con tus reglas", text:"Servicios, duración de las sesiones y disponibilidad por fisioterapeuta. El sistema se configura a partir de cómo trabajáis." },
+  { n:"03", title:"Menos tareas entre pacientes", text:"Confirmaciones, recordatorios y cambios de cita. Reduce el trabajo repetitivo de recepción y facilita que el paciente avise a tiempo." },
+];
 ---
-
 <BaseLayout title={title} description={description} canonical={canonical}>
-  <!-- Hero Section -->
-  <section class="pt-8 pb-16 bg-base-25">
-    <div class="max-w-7xl mx-auto px-8 md:px-12 lg:px-24">
-      <div class="text-center mb-12">
-         <!-- 
-        <div class="inline-block px-4 py-2 bg-green-100 rounded-full text-green-800 text-sm font-semibold mb-4">
-          🏥 Especializado para Clínicas de Fisioterapia
+  <script is:inline type="application/ld+json" set:html={JSON.stringify({
+    "@context":"https://schema.org", "@graph":[
+      {"@type":"Service", name:"Agente IA para fisioterapeutas", url:canonical, description, serviceType:"Atención y gestión de citas para clínicas de fisioterapia", provider:{"@type":"Organization", name:"AI Security", url:"https://aisecurity.es"}},
+      {"@type":"FAQPage", mainEntity:faqs.map(f=>({"@type":"Question",name:f.q,acceptedAnswer:{"@type":"Answer",text:f.a}}))}
+    ]
+  })} />
+  <div class="physio">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">IA para clínicas de fisioterapia</p>
+          <h1>Tú cuidas al paciente.<br/><span>Tu recepción sigue atendiendo.</span></h1>
+          <p class="lead">Llamadas, WhatsApp y reservas web. Un asistente que organiza las citas de tu clínica mientras tu equipo se dedica a lo importante.</p>
+          <a class="primary" href={contact}>Quiero verlo en mi clínica <span aria-hidden="true">↗</span></a>
+          <div class="hero-notes"><span>Tu agenda</span><span>Tus profesionales</span><span>Tus horarios</span></div>
         </div>
-        -->
-        <h1 class="text-4xl md:text-5xl font-bold text-base-900 mb-12">
-          Recepcionista virtual <span class="text-accent-600">que nunca descansa</span>
-        </h1>
-      </div>
-
-      <!-- Demo Selector Tabs -->
-      <div class="max-w-5xl mx-auto mb-8">
-        <div class="flex  flex-wrap justify-center gap-4>"></div>
-          <p class="justify-center text-center text-base-700 font-semibold mb-6 text-lg">
-          👇 Haz clic para ver cada demo interactiva:
-          </p>
-       </div>
-      
-        <div class="flex flex-wrap justify-center gap-4">
-          <button data-demo="llamada" class="demo-tab-button group px-8 py-5 rounded-2xl font-bold text-lg transition-all duration-300 bg-blue-200 text-base-800 shadow-lg hover:shadow-2xl hover:scale-105 border-4 border-blue-200 hover:border-blue-500">
-            <div class="flex items-center gap-3">
-              <span class="text-3xl group-hover:scale-110 transition-transform">📞</span>
-              <div class="text-left">
-                <div class="demo-tab-title">Llamada Telefónica</div>
-                <div class="demo-tab-subtitle text-xs font-normal" style="color: rgb(65, 55, 122)">Voz natural IA</div>
-              </div>
-            </div>
-          </button>
-          <button data-demo="whatsapp" class="demo-tab-button group px-8 py-5 rounded-2xl font-bold text-lg transition-all duration-300 bg-green-200 text-base-800 shadow-lg hover:shadow-2xl hover:scale-105 border-4 border-green-200 hover:border-green-500">
-            <div class="flex items-center gap-3">
-              <span class="text-3xl group-hover:scale-110 transition-transform">💬</span>
-              <div class="text-left">
-                <div class="demo-tab-title">WhatsApp</div>
-                <div class="demo-tab-subtitle text-xs font-normal" style="color: rgb(55, 122, 75)">Mensajería automática</div>
-              </div>
-            </div>
-          </button>
-          <button data-demo="web" class="demo-tab-button group px-8 py-5 rounded-2xl font-bold text-lg transition-all duration-300 bg-purple-200 text-base-800 shadow-lg hover:shadow-2xl hover:scale-105 border-4 border-purple-200 hover:border-purple-500">
-            <div class="flex items-center gap-3">
-              <span class="text-3xl group-hover:scale-110 transition-transform">🌐</span>
-              <div class="text-left">
-                <div class="demo-tab-title">Reserva Web</div>
-                <div class="demo-tab-subtitle text-xs font-normal" style="color: rgb(111, 55, 122)">Calendario online</div>
-              </div>
-            </div>
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Demo: Atención por Llamada -->
-  <section id="demo-llamada" class="demo-section py-10 bg-base-25">
-    <div class="max-w-7xl mx-auto px-8 md:px-12 lg:px-24">
-      <!-- Interactive Demo Section -->
-      <div class="mb-16">
-        <div class="max-w-4xl mx-auto bg-gradient-to-br from-base-900 to-base-800 rounded-2xl shadow-2xl overflow-hidden">
-          <!-- Demo Header -->
-          <div class="bg-base-800 px-6 py-4 border-b border-base-700">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                <span class="ml-4 text-base-300 text-sm font-medium">Atención Telefónica - Demo</span>
-              </div>
-              <div class="flex items-center gap-2 text-base-400 text-sm">
-                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                Disponible 24/7
-              </div>
-            </div>
+        <div class="workspace" id="demo">
+          <div class="workspace-top"><div class="clinic-mark" aria-hidden="true">f.</div><div><strong>Tu clínica, conectada</strong><small>Demostración · FisioVital</small></div><span class="example">Datos ficticios</span></div>
+          <div class="tabs" role="tablist" aria-label="Canal de la demostración">
+            <button id="tab-whatsapp" role="tab" aria-selected="true" aria-controls="panel-whatsapp" data-channel="whatsapp">WhatsApp</button>
+            <button id="tab-llamada" role="tab" aria-selected="false" aria-controls="panel-llamada" tabindex="-1" data-channel="llamada">Llamadas</button>
+            <button id="tab-web" role="tab" aria-selected="false" aria-controls="panel-web" tabindex="-1" data-channel="web">Reserva web</button>
           </div>
-
-          <!-- Phone Interface -->
-          <div class="bg-gradient-to-br from-blue-500 to-blue-700 p-8">
-            <div class="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto items-start">
-              <!-- Phone Mockup -->
-              <div class="relative bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 rounded-[3rem] p-3 shadow-2xl border-8 border-gray-800 w-full max-w-md mx-auto lg:mx-0 h-[750px]">
-                <!-- Phone screen -->
-                <div class="bg-black rounded-[2.5rem] overflow-hidden h-full flex flex-col">
-                  <!-- Status bar -->
-                  <div class="flex items-center justify-between text-white text-xs px-6 py-3 bg-black flex-shrink-0">
-                    <span class="font-semibold">9:41</span>
-                    <div class="flex gap-1.5 items-center">
-                      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path>
-                      </svg>
-                      <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M17.778 8.222c-4.296-4.296-11.26-4.296-15.556 0A1 1 0 01.808 6.808c5.076-5.077 13.308-5.077 18.384 0a1 1 0 01-1.414 1.414zM14.95 11.05a7 7 0 00-9.9 0 1 1 0 01-1.414-1.414 9 9 0 0112.728 0 1 1 0 01-1.414 1.414zM12.12 13.88a3 3 0 00-4.242 0 1 1 0 01-1.415-1.415 5 5 0 017.072 0 1 1 0 01-1.415 1.415zM9 16a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"></path>
-                      </svg>
-                      <span class="text-[10px]">100%</span>
-                    </div>
-                  </div>
-
-                  <!-- Main content area -->
-                  <div class="bg-gradient-to-b from-gray-900 to-black flex-1 px-6 py-8 flex flex-col overflow-hidden relative">
-                    <!-- Pre-Call Screen (shown before call) -->
-                    <div id="pre-call-screen" class="absolute inset-0 px-6 py-8 flex flex-col">
-                      <!-- Contact photo and info -->
-                      <div class="text-center mb-8">
-                        <div class="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-blue-600 flex items-center justify-center text-white text-5xl font-bold shadow-2xl">
-                          FV
-                        </div>
-                        <h3 class="text-white text-2xl font-semibold mb-2">FisioVital</h3>
-                        <p class="text-gray-400 text-base">900 434 343</p>
-                        <p id="call-status" class="text-gray-500 text-sm mt-2"></p>
-                      </div>
-
-                      <!-- Scenario Selector -->
-                      <div class="mb-auto">
-                        <p class="text-gray-400 text-xs font-semibold mb-3 text-center uppercase tracking-wide">Motivo de la llamada</p>
-                        <div class="space-y-2">
-                          <button data-scenario="reservar" class="scenario-button w-full text-left px-4 py-3 bg-gray-800/50 backdrop-blur rounded-xl border border-blue-500/50 hover:bg-gray-700/50 transition-all duration-200 text-sm text-white shadow-lg shadow-blue-500/20">
-                            <div class="flex items-center gap-3">
-                              <span class="text-xl">📅</span>
-                              <span>Primera consulta - Lesión hombro</span>
-                            </div>
-                          </button>
-                          <button data-scenario="modificar" class="scenario-button w-full text-left px-4 py-3 bg-gray-800/30 backdrop-blur rounded-xl border border-gray-700 hover:bg-gray-700/50 transition-all duration-200 text-sm text-white">
-                            <div class="flex items-center gap-3">
-                              <span class="text-xl">✏️</span>
-                              <span>Modificar cita existente</span>
-                            </div>
-                          </button>
-                          <button data-scenario="pago" class="scenario-button w-full text-left px-4 py-3 bg-gray-800/30 backdrop-blur rounded-xl border border-gray-700 hover:bg-gray-700/50 transition-all duration-200 text-sm text-white">
-                            <div class="flex items-center gap-3">
-                              <span class="text-xl">💳</span>
-                              <span>Consulta sobre precios</span>
-                            </div>
-                          </button>
-                        </div>
-                      </div>
-
-                      <!-- Call Button -->
-                      <div class="flex justify-center mt-auto pt-8">
-                        <button id="call-button" class="flex flex-col items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
-                          <div class="w-20 h-20 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center shadow-2xl shadow-green-500/50 hover:scale-105 transition-transform">
-                            <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
-                            </svg>
-                          </div>
-                          <span class="text-white text-xs"></span>
-                        </button>
-                      </div>
-                    </div>
-
-                    <!-- In-Call Screen (shown during call) -->
-                    <div id="in-call-screen" class="hidden absolute inset-0 px-6 py-8 flex-col justify-between">
-                      <!-- Contact photo and info (smaller) -->
-                      <div class="text-center pt-8">
-                        <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-blue-600 flex items-center justify-center text-white text-4xl font-bold shadow-2xl">
-                          FV
-                        </div>
-                        <h3 class="text-white text-xl font-semibold mb-1">FisioVital</h3>
-                        <p class="text-green-400 text-sm font-medium">En llamada</p>
-                      </div>
-
-                      <!-- Call Duration -->
-                      <div class="text-center flex-1 flex flex-col justify-center">
-                        <div class="text-white text-5xl font-light mb-2" id="duration-text">00:00</div>
-                        <p class="text-gray-400 text-sm">Duración de la llamada</p>
-                      </div>
-
-                      <!-- Hang Up Button -->
-                      <div class="flex justify-center pb-8">
-                        <button id="hangup-button-in-phone" class="flex flex-col items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
-                          <div class="w-20 h-20 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center shadow-2xl shadow-red-500/50 hover:scale-105 transition-transform">
-                            <svg class="w-10 h-10 text-white transform rotate-135" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
-                            </svg>
-                          </div>
-                          <span class="text-white text-xs">Colgar</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+          <div id="panel-whatsapp" role="tabpanel" aria-labelledby="tab-whatsapp" class="demo-panel">
+            <div class="panel-heading"><span class="status-dot" aria-hidden="true"></span>Recepción · FisioVital <small>Ejemplo de conversación</small></div>
+            <div class="messages" id="wa-messages" aria-live="polite"><p class="bubble">Hola, soy el asistente de FisioVital. ¿Quieres reservar una cita o consultar nuestros horarios?</p><p class="bubble patient">¿Puedo reservar con Laura por la tarde?</p><p class="bubble">Sí. En esta demo tienes una sesión con Laura a las 16:30. ¿Te viene bien?</p></div>
+            <div class="quick-replies" aria-label="Respuestas para probar"><button data-reply="reservar">Confirmar cita ↗</button><button data-reply="cambiar">Cambiar horario</button><button data-reply="horarios">Ver horarios</button></div>
+            <p class="demo-note">Prueba las respuestas. No se envían mensajes reales.</p>
+          </div>
+          <div id="panel-llamada" role="tabpanel" aria-labelledby="tab-llamada" class="demo-panel" hidden>
+            <div class="panel-heading">Atención telefónica · FisioVital <small>Simulación guiada</small></div>
+            <div class="phone-layout">
+              <div class="phone-shell">
+                <div class="phone-screen">
+                  <div class="phone-top" aria-hidden="true"><span>9:41</span><i></i><span>▮▮▮</span></div>
+                  <div class="phone-contact"><div class="phone-avatar" aria-hidden="true">FV</div><h3>FisioVital</h3><p>Recepción de tu clínica</p></div>
+                  <p id="call-status" role="status">Elige el motivo de tu llamada</p>
+                  <div id="call-clock" class="phone-clock">00:00</div>
+                  <div class="voice" aria-hidden="true"><i style="--i:0;--h:12px"></i><i style="--i:1;--h:29px"></i><i style="--i:2;--h:14px"></i><i style="--i:3;--h:31px"></i><i style="--i:4;--h:16px"></i><i style="--i:5;--h:33px"></i><i style="--i:6;--h:18px"></i><i style="--i:7;--h:35px"></i><i style="--i:8;--h:20px"></i><i style="--i:9;--h:37px"></i><i style="--i:10;--h:22px"></i><i style="--i:11;--h:39px"></i><i style="--i:12;--h:24px"></i></div>
+                  <label class="field">Motivo de la llamada<select id="call-scenario"><option value="reservar">Reservar cita</option><option value="modificar">Cambiar cita</option><option value="pago">Servicios y tarifas</option></select></label>
+                  <button id="call-play" class="phone-call" aria-label="Llamar a FisioVital (demostración)">
+                    <span class="phone-call-icon"><svg width="25" height="25" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg></span>
+                    <span id="call-label">Llamar</span>
+                  </button><div class="phone-home" aria-hidden="true"></div>
                 </div>
               </div>
-
-              <!-- Transcription Panel (always visible) -->
-              <div id="transcription-panel" class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 w-full max-w-md mx-auto lg:mx-0 h-[750px] flex flex-col">
-                <div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 flex-shrink-0">
-                  <h4 style="color: #4f46e5;" class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"></path>
-                    </svg>
-                    Transcripción en vivo
-                  </h4>
-                  <div id="recording-indicator" class="hidden items-center gap-2">
-                    <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                    <span class="text-xs text-gray-500 font-medium">Grabando</span>
-                  </div>
-                </div>
-
-                <div id="conversation-log" class="space-y-3 flex-1 overflow-y-auto pr-2">
-                  <!-- Empty state -->
-                  <div id="empty-state" class="flex flex-col items-center justify-center h-full text-center py-12">
-                    <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                    </svg>
-                    <p style="color: black;" class="text-gray-400 text-sm font-medium">La transcripción aparecerá aquí</p>
-                    <p style="color: black;" class="text-gray-300 text-xs mt-2">Selecciona un motivo y pulsa "Llamar"</p>
-                  </div>
-                </div>
+              <div class="transcription-card"><div class="transcription-heading"><strong>Transcripción</strong><span id="transcript-state">En espera</span></div>
+                <div class="transcript" id="transcript" role="log" aria-label="Transcripción de la llamada" aria-live="polite"><p>Selecciona un motivo y pulsa Llamar. Aquí podrás seguir la conversación.</p></div>
+                <p class="transcription-foot">Paciente y recepción, paso a paso.</p>
               </div>
             </div>
+            <p class="demo-note">Voz del navegador cuando esté disponible. Clínica y tarifas de ejemplo.</p>
           </div>
-
-          <!-- Info Panel -->
-          <div class="bg-base-100 px-6 py-5">
-            <p class="text-sm text-base-600 text-center font-medium max-w-2xl mx-auto">
-              Esta es una demo simulada. El sistema real utiliza síntesis de voz natural y procesamiento de lenguaje avanzado.
-            </p>
+          <div id="panel-web" role="tabpanel" aria-labelledby="tab-web" class="demo-panel" hidden>
+            <div class="panel-heading">Reserva en la web de tu clínica <small>Widget de ejemplo</small></div>
+            <form id="booking">
+              <div class="form-row"><label class="field">Servicio<select id="service"><option>Primera visita · 45 min</option><option>Sesión de fisioterapia · 50 min</option><option>Seguimiento · 30 min</option></select></label><label class="field">Profesional<select id="professional"><option>Laura</option><option>Marcos</option><option>Sin preferencia</option></select></label></div>
+              <p class="availability">Selecciona un día y una hora</p>
+              <div id="days" class="days" aria-label="Días de ejemplo"></div>
+              <div class="times" aria-label="Horas de ejemplo"><button type="button" data-time="09:00" aria-pressed="false">09:00</button><button type="button" data-time="11:30" aria-pressed="false">11:30</button><button type="button" data-time="16:30" aria-pressed="false">16:30</button><button type="button" data-time="18:00" aria-pressed="false">18:00</button></div>
+              <button type="submit" class="primary wide">Probar reserva <span aria-hidden="true">↗</span></button>
+              <p id="booking-result" role="status" class="booking-result">Elige tu cita para ver la confirmación.</p>
+            </form>
+            <p class="demo-note">Disponibilidad simulada. No se crea ninguna cita real.</p>
           </div>
+          <div class="workspace-foot"><span aria-hidden="true">↳</span> Una experiencia adaptada a tu clínica.</div>
         </div>
       </div>
-
-      <!-- Description Text (below demo) -->
-      <div class="text-center mt-12 mb-16">
-        <p class="text-xl text-base-600 max-w-3xl mx-auto">
-          Atención telefónica automatizada con voz natural. Gestiona llamadas, reserva citas, responde preguntas frecuentes y deriva casos complejos a tu equipo.
-        </p>
+      <div class="wrap channel-strip"><span>Una recepción. Tres formas de llegar.</span><p>Por teléfono <b>／</b> Por WhatsApp <b>／</b> Desde tu web</p></div>
+    </section>
+    <section class="section benefits">
+      <div class="wrap"><div class="section-intro"><p class="eyebrow">Más tiempo para tratar. Menos tiempo para gestionar.</p><h2>La atención empieza<br/>antes de entrar en consulta.</h2></div>
+        <div class="benefit-grid">{benefits.map(b=><article><span class="number">{b.n}</span><h3>{b.title}</h3><p>{b.text}</p></article>)}</div>
       </div>
-
-      <!-- Features Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        <div class="bg-black border-2 border-base-300 rounded-xl p-6">
-          <div class="w-12 h-12 bg-accent-600 rounded-lg flex items-center justify-center text-white text-xl mb-4">
-            🗣️
-          </div>
-          <h3 class="text-lg font-semibold text-white mb-3">Voz Natural</h3>
-          <p class="text-white/80">
-            Síntesis de voz con entonación natural y pronunciación perfecta en español.
-          </p>
-        </div>
-
-        <div class="bg-black border-2 border-base-300 rounded-xl p-6">
-          <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl mb-4">
-            🎯
-          </div>
-          <h3 class="text-lg font-semibold text-white mb-3">Comprensión Contextual</h3>
-          <p class="text-white/80">
-            Entiende el contexto de la conversación y adapta las respuestas.
-          </p>
-        </div>
-
-        <div class="bg-black border-2 border-base-300 rounded-xl p-6">
-          <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-white text-xl mb-4">
-            🔀
-          </div>
-          <h3 class="text-lg font-semibold text-white mb-3">Derivación Inteligente</h3>
-          <p class="text-white/80">
-            Transfiere llamadas complejas a fisioterapeutas cuando es necesario.
-          </p>
-        </div>
+    </section>
+    <section class="section integration"><div class="wrap integration-grid">
+      <div><p class="eyebrow">Así encaja en tu día a día</p><h2>Tu forma de trabajar.<br/><span>Sin empezar de cero.</span></h2><p class="lead">Desde una consulta individual hasta una clínica con varios profesionales. Definimos juntos qué puede resolver el asistente y cuándo debe intervenir recepción.</p><a class="text-link" href={contact}>Cuéntanos cómo organizas tu clínica ↗</a></div>
+      <div class="steps">
+        <article><span>01</span><div><h3>Revisamos tu agenda</h3><p>Estudiamos los canales, las preguntas frecuentes y las posibilidades de conexión de tu software.</p></div></article>
+        <article><span>02</span><div><h3>Configuramos tu recepción</h3><p>Servicios, profesionales, horarios y criterios de derivación. Todo con la información de tu clínica.</p></div></article>
+        <article><span>03</span><div><h3>Probamos con tu equipo</h3><p>Validamos las conversaciones y las reservas antes de activar los canales acordados.</p></div></article>
       </div>
-
-      <!-- Stats Section -->
-     
-
-      <!-- CTA Section -->
-      <div class="text-center rounded-2xl p-12 text-white">
-        <h2 class="text-3xl font-bold mb-4">
-          Nunca pierdas una llamada importante
-        </h2>
-        <p class="text-xl mb-8 max-w-2xl mx-auto opacity-90">
-          Descubre cómo nuestra IA puede transformar tu atención telefónica
-        </p>
-        <a
-          href="/presupuesto?plan=Agente-IA-Fisioterapeutas"
-          style="color: white;"
-          class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-        >
-          Solicitar Demo Gratuita
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Demo: WhatsApp (Hidden initially) -->
-  <section id="demo-whatsapp" class="demo-section hidden  bg-base-25">
-    <div class="max-w-full mx-auto px-8 md:px-12 lg:px-24">
-      <!-- Container centered for WhatsApp mockup only -->
-      <div class="flex justify-center items-center max-w-7xl mx-auto mb-12">
-        <!-- WhatsApp Phone Mockup - Centered -->
-        <div class="w-full max-w-[420px]">
-          
-          <div class="relative bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 rounded-[3rem] p-3 shadow-2xl border-8 border-gray-800">
-            <!-- Phone screen -->
-            <div class="bg-black rounded-[2.5rem] overflow-hidden w-full h-[730px] flex flex-col">
-              <!-- Status bar -->
-              <div class="flex items-center justify-between text-white text-xs px-6 py-3 bg-black flex-shrink-0">
-                <span class="font-semibold">9:41</span>
-                <div class="flex gap-1.5 items-center">
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path>
-                  </svg>
-                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M17.778 8.222c-4.296-4.296-11.26-4.296-15.556 0A1 1 0 01.808 6.808c5.076-5.077 13.308-5.077 18.384 0a1 1 0 01-1.414 1.414zM14.95 11.05a7 7 0 00-9.9 0 1 1 0 01-1.414-1.414 9 9 0 0112.728 0 1 1 0 01-1.414 1.414zM12.12 13.88a3 3 0 00-4.242 0 1 1 0 01-1.415-1.415 5 5 0 017.072 0 1 1 0 01-1.415 1.415zM9 16a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"></path>
-                  </svg>
-                  <span class="text-[10px]">100%</span>
-                </div>
-              </div>
-
-              <!-- WhatsApp Content -->
-              <div class="bg-white/10 backdrop-blur-sm flex-1 flex flex-col overflow-hidden">
-          <!-- WhatsApp Header -->
-          <div class="bg-[#008069] px-4 py-4 flex items-center gap-3">
-            <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center text-2xl">
-              🤖
-            </div>
-            <div class="flex-1">
-              <h5 class="text-white font-semibold text-base">FisioVital IA</h5>
-              <p class="text-white/80 text-sm">en línea</p>
-            </div>
-          </div>
-
-          <!-- WhatsApp Chat -->
-          <div class="bg-[#efeae2] p-4 flex-1 overflow-y-auto" id="chat-container-wa" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iYSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIj48cGF0aCBmaWxsPSIjZjBmMGYwIiBkPSJNMCAwaDQwdjQwSDB6Ci8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+'); background-size: 200px;">
-            <!-- Initial Bot Message -->
-            <div class="flex justify-start mb-4">
-              <div class="bg-white rounded-lg px-4 py-3 max-w-[85%] shadow-sm">
-                <p class="text-lg" style="color: #000000;">¡Hola! Soy el asistente de FisioVital. ¿Necesitas reservar o modificar una cita?</p>
-                <span class="text-sm text-gray-600 float-right mt-1">14:30 ✓✓</span>
-              </div>
-            </div>
-
-
-
-            <!-- Response Messages Container -->
-            <div id="chat-messages-wa" class="space-y-3"></div>
-          </div>
-
-          <!-- WhatsApp Input Bar -->
-          <div class="bg-[#f0f2f5] px-3 py-2 flex items-center gap-2 flex-shrink-0">
-            <button class="text-gray-600 hover:text-gray-800">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"></path>
-              </svg>
-            </button>
-            <input
-              type="text"
-              id="chat-input-wa"
-              placeholder="Escribe un mensaje..."
-              class="flex-1 bg-white rounded-full px-4 py-2 text-base placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#25D366]"
-              style="color: #000000; background-color: #ffffff"
-            />
-            <button id="send-button-wa" class="bg-[#008069] text-white rounded-full p-2 hover:bg-[#006d5a] transition-colors">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
-              </svg>
-            </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Title and Info Text (below mockup) -->
-    <div class="max-w-7xl mx-auto px-8 md:px-12 lg:px-24 mt-12">
-      <div class="text-center">
-        <h2 class="text-3xl md:text-4xl font-bold text-base-900 mb-6">
-          Gestiona citas desde WhatsApp
-        </h2>
-        <p class="text-lg text-base-700 max-w-2xl mx-auto leading-relaxed">
-          💡 Tus pacientes pueden reservar, modificar y consultar citas directamente desde WhatsApp, sin llamadas ni esperas.
-        </p>
-      </div>
-    </div>
-
-    <!-- Features Grid -->
-    <div class="max-w-7xl mx-auto px-8 md:px-12 lg:px-24 mt-16">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        <div class="bg-black border-2 border-base-300 rounded-xl p-6">
-          <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-white text-xl mb-4">
-            💬
-          </div>
-          <h3 class="text-lg font-semibold text-white mb-3">Disponible 24/7</h3>
-          <p class="text-white/80">
-            Tus pacientes pueden gestionar citas en cualquier momento, incluso fuera del horario de consulta.
-          </p>
-        </div>
-
-        <div class="bg-black border-2 border-base-300 rounded-xl p-6">
-          <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl mb-4">
-            🤖
-          </div>
-          <h3 class="text-lg font-semibold text-white mb-3">Respuestas Instantáneas</h3>
-          <p class="text-white/80">
-            El asistente responde al instante, sin tiempos de espera ni colas.
-          </p>
-        </div>
-
-        <div class="bg-black border-2 border-base-300 rounded-xl p-6">
-          <div class="w-12 h-12 bg-accent-600 rounded-lg flex items-center justify-center text-white text-xl mb-4">
-            📅
-          </div>
-          <h3 class="text-lg font-semibold text-white mb-3">Gestión Completa</h3>
-          <p class="text-white/80">
-            Reserva, modifica, cancela y consulta citas directamente desde WhatsApp.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- CTA Section -->
-    <div class="max-w-7xl mx-auto px-8 md:px-12 lg:px-24">
-      <div class="text-center rounded-2xl p-12 text-white">
-        <h2 class="text-3xl font-bold mb-4">
-          Libera a tu equipo de tareas repetitivas
-        </h2>
-        <p class="text-xl mb-8 max-w-2xl mx-auto opacity-90">
-          Descubre cómo la gestión automática de citas por WhatsApp puede transformar tu clínica
-        </p>
-        <a
-          href="/presupuesto?plan=Agente-IA-Fisioterapeutas"
-          style="color: white;"
-          class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-        >
-          Solicitar Demo Gratuita
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Demo: Web (Hidden initially) -->
-  <section id="demo-web" class="demo-section hidden pt-8 pb-20 bg-base-25">
-    <div class="max-w-7xl mx-auto px-8 md:px-12 lg:px-24">
-      <!-- Hero Section -->
-   
-      <!-- Interactive Demo Section -->
-      <div class="mb-16">
-        <div class="max-w-5xl mx-auto">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Calendar View -->
-            <div class="bg-base-50 rounded-2xl shadow-xl overflow-hidden">
-              <div class="bg-gradient-to-r from-[#0052cc] to-blue-600 px-6 py-4 text-white">
-                <h3 class="text-lg font-semibold">Calendario de Disponibilidad</h3>
-                <p class="text-sm opacity-90">FisioVital - Clínica de Fisioterapia</p>
-              </div>
-
-              <div class="p-6">
-                <!-- Calendar Header -->
-                <div class="flex items-center justify-between mb-6">
-                  <button class="p-2 hover:bg-base-100 rounded-lg transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                  </button>
-                  <h4 class="text-lg font-semibold text-base-900">Enero 2025</h4>
-                  <button class="p-2 hover:bg-base-100 rounded-lg transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </button>
-                </div>
-
-                <!-- Calendar Grid -->
-                <div class="grid grid-cols-7 gap-2 mb-4">
-                  {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map(day => (
-                    <div class="text-center text-sm font-medium text-base-500">{day}</div>
-                  ))}
-                </div>
-
-                <div class="grid grid-cols-7 gap-2" id="calendar-grid-web">
-                  <!-- Calendar days will be generated by JS -->
-                </div>
-
-                <!-- Time Slots -->
-                <div class="mt-6 pt-6 border-t border-base-200">
-                  <h5 class="text-sm font-semibold text-base-900 mb-3">Horarios disponibles</h5>
-                  <div class="grid grid-cols-3 gap-2" id="time-slots-web">
-                    <button class="time-slot-web px-3 py-2 border border-base-300 rounded-lg hover:border-accent-500 hover:bg-accent-50 transition-all text-sm font-medium">
-                      09:00
-                    </button>
-                    <button class="time-slot-web px-3 py-2 border border-base-300 rounded-lg hover:border-accent-500 hover:bg-accent-50 transition-all text-sm font-medium">
-                      10:00
-                    </button>
-                    <button class="time-slot-web px-3 py-2 border border-base-300 rounded-lg hover:border-accent-500 hover:bg-accent-50 transition-all text-sm font-medium">
-                      11:00
-                    </button>
-                    <button class="time-slot-web px-3 py-2 border border-base-300 rounded-lg hover:border-accent-500 hover:bg-accent-50 transition-all text-sm font-medium">
-                      12:00
-                    </button>
-                    <button class="time-slot-web px-3 py-2 border border-base-300 rounded-lg hover:border-accent-500 hover:bg-accent-50 transition-all text-sm font-medium">
-                      16:00
-                    </button>
-                    <button class="time-slot-web px-3 py-2 border border-base-300 rounded-lg hover:border-accent-500 hover:bg-accent-50 transition-all text-sm font-medium">
-                      17:00
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Booking Form -->
-            <div class="bg-base-50 rounded-2xl shadow-xl overflow-hidden">
-              <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4 text-white">
-                <h3 class="text-lg font-semibold">Reservar Cita</h3>
-                <p class="text-sm opacity-90">Completa tus datos</p>
-              </div>
-
-              <div class="p-6">
-                <form id="booking-form-web" class="space-y-4">
-                  <div>
-                    <label class="block text-sm font-medium text-base-700 mb-2">Nombre completo</label>
-                    <input
-                      type="text"
-                      placeholder="María González"
-                      class="w-full px-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-medium text-base-700 mb-2">Email</label>
-                    <input
-                      type="email"
-                      placeholder="maria@ejemplo.com"
-                      class="w-full px-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-medium text-base-700 mb-2">Teléfono</label>
-                    <input
-                      type="tel"
-                      placeholder="+34 600 000 000"
-                      class="w-full px-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-medium text-base-700 mb-2">Tipo de tratamiento</label>
-                    <select class="w-full px-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500">
-                      <option>Fisioterapia general</option>
-                      <option>Terapia deportiva</option>
-                      <option>Rehabilitación</option>
-                      <option>Masaje terapéutico</option>
-                      <option>Punción seca</option>
-                      <option>Primera consulta</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-medium text-base-700 mb-2">Notas adicionales</label>
-                    <textarea
-                      rows="3"
-                      placeholder="Describe tu dolencia o motivo de consulta..."
-                      class="w-full px-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500"
-                    ></textarea>
-                  </div>
-
-                  <div id="selected-slot-web" class="hidden p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <div class="flex items-center gap-2 text-green-800 text-sm font-medium">
-                      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                      </svg>
-                      <span id="selected-slot-text-web"></span>
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    class="w-full px-6 py-4 bg-gradient-to-r from-accent-600 to-blue-600 text-white rounded-xl font-semibold hover:from-accent-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-                  >
-                    Confirmar Reserva
-                  </button>
-                </form>
-
-                <div id="booking-success-web" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <div class="text-center">
-                    <div class="text-4xl mb-2">✅</div>
-                    <h4 class="text-lg font-semibold text-green-800 mb-1">¡Cita confirmada!</h4>
-                    <p class="text-sm text-green-600">Recibirás un email de confirmación y un recordatorio 24h antes</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Description Text (below demo) -->
-      <div class="text-center mt-12 mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold text-base-900 mb-6">
-          Reservas automáticas 24/7
-        </h2>
-        <p class="text-xl text-base-600 max-w-3xl mx-auto">
-          Tu asistente virtual gestiona citas, confirmaciones y recordatorios automáticamente. Sin llamadas, sin esperas, sin complicaciones.
-        </p>
-      </div>
-
-      <!-- Features Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        <div class="bg-base-100 border-2 border-base-300 rounded-xl p-6">
-          <div class="w-12 h-12 bg-accent-600 rounded-lg flex items-center justify-center text-white text-xl mb-4">
-            📅
-          </div>
-          <h3 class="text-lg font-semibold text-base-900 mb-3">Calendario Inteligente</h3>
-          <p class="text-base-600">
-            Sistema de reservas integrado con tu calendario. Sincronización automática con Google Calendar y Outlook.
-          </p>
-        </div>
-
-        <div class="bg-base-100 border-2 border-base-300 rounded-xl p-6">
-          <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl mb-4">
-            🔔
-          </div>
-          <h3 class="text-lg font-semibold text-base-900 mb-3">Recordatorios Automáticos</h3>
-          <p class="text-base-600">
-            Envío de confirmaciones y recordatorios por email y SMS. Reduce no-shows hasta en un 80%.
-          </p>
-        </div>
-
-        <div class="bg-base-100 border-2 border-base-300 rounded-xl p-6">
-          <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-white text-xl mb-4">
-            🔄
-          </div>
-          <h3 class="text-lg font-semibold text-base-900 mb-3">Gestión Flexible</h3>
-          <p class="text-base-600">
-            Permite a tus pacientes modificar o cancelar citas fácilmente. Gestión autónoma sin intervención manual.
-          </p>
-        </div>
-      </div>
-
-
-        <div class="max-w-7xl mx-auto px-8 md:px-12 lg:px-24">
-      <div class="text-center rounded-2xl p-12 text-white">
-        <h2 class="text-3xl font-bold mb-4">
-          Libera a tu equipo de tareas repetitivas
-        </h2>
-        <p class="text-xl mb-8 max-w-2xl mx-auto opacity-90">
-          Descubre cómo el sistema de reservas online puede transformar tu clínica
-        </p>
-        <a
-          href="/presupuesto?plan=Agente-IA-Fisioterapeutas"
-          style="color: white; background-color: #ad46ff;"
-          class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-        >
-          Solicitar Demo Gratuita
-        </a>
-      </div>
- 
-      <!-- CTA Section -->
-     
-    </div>
-  </section>
+    </div></section>
+    <section class="section faq"><div class="wrap faq-grid"><div><p class="eyebrow">Lo que conviene saber</p><h2>Antes de dar<br/>el siguiente paso.</h2><p>La IA ayuda con la recepción. El criterio clínico sigue siendo de tu equipo.</p></div><div>{faqs.map(f=><details><summary>{f.q}<span aria-hidden="true">+</span></summary><p>{f.a}</p></details>)}</div></div></section>
+    <section class="closing"><div class="wrap closing-inner"><p class="eyebrow">Hablemos de tu clínica</p><h2>Una recepción más ágil.<br/><span>Un equipo más centrado.</span></h2><p>Cuéntanos qué tareas os quitan tiempo. Te proponemos por dónde empezar y qué integraciones tienen sentido.</p><a class="primary" href={contact}>Solicitar información <span aria-hidden="true">↗</span></a><a class="text-link" href="#demo">Volver a probar las demos ↑</a></div></section>
+  </div>
 </BaseLayout>
 
+<style>
+  .physio{--ink:#f1f5f9;--muted:#94a3b8;--line:rgba(255,255,255,.09);color:var(--ink);background:#0a0d14;font-family:inherit}
+  .physio :is(h1,h2,h3,strong){color:var(--ink)}.physio p{color:var(--muted);line-height:1.7;margin:0;max-width:none}
+  .wrap{width:min(1240px,calc(100% - 64px));margin-inline:auto}.hero{padding:78px 0 0;background:radial-gradient(ellipse at 82% 25%,rgba(99,102,241,.07),transparent 50%),#0a0d14;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1fr 1.03fr;gap:64px;align-items:center}.eyebrow{font-size:12px!important;letter-spacing:.12em;color:#94a3b8!important;margin-bottom:22px!important}
+  h1{font-size:clamp(38px,4.15vw,62px);font-weight:600;letter-spacing:-.045em;line-height:1.12;margin:0 0 25px}h1 span,h2 span{color:#cbd5e1}
+  .lead{font-size:17px;margin-bottom:30px!important}.primary{display:inline-flex;align-items:center;justify-content:center;gap:26px;padding:15px 22px;border-radius:9px;background:#4f46e5;color:#fff!important;font-size:14px;font-weight:650;text-decoration:none;border:1px solid #6366f1;cursor:pointer;transition:background .2s,transform .2s}.primary:hover{background:#4338ca;transform:translateY(-2px)}.primary span{font-size:19px}.hero-notes{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:#94a3b8;margin-top:22px}.hero-notes span:before{content:'✓';margin-right:6px;color:#a5b4fc}
+  .workspace{min-width:0;border:1px solid rgba(255,255,255,.14);border-radius:18px;background:#161b25;box-shadow:0 35px 90px #0005;transform:rotate(-1deg)}.workspace-top{display:flex;align-items:center;gap:12px;padding:21px 23px;border-bottom:1px solid var(--line)}.clinic-mark{width:37px;height:37px;border-radius:11px;background:#a5b4fc;color:#172033;font-size:26px;display:grid;place-items:center;font-weight:700}.workspace-top strong{font-size:14px}.workspace-top small{display:block;color:#94a3b8;font-size:11px;margin-top:3px}.example{font-size:10px;color:#94a3b8;margin-left:auto}
+  .tabs{display:flex;padding:14px 20px 0;gap:6px}.tabs button{flex:1;background:none;border:0;border-bottom:2px solid transparent;color:#b1b5c9;padding:12px 3px;font-size:13px;cursor:pointer}.tabs button[aria-selected=true]{color:#e2e8f0;border-color:#a5b4fc;background:linear-gradient(0deg,#a5b4fc10,transparent)}
+  .demo-panel{padding:23px;min-height:380px}.demo-panel[hidden]{display:none}.panel-heading{font-size:12px;color:#e2e8f0;display:flex;align-items:center;gap:8px;margin-bottom:22px}.panel-heading small{margin-left:auto;color:#94a3b8;font-size:10px}.status-dot{width:6px;height:6px;background:#c1abfa;border-radius:50%}.messages{display:flex;flex-direction:column;gap:12px;height:232px;overflow-y:auto;padding-right:5px}.messages :global(.bubble){background:#202735;border-radius:12px 12px 12px 3px;padding:12px 15px;font-size:13px;max-width:88%!important;color:#e2e8f0!important}.messages :global(.bubble.patient){background:#25334d;align-self:flex-end;border-radius:12px 12px 3px 12px}.quick-replies{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px}.quick-replies button,.times button,.days :global(button){border:1px solid #465169;background:#a5b4fc09;border-radius:7px;color:#cbd5e1;padding:8px 10px;font-size:11px;cursor:pointer}.quick-replies button:hover,.times button:hover,.days :global(button):hover{background:#a5b4fc24}.demo-note{font-size:10px;margin-top:15px!important}.workspace-foot{border-top:1px solid var(--line);padding:14px 23px;font-size:11px;color:#b1b5c9}.workspace-foot span{color:#a5b4fc;margin-right:8px}
+  .channel-strip{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding:27px 0;margin-top:64px;gap:20px;font-size:12px;color:#94a3b8}.channel-strip p{font-size:14px;color:#cbd5e1}.channel-strip b{color:#64748b;margin:0 13px}
+  .section{padding:92px 0}h2{font-size:clamp(29px,3vw,43px);line-height:1.17;letter-spacing:-.035em;font-weight:550;margin:0 0 24px}.section-intro{text-align:center}.section-intro .eyebrow{margin-inline:auto}.benefits{background:#0f1117}.benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin-top:48px}.benefit-grid article{border-top:1px solid #394457;padding-top:25px}.number{font-size:12px;color:#a5b4fc}.benefit-grid h3{font-size:21px;line-height:1.35;letter-spacing:-.02em;margin:20px 0 13px}.benefit-grid p,.steps p{font-size:14px}
+  .integration-grid{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center}.text-link{display:inline-block;color:#a5b4fc!important;font-size:14px;text-decoration:none;border-bottom:1px solid #475569;padding-bottom:5px}.steps article{display:flex;gap:25px;padding:25px 0;border-bottom:1px solid var(--line)}.steps article>span{font-size:12px;color:#a5b4fc;padding-top:3px}.steps h3{font-size:18px;margin:0 0 10px}.faq{background:#0f1117}.faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:80px}.faq-grid>div>p{font-size:15px}.faq details{border-bottom:1px solid var(--line);padding:20px 0}.faq summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:15px;list-style:none;color:#e2e8f0}.faq summary::-webkit-details-marker{display:none}.faq summary span{color:#a5b4fc;font-size:22px}.faq details[open] summary span{transform:rotate(45deg)}.faq details p{font-size:14px;padding:17px 22px 0 0}
+  .closing{padding:90px 0;background:radial-gradient(ellipse at 50% 100%,#6366f114,transparent 70%),#0a0d14}.closing-inner{text-align:center}.closing p{max-width:540px;margin:0 auto 26px}.closing .eyebrow{max-width:none}.closing .text-link{display:block;width:fit-content;margin:24px auto 0;font-size:12px}
+  .call-center{text-align:center;padding:0 0 15px}.call-center strong{font-size:13px;display:block;margin-top:12px}.voice{height:62px;display:flex;justify-content:center;align-items:center;gap:5px}.voice i{width:4px;height:var(--h);background:#a5b4fc;border-radius:5px}.playing .voice i{animation:voice 1s calc(var(--i)*.05s) infinite alternate}@keyframes voice{to{transform:scaleY(.3)}}.field{display:block;font-size:11px;color:#b1b5c9}.field select{display:block;width:100%;min-width:0;margin:8px 0 15px;padding:10px 8px;border:1px solid #465169;border-radius:7px;background:#181f32;color:#f1f5f9;font-size:12px}.wide{width:100%;padding:11px;font-size:12px}.transcript{height:95px;overflow-y:auto;margin-top:14px}.transcript :global(p){font-size:12px;margin-bottom:10px}.transcript :global(strong){color:#a5b4fc}.form-row{display:grid;grid-template-columns:1.3fr 1fr;gap:12px}.availability{font-size:12px;margin:7px 0 14px!important}.days{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.days :global(button){font-size:12px;line-height:1.8}.times{display:flex;gap:8px;margin:16px 0}.times button{flex:1}.days :global(button)[aria-pressed=true],.times button[aria-pressed=true]{background:#4f46e5;color:#fff;border-color:#a5b4fc}.booking-result{font-size:12px;margin-top:14px!important;min-height:40px}.physio :is(a,button,summary,select):focus-visible{outline:2px solid #93c5fd;outline-offset:4px}
+  @media(max-width:1000px){.hero-grid{gap:30px}.wrap{width:calc(100% - 40px)}.integration-grid{gap:45px}.faq-grid{gap:40px}.workspace{transform:none}.hero{padding-top:48px}}
+  @media(max-width:760px){.hero-grid,.integration-grid,.faq-grid{grid-template-columns:1fr}.hero-copy{max-width:580px}.hero-grid{gap:35px}h1{font-size:42px}.workspace{width:100%}.channel-strip{flex-direction:column;align-items:flex-start;margin-top:35px;gap:9px}.benefit-grid{grid-template-columns:1fr;gap:28px}.section,.closing{padding:60px 0}.section-intro{text-align:left}.section-intro .eyebrow{text-align:left}.benefit-grid h3{margin-top:12px}.workspace-top{padding:18px}.demo-panel{padding:18px}.panel-heading small{font-size:9px}.example{font-size:9px}.tabs{padding-inline:13px}}
+  @media(prefers-reduced-motion:reduce){.physio *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+  .phone-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:16px;align-items:stretch}
+  .phone-shell{background:#1f2633;border:1px solid #465169;border-radius:29px;padding:6px;box-shadow:0 12px 30px #0004}
+  .phone-screen{background:linear-gradient(#121a29,#080b12);border-radius:23px;overflow:hidden;padding:10px 14px;display:flex;flex-direction:column;align-items:center;min-height:424px}
+  .phone-top{display:flex;justify-content:space-between;align-items:center;width:100%;font-size:9px;color:#cbd5e1}.phone-top i{width:56px;height:13px;background:#04060c;border-radius:10px}
+  .phone-contact{text-align:center;margin-top:15px}.phone-avatar{width:52px;height:52px;display:grid;place-items:center;margin:0 auto 8px;border-radius:50%;background:#25334d;color:#c7d2fe;font-size:19px;font-weight:600}
+  .phone-contact h3{font-size:17px;margin:0 0 2px}.phone-contact p{font-size:10px}.phone-screen #call-status{font-size:10px;text-align:center;line-height:1.4;min-height:28px;margin-top:12px;color:#a5b4fc}.phone-clock{font-variant-numeric:tabular-nums;font-size:24px;color:#e2e8f0;font-weight:300;margin-top:3px}
+  .phone-screen .voice{height:30px;gap:4px;margin:5px 0 10px;opacity:.35}.phone-screen .voice i{width:3px;max-height:24px}.playing .phone-screen .voice{opacity:1}
+  .phone-screen .field{width:100%;font-size:10px}.phone-screen select{font-size:11px;padding:8px;margin:5px 0 8px}
+  .phone-call{display:flex;flex-direction:column;align-items:center;gap:7px;border:none;background:none;color:#e2e8f0;font-size:10px;cursor:pointer;margin-top:auto;padding:3px 12px}
+  .phone-call-icon{width:49px;height:49px;display:grid;place-items:center;background:#24644e;color:white;border:1px solid #408970;border-radius:50%;transition:background .2s}
+  .playing .phone-call-icon{background:#963e48;border-color:#b85863}.playing .phone-call-icon svg{transform:rotate(135deg)}.phone-home{width:58px;height:3px;border-radius:3px;background:#64748b;margin-top:12px}
+  .transcription-card{min-width:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:13px;background:#111720;padding:15px 12px}
+  .transcription-heading{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px;border-bottom:1px solid var(--line);padding-bottom:13px}.transcription-heading strong{font-size:12px}.transcription-heading span{font-size:9px;color:#94a3b8}
+  .transcription-card .transcript{height:340px;margin-top:15px;scrollbar-width:thin;scrollbar-color:#465169 transparent}.transcription-card .transcript :global(p){font-size:12px;padding:10px;background:#202735;border-radius:8px;line-height:1.6;margin-bottom:10px}.transcription-card .transcript :global(strong){display:block;font-size:10px;margin-bottom:5px;color:#a5b4fc}.transcription-card .transcript :global(p.patient-line){background:#25334d}.transcription-foot{font-size:9px;line-height:1.4!important;margin-top:auto!important;padding-top:10px}
+  .messages{scrollbar-width:thin;scrollbar-color:#465169 transparent}
+  @media(min-width:761px) and (max-width:1100px){.phone-layout{grid-template-columns:175px minmax(0,1fr);gap:10px}.phone-screen{padding-inline:10px}.transcription-card{padding:12px 8px}}
+  @media(max-width:460px){.phone-layout{grid-template-columns:1fr}.phone-shell{width:220px;justify-self:center}.transcription-card .transcript{height:210px}.transcription-card{min-height:270px}}
+</style>
 <script>
-  // Tab switching logic
-  const demoTabs = document.querySelectorAll('.demo-tab-button');
-  const demoSections = document.querySelectorAll('.demo-section');
-
-  demoTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const demoType = tab.getAttribute('data-demo');
-
-      // Reset all tabs to their default (inactive) state
-      demoTabs.forEach(t => {
-        const tDemoType = t.getAttribute('data-demo');
-        const title = t.querySelector('.demo-tab-title');
-        const subtitle = t.querySelector('.demo-tab-subtitle');
-
-        // Remove all possible active classes
-        t.classList.remove('bg-blue-500', 'bg-green-500', 'bg-purple-500', 'text-white', 'shadow-xl', 'border-blue-600', 'border-green-600', 'border-purple-600');
-        t.classList.add('shadow-lg');
-
-        // Restore default (inactive) colors for each button
-        if (tDemoType === 'llamada') {
-          t.classList.add('bg-blue-50', 'border-blue-200');
-          if (title) {
-            title.classList.remove('text-white');
-            title.style.color = 'rgb(65, 55, 122)';
-          }
-          if (subtitle) {
-            subtitle.classList.remove('text-white', 'opacity-90');
-            subtitle.style.color = 'rgb(65, 55, 122)';
-          }
-        } else if (tDemoType === 'whatsapp') {
-          t.classList.add('bg-green-50', 'border-green-200');
-          if (title) {
-            title.classList.remove('text-white');
-            title.style.color = 'rgb(55, 122, 75)';
-          }
-          if (subtitle) {
-            subtitle.classList.remove('text-white', 'opacity-90');
-            subtitle.style.color = 'rgb(55, 122, 75)';
-          }
-        } else if (tDemoType === 'web') {
-          t.classList.add('bg-purple-50', 'border-purple-200');
-          if (title) {
-            title.classList.remove('text-white');
-            title.style.color = 'rgb(111, 55, 122)';
-          }
-          if (subtitle) {
-            subtitle.classList.remove('text-white', 'opacity-90');
-            subtitle.style.color = 'rgb(111, 55, 122)';
-          }
-        }
-      });
-
-      // Apply active state to the clicked tab only
-      const clickedTitle = tab.querySelector('.demo-tab-title');
-      const clickedSubtitle = tab.querySelector('.demo-tab-subtitle');
-
-      if (demoType === 'llamada') {
-        tab.classList.remove('bg-blue-50', 'border-blue-200', 'shadow-lg');
-        tab.classList.add('bg-blue-500', 'border-blue-600', 'shadow-xl');
-        if (clickedTitle) {
-          clickedTitle.style.color = 'white';
-        }
-        if (clickedSubtitle) {
-          clickedSubtitle.style.color = 'white';
-          clickedSubtitle.classList.add('opacity-90');
-        }
-      } else if (demoType === 'whatsapp') {
-        tab.classList.remove('bg-green-50', 'border-green-200', 'shadow-lg');
-        tab.classList.add('bg-green-500', 'border-green-600', 'shadow-xl');
-        if (clickedTitle) {
-          clickedTitle.style.color = 'white';
-        }
-        if (clickedSubtitle) {
-          clickedSubtitle.style.color = 'white';
-          clickedSubtitle.classList.add('opacity-90');
-        }
-      } else if (demoType === 'web') {
-        tab.classList.remove('bg-purple-50', 'border-purple-200', 'shadow-lg');
-        tab.classList.add('bg-purple-500', 'border-purple-600', 'shadow-xl');
-        if (clickedTitle) {
-          clickedTitle.style.color = 'white';
-        }
-        if (clickedSubtitle) {
-          clickedSubtitle.style.color = 'white';
-          clickedSubtitle.classList.add('opacity-90');
-        }
-      }
-
-      // Show/hide demo sections
-      demoSections.forEach(section => {
-        section.classList.add('hidden');
-      });
-      const targetSection = document.getElementById(`demo-${demoType}`);
-      if (targetSection) {
-        targetSection.classList.remove('hidden');
-      }
-    });
-  });
-
-  // Select "Llamada" tab by default on page load
-  document.addEventListener('DOMContentLoaded', () => {
-    const llamadaTab = document.querySelector('button[data-demo="llamada"]');
-    if (llamadaTab) {
-      llamadaTab.click();
-    }
-  });
-
-  // Demo Llamada - Phone Call Simulation (código exacto copiado)
-  document.addEventListener('DOMContentLoaded', () => {
-    const callButton = document.getElementById('call-button');
-    const callButtonContainer = document.getElementById('call-button-container');
-    const hangupButtonInPhone = document.getElementById('hangup-button-in-phone');
-    const durationText = document.getElementById('duration-text');
-    const conversationLog = document.getElementById('conversation-log');
-    const scenarioButtons = document.querySelectorAll('.scenario-button');
-    const scenarioSelectorContainer = document.getElementById('scenario-selector-container');
-    const preCallScreen = document.getElementById('pre-call-screen');
-    const inCallScreen = document.getElementById('in-call-screen');
-    const transcriptionPanel = document.getElementById('transcription-panel');
-    const recordingIndicator = document.getElementById('recording-indicator');
-    const emptyState = document.getElementById('empty-state');
-
-    let isInCall = false;
-    let callStartTime = 0;
-    let durationInterval: number;
-    let currentAudio: HTMLAudioElement | null = null;
-    let audioTimeouts: number[] = [];
-    let selectedScenario: keyof typeof scenarios = 'reservar';
-
-    // Escenarios adaptados para fisioterapia
-    const scenarios = {
+  // Guided examples only: browser speech matches the displayed transcript.
+  const scenarios = {
       reservar: [
-        { delay: 1000, speaker: 'AI', text: '¡Hola! Bienvenido a FisioVital. ¿En qué puedo ayudarte?', audio: '/audio/reservar/ai_1.mp3' },
-        { delay: 3000, speaker: 'User', text: 'Hola, tengo dolor en el hombro derecho desde hace una semana', audio: '/audio/reservar/user_1.mp3' },
-        { delay: 4500, speaker: 'AI', text: 'Entiendo. ¿Has sufrido alguna lesión reciente o es un dolor progresivo?', audio: '/audio/reservar/ai_2.mp3' },
-        { delay: 6000, speaker: 'User', text: 'Fue después de jugar al pádel el fin de semana pasado', audio: '/audio/reservar/user_2.mp3' },
-        { delay: 7500, speaker: 'AI', text: 'Perfecto. Te recomiendo una primera consulta de valoración. Tengo disponibilidad mañana a las 10:00 o pasado mañana a las 16:30. ¿Cuál prefieres?', audio: '/audio/reservar/ai_3.mp3' },
-        { delay: 9000, speaker: 'User', text: 'Mañana a las 10:00 me viene bien', audio: '/audio/reservar/user_3.mp3' },
-        { delay: 10500, speaker: 'AI', text: '¡Excelente! He reservado tu cita para mañana a las 10:00 - Valoración de hombro. Te enviaré un SMS de confirmación. ¿Necesitas algo más?', audio: '/audio/reservar/ai_4.mp3' },
+        { delay: 1000, speaker: 'AI', text: '¡Hola! Bienvenido a FisioVital. ¿En qué puedo ayudarte?' },
+        { delay: 3000, speaker: 'User', text: 'Hola, tengo dolor en el hombro derecho desde hace una semana' },
+        { delay: 4500, speaker: 'AI', text: 'Entiendo. ¿Has sufrido alguna lesión reciente o es un dolor progresivo?' },
+        { delay: 6000, speaker: 'User', text: 'Fue después de jugar al pádel el fin de semana pasado' },
+        { delay: 7500, speaker: 'AI', text: 'Perfecto. Te recomiendo una primera consulta de valoración. Tengo disponibilidad mañana a las 10:00 o pasado mañana a las 16:30. ¿Cuál prefieres?' },
+        { delay: 9000, speaker: 'User', text: 'Mañana a las 10:00 me viene bien' },
+        { delay: 10500, speaker: 'AI', text: '¡Excelente! He reservado tu cita para mañana a las 10:00 - Valoración de hombro. Te enviaré un SMS de confirmación. ¿Necesitas algo más?' },
       ],
       modificar: [
-        { delay: 1000, speaker: 'AI', text: 'Buenos días, FisioVital. ¿En qué puedo ayudarle?', audio: '/audio/modificar/ai_1.mp3' },
-        { delay: 3000, speaker: 'User', text: 'Necesito cambiar mi cita del viernes porque me surgió un imprevisto', audio: '/audio/modificar/user_1.mp3' },
-        { delay: 4500, speaker: 'AI', text: 'Sin problema. ¿Podría darme su nombre completo?', audio: '/audio/modificar/ai_2.mp3' },
-        { delay: 6000, speaker: 'User', text: 'Soy Carlos Martínez', audio: '/audio/modificar/user_2.mp3' },
-        { delay: 7500, speaker: 'AI', text: 'Perfecto, Carlos. Veo que tiene una cita el viernes a las 11:00. ¿Qué día le vendría mejor?', audio: '/audio/modificar/ai_3.mp3' },
-        { delay: 9500, speaker: 'User', text: '¿Tenéis algo el lunes siguiente por la tarde?', audio: '/audio/modificar/user_3.mp3' },
-        { delay: 11000, speaker: 'AI', text: 'Sí, tengo disponible el lunes a las 16:00 o a las 18:30. ¿Cuál prefiere?', audio: '/audio/modificar/ai_4.mp3' },
-        { delay: 12500, speaker: 'User', text: 'A las 18:30 me va perfecto', audio: '/audio/modificar/user_4.mp3' },
-        { delay: 13500, speaker: 'AI', text: 'Listo, he modificado su cita al lunes 18:30. Le enviaré una confirmación por SMS.', audio: '/audio/modificar/ai_5.mp3' },
+        { delay: 1000, speaker: 'AI', text: 'Buenos días, FisioVital. ¿En qué puedo ayudarle?' },
+        { delay: 3000, speaker: 'User', text: 'Necesito cambiar mi cita del viernes porque me surgió un imprevisto' },
+        { delay: 4500, speaker: 'AI', text: 'Sin problema. ¿Podría darme su nombre completo?' },
+        { delay: 6000, speaker: 'User', text: 'Soy Carlos Martínez' },
+        { delay: 7500, speaker: 'AI', text: 'Perfecto, Carlos. Veo que tiene una cita el viernes a las 11:00. ¿Qué día le vendría mejor?' },
+        { delay: 9500, speaker: 'User', text: '¿Tenéis algo el lunes siguiente por la tarde?' },
+        { delay: 11000, speaker: 'AI', text: 'Sí, tengo disponible el lunes a las 16:00 o a las 18:30. ¿Cuál prefiere?' },
+        { delay: 12500, speaker: 'User', text: 'A las 18:30 me va perfecto' },
+        { delay: 13500, speaker: 'AI', text: 'Listo, he modificado su cita al lunes 18:30. Le enviaré una confirmación por SMS.' },
       ],
       pago: [
-        { delay: 1000, speaker: 'AI', text: 'FisioVital, ¿en qué puedo ayudarle?', audio: '/audio/pago/ai_1.mp3' },
-        { delay: 3000, speaker: 'User', text: 'Quisiera saber cuánto cuesta una sesión de fisioterapia', audio: '/audio/pago/user_1.mp3' },
-        { delay: 5000, speaker: 'AI', text: 'Una sesión individual cuesta 35€. También tenemos bonos: 5 sesiones por 160€ (ahorra 15€) y 10 sesiones por 300€ (ahorra 50€). ¿Le gustaría información sobre algún tratamiento específico?', audio: '/audio/pago/ai_2.mp3' },
-        { delay: 7500, speaker: 'User', text: 'Sí, ¿hacéis punción seca?', audio: '/audio/pago/user_2.mp3' },
-        { delay: 9000, speaker: 'AI', text: 'Sí, ofrecemos punción seca. El precio es de 40€ por sesión. ¿Le gustaría agendar una consulta de valoración?', audio: '/audio/pago/ai_3.mp3' },
-        { delay: 11500, speaker: 'User', text: 'Sí, me interesa', audio: '/audio/pago/user_3.mp3' },
-        { delay: 12500, speaker: 'AI', text: 'Perfecto. ¿Qué día le vendría mejor para la consulta?', audio: '/audio/pago/ai_4.mp3' },
+        { delay: 1000, speaker: 'AI', text: 'FisioVital, ¿en qué puedo ayudarle?' },
+        { delay: 3000, speaker: 'User', text: 'Quisiera saber cuánto cuesta una sesión de fisioterapia' },
+        { delay: 5000, speaker: 'AI', text: 'Una sesión individual cuesta 35€. También tenemos bonos: 5 sesiones por 160€ (ahorra 15€) y 10 sesiones por 300€ (ahorra 50€). ¿Le gustaría información sobre algún tratamiento específico?' },
+        { delay: 7500, speaker: 'User', text: 'Sí, ¿hacéis punción seca?' },
+        { delay: 9000, speaker: 'AI', text: 'Sí, ofrecemos punción seca. El precio es de 40€ por sesión. ¿Le gustaría agendar una consulta de valoración?' },
+        { delay: 11500, speaker: 'User', text: 'Sí, me interesa' },
+        { delay: 12500, speaker: 'AI', text: 'Perfecto. ¿Qué día le vendría mejor para la consulta?' },
       ]
     };
-
-    function addConversationLine(speaker: string, text: string, audioSrc?: string) {
-      if (!conversationLog) return;
-
-      // Ocultar estado vacío en el primer mensaje
-      if (emptyState && !emptyState.classList.contains('hidden')) {
-        emptyState.classList.add('hidden');
-      }
-
-      const line = document.createElement('div');
-      line.className = speaker === 'AI'
-        ? 'flex gap-2 items-start'
-        : 'flex gap-2 items-start justify-end';
-
-      const bubble = document.createElement('div');
-      bubble.className = speaker === 'AI'
-        ? 'bg-blue-50 text-gray-800 px-4 py-2 rounded-2xl rounded-tl-sm max-w-[85%]'
-        : 'bg-blue-600 text-white px-4 py-2 rounded-2xl rounded-tr-sm max-w-[85%]';
-
-      const content = document.createElement('div');
-      const label = document.createElement('div');
-      label.className = 'text-xs font-semibold mb-1 opacity-70';
-      label.textContent = speaker === 'AI' ? '🤖 Asistente' : '👤 Tú';
-
-      const message = document.createElement('div');
-      message.className = 'text-sm leading-relaxed';
-      message.textContent = text;
-
-      content.appendChild(label);
-      content.appendChild(message);
-      bubble.appendChild(content);
-      line.appendChild(bubble);
-
-      conversationLog.appendChild(line);
-      conversationLog.scrollTop = conversationLog.scrollHeight;
-
-      // Reproducir audio si está disponible
-      if (audioSrc) {
-        playAudio(audioSrc);
-      }
-    }
-
-    function playAudio(src: string) {
-      // Detener audio actual si existe
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-      }
-
-      // Crear y reproducir nuevo audio
-      currentAudio = new Audio(src);
-      currentAudio.play().catch(error => {
-        console.log('Audio playback failed:', error);
-        // Silenciosamente fallar si el audio no está disponible
-      });
-    }
-
-    function stopAllAudio() {
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-        currentAudio = null;
-      }
-
-      // Limpiar todos los timeouts de audio
-      audioTimeouts.forEach(timeout => clearTimeout(timeout));
-      audioTimeouts = [];
-    }
-
-    function updateDuration() {
-      const elapsed = Math.floor((Date.now() - callStartTime) / 1000);
-      const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
-      const seconds = (elapsed % 60).toString().padStart(2, '0');
-      if (durationText) {
-        durationText.textContent = `${minutes}:${seconds}`;
-      }
-    }
-
-    function startCall() {
-      isInCall = true;
-      callStartTime = Date.now();
-
-      // Usar escenario seleccionado
-      const conversation = scenarios[selectedScenario];
-
-      // Ocultar pantalla pre-llamada
-      if (preCallScreen) preCallScreen.classList.add('hidden');
-
-      // Mostrar pantalla en llamada
-      if (inCallScreen) {
-        inCallScreen.classList.remove('hidden');
-        inCallScreen.classList.add('flex');
-      }
-
-      // Mostrar indicador de grabación
-      if (recordingIndicator) {
-        recordingIndicator.classList.remove('hidden');
-        recordingIndicator.classList.add('flex');
-      }
-
-      // Start duration counter
-      durationInterval = setInterval(updateDuration, 1000) as unknown as number;
-
-      // Play conversation with audio
-      conversation.forEach(line => {
-        const timeout = setTimeout(() => {
-          if (isInCall) {
-            addConversationLine(line.speaker, line.text, line.audio);
-          }
-        }, line.delay) as unknown as number;
-        audioTimeouts.push(timeout);
-      });
-    }
-
-    function endCall() {
-      isInCall = false;
-      clearInterval(durationInterval);
-      stopAllAudio();
-
-      // Ocultar pantalla en llamada
-      if (inCallScreen) {
-        inCallScreen.classList.add('hidden');
-        inCallScreen.classList.remove('flex');
-      }
-
-      // Ocultar indicador de grabación
-      if (recordingIndicator) {
-        recordingIndicator.classList.add('hidden');
-        recordingIndicator.classList.remove('flex');
-      }
-
-      // Limpiar transcripción y mostrar estado vacío
-      if (conversationLog) {
-        conversationLog.innerHTML = `
-          <div id="empty-state" class="flex flex-col items-center justify-center h-full text-center py-12">
-            <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-            </svg>
-            <p class="text-gray-400 text-sm font-medium">La transcripción aparecerá aquí</p>
-            <p class="text-gray-300 text-xs mt-2">Selecciona un motivo y pulsa "Llamar"</p>
-          </div>
-        `;
-      }
-
-      // Reset temporizador
-      if (durationText) durationText.textContent = '00:00';
-
-      // Mostrar pantalla pre-llamada
-      if (preCallScreen) preCallScreen.classList.remove('hidden');
-    }
-
-    // Función para actualizar el escenario seleccionado
-    function updateSelectedScenario(scenario: keyof typeof scenarios) {
-      selectedScenario = scenario;
-
-      // Actualizar estilos de los botones
-      scenarioButtons.forEach(btn => {
-        const btnScenario = btn.getAttribute('data-scenario');
-        if (btnScenario === scenario) {
-          btn.classList.remove('border-gray-700', 'bg-gray-800/30');
-          btn.classList.add('border-blue-500/50', 'bg-gray-800/50', 'shadow-lg', 'shadow-blue-500/20');
-        } else {
-          btn.classList.remove('border-blue-500/50', 'bg-gray-800/50', 'shadow-lg', 'shadow-blue-500/20');
-          btn.classList.add('border-gray-700', 'bg-gray-800/30');
-        }
-      });
-    }
-
-    // Event listener para el botón de llamar
-    if (callButton) {
-      callButton.addEventListener('click', startCall);
-    }
-
-    // Event listeners para los botones de escenario
-    scenarioButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const scenario = button.getAttribute('data-scenario') as keyof typeof scenarios;
-        if (scenario) {
-          updateSelectedScenario(scenario);
-        }
-      });
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-channel]')];
+  let inCall = false; let finishSpeech: (() => void) | undefined;
+  let runId = 0; let callTimer: ReturnType<typeof setInterval> | undefined;
+  const play = document.querySelector<HTMLButtonElement>('#call-play')!;
+  function stopCall() {
+    runId++; inCall=false; finishSpeech?.(); if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    document.querySelector('#panel-llamada')?.classList.remove('playing');
+    clearInterval(callTimer); document.querySelector('#call-label')!.textContent='Llamar'; play.setAttribute('aria-label','Llamar a FisioVital (demostración)'); document.querySelector('#transcript-state')!.textContent='En espera';
+    document.querySelector('#call-status')!.textContent = 'Escucha cómo atiende tu recepción';
+  }
+  function selectTab(tab: HTMLButtonElement) {
+    stopCall();
+    tabs.forEach(t => {const active=t===tab; t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1;document.getElementById(t.getAttribute('aria-controls')!)!.hidden=!active;});
+  }
+  tabs.forEach((tab,index)=>{
+    tab.addEventListener('click',()=>selectTab(tab));
+    tab.addEventListener('keydown',e=>{
+      const next=e.key==='ArrowRight'?(index+1)%tabs.length:e.key==='ArrowLeft'?(index+tabs.length-1)%tabs.length:e.key==='Home'?0:e.key==='End'?tabs.length-1:-1;
+      if(next<0)return;e.preventDefault();selectTab(tabs[next]);tabs[next].focus();
     });
-
-    // Event listener para colgar (botón dentro del teléfono)
-    if (hangupButtonInPhone) {
-      hangupButtonInPhone.addEventListener('click', endCall);
-    }
   });
-
-  // === WHATSAPP DEMO JAVASCRIPT (copiado exacto de migracion-wordpress.astro) ===
-  const chatMessagesWa = document.getElementById('chat-messages-wa');
-  const chatContainerWa = document.getElementById('chat-container-wa');
-  const chatInputWa = document.getElementById('chat-input-wa');
-  const sendButtonWa = document.getElementById('send-button-wa');
-  const demoTitleWa = document.getElementById('demo-title-wa');
-  const demoPriceWa = document.getElementById('demo-price-wa');
-  const demoButtonWa = document.getElementById('demo-button-wa');
-  const connectionCableWa = document.getElementById('connection-cable-wa');
-  const resetDemoButtonWa = document.getElementById('reset-demo-button-wa');
-  const particlesWa = [
-    document.getElementById('particle1Wa'),
-    document.getElementById('particle2Wa'),
-    document.getElementById('particle3Wa')
-  ];
-
-  let isPlayingWa = false;
-  const INITIAL_TITLE_WA = 'Clínica de Fisioterapia';
-  const INITIAL_PRICE_WA = '€35';
-  const INITIAL_BUTTON_COLOR_WA = '#10b981';
-
-  function addMessageWa(text, isUser = true) {
-    if (!chatMessagesWa) return;
-
-    const msgDiv = document.createElement('div');
-    msgDiv.className = isUser ? 'flex justify-end mb-3' : 'flex justify-start mb-3';
-
-    const time = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-
-    msgDiv.innerHTML = `
-      <div class="${isUser ? 'bg-[#d9fdd3]' : 'bg-white'} rounded-lg px-3 py-2 max-w-[85%] shadow-sm">
-        <p class="text-base" style="color: #000000;">${text}</p>
-        <span class="text-xs text-gray-600 float-right mt-1">${time}${isUser ? '' : ' ✓✓'}</span>
-      </div>
-    `;
-
-    chatMessagesWa.appendChild(msgDiv);
-
-    if (chatContainerWa) {
-      chatContainerWa.scrollTop = chatContainerWa.scrollHeight;
-    }
-  }
-
-  function typeMessageWa(text, callback) {
-    if (!chatInputWa) return;
-
-    let i = 0;
-    chatInputWa.value = '';
-    chatInputWa.focus();
-
-    const typingInterval = setInterval(() => {
-      if (i < text.length) {
-        chatInputWa.value += text[i];
-        i++;
-      } else {
-        clearInterval(typingInterval);
-        if (callback) callback();
-      }
-    }, 80);
-  }
-
-  function showCableAnimationWa(targetType = 'title') {
-    if (!connectionCableWa) return;
-
-    const cablePath = document.getElementById('cablePathWa');
-    if (cablePath) {
-      if (targetType === 'title') {
-        cablePath.setAttribute('d', 'M 350 500 Q 500 350, 650 500');
-      } else if (targetType === 'button') {
-        cablePath.setAttribute('d', 'M 350 550 Q 500 400, 650 550');
-      }
-    }
-
-    connectionCableWa.classList.remove('hidden');
-
-    let opacity = 0;
-    const fadeIn = setInterval(() => {
-      if (opacity < 1) {
-        opacity += 0.05;
-        connectionCableWa.style.opacity = opacity;
-      } else {
-        clearInterval(fadeIn);
-      }
-    }, 30);
-
-    particlesWa.forEach(p => {
-      if (p) p.setAttribute('opacity', '1');
-    });
-  }
-
-  function hideCableAnimationWa() {
-    if (!connectionCableWa) return;
-
-    particlesWa.forEach(p => {
-      if (p) p.setAttribute('opacity', '0');
-    });
-
-    let opacity = 1;
-    const fadeOut = setInterval(() => {
-      if (opacity > 0) {
-        opacity -= 0.05;
-        connectionCableWa.style.opacity = opacity;
-      } else {
-        clearInterval(fadeOut);
-        connectionCableWa.classList.add('hidden');
-      }
-    }, 30);
-  }
-
-  function updateWebsiteWa(type, value) {
-    if (type === 'title' && demoTitleWa) {
-      demoTitleWa.style.transform = 'scale(0.9)';
-      demoTitleWa.style.opacity = '0.3';
-      setTimeout(() => {
-        demoTitleWa.textContent = value;
-        demoTitleWa.style.transform = 'scale(1)';
-        demoTitleWa.style.opacity = '1';
-      }, 300);
-    } else if (type === 'price' && demoPriceWa) {
-      demoPriceWa.style.transform = 'scale(0.9) rotate(-5deg)';
-      demoPriceWa.style.opacity = '0.3';
-      setTimeout(() => {
-        demoPriceWa.textContent = value;
-        demoPriceWa.style.transform = 'scale(1) rotate(0deg)';
-        demoPriceWa.style.opacity = '1';
-      }, 300);
-    } else if (type === 'button' && demoButtonWa) {
-      demoButtonWa.style.transform = 'scale(0.9)';
-      demoButtonWa.style.opacity = '0.5';
-      setTimeout(() => {
-        demoButtonWa.style.backgroundColor = value;
-        demoButtonWa.style.transform = 'scale(1)';
-        demoButtonWa.style.opacity = '1';
-      }, 300);
-    }
-  }
-
-  async function runDemoWa() {
-    if (isPlayingWa) return;
-    isPlayingWa = true;
-
-    if (chatInputWa) chatInputWa.disabled = true;
-    if (sendButtonWa) sendButtonWa.disabled = true;
-
-    if (chatMessagesWa) chatMessagesWa.innerHTML = '';
-
-    // Mensaje 1: Usuario pregunta por dolor
-    const demoMessage1 = 'Hola, tengo dolor en la espalda baja desde hace 3 días';
-
-    await new Promise(resolve => {
-      typeMessageWa(demoMessage1, resolve);
-    });
-
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    if (chatInputWa) chatInputWa.value = '';
-    addMessageWa(demoMessage1, true);
-
-    await new Promise(resolve => setTimeout(resolve, 1200));
-
-    // Respuesta IA 1
-    addMessageWa('Hola! Lamento que tengas dolor. ¿El dolor es constante o solo al hacer ciertos movimientos?', false);
-
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // Mensaje 2: Usuario responde
-    const demoMessage2 = 'Me duele al agacharme y al estar sentado mucho rato';
-
-    await new Promise(resolve => {
-      typeMessageWa(demoMessage2, resolve);
-    });
-
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    if (chatInputWa) chatInputWa.value = '';
-    addMessageWa(demoMessage2, true);
-
-    await new Promise(resolve => setTimeout(resolve, 1200));
-
-    // Respuesta IA 2: Ofrece horarios
-    addMessageWa('Entiendo. Te recomiendo una sesión de fisioterapia para la zona lumbar. ¿Qué horario te viene mejor?\n\n📅 Mañana miércoles:\n• 10:00h\n• 16:30h\n• 18:00h', false);
-
-    await new Promise(resolve => setTimeout(resolve, 2500));
-
-    // Mensaje 3: Usuario elige horario
-    const demoMessage3 = 'Mañana a las 16:30 me viene bien';
-
-    await new Promise(resolve => {
-      typeMessageWa(demoMessage3, resolve);
-    });
-
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    if (chatInputWa) chatInputWa.value = '';
-    addMessageWa(demoMessage3, true);
-
-    await new Promise(resolve => setTimeout(resolve, 1200));
-
-    // Respuesta IA 3: Confirmación
-    addMessageWa('✅ ¡Perfecto! He reservado tu cita:\n\n📆 Miércoles 8 enero\n🕐 16:30h\n👨‍⚕️ Fisioterapeuta: Dr. Martínez\n📍 FisioVital - Consulta 2\n\nTe enviaré un recordatorio 1 hora antes. ¿Necesitas algo más?', false);
-
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    isPlayingWa = false;
-  }
-
-  function resetDemoWa() {
-    if (demoTitleWa) {
-      demoTitleWa.textContent = INITIAL_TITLE_WA;
-      demoTitleWa.style.transform = 'scale(1)';
-      demoTitleWa.style.opacity = '1';
-    }
-
-    if (demoPriceWa) {
-      demoPriceWa.textContent = INITIAL_PRICE_WA;
-      demoPriceWa.style.transform = 'scale(1) rotate(0deg)';
-      demoPriceWa.style.opacity = '1';
-    }
-
-    if (demoButtonWa) {
-      demoButtonWa.style.backgroundColor = INITIAL_BUTTON_COLOR_WA;
-      demoButtonWa.style.transform = 'scale(1)';
-      demoButtonWa.style.opacity = '1';
-    }
-
-    if (chatMessagesWa) chatMessagesWa.innerHTML = '';
-    if (chatInputWa) {
-      chatInputWa.value = '';
-      chatInputWa.disabled = false;
-    }
-    if (sendButtonWa) sendButtonWa.disabled = false;
-
-    if (resetDemoButtonWa) {
-      resetDemoButtonWa.classList.add('hidden');
-    }
-
-    setTimeout(() => {
-      runDemoWa();
-    }, 300);
-  }
-
-  // Auto-start WhatsApp demo when section comes into view
-  const demoSectionWa = document.querySelector('#demo-whatsapp');
-  let hasAutoPlayedWa = false;
-
-  if (demoSectionWa) {
-    const observerWa = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !hasAutoPlayedWa && !isPlayingWa) {
-          hasAutoPlayedWa = true;
-          setTimeout(() => {
-            runDemoWa();
-          }, 1000);
-        }
+  const messages=document.querySelector('#wa-messages')!;
+  const replies:Record<string,[string,string]>={
+    reservar:['Confirmo la cita de las 16:30.','Cita de ejemplo confirmada con Laura a las 16:30. En tu clínica, el paciente recibiría la confirmación por el canal configurado.'],
+    cambiar:['¿Tenéis otra hora?','Puedes elegir las 18:00 en este ejemplo. En una integración real consultamos los huecos disponibles de tu agenda.'],
+    horarios:['¿Cuál es vuestro horario?','El horario de esta clínica ficticia es de lunes a viernes, de 9:00 a 20:00. Respondemos con la información que tú configures.'],
+  };
+  document.querySelectorAll<HTMLButtonElement>('[data-reply]').forEach(button=>button.addEventListener('click',()=>{
+    const pair=replies[button.dataset.reply!];pair.forEach((text,i)=>{const p=document.createElement('p');p.className='bubble'+(i===0?' patient':'');p.textContent=text;messages.append(p);});while(messages.children.length>9)messages.firstElementChild?.remove();messages.scrollTop=messages.scrollHeight;
+  }));
+  play.addEventListener('click',async()=>{
+    if(inCall){stopCall();return;} inCall=true;
+    const id=++runId; const log=document.querySelector('#transcript')!;log.replaceChildren();
+    document.querySelector('#call-label')!.textContent='Colgar'; play.setAttribute('aria-label','Colgar llamada'); document.querySelector('#transcript-state')!.textContent='En llamada'; let seconds=0; document.querySelector('#call-clock')!.textContent='00:00'; callTimer=setInterval(()=>{seconds++;document.querySelector('#call-clock')!.textContent=String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');},1000);document.querySelector('#panel-llamada')!.classList.add('playing');
+    document.querySelector('#call-status')!.textContent='Reproduciendo conversación';
+    const key=document.querySelector<HTMLSelectElement>('#call-scenario')!.value as keyof typeof scenarios;
+    for(const line of scenarios[key]){
+      if(id!==runId)return;
+      const p=document.createElement('p');if(line.speaker==='User')p.className='patient-line';const strong=document.createElement('strong');strong.textContent=line.speaker==='AI'?'Recepción: ':'Paciente: ';p.append(strong,document.createTextNode(line.text));log.append(p);log.scrollTop=log.scrollHeight;
+      await new Promise<void>(resolve=>{
+        let settled=false;
+        const finish=()=>{if(settled)return;settled=true;clearTimeout(timer);finishSpeech=undefined;resolve();};
+        const timer=setTimeout(()=>{if ('speechSynthesis' in window) window.speechSynthesis.cancel();finish();},Math.max(3500,line.text.length*95));
+        finishSpeech=finish;
+        if ('speechSynthesis' in window) {
+          const utterance=new SpeechSynthesisUtterance(line.text);utterance.lang='es-ES';utterance.rate=1;utterance.pitch=line.speaker==='AI'?1.05:.9;
+          utterance.onend=finish;
+          utterance.onerror=()=>{if(id===runId)document.querySelector('#transcript-state')!.textContent='Modo texto';};
+          window.speechSynthesis.speak(utterance);
+        } else {document.querySelector('#transcript-state')!.textContent='Modo texto';}
       });
-    }, {
-      threshold: 0.3
-    });
-
-    observerWa.observe(demoSectionWa);
+      if(id!==runId)return;
+    }
+    stopCall();document.querySelector('#call-status')!.textContent='Ejemplo finalizado. Puedes escuchar otra consulta.';
+  });
+  document.querySelector('#call-scenario')!.addEventListener('change',stopCall);
+  window.addEventListener('pagehide',stopCall);
+  let selectedDate='',selectedTime='';
+  const days=document.querySelector('#days')!;
+  const result=document.querySelector('#booking-result')!;
+  const resetResult=()=>{result.textContent='Elige tu cita para ver la confirmación.';};
+  for(let i=1;i<=5;i++){
+    const date=new Date();date.setDate(date.getDate()+i);
+    const button=document.createElement('button');button.type='button';
+    const label=date.toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
+    button.textContent=date.toLocaleDateString('es-ES',{weekday:'short',day:'numeric'});button.setAttribute('aria-label',label);button.setAttribute('aria-pressed','false');
+    button.addEventListener('click',()=>{days.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false'));button.setAttribute('aria-pressed','true');selectedDate=label;resetResult();});days.append(button);
   }
-
-  if (resetDemoButtonWa) {
-    resetDemoButtonWa.addEventListener('click', resetDemoWa);
-  }
-
-  // === WEB BOOKING DEMO JAVASCRIPT (copiado exacto de gestor-citas.astro) ===
-  document.addEventListener('DOMContentLoaded', () => {
-    const calendarGridWeb = document.getElementById('calendar-grid-web');
-    const timeSlotsWeb = document.querySelectorAll('.time-slot-web');
-    const selectedSlotDivWeb = document.getElementById('selected-slot-web');
-    const selectedSlotTextWeb = document.getElementById('selected-slot-text-web');
-    const bookingFormWeb = document.getElementById('booking-form-web') as HTMLFormElement;
-    const bookingSuccessWeb = document.getElementById('booking-success-web');
-
-    let selectedDayWeb: number | null = null;
-    let selectedTimeWeb: string | null = null;
-
-    // Generate calendar
-    function generateCalendarWeb() {
-      if (!calendarGridWeb) return;
-
-      const today = new Date();
-      const currentMonth = today.getMonth();
-      const currentYear = today.getFullYear();
-      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-      // Add empty cells for days before month starts
-      for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
-        const emptyDay = document.createElement('div');
-        calendarGridWeb.appendChild(emptyDay);
-      }
-
-      // Add days
-      for (let day = 1; day <= daysInMonth; day++) {
-        const dayButton = document.createElement('button');
-        dayButton.type = 'button';
-        dayButton.textContent = day.toString();
-        dayButton.className = 'aspect-square p-2 rounded-lg text-sm font-medium transition-all';
-
-        const isPast = day < today.getDate();
-        const isToday = day === today.getDate();
-
-        if (isPast) {
-          dayButton.className += ' text-base-400 cursor-not-allowed';
-          dayButton.disabled = true;
-        } else if (isToday) {
-          dayButton.className += ' bg-accent-100 text-accent-700 hover:bg-accent-200';
-        } else {
-          dayButton.className += ' text-base-700 hover:bg-accent-50 hover:text-accent-600';
-        }
-
-        dayButton.addEventListener('click', () => selectDayWeb(day, dayButton));
-        calendarGridWeb.appendChild(dayButton);
-      }
-    }
-
-    function selectDayWeb(day: number, button: HTMLButtonElement) {
-      document.querySelectorAll('#calendar-grid-web button').forEach(btn => {
-        btn.classList.remove('bg-accent-600', 'text-white');
-      });
-
-      button.classList.add('bg-accent-600', 'text-white');
-      selectedDayWeb = day;
-      updateSelectedSlotWeb();
-    }
-
-    // Handle time slot selection
-    timeSlotsWeb.forEach(slot => {
-      slot.addEventListener('click', (e) => {
-        const button = e.currentTarget as HTMLButtonElement;
-
-        timeSlotsWeb.forEach(s => {
-          s.classList.remove('bg-accent-600', 'text-white', 'border-accent-600');
-        });
-
-        button.classList.add('bg-accent-600', 'text-white', 'border-accent-600');
-        selectedTimeWeb = button.textContent?.trim() || null;
-        updateSelectedSlotWeb();
-      });
-    });
-
-    function updateSelectedSlotWeb() {
-      if (selectedDayWeb && selectedTimeWeb && selectedSlotDivWeb && selectedSlotTextWeb) {
-        selectedSlotDivWeb.classList.remove('hidden');
-        selectedSlotTextWeb.textContent = `Cita seleccionada: ${selectedDayWeb} de Enero, ${selectedTimeWeb}`;
-      }
-    }
-
-    // Handle form submission
-    if (bookingFormWeb) {
-      bookingFormWeb.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        if (!selectedDayWeb || !selectedTimeWeb) {
-          alert('Por favor selecciona un día y hora');
-          return;
-        }
-
-        bookingFormWeb.classList.add('hidden');
-        if (bookingSuccessWeb) {
-          bookingSuccessWeb.classList.remove('hidden');
-        }
-      });
-    }
-
-    generateCalendarWeb();
+  document.querySelectorAll<HTMLButtonElement>('[data-time]').forEach(button=>button.addEventListener('click',()=>{
+    document.querySelectorAll('[data-time]').forEach(b=>b.setAttribute('aria-pressed','false'));button.setAttribute('aria-pressed','true');selectedTime=button.dataset.time!;resetResult();
+  }));
+  document.querySelector('#booking')!.addEventListener('change',resetResult);
+  document.querySelector('#booking')!.addEventListener('submit',e=>{
+    e.preventDefault();if(!selectedDate||!selectedTime){result.textContent='Selecciona un día y una hora para continuar.';return;}
+    const person=document.querySelector<HTMLSelectElement>('#professional')!.value;
+    const service=document.querySelector<HTMLSelectElement>('#service')!.value;
+    result.textContent='✓ Reserva de ejemplo: '+service+' · '+selectedDate+' a las '+selectedTime+' · '+person+'. No se ha creado una cita real.';
   });
 </script>
-</BaseLayout>
