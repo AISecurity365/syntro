@@ -90,7 +90,11 @@ const benefits = [
     </section>
     <section class="section benefits">
       <div class="wrap"><div class="section-intro"><p class="eyebrow">Más tiempo para tratar. Menos tiempo para gestionar.</p><h2>La atención empieza<br/>antes de entrar en consulta.</h2></div>
-        <div class="benefit-grid">{benefits.map(b=><article><span class="number">{b.n}</span><h3>{b.title}</h3><p>{b.text}</p></article>)}</div>
+        <div class="benefit-grid">{benefits.map((b,i)=><article><div class="benefit-visual" aria-hidden="true">
+  {i===0 ? <><div class="mini-row"><svg viewBox="0 0 24 24"><path d="M5 3h4l2 5-3 2a13 13 0 006 6l2-3 5 2v4c-9 3-20-8-16-16Z"/></svg><strong>Recepción atendiendo</strong><span>···</span></div><div class="mini-row"><svg viewBox="0 0 24 24"><path d="M4 4h16v13H9l-5 4V4Z"/><path d="M8 9h8M8 13h5"/></svg><strong>Consulta resuelta</strong><span>✓</span></div><p class="mini-caption">Ejemplo de atención multicanal</p></> :
+  i===1 ? <><div class="mini-agenda"><span>09:00</span><div class="mini-slot">Laura · Primera visita</div><span>10:00</span><div class="mini-slot">Marcos · Fisioterapia</div><span>11:00</span><div class="mini-slot">Laura · Seguimiento</div></div><p class="mini-caption">Una agenda por profesional</p></> :
+  <><div class="mini-notice"><span>✓</span><div><strong>Cita confirmada</strong><small>Laura · Mañana a las 16:30</small></div></div><div class="mini-row"><small>Recordatorio preparado</small><span>↗</span></div><p class="mini-caption">Ejemplo de confirmación</p></>}
+</div><span class="number">{b.n}</span><h3>{b.title}</h3><p>{b.text}</p></article>)}</div>
       </div>
     </section>
     <section class="section integration"><div class="wrap integration-grid">
@@ -142,6 +146,36 @@ const benefits = [
   .messages{scrollbar-width:thin;scrollbar-color:#465169 transparent}
   @media(min-width:761px) and (max-width:1100px){.phone-layout{grid-template-columns:175px minmax(0,1fr);gap:10px}.phone-screen{padding-inline:10px}.transcription-card{padding:12px 8px}}
   @media(max-width:460px){.phone-layout{grid-template-columns:1fr}.phone-shell{width:220px;justify-self:center}.transcription-card .transcript{height:210px}.transcription-card{min-height:270px}}
+
+  /* Product surfaces: lighter application panels against the site's blue shell. */
+  .hero{background:radial-gradient(ellipse at 85% 35%,rgba(112,162,225,.28),transparent 58%),linear-gradient(135deg,#172538,#233b57 70%,#223650);position:relative}
+  .hero-copy{position:relative}.hero-copy h1 span{color:#bddcfa}.hero .eyebrow{color:#c3d8ed!important}.hero .lead{color:#c6d3e1}.hero-notes{color:#c1d0df}
+  .workspace{background:#edf2f8;transform:none;border:1px solid #d3e0ef;box-shadow:0 24px 75px #07142355,0 0 0 7px #ffffff08;position:relative}
+  .workspace-top{background:#f6f8fc;border-color:#d3dce8;border-radius:18px 18px 0 0}.workspace-top strong{color:#24354b}.workspace-top small,.example{color:#586a80}.clinic-mark{background:#dce8fc;color:#355887}
+  .tabs{background:#e2e9f3;margin:16px 20px 0;padding:5px;border-radius:10px;gap:4px}.tabs button{border:0;border-radius:7px;color:#52647c;padding:10px 3px}.tabs button[aria-selected=true]{background:#f9fbfe;color:#264d84;box-shadow:0 2px 5px #25334d18}
+  .workspace .panel-heading{color:#263b56}.workspace .panel-heading small,.workspace .demo-note{color:#566a82}.status-dot{background:#557cad}
+  .workspace-foot{color:#586a80;border-color:#d3dce8;background:#e6edf6;border-radius:0 0 18px 18px}.workspace-foot span{color:#365f94}
+  .messages :global(.bubble){background:#fff;color:#263b56!important;box-shadow:0 2px 5px #152c4610;border:1px solid #dee6f0}
+  .messages :global(.bubble.patient){background:#dae8fc;border-color:#c3d7f1;color:#223e65!important}
+  .quick-replies button,.times button,.days :global(button){background:#f9fbfe;border-color:#b2c4db;color:#355479}.quick-replies button:hover,.times button:hover,.days :global(button):hover{background:#dde9f9}
+  .workspace .field{color:#52647c}.workspace .field select{background:#fff;border-color:#b8c8db;color:#243b59}.workspace .availability,.workspace .booking-result{color:#405872}
+  .days :global(button[aria-pressed=true]),.times button[aria-pressed=true]{background:#355f9f;border-color:#355f9f;color:#fff}
+  .primary{background:linear-gradient(135deg,#3567ae,#4f5db4);border-color:#7594cf;box-shadow:0 4px 15px #213d7020}.primary:hover{background:linear-gradient(135deg,#2a548f,#444f9e)}
+  .workspace .phone-screen .field{color:#aab9cc}.workspace .phone-screen select{background:#202d41;border-color:#405574;color:#f1f5f9}
+  .transcription-card{background:#f9fbfe;border-color:#c7d5e5}.transcription-heading{border-color:#d7e1ee}.transcription-heading strong{color:#274667}.transcription-heading span{color:#52647c}.transcription-card .transcript :global(p){color:#2a425e;background:#eaf0f7}.transcription-card .transcript :global(strong){color:#365d91}.transcription-card .transcript :global(p.patient-line){background:#dce9fa}.transcription-foot{color:#586a80!important}
+  .channel-strip{color:#bdcddd;border-color:#a8c5e133}.channel-strip p{color:#e0ebf6}.channel-strip b{color:#9bb5d2}
+  .benefits{background:#eaf0f6;color:#203651}.benefits h2,.benefits h3{color:#243a54}.benefits .eyebrow{color:#526b89!important}.benefits p{color:#536b84}
+  .benefit-grid{grid-template-columns:1.2fr 1fr 1fr;gap:20px}.benefit-grid article{border:1px solid #cedbea;padding:25px;border-radius:18px;background:#f6f9fc;overflow:hidden;transition:transform .2s,box-shadow .2s}.benefit-grid article:hover{transform:translateY(-4px);box-shadow:0 15px 30px #27456212}.benefit-grid .number{color:#587497}
+  .benefit-visual{height:154px;margin:-25px -25px 23px;padding:23px;background:linear-gradient(135deg,#d8e5f4,#e9f0f9);display:flex;flex-direction:column;justify-content:center;gap:10px;position:relative;overflow:hidden}
+  .mini-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #ccd9e9;background:#ffffffb5;border-radius:10px;color:#415b79;font-size:11px;box-shadow:0 3px 9px #2545640a}
+  .mini-row svg{width:20px;height:20px;stroke:#5074a2;fill:none;stroke-width:1.5;flex-shrink:0}.mini-row strong{color:#2d4868;font-size:11px}.mini-row>span:last-child{margin-left:auto}.mini-row small{font-size:9px;color:#61768e}
+  .mini-agenda{display:grid;grid-template-columns:35px 1fr;gap:8px;font-size:10px;color:#527091;align-items:center}.mini-slot{border-left:3px solid #658abb;background:#fff9;padding:9px 12px;border-radius:0 6px 6px 0;color:#385574}
+  .mini-notice{background:#f7faff;border:1px solid #c6d7ec;border-radius:12px;padding:14px;box-shadow:0 8px 20px #24416112;display:flex;gap:12px;align-items:center}.mini-notice>span{width:33px;height:33px;border-radius:10px;background:#dfeaf8;display:grid;place-items:center;color:#426896}.mini-notice strong{display:block;color:#2d4868;font-size:12px}.mini-notice small{color:#61768e;font-size:10px}.mini-caption{font-size:9px!important;color:#607895!important;text-align:right}
+  .integration{background:linear-gradient(115deg,#1a2d44,#263e59)}.integration .eyebrow{color:#aec6e3!important}.integration h2 span{color:#bdd8f1}.integration .lead,.steps p{color:#b9cbdc}.steps{background:#ffffff08;border:1px solid #a9c6e22b;border-radius:18px;padding:5px 25px}.steps article:last-child{border-bottom:0}.steps article>span{background:#acc9ed17;border:1px solid #acc9ed30;width:32px;height:32px;flex-shrink:0;border-radius:9px;display:grid;place-items:center;padding:0;color:#b6d1f2}.integration .text-link{color:#c2dcff!important}
+  .faq{background:#dfe8f2}.faq h2{color:#253e5b}.faq .eyebrow{color:#526b89!important}.faq-grid>div>p{color:#536b84}.faq details{background:#f5f8fc;border:1px solid #c6d5e6;border-radius:11px;margin-bottom:10px;padding:18px 20px}.faq summary{color:#294564}.faq summary span{color:#597fae}.faq details p{color:#536b84}
+  .closing{padding:65px 0;background:linear-gradient(#dfe8f2 0 38%,#0a0d14 38%)}.closing-inner{background:radial-gradient(ellipse at 80% 20%,#6e9bc54a,transparent 65%),#243e5b;border:1px solid #7d9cba55;border-radius:25px;padding:55px 25px;box-shadow:0 20px 45px #0002}.closing .eyebrow{color:#bfd2e6!important}.closing p{color:#c1d2e3}.closing h2 span{color:#bcd8f4}.closing .text-link{color:#c5ddff!important}
+  @media(max-width:1000px){.benefit-grid{grid-template-columns:repeat(3,1fr);gap:14px}.benefit-grid article{padding:20px}.benefit-visual{margin:-20px -20px 20px;padding:18px}}
+  @media(max-width:760px){.benefit-grid{grid-template-columns:1fr}.benefit-visual{height:160px}.section-intro,.section-intro .eyebrow{text-align:center}.closing-inner{padding:40px 20px}.workspace{box-shadow:0 18px 45px #07142333}.steps{padding:5px 18px}.tabs{margin-inline:16px}.hero-grid{gap:38px}}
 </style>
 <script>
   // Guided examples only: browser speech matches the displayed transcript.
