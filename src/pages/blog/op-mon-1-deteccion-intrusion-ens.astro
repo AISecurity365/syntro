@@ -145,14 +145,35 @@ const faqSchema = [
 
   <h2>Preguntas frecuentes</h2>
 
-  <h3>¿op.mon.1 aplica a todas las categorías del ENS?</h3>
-  <p>Sí, pero con exigencia creciente: Básica pide el mecanismo de detección activo; Media añade R1 (detección basada en reglas); Alta añade además R2 (procedimientos de respuesta formalizados).</p>
-
-  <h3>¿Qué diferencia hay entre IDS e IPS a efectos del ENS?</h3>
-  <p>Un IDS detecta y alerta; un IPS además puede bloquear automáticamente. op.mon.1 base no exige IPS específicamente, pero en categoría Alta el refuerzo R2 es más fácil de demostrar con una respuesta automatizada tipo IPS o Active Response.</p>
-
-  <h3>¿Sirve un antivirus como detección de intrusión?</h3>
-  <p>No por sí solo. Un antivirus/EDR cubre malware conocido en el endpoint, pero op.mon.1 pide detección de intrusión de red y/o host basada en firmas y/o anomalías — normalmente hace falta complementarlo con visibilidad de red o un SIEM que correlacione ambas fuentes.</p>
+  <div class="faq-accordion">
+    <details class="faq-item">
+      <summary>
+        <span>¿op.mon.1 aplica a todas las categorías del ENS?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>Sí, pero con exigencia creciente: Básica pide el mecanismo de detección activo; Media añade R1 (detección basada en reglas); Alta añade además R2 (procedimientos de respuesta formalizados).</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span>¿Qué diferencia hay entre IDS e IPS a efectos del ENS?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>Un IDS detecta y alerta; un IPS además puede bloquear automáticamente. op.mon.1 base no exige IPS específicamente, pero en categoría Alta el refuerzo R2 es más fácil de demostrar con una respuesta automatizada tipo IPS o Active Response.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span>¿Sirve un antivirus como detección de intrusión?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>No por sí solo. Un antivirus/EDR cubre malware conocido en el endpoint, pero op.mon.1 pide detección de intrusión de red y/o host basada en firmas y/o anomalías — normalmente hace falta complementarlo con visibilidad de red o un SIEM que correlacione ambas fuentes.</p>
+      </div>
+    </details>
+  </div>
 
   <hr />
 

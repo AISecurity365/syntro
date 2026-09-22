@@ -156,6 +156,47 @@ const faqSchema = [
   </ul>
   <hr />
 
+  <h2>Preguntas frecuentes</h2>
+
+  <div class="faq-accordion">
+    <details class="faq-item">
+      <summary>
+        <span>¿op.exp.3 aplica en el nivel básico del ENS?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>Sí. A diferencia de otras medidas del Anexo II que solo entran en juego a partir de categoría media, el RD 311/2022 extendió op.exp.3 (Gestión de la configuración de seguridad) también a la categoría básica. En básica se exige el control tal cual; en media se añade el refuerzo R1 (mantenimiento regular de la línea base); en alta, R2 (responsabilidad limitada de quién puede modificarla) y R3 (copias de seguridad de la configuración).</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span>¿Qué diferencia hay entre op.exp.2 y op.exp.3?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>op.exp.2 (Configuración de seguridad) es la medida que exige fijar la línea base: qué configuración segura debe tener cada sistema antes de entrar en producción (hardening inicial). op.exp.3 (Gestión de la configuración de seguridad) es la medida que exige mantener esa línea base en el tiempo — verificarla periódicamente, controlar los cambios y reaccionar cuando algo se desvía. Una fija el punto de partida; la otra vigila que no se degrade.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span>¿El SCA de Wazuh corrige automáticamente las desviaciones?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>No. El módulo SCA (Security Configuration Assessment) de Wazuh detecta y reporta el porcentaje de cumplimiento contra un benchmark (CIS, por ejemplo) y genera histórico de escaneos, pero no aplica remediación automática — eso es una diferencia clave frente a herramientas de compliance-as-code como Ansible o Chef, que si se configuran para ello sí pueden revertir el cambio no autorizado sin intervención humana.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span>¿Qué pasa si el % de cumplimiento SCA baja después de una actualización?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>Es la situación exacta que op.exp.3 obliga a gestionar: el escaneo periódico detecta la desviación, pero corregirla y dejar constancia de cuándo y cómo se corrigió es un paso organizativo aparte. Un auditor no pregunta solo por el % actual, sino por el registro de qué se hizo la última vez que el % bajó.</p>
+      </div>
+    </details>
+  </div>
+
   <div class="relative my-10">
     <div class="absolute -inset-px rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(99,102,241,0.3),rgba(59,130,246,0.4));filter:blur(1px);"></div>
     <div class="relative rounded-2xl p-7 md:p-8" style="background:#0b1120;border:1px solid rgba(139,92,246,0.3);">

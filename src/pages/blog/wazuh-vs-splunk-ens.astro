@@ -130,17 +130,44 @@ const faqSchema = [
 
   <h2>Preguntas frecuentes</h2>
 
-  <h3>¿Wazuh o Splunk vienen con los controles del ENS integrados?</h3>
-  <p>No, ninguno de los dos. Ambos son SIEM genéricos; el mapeo a los controles del Anexo II del RD 311/2022 es trabajo de integración que hay que construir encima.</p>
-
-  <h3>¿Splunk cumple el Esquema Nacional de Seguridad de fábrica?</h3>
-  <p>No. Splunk aporta la plataforma de análisis de logs — potente y madura — pero el mapeo a controles ENS concretos es trabajo adicional de consultoría, igual que con Wazuh.</p>
-
-  <h3>¿Cuánto cuesta Wazuh frente a Splunk para una pyme española?</h3>
-  <p>Wazuh con AI Security: 999-1.499€ (Básico), 1.999-3.999€ (Completo) o 200€/mes (Gestionado). Splunk no publica precios públicos y cotiza por volumen de datos ingerido; para una pyme, suele escalar rápido según crece el volumen de logs.</p>
-
-  <h3>¿Qué SIEM recomienda AI Security para cumplir el ENS?</h3>
-  <p>Depende del punto de partida: si ya tienes Splunk desplegado, construimos el mapeo ENS sobre esa base; si empiezas de cero, Wazuh evita la licencia recurrente y ya tenemos el trabajo de compliance resuelto como servicio.</p>
+  <div class="faq-accordion">
+    <details class="faq-item">
+      <summary>
+        <span>¿Wazuh o Splunk vienen con los controles del ENS integrados?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>No, ninguno de los dos. Ambos son SIEM genéricos; el mapeo a los controles del Anexo II del RD 311/2022 es trabajo de integración que hay que construir encima.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span>¿Splunk cumple el Esquema Nacional de Seguridad de fábrica?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>No. Splunk aporta la plataforma de análisis de logs — potente y madura — pero el mapeo a controles ENS concretos es trabajo adicional de consultoría, igual que con Wazuh.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span>¿Cuánto cuesta Wazuh frente a Splunk para una pyme española?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>Wazuh con AI Security: 999-1.499€ (Básico), 1.999-3.999€ (Completo) o 200€/mes (Gestionado). Splunk no publica precios públicos y cotiza por volumen de datos ingerido; para una pyme, suele escalar rápido según crece el volumen de logs.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span>¿Qué SIEM recomienda AI Security para cumplir el ENS?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>Depende del punto de partida: si ya tienes Splunk desplegado, construimos el mapeo ENS sobre esa base; si empiezas de cero, Wazuh evita la licencia recurrente y ya tenemos el trabajo de compliance resuelto como servicio.</p>
+      </div>
+    </details>
+  </div>
 
   <hr />
 

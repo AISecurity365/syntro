@@ -196,17 +196,44 @@ const faqSchema = [
 
   <h2>Preguntas frecuentes</h2>
 
-  <h3>¿op.exp.8 aplica en el nivel básico del ENS?</h3>
-  <p>Sí. op.exp.8 (registro de la actividad) es una de las medidas que ya exige el nivel básico del ENS, sin refuerzos adicionales. A partir del nivel medio se le suman R1-R4; el nivel alto añade R5.</p>
-
-  <h3>¿Qué es la sincronización horaria (R2) y por qué la exige el ENS?</h3>
-  <p>R2 exige que todos los sistemas que generan registros tengan el reloj sincronizado contra una misma fuente, normalmente NTP. Sin eso, reconstruir la secuencia de un incidente que toca varios sistemas es imposible — y esa reconstrucción es justo lo que pide una auditoría.</p>
-
-  <h3>¿Cuánto tiempo hay que retener los registros de actividad (R3)?</h3>
-  <p>El RD 311/2022 no fija un número universal de meses; exige que el periodo de retención se defina y documente en la política de seguridad, coherente con el nivel de riesgo. Lo que suele fallar en auditoría es no tener ningún periodo definido, no la duración concreta elegida.</p>
-
-  <h3>¿Qué añade el refuerzo R5 (análisis automático) en el nivel alto?</h3>
-  <p>R5 exige que el registro no se limite a almacenarse a la espera de revisión manual (R1), sino que exista correlación o análisis automatizado que genere alertas ante patrones anómalos — la diferencia entre un archivo de logs y un SIEM en funcionamiento.</p>
+  <div class="faq-accordion">
+    <details class="faq-item">
+      <summary>
+        <span>¿op.exp.8 aplica en el nivel básico del ENS?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>Sí. op.exp.8 (registro de la actividad) es una de las medidas que ya exige el nivel básico del ENS, sin refuerzos adicionales. A partir del nivel medio se le suman R1-R4; el nivel alto añade R5.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span>¿Qué es la sincronización horaria (R2) y por qué la exige el ENS?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>R2 exige que todos los sistemas que generan registros tengan el reloj sincronizado contra una misma fuente, normalmente NTP. Sin eso, reconstruir la secuencia de un incidente que toca varios sistemas es imposible — y esa reconstrucción es justo lo que pide una auditoría.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span>¿Cuánto tiempo hay que retener los registros de actividad (R3)?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>El RD 311/2022 no fija un número universal de meses; exige que el periodo de retención se defina y documente en la política de seguridad, coherente con el nivel de riesgo. Lo que suele fallar en auditoría es no tener ningún periodo definido, no la duración concreta elegida.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span>¿Qué añade el refuerzo R5 (análisis automático) en el nivel alto?</span>
+        <svg class="faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="faq-answer">
+        <p>R5 exige que el registro no se limite a almacenarse a la espera de revisión manual (R1), sino que exista correlación o análisis automatizado que genere alertas ante patrones anómalos — la diferencia entre un archivo de logs y un SIEM en funcionamiento.</p>
+      </div>
+    </details>
+  </div>
 
   <hr />
 
