@@ -1,0 +1,197 @@
+---
+import BlogLayout from "../../layouts/BlogLayout.astro";
+
+const faqSchema = [
+  {
+    question: "¿Basta con poner \"Chatbot IA\" en el nombre del asistente?",
+    answer: "No necesariamente. La guía exige que el sistema esté diseñado para revelar su naturaleza artificial de forma perceptible en el momento de la interacción, no solo con una etiqueta ambigua. Un nombre como \"Asistente\" a secas, sin más contexto, se considera una señal ambigua (apdo. 38). Un banner claro tipo \"Estás interactuando con un sistema de IA\" cerca del campo de conversación sí cumple."
+  },
+  {
+    question: "¿Un chatbot de atención al cliente en una web puede acogerse a la excepción de \"es obvio que es IA\"?",
+    answer: "La guía lo dice explícitamente: los chatbots de ayuda o helpdesk integrados en webs son justamente el caso que MÁS afecta a empresas y donde el usuario puede tomar las respuestas por humanas. No es obvio, así que no puedes prescindir del aviso apoyándote en esta excepción."
+  },
+  {
+    question: "¿Un agente de IA que gestiona reservas o compras tiene obligaciones distintas a un chatbot de texto?",
+    answer: "Sí, más exigentes. El apartado 31 de la guía obliga a que un agente que reserva, gestiona correspondencia, negocia o compra revele dos cosas: su naturaleza artificial y la persona por cuenta de quien actúa. Si el proveedor no puede saber de antemano con quién va a interactuar el agente, debe diseñarlo a nivel de arquitectura para que se identifique en toda situación en que sea razonablemente probable que hable con una persona, y también ante quien le da instrucciones."
+  },
+  {
+    question: "¿Qué pasa si mi asistente de IA es solo interno, para empleados?",
+    answer: "La guía pone como ejemplo de \"sí es obvio\" un asistente interno para empleados formados y alfabetizados en IA (RRHH, legal, compras, IT), lo que permite acogerse a la excepción con más margen. Pero si el sistema puede acceder también el público general o personas vulnerables, la excepción no se puede invocar."
+  }
+];
+---
+
+<BlogLayout
+  title="Chatbots con IA: la obligación legal de avisar que es una IA"
+  description="El art. 50.1 del AI Act obliga desde agosto de 2026 a que chatbots y agentes de IA revelen su naturaleza artificial. Qué exige la ley y cómo cumplirlo."
+  publishDate="2026-09-22"
+  author="AI Security"
+  readTime="9 min"
+  tags={["AI Act", "Chatbots", "Agentes IA", "Artículo 50", "Cumplimiento Normativo", "Inteligencia Artificial"]}
+  canonical="https://aisecurity.es/blog/chatbots-ia-obligacion-legal-avisar-articulo-50"
+  faqSchema={faqSchema}>
+
+  <p>
+    El <strong>artículo 50(1) del AI Act</strong> (Reglamento UE 2024/1689) obliga, desde el <strong>2 de agosto de 2026 y sin periodo de gracia</strong>, a que todo sistema de IA destinado a interactuar directamente con personas físicas —chatbots, asistentes de voz, agentes de IA— esté <strong>diseñado y desarrollado</strong> para que esa persona sepa que está hablando con una IA. Responde el <strong>proveedor</strong> del sistema, y es una obligación de diseño, no un aviso legal que se añade después en la letra pequeña.
+  </p>
+
+  <p>
+    Esta guía desarrolla en detalle esa obligación a partir de la lectura íntegra de la <strong>Comunicación de la Comisión C(2026) 5054 final</strong>, de 20 de julio de 2026 —las directrices oficiales sobre el artículo 50 del AI Act—. Si quieres el panorama completo de qué entró en vigor el 2 de agosto y qué obligaciones acumula tu empresa, lo cubrimos en <a href="/blog/ai-act-que-entro-en-vigor-2-agosto-2026">esta guía sobre el artículo 50</a>.
+  </p>
+
+  <h2>¿Qué cuenta como "interacción directa" con una persona?</h2>
+
+  <p>
+    La guía exige cuatro elementos (apdo. 30): que sea un sistema de IA, <strong>destinado a interactuar</strong>, de forma <strong>directa</strong>, <strong>con personas físicas</strong>.
+  </p>
+
+  <ul>
+    <li><strong>Interactuar</strong> significa intercambio bidireccional con carácter conversacional o de respuesta: la persona da una entrada (texto, voz, acción física) y el sistema responde con una salida contextual. Puede ser un solo turno o muchos.</li>
+    <li><strong>Directa</strong> significa en tiempo real o casi real. Queda fuera la interacción mediada: si un agente de atención al cliente humano usa una IA de apoyo para redactar y es <strong>él</strong> quien envía la respuesta, el artículo 50.1 no aplica.</li>
+  </ul>
+
+  <p>
+    <strong>Dentro de la obligación:</strong> chatbots y asistentes de voz de cualquier sector, líneas de incidencias con IA, robots y cobots, avatares, mascotas robóticas, bots en redes sociales, y agentes de IA.
+  </p>
+
+  <p>
+    <strong>Fuera</strong> (apdo. 31): recomendadores, filtros de spam, traducción y transcripción automáticas, búsqueda y recuperación de información, autocompletado de texto y código, sistemas biométricos de autenticación, robótica industrial en entorno cerrado, mantenimiento predictivo, y sistemas de apoyo a la decisión donde el usuario solo ve la salida sin poder interactuar.
+  </p>
+
+  <h2>¿Qué exige la ley cuando el sistema es un agente de IA?</h2>
+
+  <p>
+    El apartado 31 de la guía es, con diferencia, el más exigente si tu empresa usa o vende <strong>agentes de IA</strong> —sistemas que reservan, gestionan correspondencia, negocian o compran por cuenta de alguien—. Tienen que estar diseñados para revelar <strong>dos cosas</strong>: su naturaleza artificial <strong>y</strong> la persona por cuenta de quien actúan.
+  </p>
+
+  <ul>
+    <li>Si el proveedor <strong>no puede saber de antemano</strong> con quién va a interactuar el agente, debe diseñarlo a nivel de arquitectura para que <strong>se identifique en toda situación en que sea razonablemente probable</strong> que hable con una persona.</li>
+    <li>El agente debe identificarse también <strong>ante quien le da instrucciones</strong>, en los pasos clave (autorización, reporte, validación) y <strong>en cada nueva interacción</strong>.</li>
+    <li>Esto aplica igual en arquitecturas <strong>multiagente</strong>: cada agente que llega a interactuar con una persona tiene que cumplir la misma revelación, no solo el agente "de cara al público".</li>
+  </ul>
+
+  <p>
+    Es el mismo problema que resolvemos en <a href="/servicios/chatbot">chatbots empresariales con IA</a>: diseñar el flujo de conversación para que el aviso de naturaleza artificial forme parte del propio producto desde el primer turno, no un parche legal añadido a última hora.
+  </p>
+
+  <h2>¿Cómo se avisa correctamente que hay una IA al otro lado?</h2>
+
+  <p>
+    El Reglamento no impone una técnica concreta, pero la guía sí da criterios claros (apdos. 36-37):
+  </p>
+
+  <ul>
+    <li><strong>Texto:</strong> etiqueta o banner en lenguaje llano ("Estás interactuando con un sistema de IA"), saludo en el primer turno, y —según el riesgo— una insignia persistente durante toda la conversación. Colócalo cerca del campo de entrada/salida.</li>
+    <li><strong>Audio:</strong> declaración hablada explícita al principio ("Soy un asistente basado en IA"), con recordatorios periódicos en conversaciones largas o tras interrupciones. Los tonos o <em>earcons</em> ayudan pero no bastan solos.</li>
+    <li><strong>Visual:</strong> iconos persistentes, marcos de color, símbolos "AI" reconocibles. Se recomienda estandarizarlos entre tus propios servicios.</li>
+    <li><strong>Multimodal:</strong> combinar los anteriores es la buena práctica.</li>
+  </ul>
+
+  <p>
+    Todo ello adaptado a públicos vulnerables si es razonablemente previsible que los haya: menores, personas mayores, personas con discapacidad. Con menores, el aviso debe ser "apto para su edad, fácil de entender y accesible". Además, el sistema debe estar diseñado para revelarse <strong>siempre que se le pregunte por su naturaleza</strong> y siempre que de la conversación pueda deducirse que la persona está confundida sobre con quién habla (apdo. 40).
+  </p>
+
+  <h2>¿Qué NO cumple con la obligación de aviso?</h2>
+
+  <p>
+    El apartado 38 de la guía es, literalmente, la lista de errores más comunes que vemos en implementaciones reales:
+  </p>
+
+  <ul>
+    <li>Avisar <strong>solo</strong> en los términos y condiciones, en una URL o en la documentación.</li>
+    <li>Marcas <strong>legibles solo por máquina</strong> (metadatos, marcas de agua) no perceptibles en el momento de la interacción.</li>
+    <li>Señales ambiguas: llamarlo "asistente" a secas, o representaciones humanas que induzcan a error.</li>
+    <li>Avisos <strong>genéricos</strong> de sitio: "los servicios de esta web usan IA" es insuficiente.</li>
+    <li>Descripciones técnicas: "este sistema usa LLMs" no explica ni la función ni el origen artificial.</li>
+  </ul>
+
+  <h2>¿Cuándo se puede invocar la excepción de "es obvio que es una IA"?</h2>
+
+  <p>
+    Existe, pero la guía la deja muy estrecha. Hay que evaluar si es obvio para una persona "razonablemente informada, atenta y perspicaz" —el estándar del consumidor medio del Derecho de consumo— <strong>del público real y previsible</strong> del sistema. Y luego: la excepción "debe limitarse a los casos en los que <strong>no queda casi ninguna duda</strong>" sobre la naturaleza de la interacción (apdo. 45).
+  </p>
+
+  <p>
+    Dos avisos concretos de la guía: <strong>la conciencia general de que existen los chatbots no implica reconocerlos en una interacción concreta</strong>, y si al sistema puede acceder el público general, incluidas personas vulnerables, la excepción no puede invocarse.
+  </p>
+
+  <div class="overflow-x-auto my-6">
+    <table class="w-full text-sm" style="border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.15);">
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Sí es obvio (ejemplos de la guía)</th>
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">No es obvio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;">Asistentes de código para desarrolladores profesionales</td>
+          <td style="padding:10px;">Mascota robótica realista</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;">Asistente interno para empleados formados y alfabetizados en IA (RRHH, legal, compras, IT)</td>
+          <td style="padding:10px;">Avatares realistas en entornos inmersivos</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;">Herramientas de apoyo al diagnóstico para sanitarios formados</td>
+          <td style="padding:10px;font-weight:bold;">Chatbots de ayuda o helpdesk integrados en webs, donde el usuario puede tomar las respuestas por humanas</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;">IA ambiental en electrodomésticos; NPCs en un videojuego de un solo jugador</td>
+          <td style="padding:10px;"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    El caso que más afecta a empresas está en la columna de la derecha: un chatbot de soporte o ventas en tu propia web <strong>no es obvio</strong> según la guía, así que necesita el aviso explícito casi siempre.
+  </p>
+
+  <h2>¿Qué tiene que ver el Derecho de consumo con todo esto?</h2>
+
+  <p>
+    Aunque te ampares en la obviedad, la Directiva de prácticas comerciales desleales y la de derechos de los consumidores siguen aplicando: si el servicio es "impulsado por IA", eso puede ser una <strong>característica esencial</strong> que hay que informar antes de contratar. La guía subraya que esa obligación aplica <strong>con independencia de que la interacción sea "obvia"</strong> bajo el artículo 50(1) (apdo. 50). Es decir: incluso en los casos "sí es obvio" de la tabla anterior, el Derecho de consumo puede seguir exigiendo que se informe del uso de IA antes de la venta.
+  </p>
+
+  <h2>¿Qué limitación tiene esta obligación en la práctica?</h2>
+
+  <p>
+    El estándar de "no queda casi ninguna duda" es deliberadamente flexible y depende del público concreto de cada sistema, así que no hay una checklist única válida para todos los casos: el mismo diseño de aviso puede ser suficiente para un asistente interno de IT y quedarse corto para un chatbot de cara al público general. En la práctica, esto significa que cada implementación necesita una evaluación propia de su público objetivo, no copiar el aviso de otra empresa y asumir que cumple igual.
+  </p>
+
+  <h2>Preguntas frecuentes</h2>
+
+  <h3>¿Basta con poner "Chatbot IA" en el nombre del asistente?</h3>
+  <p>No necesariamente. La guía exige un aviso perceptible en el momento de la interacción, no solo un nombre. Un banner claro tipo "Estás interactuando con un sistema de IA" cerca del campo de conversación sí cumple.</p>
+
+  <h3>¿Un chatbot de atención al cliente en una web puede acogerse a la excepción de "es obvio que es IA"?</h3>
+  <p>No: la guía dice explícitamente que los chatbots de helpdesk integrados en webs son el caso que más afecta a empresas y donde no es obvio para el usuario.</p>
+
+  <h3>¿Un agente de IA que gestiona reservas o compras tiene obligaciones distintas a un chatbot de texto?</h3>
+  <p>Sí, más exigentes: debe revelar su naturaleza artificial y la persona por cuenta de quien actúa, identificándose en cada interacción y también ante quien le da instrucciones.</p>
+
+  <h3>¿Qué pasa si mi asistente de IA es solo interno, para empleados?</h3>
+  <p>Tiene más margen para acogerse a la excepción de obviedad si los empleados están formados en IA, pero si el sistema es accesible también al público general, la excepción no se puede invocar.</p>
+
+  <div class="relative my-10">
+    <div class="absolute -inset-px rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(99,102,241,0.3),rgba(59,130,246,0.4));filter:blur(1px);"></div>
+    <div class="relative rounded-2xl p-7 md:p-8" style="background:#0b1120;border:1px solid rgba(139,92,246,0.3);">
+      <p class="mb-3" style="color:#a5b4fc;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;max-width:none;">Demo interactiva</p>
+      <h3 class="mt-0 mb-3 text-xl md:text-2xl font-bold" style="color:#ffffff;">¿Tu chatbot avisa que es una IA desde el primer turno?</h3>
+      <p class="mb-6" style="color:rgba(255,255,255,0.72);">
+        Diseñamos e implementamos <a href="/servicios/chatbot" style="color:#c4b5fd;">chatbots con IA</a> que cumplen el artículo 50.1 por diseño: aviso desde el primer mensaje, escalado a humano cuando hace falta y conectado a tu CRM o ERP. Revisamos gratis si tu chatbot actual cumple.
+      </p>
+      <div class="flex flex-col sm:flex-row flex-wrap gap-3">
+        <a href="/presupuesto?plan=Chatbot-IA" style="color:#ffffff;background:linear-gradient(135deg,#7c3aed,#4f46e5);"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3.5 font-bold rounded-xl no-underline transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 shadow-lg">
+          Revisar mi chatbot gratis
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</BlogLayout>

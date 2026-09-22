@@ -1,0 +1,204 @@
+---
+import BlogLayout from "../../layouts/BlogLayout.astro";
+
+const faqSchema = [
+  {
+    question: "¿Es obligatorio firmar el Código de Buenas Prácticas sobre Transparencia?",
+    answer: "No, es voluntario. Puedes cumplir el artículo 50 por otros medios. Pero si no firmas, la guía es concreta sobre el precio (apdo. 148): tendrás que explicar cómo tus medidas aseguran el cumplimiento, se espera que hagas un análisis de brechas comparando tus medidas con las del Código, y las autoridades \"necesitarán información más detallada\", con más requerimientos de información y de acceso."
+  },
+  {
+    question: "¿Cuánto es la multa máxima por incumplir el artículo 50 del AI Act?",
+    answer: "Hasta 15.000.000 € o el 3 % del volumen de negocio mundial anual del ejercicio anterior, la cifra que sea mayor (art. 99.4 AI Act, apdo. 152 de la guía). Para pymes y startups se aplica la cifra menor de las dos. Las prácticas prohibidas del artículo 5 van a otra escala: hasta 35 M€ o el 7 %."
+  },
+  {
+    question: "¿Firmar el Código reduce el importe de una multa?",
+    answer: "Puede actuar como atenuante. El apartado 149 de la guía y el artículo 99.7.e del AI Act permiten que los compromisos aplicados conforme al Código se valoren a favor de la empresa al fijar el importe de una sanción."
+  },
+  {
+    question: "¿Etiquetar un deepfake lo hace legal?",
+    answer: "No. La guía lo repite en el considerando 137 y los apartados 25 y 96: un deepfake etiquetado puede seguir infringiendo derechos de imagen, propiedad intelectual, protección de datos, publicidad engañosa o Derecho penal. El etiquetado cumple el artículo 50, pero la legalidad del contenido se valora con otras normas."
+  }
+];
+---
+
+<BlogLayout
+  title="AI Act: multas de hasta 15M € y cómo demostrar que cumples"
+  description="El art. 50 del AI Act puede sancionarse con hasta 15M € o el 3% de la facturación. Cómo demostrar cumplimiento con el Código de Buenas Prácticas."
+  publishDate="2026-09-22"
+  author="AI Security"
+  readTime="10 min"
+  tags={["AI Act", "Sanciones", "Código de Buenas Prácticas", "AESIA", "Cumplimiento Normativo"]}
+  canonical="https://aisecurity.es/blog/ai-act-multas-sanciones-codigo-buenas-practicas"
+  faqSchema={faqSchema}>
+
+  <p>
+    Cumplir el <strong>artículo 50 del AI Act</strong> no basta: hay que <strong>poder demostrarlo</strong>. Se supervisa como vigilancia de mercado, y la pregunta que va a hacer la autoridad no es "¿cumplís?" sino "enseñadme cómo". La vía privilegiada para demostrarlo es firmar el <strong>Código de Buenas Prácticas sobre Transparencia del Contenido Generado por IA</strong> (10 de junio de 2026); si no lo firmas, las multas siguen siendo las mismas —hasta <strong>15.000.000 € o el 3 % del volumen de negocio mundial anual</strong>— pero la carga de la prueba recae entera sobre ti.
+  </p>
+
+  <p>
+    Esta guía se basa en la lectura íntegra de la <strong>Comunicación de la Comisión C(2026) 5054 final</strong>. Si buscas primero el panorama general de qué entró en vigor el 2 de agosto de 2026, está en <a href="/blog/ai-act-que-entro-en-vigor-2-agosto-2026">esta guía sobre el artículo 50</a>; y si tu obligación concreta es un chatbot o agente conversacional, el detalle está en <a href="/blog/chatbots-ia-obligacion-legal-avisar-articulo-50">esta guía sobre el artículo 50.1</a>.
+  </p>
+
+  <h2>¿Qué es el Código de Buenas Prácticas sobre Transparencia?</h2>
+
+  <p>
+    Es el instrumento previsto en el artículo 50(7) del AI Act. La guía lo describe como "el único marco práctico reconocido a escala de la Unión" para demostrar el cumplimiento de los artículos 50(2), (4) y (5) (apdo. 146). Lo habían firmado ya <strong>unas 190 organizaciones a 31 de julio de 2026</strong>.
+  </p>
+
+  <p>
+    Tiene dos secciones independientes, y <strong>se puede firmar por secciones</strong>:
+  </p>
+
+  <ul>
+    <li><strong>Sección 1 — marcado y detección</strong> (proveedores). Cuatro compromisos: marcado, detección, cumplimiento de las cuatro cualidades exigidas, y pruebas/verificación/cumplimiento.</li>
+    <li><strong>Sección 2 — etiquetado</strong> (deployers). Cuatro compromisos: divulgación de deepfakes y textos publicados, procesos internos, obras creativas, y revisión humana/responsabilidad editorial.</li>
+  </ul>
+
+  <p>
+    Nota importante: <strong>el opt-out de una sección hace perder ese beneficio solo para esa sección</strong>. Y si el Código no fuera considerado adecuado, la Comisión puede adoptar un acto de ejecución con reglas comunes obligatorias para todos.
+  </p>
+
+  <h2>¿Qué ganas firmando el Código?</h2>
+
+  <ul>
+    <li>La Comisión y las autoridades de vigilancia <strong>centran su supervisión en comprobar si has aplicado el Código</strong>, en vez de auditar tu solución desde cero (apdo. 147).</li>
+    <li>Los compromisos aplicados conforme al Código pueden contar como <strong>atenuante al fijar el importe de una multa</strong> (apdo. 149, art. 99.7.e AI Act).</li>
+    <li>Ganas previsibilidad y confianza frente a autoridades y terceros.</li>
+  </ul>
+
+  <h2>¿Qué pasa si decides no firmarlo?</h2>
+
+  <p>
+    Puedes cumplir por otros medios adecuados —el Código es voluntario—. Pero la guía es muy concreta sobre el precio (apdo. 148): tendrás que <strong>explicar cómo tus medidas aseguran el cumplimiento</strong>, se espera que hagas un <strong>análisis de brechas comparando tus medidas con las del Código</strong>, y las autoridades "necesitarán información más detallada", con <strong>más requerimientos de información y de acceso</strong> para evaluar la eficacia, interoperabilidad, solidez y fiabilidad de tu solución.
+  </p>
+
+  <p>
+    Traducido: no firmar es legítimo, pero te obliga a documentar mucho más por tu cuenta, sin la referencia común del Código.
+  </p>
+
+  <h2>¿Qué procesos internos exige la Sección 2 del Código?</h2>
+
+  <p>
+    Todo "proporcionado al tamaño y recursos" de cada firmante — está pensado para que una pyme pueda cumplirlo:
+  </p>
+
+  <ol>
+    <li><strong>Proceso de cumplimiento documentado</strong> que especifique cómo implementas la divulgación con el icono o etiqueta equivalente, con ejemplos concretos y reales de cómo se aplica en la práctica.</li>
+    <li><strong>Publicar</strong> en qué consiste tu solución de etiquetado. Si usas el icono UE, basta con remitir a la información que lo acompaña; si usas uno propio, se recomienda publicar imágenes y explicación del significado de cada etiqueta y de sus variantes por contexto.</li>
+    <li><strong>Proceso de verificación</strong> de que el diseño y la colocación se aplican bien, para reducir el riesgo de contenido sin etiquetar o mal etiquetado — sobre todo si usas IA generativa con regularidad.</li>
+    <li><strong>Concienciación y formación</strong> del personal y de los contratistas externos implicados: cuándo es obligatorio divulgar, cómo se implementa en el flujo de trabajo, cuándo interviene la responsabilidad editorial, casos de obra creativa, accesibilidad, y cómo corregir etiquetas ausentes o incorrectas.</li>
+    <li><strong>Canales de aviso</strong> para que terceros (investigadores, verificadores, <em>trusted flaggers</em>) señalen divulgaciones erróneas, revisión de los casos fundamentados y <strong>remedio sin dilación indebida</strong>.</li>
+    <li><strong>Cooperación</strong> con las autoridades nacionales de vigilancia del mercado.</li>
+  </ol>
+
+  <h2>¿Qué exige el artículo 4 sobre alfabetización en IA?</h2>
+
+  <p>
+    Va aparte del artículo 50 y <strong>está vigente desde el 2 de febrero de 2025</strong>. El Digital Omnibus lo reescribió: pasó de "garantizar un nivel suficiente de alfabetización en IA" a <strong>"adoptar medidas para apoyar el desarrollo"</strong> de esa alfabetización, aclarando que no obliga a garantizar un nivel concreto en ninguna persona. Se suavizó, <strong>no desapareció</strong>, y las autoridades nacionales lo supervisan desde agosto de 2026. La propia guía del artículo 50 lo confirma: el artículo 4 aplica tanto a proveedores como a deployers de sistemas dentro del artículo 50 (apdo. 25).
+  </p>
+
+  <p>
+    En la práctica, lo barato y suficiente es: una política escrita de una o dos páginas, una sesión de formación registrada por rol, y constancia de quién la hizo y cuándo.
+  </p>
+
+  <h2>¿Quién supervisa el cumplimiento en España y qué multas hay?</h2>
+
+  <p>
+    <strong>Quién:</strong> las autoridades de vigilancia del mercado designadas por cada Estado miembro, la Oficina de IA (para sistemas construidos sobre modelos GPAI del mismo proveedor) y el SEPD (para instituciones de la UE). En <strong>España</strong>, la <strong>AESIA</strong> —primera agencia nacional de supervisión de IA de la UE, creada por el RD 729/2023— con reparto sectorial: Banco de España en el ámbito financiero, AEPD en datos, CGPJ en justicia. Actúan de oficio <strong>o por denuncia</strong>: cualquier persona afectada, o cualquier persona física o jurídica con motivos para considerar que hay infracción, tiene derecho a denunciar (art. 85 AI Act).
+  </p>
+
+  <div class="overflow-x-auto my-6">
+    <table class="w-full text-sm" style="border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.15);">
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Sujeto</th>
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Máximo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;">Empresas</td>
+          <td style="padding:10px;font-weight:bold;">15.000.000 € o el 3 % del volumen de negocio mundial anual del ejercicio anterior — la cifra mayor</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;">Pymes y startups</td>
+          <td style="padding:10px;">El mismo cálculo pero se aplica la cifra menor</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;">Instituciones y organismos de la UE</td>
+          <td style="padding:10px;">750.000 €</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    Al graduar la multa se valoran la naturaleza, gravedad y duración de la infracción y sus consecuencias, el carácter doloso o negligente, agravantes y atenuantes, y <strong>el grado de cooperación</strong> con la autoridad. Conviene recordar que esto es solo el artículo 50: las <strong>prácticas prohibidas</strong> del artículo 5 van a otra escala, hasta 35 M€ o el 7 %.
+  </p>
+
+  <h2>¿Qué es lo que el etiquetado NO arregla?</h2>
+
+  <p>
+    Dos avisos que la guía repite (considerando 137, apdos. 25 y 96):
+  </p>
+
+  <ul>
+    <li><strong>Cumplir el artículo 50 no hace lícito el uso del sistema.</strong> Un sistema sujeto a transparencia puede estar <strong>prohibido</strong> por el artículo 5 — el caso más relevante para cualquier empresa: <strong>el reconocimiento de emociones en el trabajo y en centros educativos está prohibido</strong>, por muy bien que se avise.</li>
+    <li><strong>Etiquetar no legaliza el contenido.</strong> Un deepfake etiquetado sigue pudiendo infringir derechos de imagen, propiedad intelectual, protección de datos, publicidad engañosa o Derecho penal. La ilegalidad se valora con esas normas, no con la etiqueta.</li>
+  </ul>
+
+  <h2>¿Qué limitación tiene apoyarse solo en esta guía?</h2>
+
+  <p>
+    El Código de Buenas Prácticas es un instrumento vivo: la guía prevé expresamente que la Comisión pueda sustituirlo por un acto de ejecución con reglas obligatorias si en algún momento deja de considerarlo adecuado. Cualquier checklist basada en la versión de junio de 2026 —incluida la de este artículo— debería revisarse si la Comisión actualiza el Código o publica nuevas directrices; no es un marco cerrado para siempre.
+  </p>
+
+  <h2>Checklist de cierre</h2>
+
+  <ul>
+    <li>Inventario de sistemas de IA con el papel (proveedor / deployer / ambos) por sistema.</li>
+    <li>Aviso de IA implantado y verificado en todo sistema conversacional de cara al público.</li>
+    <li>Marcado + <strong>detección</strong> en todo sistema generativo propio (fecha límite real: <strong>2 de diciembre de 2026</strong> si ya estaba en el mercado).</li>
+    <li>Etiqueta visible "AI" en deepfakes y en textos publicados de interés público.</li>
+    <li>Política escrita de revisión humana y responsabilidad editorial, con responsable identificado y contacto publicado.</li>
+    <li>Decisión documentada sobre firmar o no el Código; si no se firma, análisis de brechas hecho.</li>
+    <li>Política de alfabetización en IA (art. 4) y registro de formación.</li>
+    <li>Canal para reportar etiquetas ausentes o erróneas, y procedimiento de corrección.</li>
+    <li>Revisión de que ningún sistema cae en el artículo 5 (especialmente reconocimiento de emociones en el entorno laboral).</li>
+  </ul>
+
+  <h2>Preguntas frecuentes</h2>
+
+  <h3>¿Es obligatorio firmar el Código de Buenas Prácticas sobre Transparencia?</h3>
+  <p>No, es voluntario. Pero si no lo firmas, tendrás que documentar tu propio análisis de brechas frente al Código y las autoridades pedirán más información.</p>
+
+  <h3>¿Cuánto es la multa máxima por incumplir el artículo 50 del AI Act?</h3>
+  <p>Hasta 15.000.000 € o el 3 % del volumen de negocio mundial anual, la cifra mayor; para pymes se aplica la cifra menor. Las prácticas prohibidas del art. 5 llegan hasta 35 M€ o el 7 %.</p>
+
+  <h3>¿Firmar el Código reduce el importe de una multa?</h3>
+  <p>Puede actuar como atenuante al fijar el importe, según el apartado 149 de la guía y el artículo 99.7.e del AI Act.</p>
+
+  <h3>¿Etiquetar un deepfake lo hace legal?</h3>
+  <p>No. El etiquetado cumple el artículo 50, pero el contenido puede seguir infringiendo derechos de imagen, propiedad intelectual, protección de datos u otras normas.</p>
+
+  <div class="relative my-10">
+    <div class="absolute -inset-px rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(99,102,241,0.3),rgba(59,130,246,0.4));filter:blur(1px);"></div>
+    <div class="relative rounded-2xl p-7 md:p-8" style="background:#0b1120;border:1px solid rgba(139,92,246,0.3);">
+      <p class="mb-3" style="color:#a5b4fc;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;max-width:none;">Diagnóstico gratuito</p>
+      <h3 class="mt-0 mb-3 text-xl md:text-2xl font-bold" style="color:#ffffff;">¿Puedes demostrar hoy mismo que tu empresa cumple el artículo 50?</h3>
+      <p class="mb-6" style="color:rgba(255,255,255,0.72);">
+        En <a href="/consultoria-ia" style="color:#c4b5fd;">consultoría de IA</a> revisamos tu inventario de sistemas de IA, qué obligación del art. 50 le toca a cada uno y si te conviene firmar el Código de Buenas Prácticas o documentar tu propio análisis de brechas. Primera consulta gratuita.
+      </p>
+      <div class="flex flex-col sm:flex-row flex-wrap gap-3">
+        <a href="/presupuesto?plan=Consultoria-IA" style="color:#ffffff;background:linear-gradient(135deg,#7c3aed,#4f46e5);"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3.5 font-bold rounded-xl no-underline transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 shadow-lg">
+          Solicitar diagnóstico gratuito
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</BlogLayout>

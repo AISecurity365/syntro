@@ -1,0 +1,216 @@
+---
+import BlogLayout from "../../layouts/BlogLayout.astro";
+
+const faqSchema = [
+  {
+    question: "¿El AI Act ya obliga a todas las empresas desde el 2 de agosto de 2026?",
+    answer: "No a todas por igual. El artículo 50 (obligaciones de transparencia) aplica a cualquier empresa que use o desarrolle sistemas conversacionales, de contenido sintético, reconocimiento de emociones o categorización biométrica. Las obligaciones de alto riesgo (Anexo III y Anexo I) se aplazaron al 2 de diciembre de 2027 y al 2 de agosto de 2028 respectivamente, así que la mayoría de pymes solo tienen que preocuparse, hoy, del artículo 50."
+  },
+  {
+    question: "¿Qué es el Digital Omnibus sobre IA?",
+    answer: "Es el Reglamento (UE) 2026/1744, publicado en el DOUE el 24 de julio de 2026 y en vigor desde el 27 de julio de 2026. Aplaza las obligaciones de alto riesgo del AI Act, pero no toca el calendario del artículo 50: la transparencia sigue aplicando desde el 2 de agosto de 2026 sin cambios."
+  },
+  {
+    question: "¿Tengo que etiquetar retroactivamente el contenido generado con IA antes de agosto de 2026?",
+    answer: "No. El apartado 154 de la guía de la Comisión aclara que no hay que etiquetar retroactivamente contenido generado antes del 2 de agosto de 2026. La excepción: si ese contenido se publica el 2 de agosto de 2026 o después, sí hay que etiquetarlo, aunque se generara antes."
+  },
+  {
+    question: "¿Qué autoridad supervisa el AI Act en España?",
+    answer: "La AESIA (Agencia Española de Supervisión de Inteligencia Artificial), creada por el RD 729/2023, con reparto sectorial: el Banco de España en el ámbito financiero, la AEPD en protección de datos y el CGPJ en el ámbito judicial."
+  }
+];
+---
+
+<BlogLayout
+  title="AI Act: qué entró en vigor el 2 de agosto de 2026 en España"
+  description="El AI Act impuso el 2 de agosto de 2026 las obligaciones de transparencia del art. 50, no las de alto riesgo. Qué cambia y qué debe hacer tu empresa ya."
+  publishDate="2026-09-22"
+  author="AI Security"
+  readTime="11 min"
+  tags={["AI Act", "Regulación IA", "Cumplimiento Normativo", "Unión Europea", "Inteligencia Artificial"]}
+  canonical="https://aisecurity.es/blog/ai-act-que-entro-en-vigor-2-agosto-2026"
+  faqSchema={faqSchema}>
+
+  <p>
+    El 2 de agosto de 2026 el <strong>Reglamento (UE) 2024/1689 (AI Act)</strong> pasó a ser de aplicación general, pero lo único que de verdad cayó encima de las empresas normales ese día fue el <strong>artículo 50: las obligaciones de transparencia</strong>. Las obligaciones de <strong>alto riesgo</strong> —lo que mucha gente daba por hecho que entraba ese día— se aplazaron por el Reglamento (UE) 2026/1744, el "Digital Omnibus sobre IA". El artículo 50 es ahora mismo la única parte del AI Act que se aplica y se supervisa en la práctica a casi cualquier empresa.
+  </p>
+
+  <p>
+    Esta guía se basa en la lectura íntegra de dos fuentes primarias: la <strong>Comunicación de la Comisión C(2026) 5054 final</strong>, de 20 de julio de 2026 —las directrices oficiales sobre la aplicación del artículo 50, 51 páginas y 155 apartados— y el <strong>Código de Buenas Prácticas sobre Transparencia del Contenido Generado por IA</strong>, del 10 de junio de 2026.
+  </p>
+
+  <h2>¿Qué entró exactamente en vigor el 2 de agosto de 2026 y qué no?</h2>
+
+  <p>
+    El aplazamiento del Digital Omnibus <strong>no salva a ninguna empresa</strong> de las obligaciones de transparencia. Solo retrasa la parte de alto riesgo:
+  </p>
+
+  <div class="overflow-x-auto my-6">
+    <table class="w-full text-sm" style="border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.15);">
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Bloque</th>
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Fecha antes</th>
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Fecha ahora</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;">Alto riesgo autónomo (Anexo III)</td>
+          <td style="padding:10px;">2 ago 2026</td>
+          <td style="padding:10px;font-weight:bold;">2 dic 2027</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;">Alto riesgo en productos regulados (Anexo I)</td>
+          <td style="padding:10px;">2 ago 2027</td>
+          <td style="padding:10px;font-weight:bold;">2 ago 2028</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;">Transparencia — artículo 50</td>
+          <td style="padding:10px;">2 ago 2026</td>
+          <td style="padding:10px;font-weight:bold;">2 ago 2026 (sin cambios)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>¿Cuáles son las cuatro obligaciones del artículo 50?</h2>
+
+  <p>
+    El artículo 50 reparte cuatro obligaciones distintas según qué hace el sistema y quién lo pone en el mercado:
+  </p>
+
+  <div class="overflow-x-auto my-6">
+    <table class="w-full text-sm" style="border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.15);">
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Norma</th>
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Se aplica a</th>
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Quién responde</th>
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Qué hay que hacer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;font-weight:bold;">50(1)</td>
+          <td style="padding:10px;">Sistemas que interactúan directamente con personas (chatbots, asistentes de voz, agentes IA)</td>
+          <td style="padding:10px;">Proveedor</td>
+          <td style="padding:10px;">Diseñar el sistema para que la persona sepa que habla con una IA</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;font-weight:bold;">50(2)</td>
+          <td style="padding:10px;">Sistemas que generan o manipulan contenido sintético (texto, imagen, audio, vídeo)</td>
+          <td style="padding:10px;">Proveedor</td>
+          <td style="padding:10px;">Marcado legible por máquina + detección disponible</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;font-weight:bold;">50(3)</td>
+          <td style="padding:10px;">Reconocimiento de emociones y categorización biométrica</td>
+          <td style="padding:10px;">Responsable del despliegue</td>
+          <td style="padding:10px;">Informar a quien esté expuesto</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;font-weight:bold;">50(4)</td>
+          <td style="padding:10px;">Deepfakes y textos publicados de interés público</td>
+          <td style="padding:10px;">Responsable del despliegue</td>
+          <td style="padding:10px;">Etiquetado claro y perceptible</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;font-weight:bold;">50(5)</td>
+          <td style="padding:10px;">Todas las anteriores</td>
+          <td style="padding:10px;">Ambos</td>
+          <td style="padding:10px;">Información clara y distinguible, a más tardar en la primera interacción o exposición, y accesible</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    Si tienes un chatbot o un agente conversacional en tu web, la obligación que más te afecta es la del 50(1) — es una obligación <em>de diseño</em>, no un aviso legal que se pega después. La desarrollamos entera, con qué cuenta como interacción directa y qué NO vale como aviso, en <a href="/blog/chatbots-ia-obligacion-legal-avisar-articulo-50">esta guía sobre chatbots y agentes IA</a>.
+  </p>
+
+  <h2>¿Cuáles son los diez puntos que más importan de la guía oficial?</h2>
+
+  <ol>
+    <li><strong>No hace falta desarrollar IA para tener obligaciones.</strong> Basta con usarla profesionalmente: eres "responsable del despliegue" (<em>deployer</em>) y te tocan el 50(3) y el 50(4). La guía es explícita en que una empresa que decide qué IA usar y para qué es deployer aunque no tenga ningún control técnico (apdo. 12).</li>
+    <li><strong>Si desarrollas un chatbot en casa y lo pones en servicio bajo tu nombre, eres proveedor</strong>, aunque sea solo para tu propio uso (apdo. 11). Esto pilla a mucha empresa que se creía solo usuaria.</li>
+    <li><strong>Se pueden acumular los papeles y las obligaciones.</strong> Un mismo sistema puede obligarte por 50(1) y 50(2) como proveedor y por 50(4) como deployer (apdos. 8 y 15).</li>
+    <li><strong>La excepción de "es obvio que es una IA" se interpreta de forma restrictiva</strong>: solo cuando "no queda casi ninguna duda" para una persona media del público objetivo (apdo. 45). El hecho de que la gente sepa que existen los chatbots no vale.</li>
+    <li><strong>Aviso escondido = incumplimiento.</strong> No sirve avisar solo en los términos y condiciones, ni con una marca de agua que el usuario no percibe, ni con un "en esta web usamos IA" genérico (apdo. 38).</li>
+    <li><strong>Marcar no es suficiente: hay que poder detectar.</strong> El 50(2) exige las dos mitades; marcar sin ofrecer medio de detección no cumple (apdo. 70).</li>
+    <li><strong>Hay salidas pensadas para el mundo B2B/industrial.</strong> Contenido estrictamente técnico, para un número limitado de profesionales de dentro de la empresa y no destinado a salir de ella, queda fuera del marcado (apdo. 87). El código fuente también está excluido expresamente (apdo. 68).</li>
+    <li><strong>La "edición estándar" no cuenta</strong>: corregir ortografía, recortar, ajustar color, traducir o transcribir no obliga a marcar. Resumir, parafrasear o cambiar una cara, sí (apdos. 90-92).</li>
+    <li><strong>La excepción editorial para textos exige revisión humana de verdad.</strong> Un repaso ortográfico o una aprobación superficial no valen, y si la IA vuelve a tocar el texto después del visto bueno editorial, la excepción decae (apdos. 135-136).</li>
+    <li><strong>Firmar el Código de Buenas Prácticas es la vía privilegiada.</strong> Quien no lo firme deberá demostrar el cumplimiento por otros medios y, dice la guía, "hacer un análisis de brechas comparando sus medidas con las del Código" y esperar más requerimientos de información (apdo. 148).</li>
+  </ol>
+
+  <h2>¿Qué fechas hay que tener en el calendario?</h2>
+
+  <ul>
+    <li><strong>2 de febrero de 2025</strong> — Artículo 4, alfabetización en IA del personal. Ya vigente. El Digital Omnibus lo suavizó de "garantizar" a "apoyar el desarrollo de", pero sigue siendo una obligación y las autoridades nacionales la supervisan desde agosto de 2026.</li>
+    <li><strong>2 de agosto de 2026</strong> — Artículo 50 completo. Todo sistema en el mercado debe cumplir, con independencia de cuándo se puso en el mercado (apdo. 153).</li>
+    <li><strong>2 de diciembre de 2026</strong> — Fin del único periodo de gracia: los sistemas generativos ya en el mercado antes del 2 de agosto de 2026 tienen hasta esta fecha para cumplir el marcado del 50(2). Ojo: la parte interactiva (50(1)) no tiene gracia, cumplía desde agosto. Ese mismo día entra la nueva prohibición de sistemas de IA para generar CSAM e imágenes íntimas no consentidas.</li>
+    <li><strong>2 de diciembre de 2027 / 2 de agosto de 2028</strong> — Alto riesgo (Anexo III / Anexo I).</li>
+  </ul>
+
+  <h2>¿Qué pasa si mi empresa no cumple el artículo 50?</h2>
+
+  <p>
+    Multas de <strong>hasta 15.000.000 € o el 3 % del volumen de negocio mundial anual, la cifra que sea mayor</strong> (art. 99.4 AI Act, confirmado en el apartado 152 de la guía). Para pymes y startups se aplica la <strong>menor</strong> de las dos cifras. En España supervisa la <strong>AESIA</strong> como autoridad de vigilancia del mercado, con reparto sectorial (Banco de España, AEPD, CGPJ según el ámbito). El detalle completo de las sanciones, quién las impone y cómo demostrar que cumples está en <a href="/blog/ai-act-multas-sanciones-codigo-buenas-practicas">esta guía sobre el Código de Buenas Prácticas y las multas del art. 50</a>.
+  </p>
+
+  <h2>¿Hay que etiquetar el contenido generado antes del 2 de agosto?</h2>
+
+  <p>
+    No hay que etiquetar retroactivamente el contenido generado antes de esa fecha (apdo. 154). Pero un texto generado antes y publicado el 2 de agosto de 2026 o después sí hay que etiquetarlo.
+  </p>
+
+  <div style="background:rgba(139,92,246,0.08);border-left:4px solid rgba(167,139,250,0.5);padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 0.5rem 0.5rem 0;">
+    <p class="m-0" style="color:rgba(255,255,255,0.85);"><strong style="color:#c4b5fd;">Detalle práctico:</strong> el apartado 149 de la guía dice que las autoridades pueden tener en cuenta el haber implantado los compromisos del Código de Buenas Prácticas <strong>como atenuante</strong> al fijar la multa. No firmarlo no es ilegal, pero cuesta más caro si algo falla.</p>
+  </div>
+
+  <h2>¿Qué limitación tiene esta guía?</h2>
+
+  <p>
+    Las directrices C(2026) 5054 final son la interpretación de la Comisión, no jurisprudencia vinculante: un tribunal nacional o el TJUE podrían matizar algunos criterios —sobre todo el listón de "no queda casi ninguna duda" de la excepción de obviedad— con el tiempo. Y el propio Digital Omnibus demuestra que el calendario del AI Act todavía se está ajustando por vía legislativa; no se puede descartar que aparezcan más actos de ejecución que precisen detalles del artículo 50 en los próximos meses.
+  </p>
+
+  <h2>Preguntas frecuentes</h2>
+
+  <h3>¿El AI Act ya obliga a todas las empresas desde el 2 de agosto de 2026?</h3>
+  <p>No a todas por igual. El artículo 50 aplica a cualquier empresa que use o desarrolle sistemas conversacionales, de contenido sintético, reconocimiento de emociones o categorización biométrica. Las obligaciones de alto riesgo se aplazaron a 2027 y 2028.</p>
+
+  <h3>¿Qué es el Digital Omnibus sobre IA?</h3>
+  <p>El Reglamento (UE) 2026/1744, en vigor desde el 27 de julio de 2026, que aplaza las obligaciones de alto riesgo del AI Act sin tocar el calendario del artículo 50.</p>
+
+  <h3>¿Tengo que etiquetar retroactivamente el contenido generado con IA antes de agosto de 2026?</h3>
+  <p>No, salvo que ese contenido se publique el 2 de agosto de 2026 o después, en cuyo caso sí hay que etiquetarlo aunque se generara antes.</p>
+
+  <h3>¿Qué autoridad supervisa el AI Act en España?</h3>
+  <p>La AESIA, con reparto sectorial: Banco de España en finanzas, AEPD en datos y CGPJ en el ámbito judicial.</p>
+
+  <p class="text-sm" style="color:rgba(255,255,255,0.55);">
+    <strong>Fuentes:</strong> <a href="https://digital-strategy.ec.europa.eu/en/library/guidelines-transparency-obligations-providers-and-deployers-ai-systems" target="_blank" rel="noopener noreferrer">Directrices art. 50 — C(2026) 5054 final</a> · <a href="https://digital-strategy.ec.europa.eu/en/policies/code-practice-ai-generated-content" target="_blank" rel="noopener noreferrer">Código de Buenas Prácticas sobre Transparencia del Contenido Generado por IA</a> · <a href="https://eur-lex.europa.eu/eli/reg/2026/1744/oj" target="_blank" rel="noopener noreferrer">Reglamento (UE) 2026/1744</a>
+  </p>
+
+  <div class="relative my-10">
+    <div class="absolute -inset-px rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(99,102,241,0.3),rgba(59,130,246,0.4));filter:blur(1px);"></div>
+    <div class="relative rounded-2xl p-7 md:p-8" style="background:#0b1120;border:1px solid rgba(139,92,246,0.3);">
+      <p class="mb-3" style="color:#a5b4fc;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;max-width:none;">Diagnóstico gratuito</p>
+      <h3 class="mt-0 mb-3 text-xl md:text-2xl font-bold" style="color:#ffffff;">¿Sabes qué sistemas de IA usa tu empresa y si cumplen el artículo 50?</h3>
+      <p class="mb-6" style="color:rgba(255,255,255,0.72);">
+        En <a href="/consultoria-ia" style="color:#c4b5fd;">consultoría de IA</a> revisamos qué herramientas de IA usa cada departamento —chatbots, generación de contenido, asistentes internos— y qué obligación de transparencia les toca. Primera consulta gratuita.
+      </p>
+      <div class="flex flex-col sm:flex-row flex-wrap gap-3">
+        <a href="/presupuesto?plan=Consultoria-IA" style="color:#ffffff;background:linear-gradient(135deg,#7c3aed,#4f46e5);"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3.5 font-bold rounded-xl no-underline transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 shadow-lg">
+          Solicitar diagnóstico gratuito
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</BlogLayout>
