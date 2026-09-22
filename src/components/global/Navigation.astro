@@ -147,7 +147,7 @@ const locale = getLocaleFromPath(currentPath);
         <div class="relative w-full lg:w-auto" @click.away="dropdownOpen = false">
           <button
             @click="dropdownOpen = !dropdownOpen"
-            class={`nav-link nav-link--highlight w-full lg:w-auto text-[11px] font-semibold tracking-wider uppercase transition-all duration-200 px-3 py-3 inline-flex items-center justify-between lg:justify-center gap-1.5 ${['/servicios/chatbot','/servicios/gestor-documental','/servicios/gestor-citas','/servicios/automatizacion','/servicios/desarrollo-web','/servicios/geo-posicionamiento','/servicios/concienciacion','/soporte-tecnico','/ciberseguridad','/consultoria-ens','/consultoria-iso27001'].includes(currentPath) ? 'nav-link--active' : ''}`}
+            class={`nav-link nav-link--highlight w-full lg:w-auto text-[11px] font-semibold tracking-wider uppercase transition-all duration-200 px-3 py-3 inline-flex items-center justify-between lg:justify-center gap-1.5 ${['/servicios/chatbot','/servicios/gestor-documental','/servicios/gestor-citas','/servicios/automatizacion','/servicios/desarrollo-web','/servicios/geo-posicionamiento','/servicios/concienciacion','/soporte-tecnico','/ciberseguridad','/consultoria-ens','/consultoria-iso27001','/consultoria-ai-act'].includes(currentPath) ? 'nav-link--active' : ''}`}
             :aria-expanded="dropdownOpen.toString()">
             <span>Servicios</span>
             <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="{'rotate-180': dropdownOpen}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -245,6 +245,14 @@ const locale = getLocaleFromPath(currentPath);
                       style={currentPath === '/consultoria-iso27001' ? 'background: rgba(239,68,68,0.12);' : ''}>
                       <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Consultoría ISO 27001</p>
                       <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Certificación SGSI</p>
+                    </a>
+
+                    <!-- Consultoría AI Act — caja propia -->
+                    <a href="/consultoria-ai-act" @click="dropdownOpen = false"
+                      class="group block px-3 py-2.5 rounded-lg transition-all duration-150 hover:bg-white/5"
+                      style={currentPath === '/consultoria-ai-act' ? 'background: rgba(239,68,68,0.12);' : ''}>
+                      <p class="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">Consultoría AI Act</p>
+                      <p class="text-xs mt-0.5" style="color: rgba(148,163,184,0.7);">Cumplimiento artículo 50</p>
                     </a>
                   </div>
 

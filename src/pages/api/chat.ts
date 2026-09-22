@@ -88,13 +88,20 @@ SERVICIOS DE CIBERSEGURIDAD Y SISTEMAS:
    - 4 horas de contenido en vídeo
    - Precio: 50€
 
-8. Soporte IT y Administración de Sistemas (/servicios/desarrollo-web)
+8. Consultoría AI Act (/consultoria-ai-act)
+   - Adecuación al artículo 50 del Reglamento europeo de IA (AI Act, Reglamento UE 2024/1689)
+   - En vigor desde el 2 de agosto de 2026, sin periodo de gracia — multas de hasta 15M€ o 3% de la facturación
+   - Inventario de sistemas de IA, análisis GAP y documentación (política de alfabetización IA)
+   - Implementación técnica real: avisos de IA en chatbots/agentes y marcado de contenido generado (no solo un informe en PDF)
+   - Precio: consultar en el diagnóstico gratuito (no hay precio público)
+
+9. Soporte IT y Administración de Sistemas (/servicios/desarrollo-web)
    - Administración Linux/Windows Server
    - Copias de seguridad automatizadas (Veeam, Restic, Duplicati)
    - Microinformática y soporte técnico
    - Consultoría de infraestructura cloud y on-premise
 
-9. Desarrollo Web (/servicios/desarrollo-web)
+10. Desarrollo Web (/servicios/desarrollo-web)
    - Desarrollo de landing pages, webs corporativas y microservicios
    - Integración con APIs y sistemas existentes
 
@@ -126,6 +133,7 @@ PÁGINAS DE REDIRECCIÓN:
 - Ver servicios de IA: /servicios/chatbot, /servicios/gestor-documental, /servicios/automatizacion, /servicios/atencion-llamadas
 - Wazuh y ciberseguridad: /wazuh
 - Curso Wazuh: /curso-wazuh
+- Consultoría AI Act (artículo 50): /consultoria-ai-act
 - Desarrollo Web: /servicios/desarrollo-web
 - Blog técnico: /blog
 
@@ -233,6 +241,9 @@ function getFallbackReply(message: string): string {
   }
   if (lower.includes('wazuh') || lower.includes('seguridad') || lower.includes('ens')) {
     return 'Wazuh es un SIEM open-source esencial para cumplir el ENS, obligatorio para muchas empresas españolas. Ofrecemos implementación completa, configuración y soporte continuo. Más info en /wazuh o contáctanos en /contacto';
+  }
+  if (lower.includes('ai act') || lower.includes('articulo 50') || lower.includes('artículo 50')) {
+    return 'El artículo 50 del AI Act (transparencia de sistemas de IA) está en vigor desde el 2 de agosto de 2026, con multas de hasta 15M€ o el 3% de la facturación. Gestionamos el inventario, la documentación y los avisos reales en tus chatbots y contenido generado por IA. Más info en /consultoria-ai-act o contáctanos en /contacto';
   }
   if (lower.includes('automatiza') || lower.includes('automatización')) {
     return 'Automatizamos procesos repetitivos con IA: facturas, emails, informes. Ejemplo real: una empresa redujo 15h/semana en gestión documental. Contáctanos en /contacto para analizar tus procesos.';
