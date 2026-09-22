@@ -596,8 +596,16 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
     padding-left: 0.5rem;
   }
 
-  article ul li::marker {
+  article ul li::marker,
+  article ol li::marker {
     color: rgba(59, 130, 246, 0.7);
+  }
+
+  /* Celdas de tabla: el prose por defecto usa gris oscuro (pensado para fondo claro).
+     Sin esto, cualquier <td> sin color inline hereda un gris casi invisible sobre
+     el fondo oscuro del artículo. */
+  article td {
+    color: rgba(255, 255, 255, 0.85);
   }
 
   /* Bloques de código estilo terminal */
