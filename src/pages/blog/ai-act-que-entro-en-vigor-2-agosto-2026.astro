@@ -31,14 +31,6 @@ const faqSchema = [
   canonical="https://aisecurity.es/blog/ai-act-que-entro-en-vigor-2-agosto-2026"
   faqSchema={faqSchema}>
 
-  <p>
-    El 2 de agosto de 2026 el <strong>Reglamento (UE) 2024/1689 (AI Act)</strong> pasó a ser de aplicación general, pero lo único que de verdad cayó encima de las empresas normales ese día fue el <strong>artículo 50: las obligaciones de transparencia</strong>. Las obligaciones de <strong>alto riesgo</strong> —lo que mucha gente daba por hecho que entraba ese día— se aplazaron por el Reglamento (UE) 2026/1744, el "Digital Omnibus sobre IA". El artículo 50 es ahora mismo la única parte del AI Act que se aplica y se supervisa en la práctica a casi cualquier empresa.
-  </p>
-
-  <p>
-    Esta guía se basa en la lectura íntegra de dos fuentes primarias: la <strong>Comunicación de la Comisión C(2026) 5054 final</strong>, de 20 de julio de 2026 —las directrices oficiales sobre la aplicación del artículo 50, 51 páginas y 155 apartados— y el <strong>Código de Buenas Prácticas sobre Transparencia del Contenido Generado por IA</strong>, del 10 de junio de 2026.
-  </p>
-
   <h2>¿Qué entró exactamente en vigor el 2 de agosto de 2026 y qué no?</h2>
 
   <p>
@@ -128,6 +120,56 @@ const faqSchema = [
   <p>
     Si tienes un chatbot o un agente conversacional en tu web, la obligación que más te afecta es la del 50(1) — es una obligación <em>de diseño</em>, no un aviso legal que se pega después. La desarrollamos entera, con qué cuenta como interacción directa y qué NO vale como aviso, en <a href="/blog/chatbots-ia-obligacion-legal-avisar-articulo-50">esta guía sobre chatbots y agentes IA</a>.
   </p>
+
+  <h2>¿Qué tipos de IA usa habitualmente una empresa (y qué obligación le toca a cada uno)?</h2>
+
+  <p>
+    Antes de mirar el detalle legal conviene hacer inventario. Estas son las categorías de sistemas de IA más comunes en cualquier empresa y la obligación del artículo 50 que les corresponde:
+  </p>
+
+  <div class="overflow-x-auto my-6">
+    <table class="w-full text-sm" style="border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.15);">
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Tipo de uso en tu empresa</th>
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Herramientas habituales (ejemplos)</th>
+          <th style="padding:10px;text-align:left;color:#c4b5fd;">Obligación que te toca</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;">Chatbot o asistente conversacional de cara al cliente</td>
+          <td style="padding:10px;">ChatGPT, Claude, Gemini, Copilot, chatbot propio integrado en la web</td>
+          <td style="padding:10px;">50(1) — avisar de que es una IA</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;">Agente IA autónomo (reserva, gestiona correo, compra, negocia)</td>
+          <td style="padding:10px;">Agentes propios o de terceros con autonomía de acción</td>
+          <td style="padding:10px;">50(1) reforzado — debe identificarse en cada interacción</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;">Generación de texto e imagen</td>
+          <td style="padding:10px;">Claude, ChatGPT, Gemini, Midjourney, DALL-E, Adobe Firefly</td>
+          <td style="padding:10px;">50(2) — marcado legible por máquina + detección</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;">Generación de voz y vídeo sintéticos</td>
+          <td style="padding:10px;">ElevenLabs, Synthesia, HeyGen, Sora</td>
+          <td style="padding:10px;">50(2) y, si se usa para deepfakes, 50(4)</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px;">Reconocimiento de emociones o categorización biométrica</td>
+          <td style="padding:10px;">Software de análisis de expresión facial, biometría de empleados o clientes</td>
+          <td style="padding:10px;">50(3) — y ojo: <strong>prohibido</strong> en el trabajo y en centros educativos (art. 5)</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;">Autocompletado, traducción, búsqueda, recomendadores</td>
+          <td style="padding:10px;">GitHub Copilot (autocompletado), DeepL, buscadores con IA integrada</td>
+          <td style="padding:10px;">Fuera del art. 50(1) — no exige aviso (apdo. 31 de la guía)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <h2>¿Cuáles son los diez puntos que más importan de la guía oficial?</h2>
 
