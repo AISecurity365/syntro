@@ -8,7 +8,6 @@ const canonical = "https://aisecurity.es/curso-wazuh-avanzado";
 // ── Próxima convocatoria (cuenta atrás ~42 días). Cambia esta fecha cuando toque. ──
 const convocatoria = new Date("2026-08-01T10:00:00");
 const convocatoriaISO = convocatoria.toISOString();
-const convocatoriaLabel = convocatoria.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
 
 const precios = [
   { n: 1, label: "1 persona",  pp: "1.100 €", total: "1.100 €" },
@@ -109,19 +108,6 @@ const breadcrumbSchema = {
         <p class="mt-4 text-lg text-white/80 max-w-2xl mx-auto">
           Formación avanzada e intensiva de 3 días para que tu <strong class="text-white">equipo de TI</strong> conozca Wazuh a fondo: de la arquitectura a las reglas y dashboards personalizados. Al terminar, operan su propio SIEM con <strong class="text-white">total independencia</strong>.
         </p>
-      </div>
-
-      <!-- Cuenta atrás convocatoria -->
-      <div class="mb-12" style="max-width:42rem;margin-left:auto;margin-right:auto;text-align:center;">
-        <p class="text-white/50 text-xs uppercase tracking-widest font-semibold mb-3" style="text-align:center;">Próxima convocatoria · {convocatoriaLabel}</p>
-        <div id="cw-countdown" class="flex items-center justify-center gap-3" data-deadline={convocatoriaISO}>
-          {[["dd","Días"],["hh","Horas"],["mm","Min"],["ss","Seg"]].map(([id,label]) => (
-            <div class="flex flex-col items-center">
-              <div id={`cw-${id}`} class="cw-num" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:clamp(1.8rem,6vw,2.6rem);font-weight:800;color:#fff;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:12px;min-width:clamp(54px,14vw,76px);padding:10px 6px;box-shadow:0 0 26px -10px rgba(139,92,246,0.6);">--</div>
-              <span class="mt-2 text-xs" style="color:rgba(255,255,255,0.45);letter-spacing:0.06em;">{label}</span>
-            </div>
-          ))}
-        </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
@@ -309,34 +295,3 @@ const breadcrumbSchema = {
     pointer-events: none;
   }
 </style>
-
-<script is:inline>
-  (function () {
-    const el = document.getElementById('cw-countdown');
-    if (!el) return;
-    const deadline = new Date(el.getAttribute('data-deadline')).getTime();
-    const dd = document.getElementById('cw-dd');
-    const hh = document.getElementById('cw-hh');
-    const mm = document.getElementById('cw-mm');
-    const ss = document.getElementById('cw-ss');
-    const pad = (n) => String(n).padStart(2, '0');
-    function tick() {
-      const diff = deadline - Date.now();
-      if (diff <= 0) {
-        if (dd) dd.textContent = '00'; if (hh) hh.textContent = '00';
-        if (mm) mm.textContent = '00'; if (ss) ss.textContent = '00';
-        return;
-      }
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      if (dd) dd.textContent = pad(d);
-      if (hh) hh.textContent = pad(h);
-      if (mm) mm.textContent = pad(m);
-      if (ss) ss.textContent = pad(s);
-    }
-    tick();
-    setInterval(tick, 1000);
-  })();
-</script>
