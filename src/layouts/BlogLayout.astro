@@ -36,6 +36,81 @@ const {
 const fullTitle = `${title} | Blog AI Security`;
 const isWazuh = tags.some((t: string) => t.toLowerCase() === 'wazuh');
 
+// ── Índice de contenidos (TOC) ──
+// Se parsean los H2/H3 del cuerpo del artículo (renderizado desde el slot),
+// se les inyecta un id (slug) si no lo tienen ya, y se reconstruye el HTML
+// con esos ids para poder enlazar cada sección desde la columna lateral.
+function slugify(text: string): string {
+  return text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w\s-]/g, "")
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+interface TocItem {
+  level: number;
+  id: string;
+  label: string;
+}
+
+const rawContentHtml = await Astro.slots.render("default");
+const usedIds = new Set<string>();
+
+// Primera pasada: reservar todos los ids que ya existan en el contenido
+// (p.ej. los H3 "nivel-1/2/3" de algunos posts) para no duplicarlos luego.
+for (const m of rawContentHtml.matchAll(/\sid\s*=\s*"([^"]+)"/gi)) {
+  usedIds.add(m[1]);
+}
+
+const tocItems: TocItem[] = [];
+
+const contentHtml = rawContentHtml.replace(
+  /<h([23])((?:[^>])*)>([\s\S]*?)<\/h\1>/gi,
+  (match, levelStr, attrs, inner) => {
+    const level = parseInt(levelStr, 10);
+    const hasClass = /\sclass\s*=/i.test(attrs);
+    const label = inner
+      .replace(/<[^>]+>/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    // Los H3 con clase propia son títulos de cajas CTA, no subsecciones
+    // reales del artículo (mismo criterio que .blog-prose h3:not([class])).
+    const includeInToc = !!label && (level === 2 || (level === 3 && !hasClass));
+
+    const idMatch = attrs.match(/\sid\s*=\s*"([^"]+)"/i);
+    let id: string | null = idMatch ? idMatch[1] : null;
+
+    if (!id && includeInToc) {
+      const base = slugify(label) || "seccion";
+      let candidate = base;
+      let n = 2;
+      while (usedIds.has(candidate)) {
+        candidate = `${base}-${n++}`;
+      }
+      id = candidate;
+      usedIds.add(id);
+      tocItems.push({ level, id, label });
+      attrs = ` id="${id}"${attrs}`;
+      return `<h${level}${attrs}>${inner}</h${level}>`;
+    }
+
+    if (id) usedIds.add(id);
+
+    if (includeInToc && id) {
+      tocItems.push({ level, id, label });
+    }
+
+    return match;
+  }
+);
+
+const showToc = tocItems.length >= 2;
+
 // hreflang automático si este post tiene versión inglesa (mismo slug bajo /en)
 const canonicalPath = stripLocale(Astro.url.pathname);
 const showAlternates = hasTranslation(canonicalPath);
@@ -179,17 +254,31 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
         <div class="absolute bottom-0 left-1/4 w-[26rem] h-[26rem] rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(16,185,129,0.06),transparent 70%);filter:blur(20px);"></div>
 
         <div class="relative z-10 max-w-6xl mx-auto px-6 md:px-8">
-          <div class="prose prose-lg prose-base max-w-none blog-prose
-            prose-headings:font-bold prose-headings:text-white
-            prose-p:text-white/90 prose-p:leading-relaxed prose-p:mb-4
-            prose-a:text-accent-400 prose-a:no-underline hover:prose-a:underline
-            prose-strong:text-white prose-strong:font-semibold
-            prose-code:bg-black prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-code:border prose-code:border-emerald-500/30
-            prose-pre:bg-black prose-pre:rounded-xl prose-pre:border-2 prose-pre:border-blue-500/30 prose-pre:shadow-lg prose-pre:shadow-blue-500/10
-            prose-ul:my-4 prose-li:text-white/90 prose-li:my-2
-            prose-ol:my-4
-            prose-img:rounded-xl prose-img:shadow-lg prose-img:border prose-img:border-base-700">
-            <slot />
+          <div class:list={["blog-content-grid", { "has-toc": showToc }]}>
+            {showToc && (
+              <aside class="blog-toc" aria-label="Índice del artículo">
+                <p class="blog-toc-title">En este artículo</p>
+                <ul class="blog-toc-list">
+                  {tocItems.map((item) => (
+                    <li class={`blog-toc-item level-${item.level}`}>
+                      <a href={`#${item.id}`} data-toc-link={item.id}>{item.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </aside>
+            )}
+            <div class="prose prose-lg prose-base max-w-none blog-prose
+              prose-headings:font-bold prose-headings:text-white
+              prose-p:text-white/90 prose-p:leading-relaxed prose-p:mb-4
+              prose-a:text-accent-400 prose-a:no-underline hover:prose-a:underline
+              prose-strong:text-white prose-strong:font-semibold
+              prose-code:bg-black prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-code:border prose-code:border-emerald-500/30
+              prose-pre:bg-black prose-pre:rounded-xl prose-pre:border-2 prose-pre:border-blue-500/30 prose-pre:shadow-lg prose-pre:shadow-blue-500/10
+              prose-ul:my-4 prose-li:text-white/90 prose-li:my-2
+              prose-ol:my-4
+              prose-img:rounded-xl prose-img:shadow-lg prose-img:border prose-img:border-base-700">
+              <Fragment set:html={contentHtml} />
+            </div>
           </div>
         </div>
       </article>
@@ -531,6 +620,48 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
   });
 </script>
 
+<!-- Índice de contenidos: scrollspy -->
+<script is:inline>
+  (function () {
+    var tocLinks = document.querySelectorAll('[data-toc-link]');
+    if (!tocLinks.length) return;
+
+    var headings = [];
+    tocLinks.forEach(function (link) {
+      var heading = document.getElementById(link.getAttribute('data-toc-link'));
+      if (heading) headings.push(heading);
+    });
+    if (!headings.length) return;
+
+    function setActive(id) {
+      tocLinks.forEach(function (link) {
+        var isActive = link.getAttribute('data-toc-link') === id;
+        link.classList.toggle('is-active', isActive);
+      });
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        var visible = entries.filter(function (entry) {
+          return entry.isIntersecting;
+        });
+        if (visible.length === 0) return;
+        visible.sort(function (a, b) {
+          return a.boundingClientRect.top - b.boundingClientRect.top;
+        });
+        setActive(visible[0].target.id);
+      },
+      { rootMargin: '-100px 0px -70% 0px', threshold: 0 }
+    );
+
+    headings.forEach(function (heading) {
+      observer.observe(heading);
+    });
+
+    setActive(headings[0].id);
+  })();
+</script>
+
 <style is:global>
   /* Mejoras adicionales para el contenido del artículo */
   article img {
@@ -665,6 +796,99 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
     border: 1px solid rgba(139,92,246,0.25) !important;
     border-radius: 12px !important;
     box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+  }
+
+  /* Índice de contenidos lateral (sticky TOC + scrollspy).
+     Solo aparece en pantallas grandes (xl+): en móvil/tablet no se muestra,
+     el artículo ocupa el ancho completo como antes. */
+  .blog-content-grid {
+    display: block;
+  }
+
+  .blog-toc {
+    display: none;
+  }
+
+  @media (min-width: 1280px) {
+    .blog-content-grid.has-toc {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 3.5rem;
+      align-items: start;
+    }
+
+    .blog-content-grid.has-toc .blog-toc {
+      display: block;
+      position: sticky;
+      top: 6.5rem;
+      max-height: calc(100vh - 8rem);
+      overflow-y: auto;
+    }
+
+    /* En presencia del índice, el contenido no necesita todo el ancho
+       de 1152px: se queda en un ancho de lectura cómodo al lado del TOC. */
+    .blog-content-grid.has-toc .blog-prose {
+      max-width: 62rem;
+    }
+  }
+
+  .blog-toc-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35);
+    margin: 0 0 0.9rem;
+    max-width: none;
+  }
+
+  .blog-toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .blog-toc-item {
+    margin: 0;
+    padding: 0;
+  }
+
+  .blog-toc-item.level-3 {
+    padding-left: 0.85rem;
+  }
+
+  .blog-toc-item a {
+    display: block;
+    position: relative;
+    padding: 0.1rem 0 0.1rem 0.9rem;
+    margin-left: -1px;
+    border-left: 1px solid transparent;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.45);
+    text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .blog-toc-item a:hover {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .blog-toc-item a.is-active {
+    color: #ffffff;
+    font-weight: 600;
+    border-left-color: #60a5fa;
+  }
+
+  /* Offset de scroll para que el header sticky no tape el heading al
+     saltar desde el índice (html ya lleva scroll-smooth). */
+  .blog-prose h2,
+  .blog-prose h3 {
+    scroll-margin-top: 6rem;
   }
 
   /* FAQ en acordeón dentro del artículo — mismo patrón visual que
