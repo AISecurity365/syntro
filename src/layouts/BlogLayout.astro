@@ -17,6 +17,8 @@ interface Props {
   tags?: string[];
   canonical?: string;
   ogImage?: string;
+  coverImage?: string;
+  coverAlt?: string;
   faqSchema?: Array<{question: string; answer: string}>;
 }
 
@@ -30,6 +32,8 @@ const {
   tags = [],
   canonical,
   ogImage = "https://aisecurity.es/og-image.png",
+  coverImage,
+  coverAlt = "",
   faqSchema
 } = Astro.props;
 
@@ -188,7 +192,8 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
         <canvas id="blog-hero-canvas" class="absolute inset-0 w-full h-full" style="opacity:0.45;"></canvas>
         <div class="absolute inset-x-0 bottom-0 h-12" style="background:linear-gradient(to bottom,transparent,#020817);"></div>
 
-        <div class="relative z-10 max-w-6xl mx-auto px-6 md:px-8">
+        <div class:list={["relative z-10 max-w-6xl mx-auto px-6 md:px-8", { "blog-hero-with-cover": coverImage }]}>
+          <div>
           <!-- Breadcrumb -->
           <nav class="mb-6" aria-label="Breadcrumb">
             <ol class="flex items-center gap-2 text-sm text-white/70">
@@ -242,18 +247,23 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
               <span>{readTime} lectura</span>
             </div>
           </div>
+          </div>
+          {coverImage && <figure class="blog-cover">
+            <img src={coverImage} alt={coverAlt} width="1280" height="720" loading="eager" fetchpriority="high" />
+            <figcaption>Imagen ilustrativa generada con IA.</figcaption>
+          </figure>}
         </div>
       </section>
 
       <!-- Article Content -->
-      <article class="py-12 md:py-16 relative overflow-hidden" style="background:#05070d;">
+      <article class="py-12 md:py-16 relative" style="background:#05070d;overflow:clip;">
         <!-- Fondo: rejilla sutil + blobs de color en vez de la foto de stock -->
         <div class="absolute inset-0 pointer-events-none" style="background-image:linear-gradient(rgba(96,165,250,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(96,165,250,0.05) 1px,transparent 1px);background-size:44px 44px;"></div>
         <div class="absolute -top-24 -left-24 w-[34rem] h-[34rem] rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(59,130,246,0.12),transparent 70%);filter:blur(20px);"></div>
         <div class="absolute top-1/3 -right-32 w-[28rem] h-[28rem] rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(139,92,246,0.09),transparent 70%);filter:blur(20px);"></div>
         <div class="absolute bottom-0 left-1/4 w-[26rem] h-[26rem] rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(16,185,129,0.06),transparent 70%);filter:blur(20px);"></div>
 
-        <div class="relative z-10 max-w-6xl mx-auto px-6 md:px-8">
+        <div class:list={["relative z-10 blog-reading-shell", { "with-toc": showToc }]}>
           <div class:list={["blog-content-grid", { "has-toc": showToc }]}>
             {showToc && (
               <aside class="blog-toc" aria-label="Índice del artículo">
@@ -729,9 +739,10 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
     line-height: 1.35;
     margin-top: 3.25rem;
     margin-bottom: 1rem;
-    background: linear-gradient(90deg, rgba(59, 130, 246, 0.08), transparent);
-    padding-left: 0.75rem;
-    margin-left: -0.75rem;
+    background: none;
+    border-top: 1px solid rgba(167,139,250,0.18);
+    padding: 1.25rem 0 0;
+    margin-left: 0;
   }
 
   .blog-prose > h2:first-child {
@@ -805,15 +816,27 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
     display: block;
   }
 
+  .blog-reading-shell { max-width:1152px; margin-inline:auto; padding-inline:24px; }
+  .blog-cover { margin:0; min-width:0; }
+  .blog-cover img { width:100%; height:auto; aspect-ratio:16 / 11; object-fit:cover; border-radius:18px; border:1px solid rgba(167,139,250,0.2); }
+  .blog-cover figcaption { margin-top:10px; color:#94a3b8; font-size:0.75rem; }
+  .blog-hero-with-cover { display:grid; gap:32px; align-items:center; }
+  @media (min-width:1024px) {
+    .blog-hero-with-cover { grid-template-columns:1.2fr 1fr; }
+    .blog-hero-with-cover h1 { font-size:clamp(2rem,3.2vw,2.8rem); }
+    .blog-cover img { aspect-ratio:4 / 5; }
+  }
+
   .blog-toc {
     display: none;
   }
 
   @media (min-width: 1280px) {
+    .blog-reading-shell.with-toc { max-width:none; }
     .blog-content-grid.has-toc {
       display: grid;
-      grid-template-columns: 230px minmax(0, 1fr);
-      gap: 3.5rem;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 802px) minmax(0, 1fr);
+      gap: 24px;
       align-items: start;
     }
 
@@ -823,12 +846,17 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
       top: 6.5rem;
       max-height: calc(100vh - 8rem);
       overflow-y: auto;
+      width:100%;
+      max-width:230px;
+      justify-self:end;
     }
 
     /* En presencia del índice, el contenido no necesita todo el ancho
        de 1152px: se queda en un ancho de lectura cómodo al lado del TOC. */
     .blog-content-grid.has-toc .blog-prose {
-      max-width: 62rem;
+      grid-column:2;
+      min-width:0;
+      width:100%;
     }
   }
 
