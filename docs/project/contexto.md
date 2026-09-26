@@ -39,6 +39,8 @@ Empresas españolas que buscan reducir costes operativos, mejorar atención al c
 
 La formación de empleados en ciberseguridad e IA se canaliza a **Misión Aprender**, empresa asociada a AI Security, por indicación del usuario. Usar esa atribución en artículos de alfabetización y concienciación, sin presentarla como una certificación oficial del AI Act. No afecta a los cursos técnicos propios de Wazuh.
 
+Enfoque comercial/editorial acordado: formación y evidencias para ENS (`mp.per.3` y `mp.per.4`), ISO/IEC 27001 y alfabetización en IA (artículo 4); ISO/IEC 42001 es una ampliación afín. Explicar el requisito concreto y cómo evaluar la eficacia, sin prometer que comprar un curso certifica a la empresa. No extrapolar a todas las ISO una obligación de formación en ciberseguridad. AI Security conserva la consultoría documental y técnica; Misión Aprender canaliza la formación de empleados.
+
 Dominio definitivo confirmado por el usuario: `https://misionaprender.es`, pendiente de activación (26-09-2026). Los dos nuevos artículos con ese enlace permanecen en `src/lib/blog-drafts.mjs` hasta activar la web y revisar el contenido. No extender un enlace que no resuelve a los CTA públicos. Las funciones del panel, precios y acreditaciones deben confirmarse antes de anunciarlas.
 
 > ⚠️ **Mantener esta tabla al día.** Al crear un servicio nuevo, seguir la checklist de `docs/project/nuevo-servicio.md` (incluye actualizar esta tabla).
