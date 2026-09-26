@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { isBlogDraft } from "../../lib/blog-drafts.mjs";
 
 const title = "Blog Técnico - IA para Sistemas y Wazuh | AI Security";
 const description = "Tutoriales prácticos sobre inteligencia artificial aplicada a sistemas y ciberseguridad con Wazuh. Guías sin teoría innecesaria, solo configuración real.";
@@ -7,6 +8,24 @@ const canonical = "https://aisecurity.es/blog";
 
 // Array de artículos del blog (luego podríamos usar Content Collections)
 const articles = ([
+  {
+    slug: "plan-ia360-bono-ia-empresas",
+    title: "Plan IA360 y Bono IA: guía de ayudas para empresas",
+    description: "Plan IA360 y Bono IA: qué está anunciado, calendario previsto, diferencias con Kit Digital y preguntas pendientes. Guía basada en fuentes oficiales.",
+    publishDate: "2026-09-26",
+    readTime: "7 min",
+    tags: ["IA360", "Bono IA", "Pymes", "Inteligencia Artificial"],
+    category: "Inteligencia Artificial"
+  },
+  {
+    slug: "preparar-proyecto-ia-pyme-costes-retorno",
+    title: "Proyecto de IA para pymes: costes y retorno",
+    description: "Prepara un proyecto de IA para tu pyme: define el proceso, calcula costes y retorno y diseña un piloto. Ejemplo numérico y plantilla para comparar proveedores.",
+    publishDate: "2026-09-26",
+    readTime: "7 min",
+    tags: ["Proyectos IA", "Pymes", "Costes", "Inteligencia Artificial"],
+    category: "Inteligencia Artificial"
+  },
   // === AI ACT ===
   {
     slug: "ai-act-que-entro-en-vigor-2-agosto-2026",
@@ -410,7 +429,8 @@ const articles = ([
     category: "Wazuh & Seguridad"
   }
   // Más artículos se añadirán aquí
-] as const).sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
+] as const).filter(article => import.meta.env.DEV || !isBlogDraft(`/blog/${article.slug}`))
+  .sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
 
 // Categorías disponibles
 const categories = ["Todos", "Concienciación", "Wazuh & Seguridad", "IA para Sistemas"];

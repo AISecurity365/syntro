@@ -2,6 +2,7 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import vercel from "@astrojs/vercel";
+import { isBlogDraft } from "./src/lib/blog-drafts.mjs";
 
 export default defineConfig({
   output: "server",
@@ -17,6 +18,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) =>
+        !isBlogDraft(page) &&
         !page.includes('/login') &&
         !page.includes('/signup') &&
         !page.includes('/akiwifi_old') &&

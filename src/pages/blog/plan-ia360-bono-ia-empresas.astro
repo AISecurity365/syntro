@@ -1,0 +1,84 @@
+---
+import BlogLayout from "../../layouts/BlogLayout.astro";
+import { isBlogDraft } from "../../lib/blog-drafts.mjs";
+if (!import.meta.env.DEV && isBlogDraft(Astro.url.pathname)) return new Response(null, { status: 404 });
+if (isBlogDraft(Astro.url.pathname)) Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+const plan = 'https://www.lamoncloa.gob.es/presidente/actividades/Documents/2026/20260920%20Plan%20IA360.pdf';
+const anuncio = 'https://www.lamoncloa.gob.es/presidente/actividades/Paginas/2026/210926-sanchez-plan-ia.aspx';
+const prensa = 'https://www.europapress.es/economia/noticia-sanchez-anuncia-bono-600-millones-pymes-autonomos-incorporen-ia-20260921134944.html';
+const faqSchema = [
+  { question: '¿Se puede solicitar ya el Bono IA?', answer: 'A fecha de revisión, 26 de septiembre de 2026, no hemos localizado una convocatoria general abierta. Un formulario comercial de interés no equivale a una solicitud oficial.' },
+  { question: '¿Cuánto dinero recibirá cada empresa?', answer: 'No hemos localizado una cuantía individual oficial. No debe deducirse un importe por empresa dividiendo el presupuesto anunciado entre el objetivo de beneficiarios.' },
+  { question: '¿Podrán solicitarlo autónomos y pequeñas empresas?', answer: 'El anuncio del Gobierno menciona pymes y autónomos. Eso no permite dar por confirmados todavía los requisitos de plantilla, antigüedad, actividad o situación fiscal.' },
+  { question: '¿Es compatible con Kit Digital o Kit Consulting?', answer: 'No podemos confirmar esa compatibilidad sin las reglas del nuevo bono. Haber recibido otra ayuda no demuestra por sí solo ni elegibilidad ni exclusión.' },
+  { question: '¿Habrá que adelantar dinero o pagar IVA?', answer: 'El mecanismo de cobro y los gastos cubiertos deben comprobarse en las futuras bases. No damos por confirmado que se financie el cien por cien, que se cubra el IVA o que no haya que adelantar fondos.' },
+  { question: '¿Puedo contratar ahora y recuperar después el gasto?', answer: 'No conviene contratar contando con esa devolución. No hemos encontrado una regla que permita afirmar que los gastos anteriores serán subvencionables.' },
+  { question: '¿AI Security es un proveedor acreditado de IA360?', answer: 'No nos presentamos como proveedor acreditado de IA360. Ofrecemos consultoría e implantación de IA; cualquier participación en el futuro programa dependerá de sus condiciones.' },
+  { question: '¿Es lo mismo que las ayudas IA360 de Galicia?', answer: 'No. Las ayudas gallegas del procedimiento IG408M tienen su propia regulación y finalidad industrial. No se deben trasladar sus requisitos al nuevo plan nacional.' },
+];
+---
+<BlogLayout title="Plan IA360 y Bono IA: guía de ayudas para empresas"
+  description="Plan IA360 y Bono IA: qué está anunciado, calendario previsto, diferencias con Kit Digital y preguntas pendientes. Guía basada en fuentes oficiales."
+  publishDate="2026-09-26" author="AI Security" readTime="7 min"
+  tags={["IA360", "Bono IA", "Pymes", "Inteligencia Artificial"]}
+  canonical="https://aisecurity.es/blog/plan-ia360-bono-ia-empresas" faqSchema={faqSchema}>
+  {isBlogDraft(Astro.url.pathname) && <p><strong>Borrador para revisión editorial · Solo visible en desarrollo.</strong></p>}
+  <p><strong>IA360 es un plan nacional para impulsar la inteligencia artificial. Incluye un futuro Bono IA dirigido a pymes y autónomos, pero no equivale a una ayuda que ya pueda solicitarse.</strong> El Gobierno lo presentó el 21 de septiembre de 2026. Esta guía separa el anuncio de las condiciones que todavía deben concretarse. <a href={anuncio}>Presentación oficial de La Moncloa</a>.</p>
+  <div style="background:rgba(139,92,246,0.07);border-left:3px solid #a78bfa;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 8px 8px 0;">
+    <p style="margin:0;color:#e2e8f0;"><strong>Revisión: 26 de septiembre de 2026.</strong> Hemos consultado el documento oficial y buscado la convocatoria en fuentes administrativas. No hemos localizado una convocatoria general abierta. No ofrecemos reservas de fondos ni garantizamos una subvención.</p>
+  </div>
+  <h2>¿Qué es el Plan IA360 y dónde está el documento oficial?</h2>
+  <p>La presentación del Gobierno reúne cuatro grandes objetivos: capacidad tecnológica, adopción y talento, gobernanza y seguridad, y un acuerdo social sobre la transformación del trabajo. Por eso aparecen iniciativas de infraestructura, educación y supervisión junto a las ayudas empresariales. <a href={anuncio}>Alcance del anuncio oficial</a>.</p>
+  <p>El <a href={plan}>PDF oficial del Plan IA360</a> tiene 15 páginas. Para una pyme, las páginas 11 y 12 son especialmente útiles: describen NEURONA y el bono empresarial.</p>
+  <h2>Calendario: la Red NEURONA y el Bono IA son iniciativas distintas</h2>
+  <div style="overflow-x:auto;">
+    <table>
+      <thead><tr><th>Iniciativa</th><th>Función</th><th>Hito previsto</th></tr></thead>
+      <tbody>
+        <tr><td>Red NEURONA</td><td>Demostración, prueba e implantación de IA.</td><td>Piloto con 100 pymes en dos comunidades antes de finalizar 2026.</td></tr>
+        <tr><td>Bono empresarial de IA</td><td>Financiación de proyectos.</td><td>Piloto controlado en el primer semestre de 2027.</td></tr>
+        <tr><td>Convocatoria general del bono</td><td>Despliegue de la ayuda.</td><td>Antes de finalizar 2027; dotación anunciada de 600 millones de euros.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Son previsiones del plan, no plazos de solicitud garantizados. <a href={plan}>Fuente: proyectos 10 y 11, páginas 11–12</a>.</p>
+  <h2>¿Qué financiaría el Bono IA?</h2>
+  <p>El diseño apunta a soluciones de empresas tecnológicas europeas con desarrollo, integración, tratamiento de datos o adaptación de procesos. Excluye las licencias aisladas. Prevé diagnóstico, caso de uso y medición del impacto; los pagos por hitos y las condiciones de formación aparecen todavía en condicional. <a href={plan}>Fuente: proyecto 11</a>.</p>
+  <p>Europa Press también recoge la vinculación del bono con los centros NEURONA y el objetivo de transformar 25.000 empresas. Esa cifra es una meta del programa: no acredita que una empresa concreta vaya a recibir ayuda. <a href={prensa}>Información sobre el bono y NEURONA</a>.</p>
+  <p><strong>Ejemplo nuestro, no categoría aprobada:</strong> conectar un asistente a la documentación y al CRM de una empresa, formar al equipo y comprobar sus resultados describe un proyecto. Comprar cuentas de una herramienta describe un gasto. La elegibilidad de cada partida deberá revisarse cuando exista regulación específica.</p>
+  <h2>¿Es el nuevo Kit Digital o se parece más a Kit Consulting?</h2>
+  <p>La comparación ayuda a entender la intención, pero no sirve para copiar requisitos de un programa a otro.</p>
+  <div style="overflow-x:auto;">
+    <table>
+      <thead><tr><th>Programa</th><th>Finalidad</th><th>Qué lo diferencia</th></tr></thead>
+      <tbody>
+        <tr><td>Kit Digital</td><td>Implantar soluciones digitales.</td><td>Catálogo y agentes adheridos regulados; justificación del servicio y cesión del derecho de cobro.</td></tr>
+        <tr><td>Kit Consulting</td><td>Asesoramiento especializado.</td><td>Incluye una categoría de asesoramiento en IA.</td></tr>
+        <tr><td>Bono IA</td><td>Apoyar la incorporación empresarial de IA.</td><td>No debemos asumir que heredará esos procedimientos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Fuentes: <a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2021-21873">bases de Kit Digital</a> e <a href="https://www.red.es/sites/redes/files/media/documents/NdP_La%20ayuda%20de%20Kit%20Consulting%20se%20podr%C3%A1%20solicitar%20a%20partir%20del%2018%20de%20junio.pdf">información oficial de Kit Consulting</a>.</p>
+  <h2>Qué comprobar antes de aceptar una oferta comercial</h2>
+  <p>Si una oferta promete una cantidad o una autorización oficial, pide el enlace a las bases y a la convocatoria que la respalden. Un logotipo, un nombre parecido al programa o un formulario de contacto no son esa prueba.</p>
+  <ul>
+    <li><strong>Quién solicita:</strong> distingue el beneficiario de la empresa que presta el servicio.</li>
+    <li><strong>Qué se contrata:</strong> separa implantación, consumo, mantenimiento y formación.</li>
+    <li><strong>Qué pagas:</strong> exige el coste completo y lo que ocurre si la ayuda no llega.</li>
+    <li><strong>Qué se entrega:</strong> fija funciones, datos, accesos y condiciones de salida.</li>
+    <li><strong>Qué se promete:</strong> una evaluación comercial de encaje no es una resolución de concesión.</li>
+  </ul>
+  <h2>Cómo prepararse sin depender de una subvención</h2>
+  <p>Empieza por un proceso repetitivo y medible: localizar documentación, clasificar solicitudes o registrar llamadas. Anota cuánto tarda el equipo, cuántos errores hay y qué datos necesita. Después decide si un piloto pequeño tiene sentido con recursos propios.</p>
+  <p>En nuestra <a href="/consultoria-ia">consultoría de IA para procesos de empresa</a> partimos de ese problema operativo. Una ayuda futura puede cambiar la financiación, pero no sustituye el análisis de utilidad. Hemos preparado una <a href="/blog/preparar-proyecto-ia-pyme-costes-retorno">guía con costes, retorno y una plantilla de proyecto</a> para hacer esa evaluación.</p>
+  <h2>Preguntas frecuentes sobre IA360 y el Bono IA</h2>
+  <p>Las respuestas reflejan lo comprobado en la fecha de revisión. Para la referencia autonómica, consulta el <a href="https://sede.xunta.gal/es/detalle-procedemento?codtram=IG408M">procedimiento oficial IA360 de Galicia</a>; es diferente del anuncio nacional.</p>
+  <div class="faq-accordion">
+    {faqSchema.map(faq => <details class="faq-item"><summary><span>{faq.question}</span></summary><div class="faq-answer"><p>{faq.answer}</p></div></details>)}
+  </div>
+  <div style="background:#0b1120;border:1px solid rgba(167,139,250,0.3);border-radius:16px;padding:2rem;margin-top:2.5rem;">
+    <h3 class="mt-0" style="color:#fff;">Identifica un proyecto de IA útil para tu empresa</h3>
+    <p style="color:#cbd5e1;">Revisamos el proceso, las integraciones y cómo medir sus resultados. Te proponemos un alcance concreto, sin dar por concedida ninguna ayuda.</p>
+    <a href="/presupuesto?plan=Consultoria-IA" style="display:inline-block;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;padding:12px 20px;border-radius:10px;text-decoration:none;">Consultar mi proyecto de IA →</a>
+  </div>
+</BlogLayout>

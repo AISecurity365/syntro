@@ -114,6 +114,15 @@ traduce, así que el contextual EN siempre apunta al servicio, nunca a un curso.
 
 ## Publicación
 
+### Borradores para revisión local
+
+Los slugs en `src/lib/blog-drafts.mjs` se ocultan del índice de producción y del sitemap.
+Las páginas que usan este mecanismo devuelven 404 fuera de desarrollo y añaden
+`X-Robots-Tag: noindex, nofollow` a la vista local. El guard debe estar en el frontmatter
+del artículo. La entrada del índice se crea igualmente en el mismo commit.
+Tras aprobación editorial, retirar el slug del registro permite publicar el artículo.
+No confundir commit de un borrador con publicación del contenido.
+
 Commit + push a `main` → Vercel despliega. El hook Stop y el comportamiento automático del
 proyecto ya hacen `git add -A` + commit + push. Tras el push de una página nueva, ejecutar
 `node .github/scripts/check-page-quality.js` con `CHANGED_FILES`.

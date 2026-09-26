@@ -1,0 +1,95 @@
+---
+import BlogLayout from "../../layouts/BlogLayout.astro";
+import { isBlogDraft } from "../../lib/blog-drafts.mjs";
+if (!import.meta.env.DEV && isBlogDraft(Astro.url.pathname)) return new Response(null, { status: 404 });
+if (isBlogDraft(Astro.url.pathname)) Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+const faqSchema = [
+  { question: '¿Esta plantilla sirve para solicitar el Bono IA?', answer: 'Es una plantilla de trabajo propuesta por AI Security, no un formulario oficial ni una lista de requisitos de una subvención. Sirve para evaluar el proyecto antes de elegir cómo financiarlo.' },
+  { question: '¿Cuánto cuesta implantar IA en una pyme?', answer: 'No hay un precio único útil sin definir alcance. Separa diagnóstico, datos, integración, formación, consumo y mantenimiento. El ejemplo del artículo es hipotético y no constituye una tarifa ni una media de mercado.' },
+  { question: '¿Ahorrar horas equivale a ahorrar dinero?', answer: 'No necesariamente. Puede liberar capacidad sin reducir la nómina ni otros gastos. Para hablar de ahorro de caja hay que identificar un gasto que realmente desaparezca o una contratación que pueda evitarse.' },
+  { question: '¿Hace falta tener un CRM?', answer: 'Depende del caso de uso. Un buscador documental puede trabajar sin CRM; un asistente que consulta pedidos necesita acceso fiable al sistema donde se encuentran. La herramienta se elige a partir del proceso.' },
+  { question: '¿Qué pasa si el piloto no mejora los resultados?', answer: 'Debe ser posible detenerlo. Define antes los criterios de aceptación, el presupuesto máximo, cómo recuperar los datos y quién mantiene el proceso original.' },
+];
+---
+<BlogLayout title="Proyecto de IA para pymes: costes y retorno"
+  description="Prepara un proyecto de IA para tu pyme: define el proceso, calcula costes y retorno y diseña un piloto. Ejemplo numérico y plantilla para comparar proveedores."
+  publishDate="2026-09-26" author="AI Security" readTime="7 min"
+  tags={["Proyectos IA", "Pymes", "Costes", "Inteligencia Artificial"]}
+  canonical="https://aisecurity.es/blog/preparar-proyecto-ia-pyme-costes-retorno" faqSchema={faqSchema}>
+  {isBlogDraft(Astro.url.pathname) && <p><strong>Borrador para revisión editorial · Solo visible en desarrollo.</strong></p>}
+  <p><strong>Preparar un proyecto de IA empieza por medir un proceso, no por comprar una herramienta.</strong> Define qué trabajo quieres mejorar, qué datos necesita y cuánto cuesta hacerlo hoy. Así podrás comparar propuestas y decidir si un piloto merece la inversión.</p>
+  <p>Si has llegado por las futuras ayudas, consulta primero nuestra <a href="/blog/plan-ia360-bono-ia-empresas">guía del Plan IA360 y el Bono IA</a>. Aquí nos centramos en la preparación operativa. El método y los ejemplos siguientes son propuestas de AI Security: no son requisitos oficiales de ese programa.</p>
+  <h2>Elige un proceso con un principio y un final claros</h2>
+  <p>“Poner IA en administración” no permite presupuestar. “Preparar un borrador de registro a partir de cada factura y dejarlo pendiente de validación” sí permite definir entradas, salidas y responsabilidades.</p>
+  <div style="overflow-x:auto;"><table>
+    <thead><tr><th>Proceso</th><th>Primer alcance razonable</th><th>Límite del piloto</th></tr></thead>
+    <tbody>
+      <tr><td>Consultas internas</td><td>Buscar respuestas en un conjunto de documentos aprobados y mostrar la fuente.</td><td>Responder solo con información autorizada; derivar cuando falta evidencia.</td></tr>
+      <tr><td>Atención telefónica</td><td>Contestar preguntas frecuentes y registrar una solicitud.</td><td>Dejar incidencias delicadas y excepciones a una persona.</td></tr>
+      <tr><td>Citas</td><td>Consultar disponibilidad y preparar una reserva.</td><td>Solicitar confirmación y evitar duplicados antes de guardar.</td></tr>
+      <tr><td>Documentos entrantes</td><td>Extraer campos y proponer una clasificación.</td><td>Revisión humana antes de actualizar el sistema de gestión.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Por ejemplo, al plantear un <a href="/servicios/gestor-documental">buscador de documentación con IA</a>, el criterio de éxito no debería ser que genere una respuesta convincente, sino que encuentre la información correcta, respete los permisos y permita comprobarla.</p>
+  <h2>Recoge una muestra del trabajo actual</h2>
+  <p>Usa una muestra que incluya días normales, picos de trabajo y excepciones. Como punto de partida puedes observar dos semanas y ampliar si no representan la actividad habitual. Anota:</p>
+  <ul>
+    <li>Volumen de tareas y tiempo completo por tarea, incluida la corrección de errores.</li>
+    <li>Porcentaje de casos que requieren una decisión especial.</li>
+    <li>Errores y consecuencias: volver a llamar, rehacer un documento o perder una cita.</li>
+    <li>Aplicaciones y personas que intervienen en cada paso.</li>
+  </ul>
+  <p>Guarda ejemplos difíciles para evaluar el piloto; no ajustes el sistema con todos ellos. Necesitas comprobarlo después con casos que no haya utilizado durante la configuración.</p>
+  <h2>Revisa datos, permisos e integraciones</h2>
+  <p>Antes de compartir información con un proveedor, aclara qué datos son necesarios y utiliza muestras ficticias o anonimizadas cuando sea posible. Pide respuestas concretas sobre almacenamiento, accesos, conservación, uso para entrenamiento y borrado.</p>
+  <p>Comprueba también si tu software permite integraciones, si la API tiene un coste adicional y quién resolverá una interrupción. Para una reserva, por ejemplo, importa más verificar que la cita se ha guardado una sola vez que conseguir una conversación muy natural.</p>
+  <h2>¿Qué costes debe incluir el presupuesto de IA?</h2>
+  <ul>
+    <li><strong>Inicio:</strong> análisis, preparación de datos, configuración, integración y pruebas.</li>
+    <li><strong>Equipo:</strong> formación, revisión de respuestas y tiempo de la persona responsable.</li>
+    <li><strong>Operación:</strong> modelos, telefonía, almacenamiento, licencias e infraestructura.</li>
+    <li><strong>Mantenimiento:</strong> cambios de documentos, ajustes, soporte e incidencias.</li>
+    <li><strong>Salida:</strong> exportar los datos y volver al proceso anterior si no funciona.</li>
+  </ul>
+  <p>Solicita un escenario con tu volumen habitual y otro con el doble. Una cuota inicial baja aporta poca información si no sabes cómo se factura el consumo o qué cambios quedan fuera.</p>
+  <h2>Ejemplo: calcular el retorno sin confundir horas con dinero</h2>
+  <div style="background:rgba(139,92,246,0.07);border-left:3px solid #a78bfa;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 8px 8px 0;">
+    <p style="margin:0;color:#e2e8f0;"><strong>Ejemplo hipotético.</strong> Estas cifras ilustran el cálculo; no son una tarifa de AI Security, un caso de cliente ni una referencia de precios del mercado.</p>
+  </div>
+  <p>Supongamos 600 consultas mensuales que hoy requieren 6 minutos cada una. En el piloto, el 60% queda resuelto con una revisión de 1 minuto; el resto sigue necesitando 6 minutos. Añadimos 4 horas mensuales de mantenimiento interno.</p>
+  <div style="overflow-x:auto;"><table>
+    <thead><tr><th>Concepto</th><th>Cálculo</th><th>Resultado</th></tr></thead>
+    <tbody>
+      <tr><td>Trabajo actual</td><td>600 × 6 / 60</td><td>60 h/mes</td></tr>
+      <tr><td>Revisión de casos resueltos</td><td>360 × 1 / 60</td><td>6 h/mes</td></tr>
+      <tr><td>Casos restantes</td><td>240 × 6 / 60</td><td>24 h/mes</td></tr>
+      <tr><td>Trabajo nuevo total</td><td>6 + 24 + 4</td><td>34 h/mes</td></tr>
+      <tr><td>Capacidad liberada</td><td>60 − 34</td><td>26 h/mes</td></tr>
+      <tr><td>Valor asignado a esa capacidad</td><td>26 × 25 €/h</td><td>650 €/mes</td></tr>
+      <tr><td>Valor neto estimado</td><td>650 − 250 € de operación</td><td>400 €/mes</td></tr>
+      <tr><td>Recuperación de una implantación de 3.000 €</td><td>3.000 / 400</td><td>7,5 meses</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Ese retorno es de capacidad valorada, no necesariamente de caja.</strong> Si la nómina no cambia y el tiempo no se aprovecha, no has ingresado 650 euros ni reducido gastos por ese importe. Identifica qué hará el equipo con las horas liberadas.</p>
+  <p>Haz además una prueba pesimista: si solo se resuelve el 30%, el trabajo baja a 49 horas mensuales y se liberan 11. Con las mismas hipótesis, el valor neto sería 25 euros al mes y la recuperación tardaría 120 meses. La tasa de resolución útil cambia la decisión más que una demo llamativa.</p>
+  <h2>Plantilla para pedir propuestas comparables</h2>
+  <p>Copia esta ficha y complétala antes de pedir presupuesto. Una página suele bastar para detectar las preguntas pendientes.</p>
+  <ol>
+    <li><strong>Proceso:</strong> qué lo inicia, qué entrega y quién es responsable.</li>
+    <li><strong>Situación actual:</strong> volumen, tiempo, errores y excepciones.</li>
+    <li><strong>Datos:</strong> origen, permisos, calidad y frecuencia de actualización.</li>
+    <li><strong>Alcance:</strong> qué automatizamos y qué seguirá haciendo una persona.</li>
+    <li><strong>Integraciones:</strong> aplicaciones, acceso disponible y dependencias.</li>
+    <li><strong>Criterios de aceptación:</strong> precisión, tiempos, errores tolerables y derivaciones.</li>
+    <li><strong>Presupuesto:</strong> coste inicial, mensual, por consumo y tiempo interno.</li>
+    <li><strong>Decisión:</strong> fecha de evaluación, responsable y condiciones para parar.</li>
+  </ol>
+  <p>No compares dos ofertas sin revisar si incluyen el mismo trabajo. Una entrega de configuración y un servicio con integración, soporte y mantenimiento son alcances distintos.</p>
+  <h2>Preguntas frecuentes antes de implantar IA</h2>
+  <div class="faq-accordion">{faqSchema.map(faq => <details class="faq-item"><summary><span>{faq.question}</span></summary><div class="faq-answer"><p>{faq.answer}</p></div></details>)}</div>
+  <div style="background:#0b1120;border:1px solid rgba(167,139,250,0.3);border-radius:16px;padding:2rem;margin-top:2.5rem;">
+    <h3 class="mt-0" style="color:#fff;">Convierte una tarea repetitiva en un piloto medible</h3>
+    <p style="color:#cbd5e1;">Cuéntanos qué hace hoy tu equipo y qué software utiliza. Podemos revisar el alcance, las dependencias y cómo comprobar si la implantación compensa.</p>
+    <a href="/presupuesto?plan=Consultoria-IA" style="display:inline-block;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;padding:12px 20px;border-radius:10px;text-decoration:none;">Revisar mi caso de uso →</a>
+  </div>
+</BlogLayout>
