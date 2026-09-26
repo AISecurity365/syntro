@@ -33,16 +33,16 @@ const demos = [
   <div class="ci-shell">
     <div class="ci-section-head">
       <div><p class="ci-eyebrow">01 / Pruébalo</p><h2>Menos imaginar.<br/>Más experimentar.</h2></div>
-      <p>Tres ejemplos de IA aplicada al trabajo diario.<br/>Abre una demo y explora cómo funciona, sin registro.</p>
+      <p>Tres servicios de IA que puedes probar.<br/>Abre una demo y explora cómo funciona, sin registro.</p>
     </div>
     <div class="ci-demo-grid">
       {demos.map((demo, i) => (
         <button type="button" class="ci-demo-card" data-demo-url={demo.url} data-demo-title={demo.title}>
-          <span class="ci-card-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d={demo.icon} stroke-linecap="round" stroke-linejoin="round"/></svg><span>0{i+1}</span></span>
+          <span class="ci-card-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d={demo.icon} stroke-linecap="round" stroke-linejoin="round"/></svg><span>Servicio IA · 0{i+1}</span></span>
           <span class="ci-card-tag">{demo.tag}</span>
           <span class="ci-card-title">{demo.title}</span><span class="ci-card-description">{demo.text}</span>
           <span class="ci-card-note">{demo.note}</span>
-          <span class="ci-card-action">Abrir demo interactiva <span aria-hidden="true">↗</span></span>
+          <span class="ci-card-action">Probar demo <span aria-hidden="true">▶</span></span>
         </button>
       ))}
     </div>

@@ -67,6 +67,8 @@ Flujo: análisis previo → desarrollo personalizado → formación del equipo �
 
 **Próxima revisión de Consultoría IA (26-09-2026):** el usuario quiere ampliar el enfoque de `/consultoria-ia` hacia acompañamiento integral a la empresa, con tres modalidades: formar al equipo para que implemente; implementar junto al equipo mientras se le forma; o actuar como implementadores continuos. El equipo del cliente aporta el contexto de la empresa y debe participar en las decisiones. Primero se revisa el diseño; el cambio comercial y sus textos quedan pendientes de trabajar con el usuario. No presentar estas modalidades como una oferta ya publicada.
 
+**Base de la consultoría IA (26-09-2026):** priorizar el contexto de la empresa y los sistemas que ya utiliza. Primero centralizar y documentar procesos, conocimiento y herramientas; después conectar agentes capaces de utilizarlos. La ejecución puede ser colaborativa con el equipo, requerir aprobación humana o ser automática, según permisos y reglas acordadas. Este concepto guía el diagrama explicativo de la landing.
+
 ### 🛡️ Ciberseguridad y Sistemas
 
 **Wazuh — PRIORIDAD ALTA:**

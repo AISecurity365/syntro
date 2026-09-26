@@ -1,63 +1,33 @@
 ---
 const steps = [
-  { label: "Entender", title: "Tu empresa.", accent: "Su contexto.", detail: "El agente necesita conocer cómo trabajáis: clientes, contratos y criterios para atender una solicitud.", color: "#a5dfff" },
-  { label: "Conectar", title: "Tus sistemas.", accent: "Conectados.", detail: "Conectamos el correo, el CRM y las herramientas de soporte, con los permisos necesarios.", color: "#bdaaff" },
-  { label: "Aplicar", title: "Un agente.", accent: "La tarea en marcha.", detail: "Llega una solicitud. El agente consulta el contexto, la clasifica y prepara su registro y asignación.", color: "#9af1d8" }
+  { label: "Entender", title: "Tu empresa.", accent: "Su contexto.", detail: "Centralizamos y documentamos lo más importante: cómo trabajáis, vuestro conocimiento y los sistemas que utilizáis.", color: "#a5dfff" },
+  { label: "Conectar", title: "Tus sistemas.", accent: "Conectados.", detail: "Con esa base documentada, conectamos las herramientas para que el agente pueda consultarlas y utilizarlas con permisos definidos.", color: "#bdaaff" },
+  { label: "Aplicar", title: "Un agente.", accent: "La tarea en marcha.", detail: "El agente usa el contexto y las herramientas: trabaja con tu equipo, pide aprobación o ejecuta automáticamente según las reglas acordadas.", color: "#9af1d8" }
 ];
-// Original toroidal sculpture: projected wire curves, rendered without a 3D library.
-function project(u: number, v: number) {
-  const radius = 100 + 39 * Math.cos(v);
-  const x = radius * Math.cos(u), y = radius * Math.sin(u), z = 39 * Math.sin(v);
-  const tilt = .92;
-  const yy = y * Math.cos(tilt) - z * Math.sin(tilt);
-  const zz = y * Math.sin(tilt) + z * Math.cos(tilt);
-  const angle = -.48;
-  const scale = 470 / (470 - zz);
-  return [250 + (x * Math.cos(angle) - yy * Math.sin(angle)) * scale, 165 + (x * Math.sin(angle) + yy * Math.cos(angle)) * scale];
-}
-function curve(value: number, meridian: boolean) {
-  return Array.from({length: 97}, (_, n) => {
-    const phase = n / 96 * Math.PI * 2;
-    const [x,y] = project(meridian ? value : phase, meridian ? phase : value);
-    return (n ? "L" : "M") + x.toFixed(2) + "," + y.toFixed(2);
-  }).join(" ") + "Z";
-}
 ---
 <div class="ci-art" data-consulting-art data-stage="0" data-playing="false" style="--art-accent:#a5dfff">
   <div class="ci-art-top"><span>DE LOS PROCESOS A LA PRÁCTICA</span><button type="button" data-art-play aria-label="Reproducir animación">▶ Reproducir</button></div>
   <div class="ci-art-heading"><h2><span data-art-title>{steps[0].title}</span><br/><span data-art-accent>{steps[0].accent}</span></h2></div>
-  <div class="ci-art-scene" aria-hidden="true">
-    <div class="ci-art-halo"></div>
-    <svg viewBox="0 0 500 320" fill="none" class="ci-art-sculpture">
-      <defs>
-        <linearGradient id="ci-sculpture-light" x1="100" y1="30" x2="410" y2="290" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#d6f7ff"/><stop offset=".27" stop-color="#68c9fb"/><stop offset=".52" stop-color="#bdacff"/><stop offset=".72" stop-color="#575dc6"/><stop offset="1" stop-color="#c3eeff"/>
-        </linearGradient>
-        <filter id="ci-sculpture-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
-      </defs>
-      <ellipse cx="250" cy="285" rx="115" ry="9" fill="#799dff" opacity=".18" filter="url(#ci-sculpture-glow)"/>
-      <g class="ci-orbit-motion">
-      <g stroke="url(#ci-sculpture-light)" stroke-width="2.5" opacity=".25" filter="url(#ci-sculpture-glow)">
-        {Array.from({length:12},(_,i)=><path d={curve(i/12*Math.PI*2,true)}/>)}
-      </g>
-      <path class="ci-orbit-tracer" d={curve(.8,false)} stroke="#dcf6ff" stroke-width="2" stroke-dasharray="15 70"/>
-      <g stroke="url(#ci-sculpture-light)">
-        {Array.from({length:44},(_,i)=><path d={curve(i/44*Math.PI*2,true)} stroke-width={i%4===0 ? "1.25" : ".65"} opacity={i%4===0 ? ".95" : ".5"}/>)}
-        {Array.from({length:20},(_,i)=><path d={curve(i/20*Math.PI*2,false)} stroke-width=".75" opacity=".55"/>)}
-      </g>
-      </g>
-      <g class="ci-system-links" stroke="var(--art-accent)" stroke-width="1.5" stroke-dasharray="6 8">
-        <path d="M30 160H116L184 164"/><path d="M319 164H390L465 80"/><path d="M316 178H397L465 250"/>
-      </g>
-      <path d="M32 236H104L143 205M468 85H395L360 121" stroke="#9ab9db" stroke-width=".7" opacity=".65"/>
-      <circle cx="143" cy="205" r="3" fill="#c9e7ff"/><circle cx="360" cy="121" r="3" fill="#c9e7ff"/>
-    </svg>
-    <span class="ci-art-label ci-art-label-left" data-art-left>CLIENTES · REGLAS</span>
-    <span class="ci-art-label ci-art-label-right" data-art-right>CONTEXTO DE EMPRESA</span>
-    <span class="ci-art-center" data-art-symbol>+</span>
-    <span class="ci-system-node ci-system-mail">Correo</span>
-    <span class="ci-system-node ci-system-crm">CRM</span>
-    <span class="ci-system-node ci-system-ticket">Soporte</span>
+  <div class="ci-art-scene" role="img" aria-label="Contexto y sistemas centralizados y documentados alimentan al agente IA. El equipo humano lo guía y aprueba; el agente realiza tareas en los sistemas con el nivel de autonomía acordado.">
+    <div class="ci-foundation">
+      <div class="ci-source"><span class="ci-node-icon">◎</span><strong>Contexto de empresa</strong><p>Procesos, clientes, criterios y conocimiento del equipo.</p></div>
+      <div class="ci-source"><span class="ci-node-icon">⌘</span><strong>Sistemas y herramientas</strong><p>Correo, CRM, documentos y aplicaciones que ya utilizáis.</p></div>
+      <div class="ci-foundation-caption">01 · CENTRALIZADOS Y DOCUMENTADOS</div>
+    </div>
+    <div class="ci-flow">
+      <svg class="ci-connections" fill="none" viewBox="0 0 600 250" preserveAspectRatio="none" aria-hidden="true">
+        <g class="ci-wires"><path d="M150 0V28Q150 42 170 42H280Q300 42 300 62V90"/><path d="M450 0V28Q450 42 430 42H320Q300 42 300 62V90"/><path d="M85 110H300"/><path d="M300 110H515"/></g>
+        <g class="ci-packets"><path pathLength="100" d="M150 0V28Q150 42 170 42H280Q300 42 300 62V90"/><path pathLength="100" d="M450 0V28Q450 42 430 42H320Q300 42 300 62V90"/></g>
+        <path class="ci-human-packet" pathLength="100" d="M85 110H300"/>
+        <path class="ci-result-packet" pathLength="100" d="M300 110H515"/>
+      </svg>
+      <div class="ci-flow-nodes">
+        <div class="ci-person"><span class="ci-flow-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg></span><strong>Tu equipo</strong><small>Guía y aprueba</small></div>
+        <div class="ci-agent"><span class="ci-flow-icon">✦</span><strong>Agente IA</strong><small data-node-agent>Recibe contexto</small></div>
+        <div class="ci-result"><span class="ci-flow-icon" data-node-result>···</span><strong>Tarea hecha</strong><small>En tus sistemas</small></div>
+      </div>
+      <div class="ci-operation"><span>Con tu equipo</span><span>Con aprobación</span><span>Automático</span></div>
+    </div>
   </div>
   <div class="ci-task" aria-label="Simulación de una solicitud de soporte">
     <div class="ci-task-top"><span>EJEMPLO ILUSTRATIVO</span><span data-task-status>01 / Contexto</span></div>
@@ -79,10 +49,10 @@ function curve(value: number, meridian: boolean) {
     const play = art.querySelector<HTMLButtonElement>('[data-art-play]')!;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const scenes = [
-      {status:'01 / Contexto', title:'Conocer al cliente', text:'Contrato y reglas de atención', icon:'≡', left:'CLIENTES · REGLAS', right:'CONTEXTO DE EMPRESA', symbol:'+'},
-      {status:'02 / Conexión', title:'Correo + CRM + soporte', text:'Información disponible para el agente', icon:'⇄', left:'SISTEMAS CONECTADOS', right:'ACCESOS DEFINIDOS', symbol:'↔'},
-      {status:'03 / En curso', title:'Nueva solicitud recibida', text:'Consultando contexto y asignando responsable…', icon:'↗', left:'CONTEXTO + SISTEMAS', right:'AGENTE EN ACCIÓN', symbol:'✦'},
-      {status:'✓ Completada', title:'Ticket creado y asignado', text:'La tarea se ha realizado automáticamente.', icon:'✓', left:'CONTEXTO + SISTEMAS', right:'TAREA COMPLETADA', symbol:'✓'}
+      {status:'01 / Contexto', title:'Conocer al cliente', text:'Contrato y reglas de atención', icon:'≡'},
+      {status:'02 / Conexión', title:'Correo + CRM + soporte', text:'Información disponible para el agente', icon:'⇄'},
+      {status:'03 / En curso', title:'Nueva solicitud recibida', text:'Consultando contexto y asignando responsable…', icon:'↗'},
+      {status:'✓ Completada', title:'Ticket creado y asignado', text:'La tarea se ha realizado automáticamente.', icon:'✓'}
     ];
     let stage = 0;
     let paused = reduceMotion.matches;
@@ -103,9 +73,8 @@ function curve(value: number, meridian: boolean) {
       setText('[data-task-title]', scene.title);
       setText('[data-task-text]', scene.text);
       setText('[data-task-icon]', scene.icon);
-      setText('[data-art-left]', scene.left);
-      setText('[data-art-right]', scene.right);
-      setText('[data-art-symbol]', scene.symbol);
+      setText('[data-node-agent]', ['Recibe contexto', 'Accede a herramientas', 'Realiza la tarea', 'Trabajo completado'][stage]);
+      setText('[data-node-result]', stage === 3 ? '✓' : '···');
     }
     function schedule() {
       clearTimeout(timer);
@@ -142,22 +111,35 @@ function curve(value: number, meridian: boolean) {
   .ci-art-heading { padding:25px 26px 0; }
   .ci-art-heading h2 { color:#eff4ff; font-size:clamp(26px,2.8vw,38px); font-weight:500; letter-spacing:-.045em; line-height:1.12; margin:0; min-height:86px; }
   [data-art-accent] { color:var(--art-accent); transition:color .4s; }
-  .ci-art-scene { position:relative; margin:-7px 0 -4px; }
-  .ci-art-sculpture { display:block; width:100%; height:auto; filter:drop-shadow(0 0 12px #7aaaff25); transition:transform .7s; }
-  .ci-orbit-motion { transform-origin:250px 165px; animation:ci-orbit 9s ease-in-out infinite; }
-  .ci-orbit-tracer { animation:ci-flow 5s linear infinite; }
-  .ci-system-links { opacity:0; transition:opacity .7s; animation:ci-flow 3s linear infinite; }
-  .ci-system-node { position:absolute; padding:6px 9px; border:1px solid #697298; border-radius:7px; background:#172238; color:#e0e8ff; font-size:10px; opacity:0; transform:translateY(8px); transition:opacity .6s,transform .6s; }
-  .ci-system-mail { left:3%; top:44%; }
-  .ci-system-crm { right:4%; top:30%; }
-  .ci-system-ticket { right:4%; top:70%; }
-  .ci-art:not([data-stage="0"]) .ci-system-links { opacity:.75; }
-  .ci-art:not([data-stage="0"]) .ci-system-node { opacity:1; transform:translateY(0); }
-  .ci-art[data-stage="2"] .ci-orbit-motion { animation-duration:4s; }
-  .ci-art[data-stage="3"] .ci-art-center { color:#9af1d8; }
+  .ci-art-scene { margin:22px 24px 0; }
+  .ci-foundation { display:grid; grid-template-columns:1fr 1fr; gap:14px; border:1px solid #6081ac; border-radius:16px; padding:18px 16px 12px; background:#15243c; }
+  .ci-source { min-width:0; }
+  .ci-source strong { display:block; font-size:14px; color:#ebf3ff; margin:10px 0 7px; }
+  .ci-source p { font-size:12px; line-height:1.6; color:#bbcae0; margin:0; }
+  .ci-node-icon { display:grid; place-items:center; width:32px; height:32px; border-radius:9px; background:#a5dfff16; color:#a5dfff; font-size:24px; }
+  .ci-foundation-caption { grid-column:1/-1; border-top:1px solid #405775; padding-top:12px; color:#b5d7ff; font:9px/1.5 monospace; letter-spacing:.05em; }
+  .ci-flow { position:relative; height:275px; }
+  .ci-connections { position:absolute; inset:0; width:100%; height:250px; }
+  .ci-wires { stroke:#526c90; stroke-width:1.5; }
+  .ci-packets,.ci-human-packet,.ci-result-packet { stroke:#a5dfff; stroke-width:3; stroke-linecap:round; stroke-dasharray:7 93; animation:ci-packet 2.5s linear infinite; }
+  .ci-human-packet { stroke:#bdaaff; animation-direction:alternate; opacity:0; }
+  .ci-result-packet { stroke:#9af1d8; opacity:0; }
+  .ci-flow-nodes { position:relative; padding-top:78px; display:grid; grid-template-columns:1fr 1.3fr 1fr; gap:24px; align-items:start; }
+  .ci-flow-nodes>div { text-align:center; min-width:0; }
+  .ci-flow-icon { position:relative; display:grid; place-items:center; margin:0 auto 12px; width:64px; height:64px; border:1px solid #607897; border-radius:18px; background:#17263d; color:#c6d9f2; font-size:30px; }
+  .ci-agent .ci-flow-icon { background:#253b5d; border-color:#a5dfff; color:#a5dfff; box-shadow:0 0 0 7px #a5dfff0b; animation:ci-node-pulse 3s ease-in-out infinite; }
+  .ci-flow-nodes strong { display:block; color:#e7f0ff; font-size:13px; }
+  .ci-flow-nodes small { display:block; color:#adbed7; font-size:10px; margin-top:4px; min-height:28px; }
+  .ci-result { opacity:.45; transition:opacity .5s; }
+  .ci-operation { display:flex; justify-content:center; gap:7px; position:relative; margin-top:14px; }
+  .ci-operation span { padding:5px 7px; border:1px solid #405371; border-radius:20px; color:#bdd0e8; font-size:9px; }
+  .ci-art[data-stage="2"] .ci-human-packet,.ci-art[data-stage="2"] .ci-result-packet { opacity:1; }
+  .ci-art[data-stage="2"] .ci-agent .ci-flow-icon { animation-duration:1s; }
+  .ci-art[data-stage="3"] .ci-result { opacity:1; }
+  .ci-art[data-stage="3"] .ci-result .ci-flow-icon { background:#20473e; border-color:#9af1d8; color:#9af1d8; }
   .ci-art[data-playing="false"] * { animation-play-state:paused; }
-  @keyframes ci-orbit { 0%,100% { transform:translateY(4px) rotate(-12deg) scale(.94); } 50% { transform:translateY(-8px) rotate(18deg) scale(1.04); } }
-  @keyframes ci-flow { to { stroke-dashoffset:-170; } }
+  @keyframes ci-packet { from { stroke-dashoffset:100; } to { stroke-dashoffset:0; } }
+  @keyframes ci-node-pulse { 0%,100% { transform:translateY(0); box-shadow:0 0 0 5px #a5dfff08; } 50% { transform:translateY(-5px); box-shadow:0 0 0 12px #a5dfff14; } }
   @keyframes ci-complete { from { box-shadow:0 0 0 12px #9af1d830; } to { box-shadow:0 0 0 0 #9af1d800; } }
   .ci-task { margin:0 26px 20px; padding:13px 15px 0; border:1px solid #3b4862; border-radius:12px; background:#152136; overflow:hidden; transition:border-color .5s,background .5s; }
   .ci-task-top { display:flex; justify-content:space-between; gap:8px; color:#b5c4dc; font:9px/1.5 monospace; }
@@ -173,11 +155,6 @@ function curve(value: number, meridian: boolean) {
   .ci-art[data-stage="3"] .ci-task-track span { width:100%; }
   .ci-art[data-stage="3"] .ci-task { border-color:#64b8a0; background:#17302f; }
   .ci-art[data-stage="3"] .ci-task-icon { animation:ci-complete .8s ease-out; background:#9af1d822; }
-  .ci-art-halo { position:absolute; width:50%; height:60%; left:25%; top:22%; background:radial-gradient(ellipse,#596ee835,transparent 70%); filter:blur(18px); }
-  .ci-art-label { position:absolute; color:#c5d2e9; font:8px/1.4 monospace; letter-spacing:.09em; }
-  .ci-art-label-left { left:6.5%; top:77%; }
-  .ci-art-label-right { right:6.5%; top:21%; }
-  .ci-art-center { position:absolute; left:50%; top:49%; transform:translate(-50%,-50%); color:#d8e6ff; font:24px/1 monospace; }
   .ci-art-bottom { padding:0 26px 24px; }
   .ci-art-steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; border-top:1px solid #38415c; }
   .ci-art-steps button { background:none; padding:17px 0 12px; text-align:left; border:0; border-top:2px solid transparent; margin-top:-1px; color:#b5bfd3; font-size:12px; cursor:pointer; display:flex; gap:9px; align-items:center; transition:color .2s,border-color .2s; }
@@ -194,7 +171,14 @@ function curve(value: number, meridian: boolean) {
     .ci-art-top { align-items:center; gap:10px; }
     .ci-art-bottom { padding:0 20px 22px; }
     .ci-art-steps button { font-size:11px; gap:6px; }
-    .ci-art-label { font-size:7px; }
+    .ci-art-scene { margin:20px 16px 0; }
+    .ci-foundation { padding:14px 12px 10px; gap:12px; }
+    .ci-source strong { font-size:12px; }
+    .ci-source p { font-size:11px; }
+    .ci-flow-nodes { gap:10px; }
+    .ci-flow-icon { width:54px; height:54px; }
+    .ci-operation { gap:4px; }
+    .ci-operation span { font-size:8px; padding:5px; }
     .ci-art-bottom #ci-art-detail { min-height:86px; }
   }
   @media(prefers-reduced-motion:reduce) { .ci-art * { animation:none; transition:none; } }

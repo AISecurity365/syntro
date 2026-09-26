@@ -1,7 +1,7 @@
 .consulting-page { --ci-ink:#eaf0fa; --ci-muted:#a4b2c8; --ci-line:#243247; background:#090f1b; color:var(--ci-ink); }
-.consulting-page .ci-shell { max-width:1240px; margin:auto; padding:0 40px; }
+.consulting-page .ci-shell { max-width:1380px; margin:auto; padding:0 40px; }
 .consulting-page .ci-hero { padding:80px 0 0; background:radial-gradient(ellipse at 85% 35%,#142b48 0,transparent 55%),#090f1b; }
-.consulting-page .ci-hero-grid { display:grid; grid-template-columns:1.1fr 1fr; align-items:center; gap:64px; }
+.consulting-page .ci-hero-grid { display:grid; grid-template-columns:.85fr 1.25fr; align-items:center; gap:40px; }
 .consulting-page .ci-eyebrow { color:#a8c6ee; font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:600; margin:0 0 25px; max-width:none; display:flex; gap:10px; align-items:center; }
 .ci-eyebrow>span { width:6px; height:6px; background:#92c5ff; border-radius:50%; }
 .consulting-page .ci-intro h1 { font-size:clamp(40px,4.8vw,64px); line-height:1.06; letter-spacing:-.055em; font-weight:650; margin:0 0 26px; color:#f1f5fc; }
@@ -42,13 +42,13 @@
 .ci-demo-card { text-align:left; padding:26px; border:1px solid #304158; background:#142033; border-radius:12px; display:flex; flex-direction:column; width:100%; cursor:pointer; transition:transform .2s,border-color .2s,background .2s; }
 .ci-demo-card:hover { transform:translateY(-5px); border-color:#739bd5; background:#192940; }
 .ci-card-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:32px; color:#99b9e8; }
-.ci-card-top svg { width:30px; height:30px; }
+.ci-card-top svg { box-sizing:content-box; width:30px; height:30px; padding:14px; background:#7faaff18; border:1px solid #658bc2; border-radius:16px; }
 .ci-card-top>span { font-size:12px; color:#a7b5c9; }
 .ci-card-tag { color:#a2b7d1; font-size:9px; letter-spacing:.1em; margin-bottom:12px; }
 .ci-card-title { color:#f1f5fc; font-size:20px; font-weight:600; letter-spacing:-.025em; margin-bottom:13px; }
 .ci-card-description { color:#adbbce; font-size:14px; line-height:1.75; flex:1; }
 .ci-card-note { color:#a1b5d0; font-size:11px; padding:24px 0; }
-.ci-card-action { display:flex; justify-content:space-between; color:#b9d4fc; font-size:12px; font-weight:600; padding-top:17px; border-top:1px solid #34445c; }
+.ci-card-action { display:flex; justify-content:space-between; color:#b9d4fc; font-size:12px; font-weight:600; padding:13px 16px; border:1px solid #719ce4; border-radius:8px; background:#254b89; color:#fff; }
 .consulting-page .ci-departments { background:#090f1b !important; scroll-margin-top:95px; padding:85px 0 !important; }
 .ci-departments>.absolute { display:none; }
 .ci-department-picker { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:0 auto 36px; max-width:1000px; }
