@@ -1,8 +1,29 @@
 ---
 const steps = [
-  { title: 'Documentar y conectar', description: 'Documentamos el contexto de tu empresa y damos acceso a los sistemas y herramientas que necesita el agente.', icon: '◎', nodes: ['Procesos y conocimiento', 'Clientes y criterios', 'Sistemas y permisos'], result: 'Una base centralizada y documentada.' },
-  { title: 'Configurar y educar al agente', description: 'Le enseñamos cómo usar ese contexto y solo las herramientas justas y necesarias para su tarea.', icon: '✦', nodes: ['Instrucciones claras', 'Herramientas necesarias', 'Pruebas con tu equipo'], result: 'Sabe qué hacer, cómo hacerlo y cuándo preguntar.' },
-  { title: 'Realizar la tarea', description: 'El agente utiliza lo aprendido y actúa en tus sistemas: junto a una persona, con su aprobación o automáticamente.', icon: '✓', nodes: ['Recibe una petición', 'Consulta y actúa', 'Entrega el resultado'], result: 'El trabajo se completa con las reglas acordadas.' },
+  { title: 'Documentar y conectar', description: 'El contexto de tu empresa y sus sistemas, preparados para trabajar juntos.', nodes: [
+    ['◎', 'Tu equipo', 'Recogemos cómo trabaja el equipo y qué necesita resolver.'],
+    ['≡', 'Procesos', 'Documentamos las tareas y cómo se hacen hoy.'],
+    ['♧', 'Clientes y criterios', 'Definimos cómo identificar al cliente y las reglas del negocio.'],
+    ['▤', 'Conocimiento', 'Centralizamos documentos, procedimientos y respuestas útiles.'],
+    ['⌘', 'Sistemas', 'Identificamos el ERP, correo y aplicaciones que usáis.'],
+    ['⊞', 'Accesos', 'Conectamos los datos y acciones necesarios con permisos concretos.']
+  ], result: 'Contexto y herramientas listos.' },
+  { title: 'Configurar y educar al agente', description: 'Le enseñamos qué hacer y cómo usar solo lo que necesita.', nodes: [
+    ['✦', 'Agente IA', 'Creamos un agente con una tarea y un alcance definidos.'],
+    ['≡', 'Instrucciones', 'Le explicamos los pasos, criterios y límites de su trabajo.'],
+    ['▤', 'Contexto adecuado', 'Le damos el conocimiento relevante para esa tarea.'],
+    ['⌘', 'Herramientas justas', 'Configuramos cómo consultar y actuar en los sistemas necesarios.'],
+    ['◇', 'Cuándo preguntar', 'Definimos qué puede hacer solo y qué requiere aprobación.'],
+    ['✓', 'Pruebas con el equipo', 'Probamos casos con vuestro equipo y ajustamos el comportamiento.']
+  ], result: 'Preparado para una tarea concreta.' },
+  { title: 'Realizar la tarea', description: 'La petición recorre el flujo hasta convertirse en un resultado.', nodes: [
+    ['↘', 'Petición', 'Llega una solicitud de un cliente o del equipo.'],
+    ['◎', 'Entender el contexto', 'El agente identifica qué se necesita y a quién corresponde.'],
+    ['⌕', 'Consultar sistemas', 'Busca la información en las herramientas autorizadas.'],
+    ['✦', 'Preparar la acción', 'Prepara la respuesta o la operación con los datos encontrados.'],
+    ['◇', 'Aplicar las reglas', 'Pide aprobación cuando corresponde o continúa automáticamente.'],
+    ['✓', 'Tarea completada', 'Ejecuta la acción y entrega el resultado en tus sistemas.']
+  ], result: 'Trabajo realizado con tus reglas.' },
 ];
 ---
 <div class="workflow" data-workflow data-playing="false">
@@ -11,16 +32,21 @@ const steps = [
     <button type="button" class="play" data-workflow-play>Pausar recorrido</button>
   </div>
   <div class="steps" role="group" aria-label="Los tres pasos de implantación">
-    {steps.map((step, i) => <button type="button" class="step" data-step={i} aria-pressed={i === 0 ? 'true' : 'false'}>
-      <span class="step-number">PASO {i + 1}</span>
-      <span class="node-icon" aria-hidden="true">{step.icon}</span>
-      <strong class="step-title">{step.title}</strong>
-      <span class="step-description">{step.description}</span>
-      <span class="node-list">{step.nodes.map(node => <span>{node}</span>)}</span>
-      <span class="step-result">{step.result}</span>
+    {steps.map((step, i) => <fieldset class="step" data-step-group={i}>
+      <legend><button type="button" data-step={i} aria-pressed={i === 0 ? 'true' : 'false'}>PASO {i + 1}</button></legend>
+      <h3 class="step-title">{step.title}</h3>
+      <p class="step-description">{step.description}</p>
+      <div class="node-list">
+        {step.nodes.map(([icon, label, detail], n) => <button type="button" class="mini-node" data-node={i * 6 + n} data-detail={detail} aria-pressed="false" style={`--node-column:${[1,2,2,1,1,2][n]};--node-row:${Math.floor(n/2)+1}`}>
+          <span class="mini-icon" aria-hidden="true">{icon}</span><strong>{label}</strong><span class="mini-order">0{n+1}</span>
+          {n < 5 && <span class:list={['node-edge', n === 1 || n === 3 ? 'edge-down' : n === 2 ? 'edge-left' : 'edge-right']} aria-hidden="true"><i></i></span>}
+        </button>)}
+      </div>
+      <p class="step-result">{step.result}</p>
       {i < 2 && <span class="connector" aria-hidden="true"><span></span>→</span>}
-    </button>)}
+    </fieldset>)}
   </div>
+  <div class="journey-caption" aria-live="off"><span data-journey-count>PASO 1 · 01 / 06</span><p data-journey-text>Recogemos cómo trabaja el equipo y qué necesita resolver.</p><button class="play" type="button" data-journey-next>Siguiente nodo →</button></div>
   <div class="case-toggle-row">
     <p>Del concepto a una situación del día a día.</p>
     <button type="button" class="case-toggle" aria-expanded="false" aria-controls="invoice-example">¿Cómo sería esto con un caso real? <span aria-hidden="true">↗</span></button>
@@ -42,12 +68,14 @@ const steps = [
   const root = document.querySelector<HTMLElement>('[data-workflow]');
   if (root) {
     const steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
+    const nodes = [...root.querySelectorAll<HTMLButtonElement>('[data-node]')];
+    const groups = [...root.querySelectorAll<HTMLElement>('[data-step-group]')];
     const play = root.querySelector<HTMLButtonElement>('[data-workflow-play]')!;
     const toggle = root.querySelector<HTMLButtonElement>('.case-toggle')!;
     const example = root.querySelector<HTMLElement>('#invoice-example')!;
     const next = root.querySelector<HTMLButtonElement>('[data-case-next]')!;
     const motion = matchMedia('(prefers-reduced-motion: reduce)');
-    let paused = motion.matches, visible = false, step = 0, caseStep = 0;
+    let paused = motion.matches, visible = false, nodeIndex = 0, caseStep = 0;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const cases = [
       ['El agente lee la petición en Gmail', '«Hola, soy Marta de Empresa Ejemplo. ¿Podéis enviarme la factura de agosto?» Identifica al cliente siguiendo las reglas documentadas.', 'Siguiente: consultar el ERP →'],
@@ -67,10 +95,17 @@ const steps = [
       const running = !paused && visible && !document.hidden;
       root!.dataset.playing = String(running);
       play.textContent = paused ? 'Reproducir recorrido' : 'Pausar recorrido';
+      const step = Math.floor(nodeIndex / 6);
       steps.forEach((button, i) => button.setAttribute('aria-pressed', String(i === step)));
-      if (running) timer = setTimeout(() => { step = (step + 1) % steps.length; schedule(); }, 6000);
+      groups.forEach((group, i) => { group.dataset.active = String(i === step); group.dataset.exit = String(i === step && nodeIndex % 6 === 5); });
+      nodes.forEach((node, i) => { node.setAttribute('aria-pressed', String(i === nodeIndex)); node.dataset.done = String(i < nodeIndex); });
+      root!.querySelector('[data-journey-count]')!.textContent = `PASO ${step + 1} · 0${nodeIndex % 6 + 1} / 06`;
+      root!.querySelector('[data-journey-text]')!.textContent = nodes[nodeIndex].dataset.detail!;
+      if (running) timer = setTimeout(() => { nodeIndex = (nodeIndex + 1) % nodes.length; schedule(); }, 2600);
     }
-    steps.forEach((button, i) => button.addEventListener('click', () => { step = i; paused = true; schedule(); }));
+    steps.forEach((button, i) => button.addEventListener('click', () => { nodeIndex = i * 6; paused = true; schedule(); }));
+    nodes.forEach((node, i) => node.addEventListener('click', () => { nodeIndex = i; paused = true; schedule(); }));
+    root.querySelector('[data-journey-next]')!.addEventListener('click', () => { nodeIndex = (nodeIndex + 1) % nodes.length; paused = true; schedule(); });
     play.addEventListener('click', () => { paused = !paused; schedule(); });
     toggle.addEventListener('click', () => {
       const open = toggle.getAttribute('aria-expanded') !== 'true';
@@ -96,20 +131,39 @@ const steps = [
   .play { padding:10px 14px; border:1px solid #657b9a; border-radius:20px; background:#16253a; color:#dceaff; font-size:12px; white-space:nowrap; cursor:pointer; }
   button:focus-visible { outline:2px solid #b3ddff; outline-offset:5px; }
   .steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:40px; margin:38px 0; }
-  .step { position:relative; display:flex; flex-direction:column; align-items:start; text-align:left; min-width:0; border:1px solid #455b7a; border-radius:16px; padding:24px; color:#e9f2ff; background:#142238; cursor:pointer; transition:border-color .4s,background .4s,box-shadow .4s; }
-  .step[aria-pressed="true"] { border-color:#a5dfff; background:#1b314d; box-shadow:0 0 30px #87bfff13; }
-  .step-number { font:12px monospace; letter-spacing:.12em; color:#b1d8ff; }
-  .node-icon { display:grid; place-items:center; width:56px; height:56px; margin:22px 0; border-radius:15px; background:#94c7ff12; border:1px solid #779ac4; font-size:30px; color:#b7dcff; }
-  .step[aria-pressed="true"] .node-icon { animation:node-pulse 2s ease-in-out infinite; }
-  .step-title { font-size:21px; line-height:1.3; min-height:55px; }
-  .step-description { color:#bacbe1; font-size:14px; line-height:1.7; margin:12px 0 20px; }
-  .node-list { display:flex; flex-direction:column; gap:8px; width:100%; margin-top:auto; }
-  .node-list>span { padding:10px 12px; border:1px solid #415a7b; border-radius:8px; background:#0d1a2b; font-size:12px; }
-  .step-result { color:#b2e9d7; font-size:12px; line-height:1.6; margin-top:20px; min-height:39px; }
+  .step { position:relative; min-width:0; margin:0; border:1px dashed #526987; border-radius:16px; padding:20px; color:#e9f2ff; background:#101e31; transition:border-color .4s,background .4s; }
+  .step[data-active="true"] { border:1px solid #a5dfff; background:#182c46; }
+  legend { padding:0 8px; }
+  legend button { font:12px monospace; letter-spacing:.12em; color:#b1d8ff; background:#182c46; border:1px solid #577798; border-radius:7px; padding:9px 13px; cursor:pointer; }
+  .workflow .step-title { font-size:19px; line-height:1.35; min-height:52px; margin:4px 0 10px; }
+  .workflow .step-description { color:#bacbe1; font-size:12px; line-height:1.7; min-height:62px; margin:0 0 24px; }
+  .node-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(3,100px); gap:28px 24px; }
+  .mini-node { grid-column:var(--node-column); grid-row:var(--node-row); position:relative; display:flex; flex-direction:column; align-items:start; justify-content:center; gap:8px; padding:12px; border:1px solid #4a6383; border-radius:10px; background:#101b2d; color:#dceaff; text-align:left; cursor:pointer; transition:background .3s,border-color .3s,transform .3s,box-shadow .3s; }
+  .mini-icon { font-size:22px; color:#a5cfff; line-height:1; }
+  .mini-node strong { font-size:11px; line-height:1.4; font-weight:500; }
+  .mini-order { position:absolute; top:10px; right:10px; font:9px monospace; color:#9eb4cf; }
+  .mini-node[data-done="true"] { border-color:#538779; }
+  .mini-node[aria-pressed="true"] { background:#294e75; border-color:#bbebff; transform:translateY(-3px); box-shadow:0 0 0 4px #a5dfff12,0 8px 22px #0003; }
+  .mini-node[aria-pressed="true"] .mini-icon { animation:node-pulse 1.3s ease-in-out infinite; color:#fff; }
+  .node-edge { position:absolute; pointer-events:none; background:#526d91; }
+  .edge-right { left:100%; top:50%; width:24px; height:1px; }
+  .edge-left { right:100%; top:50%; width:24px; height:1px; }
+  .edge-down { left:50%; top:100%; height:28px; width:1px; }
+  .node-edge i { display:none; position:absolute; width:6px; height:6px; border-radius:50%; background:#cef1ff; box-shadow:0 0 9px #b8e9ff; }
+  .mini-node[aria-pressed="true"] .node-edge i { display:block; animation:node-right 1.3s linear infinite; }
+  .mini-node[aria-pressed="true"] .edge-left i { animation-name:node-left; }
+  .mini-node[aria-pressed="true"] .edge-down i { animation-name:node-down; }
+  @keyframes node-right { from { left:0; top:-3px; opacity:0; } 20% { opacity:1; } to { left:100%; top:-3px; opacity:0; } }
+  @keyframes node-left { from { right:0; top:-3px; opacity:0; } 20% { opacity:1; } to { right:100%; top:-3px; opacity:0; } }
+  @keyframes node-down { from { top:0; left:-3px; opacity:0; } 20% { opacity:1; } to { top:100%; left:-3px; opacity:0; } }
+  .workflow .step-result { color:#b2e9d7; font-size:12px; line-height:1.6; margin:22px 0 0; }
+  .journey-caption { display:flex; align-items:center; gap:24px; padding:20px; margin:0 0 28px; border:1px solid #536e93; border-radius:12px; background:#1b304b; }
+  [data-journey-count] { color:#bce7ff; font:11px monospace; white-space:nowrap; }
+  .journey-caption p { flex:1; min-height:48px; }
   .connector { position:absolute; left:100%; top:50%; width:40px; color:#a5dfff; text-align:right; font-size:19px; }
   .connector::before { content:""; position:absolute; height:1px; background:#678dbb; left:0; right:0; top:50%; }
   .connector>span { position:absolute; width:7px; height:7px; border-radius:50%; top:calc(50% - 3px); background:#c5e7ff; opacity:0; }
-  .step[aria-pressed="true"] .connector>span { animation:travel 2s linear infinite; }
+  .step[data-exit="true"] .connector>span { animation:travel 2s linear infinite; }
   .invoice-nodes li[data-active="true"]:not(:last-child)::after { animation:case-travel 1.8s linear infinite; color:#d2edff; }
   @keyframes case-travel { from { transform:translateX(-5px); opacity:.25; } to { transform:translateX(5px); opacity:1; } }
   .workflow[data-playing="false"] .steps * { animation-play-state:paused; }
@@ -141,6 +195,6 @@ const steps = [
   .case-footer p { font-size:12px; max-width:65ch; }
   .case-next { flex-shrink:0; }
   @media(max-width:1000px) { .workflow { padding:25px; } .steps { gap:24px; } .step { padding:18px; } .connector { width:24px; } .step-title { font-size:18px; } .case-toggle-row,.case-footer { align-items:start; flex-direction:column; } .case-context { flex-direction:column; gap:6px; } }
-  @media(max-width:700px) { .workflow { padding:22px 18px; } .workflow-head,.case-heading { flex-direction:column; } .steps { grid-template-columns:1fr; gap:30px; } .step-title,.step-result { min-height:0; } .node-icon { margin:16px 0; } .connector { left:50%; top:100%; height:30px; width:1px; font-size:0; } .connector::before { height:30px; width:1px; top:0; } .connector>span { display:none; } .invoice-nodes { grid-template-columns:1fr 1fr; gap:12px; } .invoice-nodes li { padding:14px; } .invoice-nodes li::after { display:none; } .case-detail { flex-direction:column; gap:12px; padding:18px; } .case-next,.case-toggle { width:100%; } }
+  @media(max-width:700px) { .workflow { padding:22px 18px; } .workflow-head,.case-heading { flex-direction:column; } .steps { grid-template-columns:1fr; gap:30px; } .step-title,.step-result { min-height:0; } .journey-caption { flex-direction:column; align-items:start; gap:12px; } .workflow .step-description { min-height:0; } .connector { left:50%; top:100%; height:30px; width:1px; font-size:0; } .connector::before { height:30px; width:1px; top:0; } .connector>span { display:none; } .invoice-nodes { grid-template-columns:1fr 1fr; gap:12px; } .invoice-nodes li { padding:14px; } .invoice-nodes li::after { display:none; } .case-detail { flex-direction:column; gap:12px; padding:18px; } .case-next,.case-toggle { width:100%; } }
   @media(prefers-reduced-motion:reduce) { .workflow * { animation:none !important; transition:none !important; } }
 </style>
