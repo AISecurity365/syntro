@@ -65,6 +65,8 @@ Flujo: análisis previo → desarrollo personalizado → formación del equipo �
 
 **Precios IA:** modelo de **3 niveles** (básico / medio / avanzado) en chatbot, gestor documental y atención de llamadas. Los CTAs de nivel llevan a `/presupuesto?plan={servicio}-{nivel}` (mapeo en `ContactMigrationForm.astro`). Sin cifra pública → "a consultar".
 
+**Próxima revisión de Consultoría IA (26-09-2026):** el usuario quiere ampliar el enfoque de `/consultoria-ia` hacia acompañamiento integral a la empresa, con tres modalidades: formar al equipo para que implemente; implementar junto al equipo mientras se le forma; o actuar como implementadores continuos. El equipo del cliente aporta el contexto de la empresa y debe participar en las decisiones. Primero se revisa el diseño; el cambio comercial y sus textos quedan pendientes de trabajar con el usuario. No presentar estas modalidades como una oferta ya publicada.
+
 ### 🛡️ Ciberseguridad y Sistemas
 
 **Wazuh — PRIORIDAD ALTA:**

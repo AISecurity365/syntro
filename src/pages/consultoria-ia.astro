@@ -1,9 +1,42 @@
 ﻿---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ConsultoriaHero from "../components/consultoria/ConsultoriaHero.astro";
+import "../styles/consultoria-ia.css";
 
 const title = "Consultoría de IA para Empresas por Departamentos | AI Security";
 const description = "Consultoría IA para PYMES en España: analizamos tu empresa por departamentos e implementamos las mejores herramientas. Primera consulta gratuita. ROI en 2-3 meses.";
 const canonical = "https://aisecurity.es/consultoria-ia";
+
+const faqs = [
+          {
+            q: "¿Necesito conocimientos técnicos para trabajar con vosotros?",
+            a: "No. Nos encargamos de toda la parte técnica: configuración, integración con tus herramientas actuales y puesta en marcha. Tu equipo solo necesita aprender a usar las soluciones, que es precisamente lo que cubrimos en la formación."
+          },
+          {
+            q: "¿Cuánto tarda en implementarse una solución de IA?",
+            a: "Depende de la complejidad. Un chatbot básico o un flujo de automatización puede estar funcionando en 2-3 semanas. Una implementación completa por departamentos puede llevar 2-3 meses. En la propuesta siempre indicamos plazos concretos."
+          },
+          {
+            q: "¿Trabajáis con empresas pequeñas o solo con grandes corporaciones?",
+            a: "La mayoría de nuestros clientes son PyMEs de 10 a 150 empleados. Adaptamos la propuesta y la inversión al tamaño real de cada empresa. No tiene sentido instalar un sistema complejo donde no se va a aprovechar."
+          },
+          {
+            q: "¿Qué pasa si una herramienta de IA queda obsoleta?",
+            a: "El ecosistema IA cambia constantemente. Por eso ofrecemos mantenimiento y revisión periódica. Si una herramienta queda obsoleta o aparece una mejor alternativa, te lo comunicamos y gestionamos la transición."
+          },
+          {
+            q: "¿Tengo que cambiar el software que ya uso?",
+            a: "No necesariamente. Integramos las soluciones de IA con las herramientas que ya tenéis: ERP, CRM, email, Google Workspace, etc. El objetivo es añadir automatización por encima de lo que ya funciona, no reemplazar todo."
+          },
+          {
+            q: "¿Cuándo se nota el retorno de la inversión?",
+            a: "Depende de la solución. Un flujo de automatización de facturas o emails suele amortizarse en el primer mes. Soluciones más completas como gestores documentales o chatbots integrados con ERP, en 2-4 meses. En la propuesta siempre incluimos una estimación de ahorro mensual."
+          },
+          {
+            q: "¿La consultoría incluye formación para mi equipo?",
+            a: "Sí, siempre. No entregamos una herramienta y desaparecemos. Formamos a las personas que la van a usar con sesiones prácticas adaptadas a su nivel, guías de uso y soporte durante el periodo de adaptación."
+          },
+        ];
 
 const departamentos = [
   {
@@ -183,206 +216,16 @@ const departamentos = [
     }
   }
   </script>
-  <script slot="head" type="application/ld+json" is:inline>
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "¿Qué es la consultoría de IA para empresas?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "La consultoría de IA para empresas es un servicio de análisis, implementación y formación de herramientas de inteligencia artificial adaptadas a los procesos específicos de tu empresa. Incluye diagnóstico por departamento, propuesta personalizada, puesta en marcha y formación del equipo."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Cuánto cuesta implementar IA en una empresa?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "El coste depende del alcance. Ofrecemos una primera consulta gratuita y propuesta personalizada. Las implementaciones concretas parten desde 1.500€ para un único departamento (ej: chatbot de atención al cliente o automatización de procesos documentales) hasta soluciones multiárea de mayor envergadura."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Necesito equipo técnico propio para implementar IA en mi empresa?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. AI Security se encarga de toda la parte técnica: configuración, integración con tus herramientas actuales (ERP, CRM, email, Google Workspace) y puesta en marcha. La formación del equipo está incluida para que puedas usarlo de forma autónoma desde el primer día."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Qué herramientas de IA podéis implementar en mi empresa?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Implementamos herramientas como Claude y ChatGPT para tareas de texto y análisis, n8n para automatización de flujos, chatbots empresariales con acceso a tu base de datos, gestores documentales con búsqueda semántica, recepcionistas virtuales con voz IA, y automatización de procesos repetitivos (RPA con IA)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "¿En cuánto tiempo se ve el retorno de la inversión en IA?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "En la mayoría de implementaciones el ROI empieza a ser visible en los primeros 2-3 meses. Por ejemplo, un chatbot de atención al cliente que resuelve el 80% de consultas supone un ahorro medio de 10-15 horas semanales de personal. Un gestor documental IA reduce el tiempo de búsqueda de 10-15 minutos a menos de 30 segundos por consulta."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Qué departamentos de una empresa pueden beneficiarse de la IA?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Prácticamente todos: Administración (facturas, presupuestos con Claude+Excel), Comercial (propuestas, análisis de ventas), Atención al cliente (chatbot 24/7), Comunicación (contenido visual con IA generativa), Gestión de proyectos (Notion AI, Jira Intelligence), Desarrollo (Claude Code, GitHub Copilot) y Sistemas (Wazuh, Ansible+IA)."
-        }
-      }
-    ]
-  }
-  </script>
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify({
+    "@context": "https://schema.org", "@type": "FAQPage",
+    mainEntity: faqs.map(({q, a}) => ({"@type": "Question", name: q, acceptedAnswer: {"@type": "Answer", text: a}}))
+  })} />
 
-  <!-- HERO + DEMOS -->
-  <section style="background: linear-gradient(135deg, #0a0d1a 0%, #0f1628 50%, #0a0d1a 100%); padding: 80px 0 60px; position: relative; overflow: hidden;">
-    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 20% 30%, #4f7cff 0%, transparent 50%), radial-gradient(circle at 80% 70%, #a78bfa 0%, transparent 50%);"></div>
-
-    <div class="max-w-6xl mx-auto px-6 relative z-10">
-      <!-- Badge + Título -->
-      <div class="text-center mb-10">
-        <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight" style="color: #fff;">
-          IA aplicada a tu empresa,<br/>
-          <span style="background: linear-gradient(90deg, #4f7cff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">departamento a departamento</span>
-        </h1>
-        <p class="text-xl max-w-3xl mx-auto" style="color: #94a3b8; line-height: 1.7;">
-          Analizamos cómo trabajáis e implementamos las herramientas de IA con mejor retorno. Formación incluida. ROI visible en 2-3 meses.
-        </p>
-      </div>
-
-      <!-- Demo Container -->
-      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 1.5rem; overflow: hidden; margin-bottom: 2.5rem;">
-        <!-- Terminal bar -->
-        <div style="background: rgba(0,0,0,0.4); padding: 14px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="display: flex; gap: 6px;">
-              <div style="width:12px;height:12px;border-radius:50%;background:#ef4444;"></div>
-              <div style="width:12px;height:12px;border-radius:50%;background:#eab308;"></div>
-              <div style="width:12px;height:12px;border-radius:50%;background:#22c55e;"></div>
-            </div>
-            <span style="color: #64748b; font-size: 0.875rem; font-family: monospace;">Demos interactivas — servicios IA para empresas</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #22c55e;">
-            <span style="width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block;" class="animate-pulse"></span>
-            Demo en vivo
-          </div>
-        </div>
-
-        <!-- 3 Service Cards -->
-        <div style="background: linear-gradient(135deg, #0f1628 0%, #1a1040 100%); padding: 2rem;">
-          <p style="text-align:center; color:#64748b; font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1.5rem;">Haz clic para abrir la demo interactiva</p>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-            <!-- Card 1: Atención Llamadas -->
-            <button onclick="openDemo('/servicios/atencion-llamadas', '📞 Atención de Llamadas IA')"
-              style="background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.25); border-radius: 1rem; padding: 1.5rem; cursor: pointer; transition: all .25s ease; width: 100%; text-align: left;"
-              onmouseover="this.style.background='rgba(37,99,235,0.18)';this.style.borderColor='rgba(96,165,250,0.5)';this.style.transform='translateY(-4px)'"
-              onmouseout="this.style.background='rgba(37,99,235,0.1)';this.style.borderColor='rgba(37,99,235,0.25)';this.style.transform=''">
-              <div style="font-size:2rem; margin-bottom:0.75rem;">📞</div>
-              <div style="font-size:1rem; font-weight:700; color:#e2e8f0; margin-bottom:0.4rem;">Atención Llamadas IA</div>
-              <div style="font-size:0.82rem; color:#94a3b8; line-height:1.5; margin-bottom:1rem;">Recepcionista virtual con voz natural. Atiende, filtra y deriva llamadas las 24 horas.</div>
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:rgba(37,99,235,0.15); border-radius:0.5rem; margin-bottom:1rem;">
-                <span style="color:#93c5fd; font-size:0.75rem; font-weight:600;">~85% llamadas resueltas</span>
-                <span style="color:#60a5fa; font-size:1.1rem; font-weight:700;">24/7</span>
-              </div>
-              <div style="display:flex; align-items:center; justify-content:center; gap:6px; padding:8px 0; color:#60a5fa; font-size:0.85rem; font-weight:600;">
-                Ver demo interactiva
-                <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-              </div>
-            </button>
-
-            <!-- Card 2: Chatbot -->
-            <button onclick="openDemo('/servicios/chatbot', '🤖 Chatbot Inteligente')"
-              style="background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.25); border-radius: 1rem; padding: 1.5rem; cursor: pointer; transition: all .25s ease; width: 100%; text-align: left;"
-              onmouseover="this.style.background='rgba(99,102,241,0.18)';this.style.borderColor='rgba(165,180,252,0.5)';this.style.transform='translateY(-4px)'"
-              onmouseout="this.style.background='rgba(99,102,241,0.1)';this.style.borderColor='rgba(99,102,241,0.25)';this.style.transform=''">
-              <div style="font-size:2rem; margin-bottom:0.75rem;">🤖</div>
-              <div style="font-size:1rem; font-weight:700; color:#e2e8f0; margin-bottom:0.4rem;">Chatbot Empresarial</div>
-              <div style="font-size:0.82rem; color:#94a3b8; line-height:1.5; margin-bottom:1rem;">Chat inteligente con acceso a tu base de conocimiento. Responde en segundos, siempre disponible.</div>
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:rgba(99,102,241,0.15); border-radius:0.5rem; margin-bottom:1rem;">
-                <span style="color:#c7d2fe; font-size:0.75rem; font-weight:600;">~70% tickets resueltos</span>
-                <span style="color:#a5b4fc; font-size:1.1rem; font-weight:700;">-60%</span>
-              </div>
-              <div style="display:flex; align-items:center; justify-content:center; gap:6px; padding:8px 0; color:#a5b4fc; font-size:0.85rem; font-weight:600;">
-                Ver demo interactiva
-                <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-              </div>
-            </button>
-
-            <!-- Card 3: Gestor Documental -->
-            <button onclick="openDemo('/servicios/gestor-documental', '📄 Gestor Documental IA')"
-              style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); border-radius: 1rem; padding: 1.5rem; cursor: pointer; transition: all .25s ease; width: 100%; text-align: left;"
-              onmouseover="this.style.background='rgba(16,185,129,0.18)';this.style.borderColor='rgba(52,211,153,0.5)';this.style.transform='translateY(-4px)'"
-              onmouseout="this.style.background='rgba(16,185,129,0.1)';this.style.borderColor='rgba(16,185,129,0.25)';this.style.transform=''">
-              <div style="font-size:2rem; margin-bottom:0.75rem;">📄</div>
-              <div style="font-size:1rem; font-weight:700; color:#e2e8f0; margin-bottom:0.4rem;">Gestor Documental IA</div>
-              <div style="font-size:0.82rem; color:#94a3b8; line-height:1.5; margin-bottom:1rem;">Búsqueda semántica en todos tus documentos. Encuentra en segundos lo que antes tardabas minutos.</div>
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:rgba(16,185,129,0.15); border-radius:0.5rem; margin-bottom:1rem;">
-                <span style="color:#6ee7b7; font-size:0.75rem; font-weight:600;">Búsqueda &lt;30 segundos</span>
-                <span style="color:#34d399; font-size:1.1rem; font-weight:700;">10x</span>
-              </div>
-              <div style="display:flex; align-items:center; justify-content:center; gap:6px; padding:8px 0; color:#34d399; font-size:0.85rem; font-weight:600;">
-                Ver demo interactiva
-                <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-              </div>
-            </button>
-
-          </div>
-        </div>
-
-        <!-- Note -->
-        <div style="padding: 14px 24px; background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.06); text-align:center;">
-          <p style="color:#475569;font-size:0.8rem;margin:0;">Demos interactivas reales. Sin registro. Experimenta cómo funcionaría en tu empresa.</p>
-        </div>
-      </div>
-
-      <!-- Stats + CTAs -->
-      <div class="text-center">
-        <div class="flex flex-wrap justify-center gap-6 mb-8">
-          <div class="text-center">
-            <div class="text-3xl font-bold" style="color: #60a5fa;">8</div>
-            <div class="text-xs mt-1" style="color: #64748b;">Departamentos cubiertos</div>
-          </div>
-          <div class="w-px h-10 self-center" style="background: rgba(255,255,255,0.1);"></div>
-          <div class="text-center">
-            <div class="text-3xl font-bold" style="color: #a78bfa;">~80%</div>
-            <div class="text-xs mt-1" style="color: #64748b;">Tareas repetitivas automatizadas</div>
-          </div>
-          <div class="w-px h-10 self-center" style="background: rgba(255,255,255,0.1);"></div>
-          <div class="text-center">
-            <div class="text-3xl font-bold" style="color: #60a5fa;">2-3m</div>
-            <div class="text-xs mt-1" style="color: #64748b;">Para ver el ROI</div>
-          </div>
-          <div class="w-px h-10 self-center" style="background: rgba(255,255,255,0.1);"></div>
-          <div class="text-center">
-            <div class="text-3xl font-bold" style="color: #a78bfa;">0€</div>
-            <div class="text-xs mt-1" style="color: #64748b;">Primera consulta</div>
-          </div>
-        </div>
-        <div class="flex flex-wrap gap-4 justify-center">
-          <a href="/presupuesto?plan=Consultoria-IA"
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all"
-            style="background: linear-gradient(135deg, #4f7cff, #7c3aed); color: #ffffff;">
-            Solicitar consulta gratuita →
-          </a>
-          <a href="/consultoria-it"
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all"
-            style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); color: #cbd5e1;">
-            ¿Necesitas Consultoría IT? →
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+  <div class="consulting-page">
+  <ConsultoriaHero />
 
   <!-- Modal overlay para demos -->
-  <div id="demo-modal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.88); backdrop-filter:blur(6px);">
+  <div id="demo-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.88); backdrop-filter:blur(6px);">
     <div style="position:relative; width:100%; height:100%; display:flex; flex-direction:column;">
       <div style="background: linear-gradient(135deg, #0f1117, #161b25); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 14px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
         <div style="display:flex; align-items:center; gap:12px;">
@@ -395,12 +238,12 @@ const departamentos = [
         </div>
         <button id="close-modal-btn" style="color:#94a3b8; font-size:1.4rem; font-weight:300; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); cursor:pointer; line-height:1; padding:6px 12px; border-radius:8px; transition:all .15s;">✕ Cerrar</button>
       </div>
-      <iframe id="demo-iframe" src="" style="flex:1; border:none; width:100%;" loading="lazy"></iframe>
+      <iframe title="Demo interactiva del servicio" id="demo-iframe" src="" style="flex:1; border:none; width:100%;" loading="lazy"></iframe>
     </div>
   </div>
 
   <!-- DIAGRAMA INTERACTIVO -->
-  <section style="background: #0a0d1a; padding: 80px 0; position: relative; overflow: hidden;">
+  <section id="departamentos" class="ci-departments" style="background: #0a0d1a; padding: 80px 0; position: relative; overflow: hidden;">
     <!-- Fondo sutil: sala de servidores -->
     <div class="absolute inset-0" style="background-image: url('/images/consultoria-bg.jpg'); background-size: cover; background-position: center; opacity: 0.20;"></div>
     <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(10,13,26,0.55) 0%, rgba(15,22,40,0.35) 50%, rgba(10,13,26,0.6) 100%);"></div>
@@ -409,11 +252,14 @@ const departamentos = [
         <h2 class="text-3xl md:text-4xl font-bold mb-3" style="color: #e2e8f0;">
           ¿Qué IA puede usar cada departamento?
         </h2>
-        <p style="color: #64748b; font-size: 1.05rem; max-width: 480px; margin: 0 auto;">Selecciona un departamento para ver las herramientas y el ahorro estimado</p>
+        <p style="color: #a4b2c8; font-size: 1.05rem; max-width: 480px; margin: 0 auto;">Selecciona un departamento para ver las herramientas y el ahorro estimado</p>
       </div>
 
+      <div class="ci-department-picker" role="group" aria-label="Seleccionar departamento">
+        {departamentos.map(dep => <button type="button" data-department={dep.id} aria-pressed="false">{dep.nombre}</button>)}
+      </div>
       <!-- Diagram + Panel layout -->
-      <div class="flex flex-col xl:flex-row gap-8 items-start justify-center">
+      <div class="ci-department-layout">
 
         <!-- Diagram + descripción debajo -->
         <div id="diagram-container" style="width: 100%; max-width: 560px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px;">
@@ -436,7 +282,7 @@ const departamentos = [
         <div id="info-panel" style="flex: 1; min-width: 300px; max-width: 480px; position: sticky; top: 24px;">
           <div id="panel-default" style="background: #1a1d27; border: 1px solid #2a2d3a; border-radius: 16px; padding: 32px; text-align: center;">
             <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.4;">👆</div>
-            <p style="color: #64748b; font-size: 1rem;">Haz clic en cualquier departamento del diagrama para ver las herramientas de IA recomendadas</p>
+            <p style="color: #a4b2c8; font-size: 1rem;">Haz clic en cualquier departamento del diagrama para ver las herramientas de IA recomendadas</p>
           </div>
           <div id="panel-active" style="display: none; background: #1a1d27; border-radius: 16px; overflow: hidden; min-height: 560px;">
             <div id="panel-header" style="padding: 20px 24px; display: flex; align-items: center; gap: 12px;">
@@ -470,51 +316,22 @@ const departamentos = [
 
   <!-- CIUDADES COMUNITAT VALENCIANA -->
   <!-- FAQ -->
-  <section style="background: linear-gradient(135deg, #0a0d1a 0%, #0f1628 100%); padding: 80px 0; border-top: 1px solid rgba(255,255,255,0.06);">
+  <section class="ci-faq" style="background: linear-gradient(135deg, #0a0d1a 0%, #0f1628 100%); padding: 80px 0; border-top: 1px solid rgba(255,255,255,0.06);">
     <div class="max-w-3xl mx-auto px-6">
       <div class="text-center mb-12">
         <h2 class="text-3xl md:text-4xl font-bold mb-4" style="color: #e2e8f0;">¿Qué nos preguntan antes de empezar?</h2>
-        <p style="color: #64748b; font-size: 1.05rem; max-width: 480px; margin: 0 auto; line-height: 1.7;">Respuestas directas a las dudas más habituales sobre implementar IA en tu empresa.</p>
+        <p style="color: #a4b2c8; font-size: 1.05rem; max-width: 480px; margin: 0 auto; line-height: 1.7;">Respuestas directas a las dudas más habituales sobre implementar IA en tu empresa.</p>
       </div>
       <div style="display: flex; flex-direction: column; gap: 10px;">
-        {[
-          {
-            q: "¿Necesito conocimientos técnicos para trabajar con vosotros?",
-            a: "No. Nos encargamos de toda la parte técnica: configuración, integración con tus herramientas actuales y puesta en marcha. Tu equipo solo necesita aprender a usar las soluciones, que es precisamente lo que cubrimos en la formación."
-          },
-          {
-            q: "¿Cuánto tarda en implementarse una solución de IA?",
-            a: "Depende de la complejidad. Un chatbot básico o un flujo de automatización puede estar funcionando en 2-3 semanas. Una implementación completa por departamentos puede llevar 2-3 meses. En la propuesta siempre indicamos plazos concretos."
-          },
-          {
-            q: "¿Trabajáis con empresas pequeñas o solo con grandes corporaciones?",
-            a: "La mayoría de nuestros clientes son PyMEs de 10 a 150 empleados. Adaptamos la propuesta y la inversión al tamaño real de cada empresa. No tiene sentido instalar un sistema complejo donde no se va a aprovechar."
-          },
-          {
-            q: "¿Qué pasa si una herramienta de IA queda obsoleta?",
-            a: "El ecosistema IA cambia constantemente. Por eso ofrecemos mantenimiento y revisión periódica. Si una herramienta queda obsoleta o aparece una mejor alternativa, te lo comunicamos y gestionamos la transición."
-          },
-          {
-            q: "¿Tengo que cambiar el software que ya uso?",
-            a: "No necesariamente. Integramos las soluciones de IA con las herramientas que ya tenéis: ERP, CRM, email, Google Workspace, etc. El objetivo es añadir automatización por encima de lo que ya funciona, no reemplazar todo."
-          },
-          {
-            q: "¿Cuándo se nota el retorno de la inversión?",
-            a: "Depende de la solución. Un flujo de automatización de facturas o emails suele amortizarse en el primer mes. Soluciones más completas como gestores documentales o chatbots integrados con ERP, en 2-4 meses. En la propuesta siempre incluimos una estimación de ahorro mensual."
-          },
-          {
-            q: "¿La consultoría incluye formación para mi equipo?",
-            a: "Sí, siempre. No entregamos una herramienta y desaparecemos. Formamos a las personas que la van a usar con sesiones prácticas adaptadas a su nivel, guías de uso y soporte durante el periodo de adaptación."
-          },
-        ].map((item, i) => (
+        {faqs.map((item, i) => (
           <div class="faq-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden;">
-            <button class="faq-btn" style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:12px; padding: 18px 24px; background:none; border:none; cursor:pointer; text-align:left;">
+            <button class="faq-btn" aria-expanded="false" aria-controls={"ci-faq-" + i} style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:12px; padding: 18px 24px; background:none; border:none; cursor:pointer; text-align:left;">
               <h3 style="font-size: 0.95rem; font-weight: 700; color: #e2e8f0; margin: 0; line-height: 1.4;">{item.q}</h3>
               <svg class="faq-chevron" style="width:18px;height:18px;flex-shrink:0;color:#4f7cff;transition:transform .25s ease;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
               </svg>
             </button>
-            <div class="faq-body" style="display:none; padding: 0 24px 18px;">
+            <div class="faq-body" id={"ci-faq-" + i} style="display:none; padding: 0 24px 18px;">
               <p style="color: #94a3b8; font-size: 0.875rem; line-height: 1.75; margin: 0; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px;">{item.a}</p>
             </div>
           </div>
@@ -524,7 +341,7 @@ const departamentos = [
   </section>
 
   <!-- CTA FINAL -->
-  <section style="background: linear-gradient(135deg, #0f1628 0%, #1a0a2e 50%, #0a0d1a 100%); padding: 80px 0; position: relative; overflow: hidden;">
+  <section class="ci-closing" style="background: linear-gradient(135deg, #0f1628 0%, #1a0a2e 50%, #0a0d1a 100%); padding: 80px 0; position: relative; overflow: hidden;">
     <div class="absolute inset-0 pointer-events-none opacity-30" style="background-image: radial-gradient(circle at 50% 50%, rgba(79,124,255,0.3), transparent 60%);"></div>
     <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
       <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-6" style="background: rgba(79,124,255,0.15); border: 1px solid rgba(79,124,255,0.3); color: #7da4ff;">
@@ -549,28 +366,37 @@ const departamentos = [
 
   <!-- Enlace discreto a páginas provinciales (SEO local, sin ocupar protagonismo) -->
   <div style="background: #0a0d1a; padding: 18px 0; border-top: 1px solid rgba(255,255,255,0.05);">
-    <p class="text-center" style="color: #475569; font-size: 0.75rem;">
+    <p class="text-center" style="color: #a4b2c8; font-size: 0.75rem;">
       También en
-      <a href="/consultoria-ia-valencia" style="color: #64748b; text-decoration: underline; text-underline-offset: 2px;">Valencia</a>,
-      <a href="/consultoria-ia-castellon" style="color: #64748b; text-decoration: underline; text-underline-offset: 2px;">Castellón</a>
-      y <a href="/consultoria-ia-alicante" style="color: #64748b; text-decoration: underline; text-underline-offset: 2px;">Alicante</a>
+      <a href="/consultoria-ia-valencia" style="color: #a4b2c8; text-decoration: underline; text-underline-offset: 2px;">Valencia</a>,
+      <a href="/consultoria-ia-castellon" style="color: #a4b2c8; text-decoration: underline; text-underline-offset: 2px;">Castellón</a>
+      y <a href="/consultoria-ia-alicante" style="color: #a4b2c8; text-decoration: underline; text-underline-offset: 2px;">Alicante</a>
     </p>
   </div>
 
+  </div>
 </BaseLayout>
 
 <script is:inline>
+  document.querySelectorAll('[data-demo-url]').forEach(button => {
+    button.addEventListener('click', () => openDemo(button.dataset.demoUrl, button.dataset.demoTitle));
+  });
+  let demoTrigger = null;
   // Modal de demos
   function openDemo(url, title) {
+    demoTrigger = document.activeElement;
     document.getElementById('modal-title').textContent = title;
     document.getElementById('demo-iframe').src = url;
     document.getElementById('demo-modal').style.display = 'block';
     document.body.style.overflow = 'hidden';
+    document.getElementById('close-modal-btn').focus();
+
   }
   function closeDemo() {
     document.getElementById('demo-modal').style.display = 'none';
     document.getElementById('demo-iframe').src = '';
     document.body.style.overflow = '';
+    if (demoTrigger) demoTrigger.focus();
   }
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeDemo(); });
   document.getElementById('close-modal-btn').addEventListener('click', closeDemo);
@@ -582,6 +408,8 @@ const departamentos = [
     var chevron = item.querySelector('.faq-chevron');
     btn.addEventListener('click', function() {
       var isOpen = body.style.display === 'block';
+      document.querySelectorAll('.faq-btn').forEach(b => b.setAttribute('aria-expanded', 'false'));
+      btn.setAttribute('aria-expanded', String(!isOpen));
       document.querySelectorAll('.faq-body').forEach(function(b) { b.style.display = 'none'; });
       document.querySelectorAll('.faq-chevron').forEach(function(c) { c.style.transform = ''; });
       if (!isOpen) { body.style.display = 'block'; chevron.style.transform = 'rotate(180deg)'; }
@@ -695,7 +523,7 @@ const departamentos = [
       if (activeId !== dep.id) { g.style.opacity = '0.78'; bg.setAttribute('stroke-width', '2'); }
     });
     g.addEventListener('mouseleave', () => {
-      if (activeId !== dep.id) { g.style.opacity = '0.38'; bg.setAttribute('stroke-width', '1.5'); }
+      if (activeId !== dep.id) { g.style.opacity = '0.75'; bg.setAttribute('stroke-width', '1.5'); }
     });
 
     nodesGroup.appendChild(g);
@@ -760,6 +588,7 @@ const departamentos = [
 
   function selectDep(id) {
     activeId = id;
+    document.querySelectorAll('[data-department]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.department === id)));
     const dep = departamentos.find(d => d.id === id);
     if (!dep) return;
 
@@ -771,7 +600,7 @@ const departamentos = [
 
       if (g) {
         g.classList.toggle('cc-active', on);
-        g.style.opacity = on ? '1' : '0.38';
+        g.style.opacity = on ? '1' : '0.75';
         g.style.filter  = on ? `drop-shadow(0 0 12px ${dep.color})` : 'none';
       }
       if (bg) {
@@ -816,7 +645,7 @@ const departamentos = [
       item.style.cssText = `background: rgba(255,255,255,0.04); border-radius: 8px; padding: 10px 12px; border-left: 3px solid ${dep.color};`;
       item.innerHTML = `
         <div style="font-size: 0.85rem; font-weight: 600; color: #e2e8f0; margin-bottom: 2px;">${h.nombre}</div>
-        <div style="font-size: 0.78rem; color: #64748b;">${h.uso}</div>
+        <div style="font-size: 0.78rem; color: #a4b2c8;">${h.uso}</div>
       `;
       panelTools.appendChild(item);
     });
@@ -830,6 +659,13 @@ const departamentos = [
     }
   }
 
+  document.querySelectorAll('[data-department]').forEach(button => {
+    button.addEventListener('click', () => {
+      userSelected = true; stopCountdown(); removePulse();
+      if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+      selectDep(button.dataset.department);
+    });
+  });
   // Inicio + auto-rotación cada 10 s
   let ccStarted = false;
   function ccInit() {
