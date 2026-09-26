@@ -1,6 +1,7 @@
 ﻿---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ConsultoriaHero from "../components/consultoria/ConsultoriaHero.astro";
+import ConsultoriaIdeaForm from "../components/consultoria/ConsultoriaIdeaForm.astro";
 import "../styles/consultoria-ia.css";
 
 const title = "Consultoría de IA para Empresas por Departamentos | AI Security";
@@ -453,7 +454,7 @@ const departamentos = [
 <section class="ci-custom-case" aria-labelledby="ci-custom-title">
     <div class="ci-shell ci-custom-case-inner">
       <div><p class="ci-eyebrow">Tu caso también cuenta</p><h2 id="ci-custom-title">¿Se podría automatizar esto en mi empresa?</h2><p>Cuéntanos qué tarea os quita tiempo, cómo la hacéis y qué programas utilizáis. Valoramos si tiene sentido automatizarla, qué información haría falta y dónde debe intervenir una persona.</p></div>
-      <a class="ci-primary" href="/presupuesto?plan=consultoria-ia">Consultar si mi idea es posible <span aria-hidden="true">↗</span></a>
+      <ConsultoriaIdeaForm />
     </div>
   </section>
 

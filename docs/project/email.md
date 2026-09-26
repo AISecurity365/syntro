@@ -46,3 +46,8 @@ Los scripts de SEO/GA4 también usan Resend:
 - `RESEND_API_KEY` en GitHub Secrets
 - From: `info@aisecurity.es`
 - To: `julen.sistemas@gmail.com` / `info@aisecurity.es`
+
+
+## 4. Ideas de automatización — Consultoría IA
+
+Formulario integrado en `/consultoria-ia`: `ConsultoriaIdeaForm.astro`. Solicita solo correo e idea (10–5000 caracteres), sin redirección. Usa `/api/send-contact` con `plan: consultoria-ia`; envía a `info@aisecurity.es` con reply-to del visitante y guarda el lead con el plan y origen del formulario. Comprueba el error de Resend antes de confirmar éxito. El cliente limita la espera a 15 segundos y conserva los campos si no puede confirmar el envío.

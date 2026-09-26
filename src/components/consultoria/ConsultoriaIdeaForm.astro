@@ -1,0 +1,69 @@
+<form class="ci-idea-form" id="ci-idea-form">
+  <label for="ci-idea-email">Tu correo electrónico</label>
+  <input id="ci-idea-email" name="email" type="email" autocomplete="email" placeholder="tu@empresa.com" maxlength="254" required />
+  <label for="ci-idea-message">¿Qué te gustaría automatizar?</label>
+  <textarea id="ci-idea-message" name="mensaje" rows="5" minlength="10" maxlength="5000" required placeholder="Por ejemplo: recibimos pedidos por correo y los copiamos a mano en nuestro programa de gestión…"></textarea>
+  <div hidden aria-hidden="true"><label>No rellenar<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+  <p class="ci-idea-privacy">Usaremos tu correo para responder a tu consulta. <a href="/privacy">Política de privacidad</a>.</p>
+  <button class="ci-primary" type="submit">Enviar mi idea <span aria-hidden="true">↗</span></button>
+  <p class="ci-idea-status" role="status" aria-live="polite" hidden></p>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('#ci-idea-form');
+  if (form) {
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const status = form.querySelector<HTMLElement>('.ci-idea-status')!;
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (button.disabled || !form.reportValidity()) return;
+      const data = new FormData(form);
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 15000);
+      button.disabled = true;
+      button.textContent = 'Enviando…';
+      form.setAttribute('aria-busy', 'true');
+      status.hidden = true;
+      try {
+        const response = await fetch('/api/send-contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: data.get('email'), mensaje: data.get('mensaje'), website: data.get('website'), plan: 'consultoria-ia' }),
+          signal: controller.signal,
+        });
+        const result = await response.json();
+        if (!response.ok || result.success !== true) throw new Error('send-failed');
+        status.textContent = 'Hemos recibido tu idea. Te responderemos por correo para valorar cómo llevarla a la práctica.';
+        status.dataset.state = 'success';
+        form.reset();
+      } catch {
+        status.textContent = 'No hemos podido confirmar el envío. Tu idea sigue aquí: inténtalo de nuevo o escríbenos a info@aisecurity.es.';
+        status.dataset.state = 'error';
+      } finally {
+        window.clearTimeout(timeout);
+        button.disabled = false;
+        button.textContent = 'Enviar mi idea ↗';
+        form.removeAttribute('aria-busy');
+        status.hidden = false;
+      }
+    });
+  }
+</script>
+
+<style>
+  .ci-idea-form { width:100%; min-width:0; display:flex; flex-direction:column; gap:12px; padding:26px; border:1px solid #486082; border-radius:16px; background:#101d30; }
+  label { color:#e5efff; font-size:14px; font-weight:600; }
+  input,textarea { width:100%; box-sizing:border-box; border:1px solid #5b7394; border-radius:8px; background:#192a42; padding:13px 14px; color:#f0f6ff; font:inherit; font-size:16px; }
+  input { margin-bottom:10px; }
+  textarea { resize:vertical; min-height:140px; }
+  input::placeholder,textarea::placeholder { color:#a9bcd4; }
+  input:focus-visible,textarea:focus-visible,button:focus-visible { outline:2px solid #a5dfff; outline-offset:3px; }
+  .ci-idea-form .ci-idea-privacy { font-size:12px; line-height:1.6; color:#b6c6dc; margin:0 0 5px; }
+  a { color:#bad9ff; text-decoration:underline; }
+  button { justify-content:center; cursor:pointer; }
+  button:disabled { opacity:.65; cursor:wait; }
+  .ci-idea-form .ci-idea-status { font-size:14px; line-height:1.6; margin:0; padding:12px; border-radius:8px; background:#22334c; color:#f0f6ff; }
+  .ci-idea-form .ci-idea-status[data-state="success"] { color:#a6f2d3; }
+  .ci-idea-form .ci-idea-status[data-state="error"] { color:#ffcfcb; }
+  @media(max-width:600px) { .ci-idea-form { padding:20px; } }
+</style>
