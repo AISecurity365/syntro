@@ -1,185 +1,146 @@
 ---
 const steps = [
-  { label: "Entender", title: "Tu empresa.", accent: "Su contexto.", detail: "Centralizamos y documentamos lo más importante: cómo trabajáis, vuestro conocimiento y los sistemas que utilizáis.", color: "#a5dfff" },
-  { label: "Conectar", title: "Tus sistemas.", accent: "Conectados.", detail: "Con esa base documentada, conectamos las herramientas para que el agente pueda consultarlas y utilizarlas con permisos definidos.", color: "#bdaaff" },
-  { label: "Aplicar", title: "Un agente.", accent: "La tarea en marcha.", detail: "El agente usa el contexto y las herramientas: trabaja con tu equipo, pide aprobación o ejecuta automáticamente según las reglas acordadas.", color: "#9af1d8" }
+  { title: 'Documentar y conectar', description: 'Documentamos el contexto de tu empresa y damos acceso a los sistemas y herramientas que necesita el agente.', icon: '◎', nodes: ['Procesos y conocimiento', 'Clientes y criterios', 'Sistemas y permisos'], result: 'Una base centralizada y documentada.' },
+  { title: 'Configurar y educar al agente', description: 'Le enseñamos cómo usar ese contexto y solo las herramientas justas y necesarias para su tarea.', icon: '✦', nodes: ['Instrucciones claras', 'Herramientas necesarias', 'Pruebas con tu equipo'], result: 'Sabe qué hacer, cómo hacerlo y cuándo preguntar.' },
+  { title: 'Realizar la tarea', description: 'El agente utiliza lo aprendido y actúa en tus sistemas: junto a una persona, con su aprobación o automáticamente.', icon: '✓', nodes: ['Recibe una petición', 'Consulta y actúa', 'Entrega el resultado'], result: 'El trabajo se completa con las reglas acordadas.' },
 ];
 ---
-<div class="ci-art" data-consulting-art data-stage="0" data-playing="false" style="--art-accent:#a5dfff">
-  <div class="ci-art-top"><span>DE LOS PROCESOS A LA PRÁCTICA</span><button type="button" data-art-play aria-label="Reproducir animación">▶ Reproducir</button></div>
-  <div class="ci-art-heading"><h2><span data-art-title>{steps[0].title}</span><br/><span data-art-accent>{steps[0].accent}</span></h2></div>
-  <div class="ci-art-scene" role="img" aria-label="Contexto y sistemas centralizados y documentados alimentan al agente IA. El equipo humano lo guía y aprueba; el agente realiza tareas en los sistemas con el nivel de autonomía acordado.">
-    <div class="ci-foundation">
-      <div class="ci-source"><span class="ci-node-icon">◎</span><strong>Contexto de empresa</strong><p>Procesos, clientes, criterios y conocimiento del equipo.</p></div>
-      <div class="ci-source"><span class="ci-node-icon">⌘</span><strong>Sistemas y herramientas</strong><p>Correo, CRM, documentos y aplicaciones que ya utilizáis.</p></div>
-      <div class="ci-foundation-caption">01 · CENTRALIZADOS Y DOCUMENTADOS</div>
-    </div>
-    <div class="ci-flow">
-      <svg class="ci-connections" fill="none" viewBox="0 0 600 250" preserveAspectRatio="none" aria-hidden="true">
-        <g class="ci-wires"><path d="M150 0V28Q150 42 170 42H280Q300 42 300 62V90"/><path d="M450 0V28Q450 42 430 42H320Q300 42 300 62V90"/><path d="M85 110H300"/><path d="M300 110H515"/></g>
-        <g class="ci-packets"><path pathLength="100" d="M150 0V28Q150 42 170 42H280Q300 42 300 62V90"/><path pathLength="100" d="M450 0V28Q450 42 430 42H320Q300 42 300 62V90"/></g>
-        <path class="ci-human-packet" pathLength="100" d="M85 110H300"/>
-        <path class="ci-result-packet" pathLength="100" d="M300 110H515"/>
-      </svg>
-      <div class="ci-flow-nodes">
-        <div class="ci-person"><span class="ci-flow-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg></span><strong>Tu equipo</strong><small>Guía y aprueba</small></div>
-        <div class="ci-agent"><span class="ci-flow-icon">✦</span><strong>Agente IA</strong><small data-node-agent>Recibe contexto</small></div>
-        <div class="ci-result"><span class="ci-flow-icon" data-node-result>···</span><strong>Tarea hecha</strong><small>En tus sistemas</small></div>
-      </div>
-      <div class="ci-operation"><span>Con tu equipo</span><span>Con aprobación</span><span>Automático</span></div>
-    </div>
+<div class="workflow" data-workflow data-playing="false">
+  <div class="workflow-head">
+    <div><p class="eyebrow">DE LOS PROCESOS A LA PRÁCTICA</p><h2>Primero, tu empresa.<br/><span>Después, un agente que sabe trabajar en ella.</span></h2></div>
+    <button type="button" class="play" data-workflow-play>Pausar recorrido</button>
   </div>
-  <div class="ci-task" aria-label="Simulación de una solicitud de soporte">
-    <div class="ci-task-top"><span>EJEMPLO ILUSTRATIVO</span><span data-task-status>01 / Contexto</span></div>
-    <div class="ci-task-row"><span class="ci-task-icon" data-task-icon aria-hidden="true">≡</span><div><strong data-task-title>Conocer al cliente</strong><p data-task-text>Contrato y reglas de atención</p></div></div>
-    <div class="ci-task-track" aria-hidden="true"><span></span></div>
+  <div class="steps" role="group" aria-label="Los tres pasos de implantación">
+    {steps.map((step, i) => <button type="button" class="step" data-step={i} aria-pressed={i === 0 ? 'true' : 'false'}>
+      <span class="step-number">PASO {i + 1}</span>
+      <span class="node-icon" aria-hidden="true">{step.icon}</span>
+      <strong class="step-title">{step.title}</strong>
+      <span class="step-description">{step.description}</span>
+      <span class="node-list">{step.nodes.map(node => <span>{node}</span>)}</span>
+      <span class="step-result">{step.result}</span>
+      {i < 2 && <span class="connector" aria-hidden="true"><span></span>→</span>}
+    </button>)}
   </div>
-  <div class="ci-art-bottom">
-    <div class="ci-art-steps" role="group" aria-label="Etapas de la consultoría">
-      {steps.map((step,i)=><button type="button" data-art-step data-title={step.title} data-accent={step.accent} data-detail={step.detail} data-color={step.color} aria-pressed={i===0 ? "true" : "false"} aria-controls="ci-art-detail"><span>0{i+1}</span>{step.label}</button>)}
-    </div>
-    <p id="ci-art-detail" aria-live="off">{steps[0].detail}</p>
-    <span class="ci-art-footnote">CON PERMISOS Y REGLAS DEFINIDOS POR TU EQUIPO</span>
+  <div class="case-toggle-row">
+    <p>Del concepto a una situación del día a día.</p>
+    <button type="button" class="case-toggle" aria-expanded="false" aria-controls="invoice-example">¿Cómo sería esto con un caso real? <span aria-hidden="true">↗</span></button>
   </div>
+  <section id="invoice-example" class="invoice-example" hidden aria-labelledby="invoice-title">
+    <div class="case-heading"><div><p class="eyebrow">EJEMPLO ILUSTRATIVO · DATOS FICTICIOS</p><h3 id="invoice-title">«Hola, ¿me podéis enviar mi factura?»</h3><p>Así podría resolverlo un agente conectado al ERP y a Gmail de tu empresa.</p></div><button type="button" class="play" data-case-restart>Reiniciar ejemplo ↺</button></div>
+    <div class="case-context"><strong>Lo que hemos preparado antes</strong><span>Cómo identificar al cliente y localizar su factura · Acceso de consulta al ERP · Permisos de Gmail · Aprobación humana antes de enviar.</span></div>
+    <ol class="invoice-nodes">
+      <li data-case-node="0"><span class="app-icon gmail" aria-hidden="true"><svg viewBox="0 0 32 24"><path fill="#4285f4" d="M0 5h5v19H0z"/><path fill="#34a853" d="M27 5h5v19h-5z"/><path fill="#ea4335" d="M0 0h5l11 9L27 0h5v7L16 19 0 7z"/><path fill="#fbbc04" d="m27 0 5 4v3l-5 4z"/></svg></span><strong>1. Gmail</strong><span>Llega la petición del cliente.</span></li>
+      <li data-case-node="1"><span class="app-icon erp" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="16" cy="7" rx="11" ry="4"/><path d="M5 7v18c0 5 22 5 22 0V7M5 16c0 5 22 5 22 0"/></svg></span><strong>2. ERP</strong><span>El agente consulta la factura.</span></li>
+      <li data-case-node="2"><span class="app-icon human" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="16" cy="9" r="5"/><path d="M5 29v-3a11 11 0 0 1 22 0v3"/></svg></span><strong>3. Tu equipo</strong><span>Revisa y aprueba la respuesta.</span></li>
+      <li data-case-node="3"><span class="app-icon gmail" aria-hidden="true"><svg viewBox="0 0 32 24"><path fill="#4285f4" d="M0 5h5v19H0z"/><path fill="#34a853" d="M27 5h5v19h-5z"/><path fill="#ea4335" d="M0 0h5l11 9L27 0h5v7L16 19 0 7z"/><path fill="#fbbc04" d="m27 0 5 4v3l-5 4z"/></svg></span><strong>4. Gmail</strong><span>Envía la factura al cliente.</span></li>
+    </ol>
+    <div class="case-detail" aria-live="polite"><span data-case-count>01 / 04</span><div><strong data-case-title>El agente lee la petición en Gmail</strong><p data-case-text>«Hola, soy Marta de Empresa Ejemplo. ¿Podéis enviarme la factura de agosto?» Identifica al cliente siguiendo las reglas documentadas.</p></div></div>
+    <div class="case-footer"><p>En este ejemplo se pide aprobación. También podemos configurar tareas automáticas. Si falta información o no se puede verificar el cliente, el agente consulta al equipo.</p><button type="button" class="case-next" data-case-next>Siguiente: consultar el ERP →</button></div>
+  </section>
 </div>
 <script>
-  const art = document.querySelector<HTMLElement>('[data-consulting-art]');
-  if (art) {
-    const buttons = [...art.querySelectorAll<HTMLButtonElement>('[data-art-step]')];
-    const play = art.querySelector<HTMLButtonElement>('[data-art-play]')!;
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const scenes = [
-      {status:'01 / Contexto', title:'Conocer al cliente', text:'Contrato y reglas de atención', icon:'≡'},
-      {status:'02 / Conexión', title:'Correo + CRM + soporte', text:'Información disponible para el agente', icon:'⇄'},
-      {status:'03 / En curso', title:'Nueva solicitud recibida', text:'Consultando contexto y asignando responsable…', icon:'↗'},
-      {status:'✓ Completada', title:'Ticket creado y asignado', text:'La tarea se ha realizado automáticamente.', icon:'✓'}
-    ];
-    let stage = 0;
-    let paused = reduceMotion.matches;
-    let visible = false;
+  const root = document.querySelector<HTMLElement>('[data-workflow]');
+  if (root) {
+    const steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
+    const play = root.querySelector<HTMLButtonElement>('[data-workflow-play]')!;
+    const toggle = root.querySelector<HTMLButtonElement>('.case-toggle')!;
+    const example = root.querySelector<HTMLElement>('#invoice-example')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-case-next]')!;
+    const motion = matchMedia('(prefers-reduced-motion: reduce)');
+    let paused = motion.matches, visible = false, step = 0, caseStep = 0;
     let timer: ReturnType<typeof setTimeout> | undefined;
-    const setText = (selector: string, text: string) => { art.querySelector(selector)!.textContent = text; };
-    function render(manual = false) {
-      const step = buttons[Math.min(stage, 2)];
-      const scene = scenes[stage];
-      art.dataset.stage = String(stage);
-      buttons.forEach(button => button.setAttribute('aria-pressed', String(button === step)));
-      art.querySelector('#ci-art-detail')!.setAttribute('aria-live', manual ? 'polite' : 'off');
-      setText('[data-art-title]', stage === 3 ? 'Y la tarea…' : step.dataset.title!);
-      setText('[data-art-accent]', stage === 3 ? 'Ya está hecha.' : step.dataset.accent!);
-      setText('#ci-art-detail', stage === 3 ? 'En este ejemplo, la solicitud queda registrada y asignada sin copiar datos a mano. Los casos fuera de las reglas pasan al equipo.' : step.dataset.detail!);
-      art.style.setProperty('--art-accent', step.dataset.color!);
-      setText('[data-task-status]', scene.status);
-      setText('[data-task-title]', scene.title);
-      setText('[data-task-text]', scene.text);
-      setText('[data-task-icon]', scene.icon);
-      setText('[data-node-agent]', ['Recibe contexto', 'Accede a herramientas', 'Realiza la tarea', 'Trabajo completado'][stage]);
-      setText('[data-node-result]', stage === 3 ? '✓' : '···');
+    const cases = [
+      ['El agente lee la petición en Gmail', '«Hola, soy Marta de Empresa Ejemplo. ¿Podéis enviarme la factura de agosto?» Identifica al cliente siguiendo las reglas documentadas.', 'Siguiente: consultar el ERP →'],
+      ['Consulta el ERP con el contexto del cliente', 'Localiza la ficha de Empresa Ejemplo, comprueba que la factura corresponde a ese cliente y recupera el PDF F-2026-0842. Solo consulta los datos necesarios.', 'Siguiente: revisar la respuesta →'],
+      ['Prepara el correo y pide aprobación', '«Hola, Marta. Te adjunto vuestra factura de agosto. Un saludo.» El equipo comprueba el destinatario, el texto y el PDF antes de autorizar el envío.', 'Simular aprobación y envío →'],
+      ['Factura enviada desde Gmail', 'Con la aprobación recibida, el agente envía el correo con la factura adjunta. La petición queda atendida sin buscar y copiar datos manualmente entre aplicaciones.', 'Volver a ver el ejemplo ↺'],
+    ];
+    function renderCase() {
+      root!.querySelectorAll<HTMLElement>('[data-case-node]').forEach((node, i) => { node.dataset.active = String(i === caseStep); node.dataset.done = String(i < caseStep); });
+      root!.querySelector('[data-case-count]')!.textContent = `0${caseStep + 1} / 04`;
+      root!.querySelector('[data-case-title]')!.textContent = cases[caseStep][0];
+      root!.querySelector('[data-case-text]')!.textContent = cases[caseStep][1];
+      next.textContent = cases[caseStep][2];
     }
     function schedule() {
       clearTimeout(timer);
       const running = !paused && visible && !document.hidden;
-      art.dataset.playing = String(running);
-      play.textContent = paused ? '▶ Reproducir' : 'Ⅱ Pausar';
-      play.setAttribute('aria-label', paused ? 'Reproducir animación' : 'Pausar animación');
-      if (running) timer = setTimeout(() => { stage = (stage + 1) % scenes.length; render(); schedule(); }, stage === 3 ? 6000 : 5000);
+      root!.dataset.playing = String(running);
+      play.textContent = paused ? 'Reproducir recorrido' : 'Pausar recorrido';
+      steps.forEach((button, i) => button.setAttribute('aria-pressed', String(i === step)));
+      if (running) timer = setTimeout(() => { step = (step + 1) % steps.length; schedule(); }, 6000);
     }
-    buttons.forEach((button, index) => button.addEventListener('click', () => {
-      paused = true; stage = index; render(true); schedule();
-    }));
+    steps.forEach((button, i) => button.addEventListener('click', () => { step = i; paused = true; schedule(); }));
     play.addEventListener('click', () => { paused = !paused; schedule(); });
-    reduceMotion.addEventListener('change', () => { paused = reduceMotion.matches; schedule(); });
-    document.addEventListener('visibilitychange', schedule);
-    const observer = new IntersectionObserver(entries => {
-      visible = entries[0].isIntersecting;
-      schedule();
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      toggle.setAttribute('aria-expanded', String(open)); example.hidden = !open;
+      if (open) { paused = true; caseStep = 0; renderCase(); schedule(); }
     });
-    observer.observe(art);
-    render();
-    schedule();
-    document.addEventListener('astro:before-swap', () => {
-      clearTimeout(timer); observer.disconnect(); document.removeEventListener('visibilitychange', schedule);
-    }, {once:true});
+    next.addEventListener('click', () => { caseStep = (caseStep + 1) % cases.length; renderCase(); });
+    root.querySelector('[data-case-restart]')!.addEventListener('click', () => { caseStep = 0; renderCase(); });
+    const onMotion = () => { paused = motion.matches; schedule(); };
+    motion.addEventListener('change', onMotion);
+    document.addEventListener('visibilitychange', schedule);
+    const observer = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; schedule(); });
+    observer.observe(root); renderCase(); schedule();
+    document.addEventListener('astro:before-swap', () => { clearTimeout(timer); observer.disconnect(); motion.removeEventListener('change', onMotion); document.removeEventListener('visibilitychange', schedule); }, { once: true });
   }
 </script>
 <style>
-  .ci-art { position:relative; isolation:isolate; border:1px solid #38415c; border-radius:22px; overflow:hidden; background:radial-gradient(ellipse at 72% 20%,#202340 0,transparent 65%),#0a101e; box-shadow:0 28px 100px #0005,inset 0 1px 0 #c5d6ff16; }
-  .ci-art::before { content:""; position:absolute; inset:0; z-index:-1; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.2' filter='url(%23n)'/%3E%3C/svg%3E"); opacity:.13; pointer-events:none; }
-  .ci-art-top { display:flex; justify-content:space-between; padding:23px 26px 0; color:#b0bcd3; font:9px/1.5 monospace; letter-spacing:.14em; }
-  [data-art-play] { border:1px solid #485574; border-radius:20px; padding:5px 9px; background:#172238; color:#dce9ff; font-size:10px; line-height:1.2; letter-spacing:0; cursor:pointer; white-space:nowrap; }
-  .ci-art button:focus-visible { outline:2px solid #a5dfff; outline-offset:4px; }
-  .ci-art-heading { padding:25px 26px 0; }
-  .ci-art-heading h2 { color:#eff4ff; font-size:clamp(26px,2.8vw,38px); font-weight:500; letter-spacing:-.045em; line-height:1.12; margin:0; min-height:86px; }
-  [data-art-accent] { color:var(--art-accent); transition:color .4s; }
-  .ci-art-scene { margin:22px 24px 0; }
-  .ci-foundation { display:grid; grid-template-columns:1fr 1fr; gap:14px; border:1px solid #6081ac; border-radius:16px; padding:18px 16px 12px; background:#15243c; }
-  .ci-source { min-width:0; }
-  .ci-source strong { display:block; font-size:14px; color:#ebf3ff; margin:10px 0 7px; }
-  .ci-source p { font-size:12px; line-height:1.6; color:#bbcae0; margin:0; }
-  .ci-node-icon { display:grid; place-items:center; width:32px; height:32px; border-radius:9px; background:#a5dfff16; color:#a5dfff; font-size:24px; }
-  .ci-foundation-caption { grid-column:1/-1; border-top:1px solid #405775; padding-top:12px; color:#b5d7ff; font:9px/1.5 monospace; letter-spacing:.05em; }
-  .ci-flow { position:relative; height:275px; }
-  .ci-connections { position:absolute; inset:0; width:100%; height:250px; }
-  .ci-wires { stroke:#526c90; stroke-width:1.5; }
-  .ci-packets,.ci-human-packet,.ci-result-packet { stroke:#a5dfff; stroke-width:3; stroke-linecap:round; stroke-dasharray:7 93; animation:ci-packet 2.5s linear infinite; }
-  .ci-human-packet { stroke:#bdaaff; animation-direction:alternate; opacity:0; }
-  .ci-result-packet { stroke:#9af1d8; opacity:0; }
-  .ci-flow-nodes { position:relative; padding-top:78px; display:grid; grid-template-columns:1fr 1.3fr 1fr; gap:24px; align-items:start; }
-  .ci-flow-nodes>div { text-align:center; min-width:0; }
-  .ci-flow-icon { position:relative; display:grid; place-items:center; margin:0 auto 12px; width:64px; height:64px; border:1px solid #607897; border-radius:18px; background:#17263d; color:#c6d9f2; font-size:30px; }
-  .ci-agent .ci-flow-icon { background:#253b5d; border-color:#a5dfff; color:#a5dfff; box-shadow:0 0 0 7px #a5dfff0b; animation:ci-node-pulse 3s ease-in-out infinite; }
-  .ci-flow-nodes strong { display:block; color:#e7f0ff; font-size:13px; }
-  .ci-flow-nodes small { display:block; color:#adbed7; font-size:10px; margin-top:4px; min-height:28px; }
-  .ci-result { opacity:.45; transition:opacity .5s; }
-  .ci-operation { display:flex; justify-content:center; gap:7px; position:relative; margin-top:14px; }
-  .ci-operation span { padding:5px 7px; border:1px solid #405371; border-radius:20px; color:#bdd0e8; font-size:9px; }
-  .ci-art[data-stage="2"] .ci-human-packet,.ci-art[data-stage="2"] .ci-result-packet { opacity:1; }
-  .ci-art[data-stage="2"] .ci-agent .ci-flow-icon { animation-duration:1s; }
-  .ci-art[data-stage="3"] .ci-result { opacity:1; }
-  .ci-art[data-stage="3"] .ci-result .ci-flow-icon { background:#20473e; border-color:#9af1d8; color:#9af1d8; }
-  .ci-art[data-playing="false"] * { animation-play-state:paused; }
-  @keyframes ci-packet { from { stroke-dashoffset:100; } to { stroke-dashoffset:0; } }
-  @keyframes ci-node-pulse { 0%,100% { transform:translateY(0); box-shadow:0 0 0 5px #a5dfff08; } 50% { transform:translateY(-5px); box-shadow:0 0 0 12px #a5dfff14; } }
-  @keyframes ci-complete { from { box-shadow:0 0 0 12px #9af1d830; } to { box-shadow:0 0 0 0 #9af1d800; } }
-  .ci-task { margin:0 26px 20px; padding:13px 15px 0; border:1px solid #3b4862; border-radius:12px; background:#152136; overflow:hidden; transition:border-color .5s,background .5s; }
-  .ci-task-top { display:flex; justify-content:space-between; gap:8px; color:#b5c4dc; font:9px/1.5 monospace; }
-  [data-task-status] { color:var(--art-accent); }
-  .ci-task-row { display:flex; align-items:center; gap:12px; padding:12px 0 14px; min-height:72px; }
-  .ci-task-icon { display:grid; place-items:center; width:32px; height:32px; flex-shrink:0; border-radius:9px; background:#bdaaff18; color:var(--art-accent); font-size:21px; }
-  .ci-task-row strong { display:block; color:#edf4ff; font-size:13px; }
-  .ci-task-row p { margin:4px 0 0; color:#b5c4dc; font-size:11px; line-height:1.5; min-height:33px; }
-  .ci-task-track { height:3px; margin:0 -15px; background:#26344c; }
-  .ci-task-track span { display:block; height:100%; width:15%; background:var(--art-accent); transition:width 1.2s ease; }
-  .ci-art[data-stage="1"] .ci-task-track span { width:40%; }
-  .ci-art[data-stage="2"] .ci-task-track span { width:70%; }
-  .ci-art[data-stage="3"] .ci-task-track span { width:100%; }
-  .ci-art[data-stage="3"] .ci-task { border-color:#64b8a0; background:#17302f; }
-  .ci-art[data-stage="3"] .ci-task-icon { animation:ci-complete .8s ease-out; background:#9af1d822; }
-  .ci-art-bottom { padding:0 26px 24px; }
-  .ci-art-steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; border-top:1px solid #38415c; }
-  .ci-art-steps button { background:none; padding:17px 0 12px; text-align:left; border:0; border-top:2px solid transparent; margin-top:-1px; color:#b5bfd3; font-size:12px; cursor:pointer; display:flex; gap:9px; align-items:center; transition:color .2s,border-color .2s; }
-  .ci-art-steps button span { font:9px/1 monospace; opacity:.8; }
-  .ci-art-steps button[aria-pressed="true"] { color:var(--art-accent); border-top-color:var(--art-accent); }
-  .ci-art-steps button:hover { color:#fff; }
-  .ci-art-bottom #ci-art-detail { font-size:13px; line-height:1.65; color:#b3bfd5; margin:4px 0 19px; min-height:65px; }
-  .ci-art-footnote { font:8px/1.5 monospace; color:#9baac4; letter-spacing:.14em; }
-  @media(max-width:680px) {
-    .ci-art-heading h2 { font-size:29px; min-height:68px; }
-    .ci-art-top { font-size:8px; padding:20px 20px 0; }
-    .ci-art-heading { padding:22px 20px 0; }
-    .ci-task { margin:0 20px 18px; }
-    .ci-art-top { align-items:center; gap:10px; }
-    .ci-art-bottom { padding:0 20px 22px; }
-    .ci-art-steps button { font-size:11px; gap:6px; }
-    .ci-art-scene { margin:20px 16px 0; }
-    .ci-foundation { padding:14px 12px 10px; gap:12px; }
-    .ci-source strong { font-size:12px; }
-    .ci-source p { font-size:11px; }
-    .ci-flow-nodes { gap:10px; }
-    .ci-flow-icon { width:54px; height:54px; }
-    .ci-operation { gap:4px; }
-    .ci-operation span { font-size:8px; padding:5px; }
-    .ci-art-bottom #ci-art-detail { min-height:86px; }
-  }
-  @media(prefers-reduced-motion:reduce) { .ci-art * { animation:none; transition:none; } }
+  .workflow { padding:38px; border:1px solid #3e5271; border-radius:24px; background:radial-gradient(ellipse at 50% 0,#21314c,transparent 65%),#101a2b; }
+  .workflow-head,.case-heading { display:flex; justify-content:space-between; align-items:start; gap:24px; }
+  .workflow .eyebrow { color:#a9c9f2; font:10px/1.6 monospace; letter-spacing:.12em; margin:0 0 15px; }
+  .workflow h2 { margin:0; font-size:clamp(27px,3vw,40px); line-height:1.2; letter-spacing:-.035em; color:#f0f6ff; }
+  h2 span { color:#a9c9f2; }
+  .play { padding:10px 14px; border:1px solid #657b9a; border-radius:20px; background:#16253a; color:#dceaff; font-size:12px; white-space:nowrap; cursor:pointer; }
+  button:focus-visible { outline:2px solid #b3ddff; outline-offset:5px; }
+  .steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:40px; margin:38px 0; }
+  .step { position:relative; display:flex; flex-direction:column; align-items:start; text-align:left; min-width:0; border:1px solid #455b7a; border-radius:16px; padding:24px; color:#e9f2ff; background:#142238; cursor:pointer; transition:border-color .4s,background .4s,box-shadow .4s; }
+  .step[aria-pressed="true"] { border-color:#a5dfff; background:#1b314d; box-shadow:0 0 30px #87bfff13; }
+  .step-number { font:12px monospace; letter-spacing:.12em; color:#b1d8ff; }
+  .node-icon { display:grid; place-items:center; width:56px; height:56px; margin:22px 0; border-radius:15px; background:#94c7ff12; border:1px solid #779ac4; font-size:30px; color:#b7dcff; }
+  .step[aria-pressed="true"] .node-icon { animation:node-pulse 2s ease-in-out infinite; }
+  .step-title { font-size:21px; line-height:1.3; min-height:55px; }
+  .step-description { color:#bacbe1; font-size:14px; line-height:1.7; margin:12px 0 20px; }
+  .node-list { display:flex; flex-direction:column; gap:8px; width:100%; margin-top:auto; }
+  .node-list>span { padding:10px 12px; border:1px solid #415a7b; border-radius:8px; background:#0d1a2b; font-size:12px; }
+  .step-result { color:#b2e9d7; font-size:12px; line-height:1.6; margin-top:20px; min-height:39px; }
+  .connector { position:absolute; left:100%; top:50%; width:40px; color:#a5dfff; text-align:right; font-size:19px; }
+  .connector::before { content:""; position:absolute; height:1px; background:#678dbb; left:0; right:0; top:50%; }
+  .connector>span { position:absolute; width:7px; height:7px; border-radius:50%; top:calc(50% - 3px); background:#c5e7ff; opacity:0; }
+  .step[aria-pressed="true"] .connector>span { animation:travel 2s linear infinite; }
+  .invoice-nodes li[data-active="true"]:not(:last-child)::after { animation:case-travel 1.8s linear infinite; color:#d2edff; }
+  @keyframes case-travel { from { transform:translateX(-5px); opacity:.25; } to { transform:translateX(5px); opacity:1; } }
+  .workflow[data-playing="false"] .steps * { animation-play-state:paused; }
+  @keyframes travel { from { left:0; opacity:0; } 25% { opacity:1; } to { left:90%; opacity:0; } }
+  @keyframes node-pulse { 50% { transform:translateY(-4px); box-shadow:0 0 0 7px #a5dfff0b; } }
+  .case-toggle-row { display:flex; justify-content:space-between; align-items:center; gap:20px; padding-top:24px; border-top:1px solid #3c516e; }
+  .workflow p { color:#b8cae2; font-size:14px; line-height:1.7; margin:0; }
+  .case-toggle,.case-next { border:1px solid #82aeec; border-radius:9px; padding:14px 18px; background:#285399; color:#fff; font-size:14px; font-weight:600; cursor:pointer; }
+  .case-toggle span { margin-left:14px; }
+  .invoice-example { margin-top:30px; padding-top:30px; border-top:1px solid #3c516e; }
+  .invoice-example[hidden] { display:none; }
+  .workflow h3 { color:#f0f6ff; font-size:25px; line-height:1.3; margin:0 0 12px; }
+  .case-context { display:flex; gap:20px; padding:18px; margin:24px 0 30px; background:#1b2b43; border-radius:10px; font-size:13px; line-height:1.7; color:#bdd0e9; }
+  .case-context strong { flex-shrink:0; color:#e3efff; }
+  .invoice-nodes { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:32px; padding:0; margin:0 0 28px; list-style:none; }
+  .invoice-nodes li { position:relative; border:1px solid #455d7c; background:#122137; border-radius:12px; padding:18px; transition:border-color .3s,background .3s; }
+  .invoice-nodes li:not(:last-child)::after { content:'→'; position:absolute; left:100%; width:32px; text-align:center; top:42px; color:#8eb9ec; }
+  .invoice-nodes li[data-active="true"] { border-color:#b6ddff; background:#243e60; }
+  .invoice-nodes li[data-done="true"] { border-color:#75c7ab; }
+  .app-icon { display:grid; place-items:center; width:48px; height:48px; background:#213752; border-radius:12px; color:#b9d7ff; margin-bottom:14px; }
+  .app-icon svg { width:28px; height:28px; }
+  .gmail { background:#fff; }
+  .invoice-nodes strong { display:block; color:#edf5ff; font-size:15px; margin-bottom:6px; }
+  .invoice-nodes li>span:last-child { color:#bed0e7; font-size:12px; line-height:1.6; }
+  .case-detail { display:flex; gap:24px; padding:24px; border:1px solid #5c7ba3; border-radius:12px; background:#1b304b; min-height:145px; }
+  [data-case-count] { color:#b3dcff; font:13px monospace; white-space:nowrap; }
+  [data-case-title] { display:block; color:#f0f6ff; font-size:18px; margin-bottom:10px; }
+  .case-footer { display:flex; justify-content:space-between; align-items:center; gap:30px; margin-top:22px; }
+  .case-footer p { font-size:12px; max-width:65ch; }
+  .case-next { flex-shrink:0; }
+  @media(max-width:1000px) { .workflow { padding:25px; } .steps { gap:24px; } .step { padding:18px; } .connector { width:24px; } .step-title { font-size:18px; } .case-toggle-row,.case-footer { align-items:start; flex-direction:column; } .case-context { flex-direction:column; gap:6px; } }
+  @media(max-width:700px) { .workflow { padding:22px 18px; } .workflow-head,.case-heading { flex-direction:column; } .steps { grid-template-columns:1fr; gap:30px; } .step-title,.step-result { min-height:0; } .node-icon { margin:16px 0; } .connector { left:50%; top:100%; height:30px; width:1px; font-size:0; } .connector::before { height:30px; width:1px; top:0; } .connector>span { display:none; } .invoice-nodes { grid-template-columns:1fr 1fr; gap:12px; } .invoice-nodes li { padding:14px; } .invoice-nodes li::after { display:none; } .case-detail { flex-direction:column; gap:12px; padding:18px; } .case-next,.case-toggle { width:100%; } }
+  @media(prefers-reduced-motion:reduce) { .workflow * { animation:none !important; transition:none !important; } }
 </style>

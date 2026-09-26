@@ -1,7 +1,7 @@
 .consulting-page { --ci-ink:#eaf0fa; --ci-muted:#a4b2c8; --ci-line:#243247; background:#090f1b; color:var(--ci-ink); }
 .consulting-page .ci-shell { max-width:1380px; margin:auto; padding:0 40px; }
 .consulting-page .ci-hero { padding:80px 0 0; background:radial-gradient(ellipse at 85% 35%,#142b48 0,transparent 55%),#090f1b; }
-.consulting-page .ci-hero-grid { display:grid; grid-template-columns:.85fr 1.25fr; align-items:center; gap:40px; }
+.consulting-page .ci-hero-grid { display:grid; grid-template-columns:1fr; align-items:center; gap:40px; }
 .consulting-page .ci-eyebrow { color:#a8c6ee; font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:600; margin:0 0 25px; max-width:none; display:flex; gap:10px; align-items:center; }
 .ci-eyebrow>span { width:6px; height:6px; background:#92c5ff; border-radius:50%; }
 .consulting-page .ci-intro h1 { font-size:clamp(40px,4.8vw,64px); line-height:1.06; letter-spacing:-.055em; font-weight:650; margin:0 0 26px; color:#f1f5fc; }
@@ -119,3 +119,8 @@
 @media(prefers-reduced-motion:reduce) {
   .consulting-page *, .consulting-page *::before { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
 }
+
+.consulting-page .ci-intro { text-align:center; max-width:1050px; margin:auto; }
+.consulting-page .ci-intro .ci-eyebrow,.ci-intro .ci-actions { justify-content:center; }
+.consulting-page .ci-intro .ci-lead { max-width:65ch; margin:0 auto 28px; }
+.ci-workflow-section { padding:35px 0 80px; background:#090f1b; }
