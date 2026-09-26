@@ -853,6 +853,7 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
       width:100%;
       max-width:230px;
       justify-self:end;
+      transform: translateX(clamp(-80px, calc((1400px - 100vw) / 2), 0px));
     }
 
     /* En presencia del índice, el contenido no necesita todo el ancho
