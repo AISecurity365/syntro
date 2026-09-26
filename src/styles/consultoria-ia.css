@@ -58,6 +58,9 @@
 .consulting-page #info-panel { min-width:0 !important; max-width:none !important; position:static !important; width:100%; }
 .consulting-page #panel-active { background:#121f31 !important; min-height:0 !important; box-shadow:0 20px 70px #0003; }
 .consulting-page #panel-active>div>p { color:#b1c9ee !important; }
+.consulting-page .ci-use-cases>div { padding:14px 16px !important; }
+.consulting-page .ci-use-cases>div>div:first-child { font-size:15px !important; margin-bottom:6px !important; }
+.consulting-page .ci-use-cases>div>div:last-child { font-size:14px !important; line-height:1.65; color:#b7c5d9 !important; }
 .consulting-page>div:last-child>p { max-width:none; }
 .consulting-page .ci-faq { background:#101a29 !important; }
 .ci-faq>.max-w-3xl { max-width:940px; }

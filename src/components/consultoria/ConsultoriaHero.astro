@@ -1,4 +1,5 @@
 ---
+import ConsultoriaVisual from "./ConsultoriaVisual.astro";
 const demos = [
   {title: "Atención de llamadas", tag: "VOZ + ATENCIÓN", url: "/servicios/atencion-llamadas", icon: "M5 4h4l2 5-3 2a14 14 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2C9 21 3 15 3 6a2 2 0 0 1 2-2Z", text: "Recepcionista virtual con voz natural. Atiende, filtra y deriva llamadas las 24 horas.", note: "Una conversación, muchas posibilidades."},
   {title: "Chatbot empresarial", tag: "CONVERSACIÓN + CONOCIMIENTO", url: "/servicios/chatbot", icon: "M21 11a8 8 0 0 1-8 8H5l-3 3V5a2 2 0 0 1 2-2h9a8 8 0 0 1 8 8ZM7 8h9M7 12h6", text: "Chat inteligente con acceso a tu base de conocimiento. Respuestas en segundos, siempre disponible.", note: "La información de tu empresa, accesible."},
@@ -18,19 +19,7 @@ const demos = [
         </div>
         <p class="ci-note">Primera consulta gratuita · Propuesta personalizada</p>
       </div>
-      <div class="ci-blueprint" aria-label="Proceso de consultoría: analizar, implementar y formar">
-        <div class="ci-board-top"><span>DE LOS PROCESOS A LA PRÁCTICA</span><span aria-hidden="true">↗</span></div>
-        <div class="ci-board-center">
-          <div class="ci-orbit" aria-hidden="true"><span>IA</span></div>
-          <div><small>EL PUNTO DE PARTIDA</small><h2>Tu empresa.<br/>Tu forma de trabajar.</h2></div>
-        </div>
-        <ol class="ci-process">
-          <li><span>01</span><div><strong>Analizamos</strong><p>Procesos, necesidades y oportunidades.</p></div><span aria-hidden="true">↗</span></li>
-          <li><span>02</span><div><strong>Implementamos</strong><p>Herramientas conectadas a tu día a día.</p></div><span aria-hidden="true">↗</span></li>
-          <li><span>03</span><div><strong>Formamos</strong><p>Tu equipo aprende a utilizarlas.</p></div><span aria-hidden="true">↗</span></li>
-        </ol>
-        <div class="ci-board-bottom"><span>Personas + procesos + tecnología</span><span class="ci-status">Conectados</span></div>
-      </div>
+      <ConsultoriaVisual />
     </div>
     <div class="ci-summary">
       <div><strong>08</strong><span>Departamentos<br/>donde aplicar IA</span></div>

@@ -1,0 +1,107 @@
+---
+const steps = [
+  { label: "Entender", title: "Tu equipo.", accent: "El punto de partida.", detail: "Escuchamos a quienes conocen los procesos, los clientes y el trabajo diario.", color: "#a5dfff" },
+  { label: "Conectar", title: "Tus procesos.", accent: "Nuevas posibilidades.", detail: "Conectamos conocimiento, herramientas y tareas alrededor de un caso de uso concreto.", color: "#bdaaff" },
+  { label: "Aplicar", title: "La IA.", accent: "En vuestro día a día.", detail: "Probamos, formamos al equipo y ajustamos la solución con su experiencia.", color: "#9af1d8" }
+];
+// Original toroidal sculpture: projected wire curves, rendered without a 3D library.
+function project(u: number, v: number) {
+  const radius = 100 + 39 * Math.cos(v);
+  const x = radius * Math.cos(u), y = radius * Math.sin(u), z = 39 * Math.sin(v);
+  const tilt = .92;
+  const yy = y * Math.cos(tilt) - z * Math.sin(tilt);
+  const zz = y * Math.sin(tilt) + z * Math.cos(tilt);
+  const angle = -.48;
+  const scale = 470 / (470 - zz);
+  return [250 + (x * Math.cos(angle) - yy * Math.sin(angle)) * scale, 165 + (x * Math.sin(angle) + yy * Math.cos(angle)) * scale];
+}
+function curve(value: number, meridian: boolean) {
+  return Array.from({length: 97}, (_, n) => {
+    const phase = n / 96 * Math.PI * 2;
+    const [x,y] = project(meridian ? value : phase, meridian ? phase : value);
+    return (n ? "L" : "M") + x.toFixed(2) + "," + y.toFixed(2);
+  }).join(" ") + "Z";
+}
+---
+<div class="ci-art" data-consulting-art style="--art-accent:#a5dfff">
+  <div class="ci-art-top"><span>DE LOS PROCESOS A LA PRÁCTICA</span><span aria-hidden="true">↗</span></div>
+  <div class="ci-art-heading"><h2><span data-art-title>Tu equipo.</span><br/><span data-art-accent>El punto de partida.</span></h2></div>
+  <div class="ci-art-scene" aria-hidden="true">
+    <div class="ci-art-halo"></div>
+    <svg viewBox="0 0 500 320" fill="none" class="ci-art-sculpture">
+      <defs>
+        <linearGradient id="ci-sculpture-light" x1="100" y1="30" x2="410" y2="290" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#d6f7ff"/><stop offset=".27" stop-color="#68c9fb"/><stop offset=".52" stop-color="#bdacff"/><stop offset=".72" stop-color="#575dc6"/><stop offset="1" stop-color="#c3eeff"/>
+        </linearGradient>
+        <filter id="ci-sculpture-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
+      </defs>
+      <ellipse cx="250" cy="285" rx="115" ry="9" fill="#799dff" opacity=".18" filter="url(#ci-sculpture-glow)"/>
+      <g stroke="url(#ci-sculpture-light)" stroke-width="2.5" opacity=".25" filter="url(#ci-sculpture-glow)">
+        {Array.from({length:12},(_,i)=><path d={curve(i/12*Math.PI*2,true)}/>)}
+      </g>
+      <g stroke="url(#ci-sculpture-light)">
+        {Array.from({length:44},(_,i)=><path d={curve(i/44*Math.PI*2,true)} stroke-width={i%4===0 ? "1.25" : ".65"} opacity={i%4===0 ? ".95" : ".5"}/>)}
+        {Array.from({length:20},(_,i)=><path d={curve(i/20*Math.PI*2,false)} stroke-width=".75" opacity=".55"/>)}
+      </g>
+      <path d="M32 236H104L143 205M468 85H395L360 121" stroke="#9ab9db" stroke-width=".7" opacity=".65"/>
+      <circle cx="143" cy="205" r="3" fill="#c9e7ff"/><circle cx="360" cy="121" r="3" fill="#c9e7ff"/>
+    </svg>
+    <span class="ci-art-label ci-art-label-left">CONTEXTO HUMANO</span>
+    <span class="ci-art-label ci-art-label-right">INTELIGENCIA ARTIFICIAL</span>
+    <span class="ci-art-center">+</span>
+  </div>
+  <div class="ci-art-bottom">
+    <div class="ci-art-steps" role="group" aria-label="Etapas de la consultoría">
+      {steps.map((step,i)=><button type="button" data-art-step data-title={step.title} data-accent={step.accent} data-detail={step.detail} data-color={step.color} aria-pressed={i===0 ? "true" : "false"} aria-controls="ci-art-detail"><span>0{i+1}</span>{step.label}</button>)}
+    </div>
+    <p id="ci-art-detail" aria-live="polite">{steps[0].detail}</p>
+    <span class="ci-art-footnote">PERSONAS + PROCESOS + TECNOLOGÍA</span>
+  </div>
+</div>
+<script>
+  const art = document.querySelector<HTMLElement>('[data-consulting-art]');
+  art?.querySelectorAll<HTMLButtonElement>('[data-art-step]').forEach(button => {
+    button.addEventListener('click', () => {
+      art.querySelectorAll('[data-art-step]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      art.querySelector('[data-art-title]')!.textContent = button.dataset.title!;
+      art.querySelector('[data-art-accent]')!.textContent = button.dataset.accent!;
+      art.querySelector('#ci-art-detail')!.textContent = button.dataset.detail!;
+      art.style.setProperty('--art-accent', button.dataset.color!);
+    });
+  });
+</script>
+<style>
+  .ci-art { position:relative; isolation:isolate; border:1px solid #38415c; border-radius:22px; overflow:hidden; background:radial-gradient(ellipse at 72% 20%,#202340 0,transparent 65%),#0a101e; box-shadow:0 28px 100px #0005,inset 0 1px 0 #c5d6ff16; }
+  .ci-art::before { content:""; position:absolute; inset:0; z-index:-1; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.2' filter='url(%23n)'/%3E%3C/svg%3E"); opacity:.13; pointer-events:none; }
+  .ci-art-top { display:flex; justify-content:space-between; padding:23px 26px 0; color:#b0bcd3; font:9px/1.5 monospace; letter-spacing:.14em; }
+  .ci-art-top>span:last-child { font-size:20px; line-height:1; color:#bdcee9; }
+  .ci-art-heading { padding:25px 26px 0; }
+  .ci-art-heading h2 { color:#eff4ff; font-size:clamp(26px,2.8vw,38px); font-weight:500; letter-spacing:-.045em; line-height:1.12; margin:0; min-height:86px; }
+  [data-art-accent] { color:var(--art-accent); transition:color .4s; }
+  .ci-art-scene { position:relative; margin:-7px 0 -4px; }
+  .ci-art-sculpture { display:block; width:100%; height:auto; filter:drop-shadow(0 0 12px #7aaaff25); transition:transform .7s; }
+  .ci-art:hover .ci-art-sculpture { transform:translateY(-4px) rotate(-3deg); }
+  .ci-art-halo { position:absolute; width:50%; height:60%; left:25%; top:22%; background:radial-gradient(ellipse,#596ee835,transparent 70%); filter:blur(18px); }
+  .ci-art-label { position:absolute; color:#c5d2e9; font:8px/1.4 monospace; letter-spacing:.09em; }
+  .ci-art-label-left { left:6.5%; top:77%; }
+  .ci-art-label-right { right:6.5%; top:21%; }
+  .ci-art-center { position:absolute; left:50%; top:49%; transform:translate(-50%,-50%); color:#d8e6ff; font:24px/1 monospace; }
+  .ci-art-bottom { padding:0 26px 24px; }
+  .ci-art-steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; border-top:1px solid #38415c; }
+  .ci-art-steps button { background:none; padding:17px 0 12px; text-align:left; border:0; border-top:2px solid transparent; margin-top:-1px; color:#b5bfd3; font-size:12px; cursor:pointer; display:flex; gap:9px; align-items:center; transition:color .2s,border-color .2s; }
+  .ci-art-steps button span { font:9px/1 monospace; opacity:.8; }
+  .ci-art-steps button[aria-pressed="true"] { color:var(--art-accent); border-top-color:var(--art-accent); }
+  .ci-art-steps button:hover { color:#fff; }
+  .ci-art-bottom #ci-art-detail { font-size:13px; line-height:1.65; color:#b3bfd5; margin:4px 0 19px; min-height:65px; }
+  .ci-art-footnote { font:8px/1.5 monospace; color:#9baac4; letter-spacing:.14em; }
+  @media(max-width:680px) {
+    .ci-art-heading h2 { font-size:29px; min-height:68px; }
+    .ci-art-top { font-size:8px; padding:20px 20px 0; }
+    .ci-art-heading { padding:22px 20px 0; }
+    .ci-art-bottom { padding:0 20px 22px; }
+    .ci-art-steps button { font-size:11px; gap:6px; }
+    .ci-art-label { font-size:7px; }
+    .ci-art-bottom #ci-art-detail { min-height:86px; }
+  }
+  @media(prefers-reduced-motion:reduce) { .ci-art *, .ci-art:hover .ci-art-sculpture { transition:none; transform:none; } .ci-art-center { transform:translate(-50%,-50%); } }
+</style>

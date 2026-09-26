@@ -4,7 +4,7 @@ import ConsultoriaHero from "../components/consultoria/ConsultoriaHero.astro";
 import "../styles/consultoria-ia.css";
 
 const title = "Consultoría de IA para Empresas por Departamentos | AI Security";
-const description = "Consultoría IA para PYMES en España: analizamos tu empresa por departamentos e implementamos las mejores herramientas. Primera consulta gratuita. ROI en 2-3 meses.";
+const description = "Consultoría IA para empresas: descubre casos de uso por departamento para mejorar tareas y procesos junto a tu equipo. Primera consulta gratuita.";
 const canonical = "https://aisecurity.es/consultoria-ia";
 
 const faqs = [
@@ -40,149 +40,285 @@ const faqs = [
 
 const departamentos = [
   {
-    id: "comunicacion",
-    nombre: "Comunicación",
-    icon: "🎨",
-    color: "#38bdf8",
-    resumen: "Genera contenido visual, vídeos y creatividades con IA generativa",
-    descripcion: "Transforma la producción de contenido visual de tu equipo. Crear imágenes profesionales, vídeos de producto o creatividades para redes sociales pasa de horas a minutos.",
-    objetivos: [
-      { icono: "⏱️", texto: "Reduce un 70% el tiempo de producción de contenido visual" },
-      { icono: "📈", texto: "Multiplica por 10 el volumen de publicaciones sin ampliar el equipo" },
+    "id": "comunicacion",
+    "nombre": "Comunicación",
+    "icon": "🎨",
+    "color": "#38bdf8",
+    "resumen": "Del borrador a la publicación, con el criterio y la voz de tu equipo.",
+    "objetivos": [
+      {
+        "icono": "✓",
+        "texto": "Dedicar más tiempo al mensaje y menos a preparar versiones."
+      },
+      {
+        "icono": "✓",
+        "texto": "Mantener un tono coherente en los distintos canales."
+      }
     ],
-    herramientas: [
-      { nombre: "Midjourney", uso: "Imágenes y creatividades profesionales por prompt" },
-      { nombre: "HeyGen", uso: "Avatares de vídeo con voz natural en español" },
-      { nombre: "Canva AI", uso: "Diseño asistido, fondo automático, redimensionado inteligente" },
-    ],
-    ahorro: "Reduce hasta un 70% el tiempo de producción de contenido visual"
+    "casos": [
+      {
+        "nombre": "Convertir una idea en varias piezas",
+        "uso": "A partir de una novedad de tu empresa, preparar borradores para un email, una publicación y un guion de vídeo. El equipo revisa el mensaje antes de publicarlo."
+      },
+      {
+        "nombre": "Reutilizar lo que ya tenéis",
+        "uso": "Convertir una presentación o un webinar en un resumen, preguntas frecuentes y propuestas de contenido para redes."
+      },
+      {
+        "nombre": "Preparar una campaña",
+        "uso": "Organizar un calendario de contenidos y proponer textos y conceptos visuales a partir del público y los objetivos que defináis."
+      },
+      {
+        "nombre": "Adaptar mensajes a cada público",
+        "uso": "Crear versiones de una comunicación para clientes, distribuidores o empleados, revisando datos, tono y traducciones."
+      }
+    ]
   },
   {
-    id: "comercial",
-    nombre: "Comercial & SEO",
-    icon: "📊",
-    color: "#4f7cff",
-    resumen: "Analítica automática, SEO con IA y seguimiento de oportunidades",
-    descripcion: "Scripts que recogen datos de Google Search Console y Analytics cada semana, generan informes y detectan oportunidades de negocio sin intervención manual.",
-    objetivos: [
-      { icono: "📬", texto: "Informes semanales automáticos enviados a tu email sin trabajo manual" },
-      { icono: "🎯", texto: "Detecta keywords y oportunidades de captación antes que la competencia" },
+    "id": "comercial",
+    "nombre": "Comercial & SEO",
+    "icon": "📊",
+    "color": "#86a9ff",
+    "resumen": "Preparar propuestas y seguimientos con la información que ya maneja tu equipo.",
+    "objetivos": [
+      {
+        "icono": "✓",
+        "texto": "Reducir el trabajo de copiar datos entre reuniones, propuestas y CRM."
+      },
+      {
+        "icono": "✓",
+        "texto": "Llegar a cada conversación con un contexto más claro."
+      }
     ],
-    herramientas: [
-      { nombre: "Claude + Excel/Word", uso: "Genera propuestas comerciales, analiza datos de ventas y resume reuniones por chat" },
-      { nombre: "GSC + GA4 Automation", uso: "Scripts propios que analizan tu web semanalmente con IA" },
-      { nombre: "n8n + LLM", uso: "Flujos automáticos de seguimiento de leads y CRM" },
-    ],
-    ahorro: "Informes semanales automáticos sin dedicar horas a exportar datos"
+    "casos": [
+      {
+        "nombre": "Pasar de reunión a propuesta",
+        "uso": "Usar notas de una reunión para preparar un borrador con necesidades, alcance y próximos pasos. El comercial valida precios y compromisos."
+      },
+      {
+        "nombre": "Dar seguimiento a las oportunidades",
+        "uso": "Preparar recordatorios y borradores de email según lo hablado con cada cliente y el estado registrado en el CRM."
+      },
+      {
+        "nombre": "Entender qué pasa con las ventas",
+        "uso": "Resumir los datos disponibles: oportunidades sin respuesta, motivos de pérdida y cambios por producto o periodo."
+      },
+      {
+        "nombre": "Priorizar mejoras de la web",
+        "uso": "Cruzar consultas de buscadores con las páginas que reciben visitas para proponer contenidos y mejoras que el equipo pueda valorar."
+      }
+    ]
   },
   {
-    id: "callcenter",
-    nombre: "Call Center & Soporte",
-    icon: "📞",
-    color: "#60a5fa",
-    resumen: "Atención telefónica y chat con IA que nunca descansa",
-    descripcion: "Recepcionistas virtuales y chatbots que gestionan el 80% de las consultas habituales. Voz natural en español, integración con CRM y derivación a agente humano cuando es necesario.",
-    objetivos: [
-      { icono: "🤖", texto: "Resuelve el 80% de consultas habituales sin intervención humana" },
-      { icono: "🕐", texto: "Disponible 24/7 sin coste adicional de personal" },
+    "id": "callcenter",
+    "nombre": "Call Center & Soporte",
+    "icon": "📞",
+    "color": "#60a5fa",
+    "resumen": "Ayudar a atender consultas y entregar al equipo humano el contexto que necesita.",
+    "objetivos": [
+      {
+        "icono": "✓",
+        "texto": "Evitar que el cliente tenga que repetir toda su consulta."
+      },
+      {
+        "icono": "✓",
+        "texto": "Reservar la atención del equipo para los casos que requieren criterio."
+      }
     ],
-    herramientas: [
-      { nombre: "Atención Llamadas IA", uso: "Recepcionista virtual 24/7 con voz natural en español" },
-      { nombre: "Chatbot Empresarial IA", uso: "Chat con acceso a tu base de datos y ERP en tiempo real" },
-      { nombre: "ElevenLabs", uso: "Voces IA ultra-realistas en español para agentes telefónicos" },
-    ],
-    ahorro: "Atiende el 80% de consultas comunes sin coste de personal adicional"
+    "casos": [
+      {
+        "nombre": "Resolver preguntas frecuentes",
+        "uso": "Responder sobre horarios, servicios o procedimientos usando información aprobada. Si falta información, derivar la consulta a una persona."
+      },
+      {
+        "nombre": "Recoger una solicitud fuera de horario",
+        "uso": "Tomar el motivo del contacto y los datos necesarios para que el equipo pueda responder después, sin prometer una solución inmediata."
+      },
+      {
+        "nombre": "Preparar al agente antes de responder",
+        "uso": "Resumir el historial disponible y sugerir una respuesta basada en los procedimientos internos para que el agente la revise."
+      },
+      {
+        "nombre": "Ordenar las incidencias entrantes",
+        "uso": "Clasificar solicitudes por tema y prioridad según criterios acordados y dirigirlas al equipo adecuado."
+      }
+    ]
   },
   {
-    id: "proyectos",
-    nombre: "Gestión de Proyectos",
-    icon: "📋",
-    color: "#6366f1",
-    resumen: "IA integrada en tu herramienta de proyectos para acelerar entregas",
-    descripcion: "Conectamos tu gestor de proyectos con IA para generar tareas automáticamente, resumir el estado del sprint y detectar bloqueos sin reuniones extra.",
-    objetivos: [
-      { icono: "⚡", texto: "Reduce un 50% el tiempo de planificación y reporting de sprints" },
-      { icono: "🔍", texto: "Detecta bloqueos y riesgos antes de que impacten en el plazo" },
+    "id": "proyectos",
+    "nombre": "Gestión de Proyectos",
+    "icon": "📋",
+    "color": "#a5b4fc",
+    "resumen": "Convertir conversaciones y actualizaciones en un seguimiento más fácil de mantener.",
+    "objetivos": [
+      {
+        "icono": "✓",
+        "texto": "Reducir el tiempo dedicado a preparar actas e informes de estado."
+      },
+      {
+        "icono": "✓",
+        "texto": "Hacer más visibles los acuerdos, los pendientes y los bloqueos."
+      }
     ],
-    herramientas: [
-      { nombre: "Jira + Atlassian Intelligence", uso: "Creación automática de subtareas, resumen de issues" },
-      { nombre: "Notion AI", uso: "Documentación de proyectos y wikis que se actualizan solas" },
-      { nombre: "n8n", uso: "Automatiza notificaciones, asignaciones y reportes entre herramientas" },
-    ],
-    ahorro: "Reduce el tiempo de planificación y reporting hasta un 50%"
+    "casos": [
+      {
+        "nombre": "Convertir reuniones en tareas",
+        "uso": "Preparar un acta con decisiones, responsables propuestos y fechas a partir de las notas. Los participantes confirman los acuerdos."
+      },
+      {
+        "nombre": "Preparar el informe semanal",
+        "uso": "Reunir las actualizaciones del gestor de tareas y resumir avances, pendientes y bloqueos para cada responsable."
+      },
+      {
+        "nombre": "Detectar pendientes sin seguimiento",
+        "uso": "Señalar tareas sin responsable, fechas vencidas o dependencias registradas que pueden afectar a la entrega."
+      },
+      {
+        "nombre": "Recuperar el contexto de una decisión",
+        "uso": "Encontrar acuerdos y documentos de un proyecto, mostrando la fuente para que el equipo pueda comprobarlos."
+      }
+    ]
   },
   {
-    id: "administracion",
-    nombre: "Administración",
-    icon: "🧾",
-    color: "#818cf8",
-    resumen: "Facturas, presupuestos y contabilidad gestionados de forma automática",
-    descripcion: "Automatizamos la captura de facturas de proveedores, la generación de presupuestos y el seguimiento de pagos. El equipo deja de hacer trabajo repetitivo.",
-    objetivos: [
-      { icono: "🧾", texto: "Procesa facturas en segundos en vez de 5-10 minutos por documento" },
-      { icono: "✅", texto: "Elimina errores de introducción manual de datos contables" },
+    "id": "administracion",
+    "nombre": "Administración",
+    "icon": "🧾",
+    "color": "#a5b4fc",
+    "resumen": "Menos copiar y pegar; más tiempo para revisar documentos, importes y excepciones.",
+    "objetivos": [
+      {
+        "icono": "✓",
+        "texto": "Reducir la introducción repetitiva de datos."
+      },
+      {
+        "icono": "✓",
+        "texto": "Facilitar la revisión antes de registrar, enviar o aprobar documentos."
+      }
     ],
-    herramientas: [
-      { nombre: "Claude + Excel/Word", uso: "Redacta presupuestos, analiza hojas de cálculo y resume contratos por chat" },
-      { nombre: "Mindee", uso: "OCR inteligente que extrae datos de facturas y recibos automáticamente" },
-      { nombre: "n8n + ChatGPT", uso: "Flujos que clasifican, registran y notifican facturas entrantes" },
-    ],
-    ahorro: "Procesa facturas en segundos en vez de 5-10 minutos por documento"
+    "casos": [
+      {
+        "nombre": "Preparar el registro de facturas",
+        "uso": "Extraer proveedor, fecha, base e impuestos de las facturas y proponer su registro. El equipo revisa importes y posibles duplicados."
+      },
+      {
+        "nombre": "Organizar el correo administrativo",
+        "uso": "Separar facturas, solicitudes y avisos, y proponer respuestas o tareas según el procedimiento de la empresa."
+      },
+      {
+        "nombre": "Revisar vencimientos",
+        "uso": "Preparar un listado de cobros y pagos pendientes a partir de los datos disponibles y borradores de recordatorio para validar."
+      },
+      {
+        "nombre": "Encontrar datos en contratos",
+        "uso": "Localizar plazos, renovaciones y condiciones en los documentos, con referencias al original para su revisión."
+      }
+    ]
   },
   {
-    id: "desarrollo",
-    nombre: "Desarrollo",
-    icon: "💻",
-    color: "#8b5cf6",
-    resumen: "Acelera tu equipo de desarrollo con IA en cada paso del ciclo",
-    descripcion: "Desde la generación de código hasta la documentación automática y los pipelines de CI/CD. Todos los devs trabajando al mismo ritmo con IA.",
-    objetivos: [
-      { icono: "🚀", texto: "Multiplica por 2-3x la velocidad de entrega de features" },
-      { icono: "🛡️", texto: "Reduce un 60% los bugs que llegan a producción" },
+    "id": "desarrollo",
+    "nombre": "Desarrollo",
+    "icon": "💻",
+    "color": "#b7a0fa",
+    "resumen": "Ayudar al equipo a entender, escribir y revisar código dentro de sus propios procesos.",
+    "objetivos": [
+      {
+        "icono": "✓",
+        "texto": "Reducir tareas repetitivas de programación y documentación."
+      },
+      {
+        "icono": "✓",
+        "texto": "Dar más contexto a las revisiones y las pruebas."
+      }
     ],
-    herramientas: [
-      { nombre: "Claude Code", uso: "Agente de desarrollo que lee tu repo y ejecuta tareas completas" },
-      { nombre: "GitHub Copilot", uso: "Autocompletado de código en tiempo real en el IDE" },
-      { nombre: "GitHub Actions + IA", uso: "Pipelines que generan tests y detectan bugs automáticamente" },
-    ],
-    ahorro: "Multiplica por 2-3x la velocidad de entrega de features"
+    "casos": [
+      {
+        "nombre": "Entender un proyecto existente",
+        "uso": "Explorar el código para explicar dónde se realiza una operación y qué componentes podrían verse afectados por un cambio."
+      },
+      {
+        "nombre": "Preparar una primera implementación",
+        "uso": "Generar un borrador a partir de requisitos y convenciones del proyecto. Los desarrolladores revisan el código antes de integrarlo."
+      },
+      {
+        "nombre": "Ampliar las pruebas",
+        "uso": "Proponer casos normales, errores y situaciones límite, y ayudar a escribir pruebas que el equipo ejecuta y valida."
+      },
+      {
+        "nombre": "Mantener documentación útil",
+        "uso": "Preparar instrucciones de uso, notas de versión y explicaciones de cambios a partir del código revisado."
+      }
+    ]
   },
   {
-    id: "devops",
-    nombre: "DevOps",
-    icon: "⚙️",
-    color: "#a78bfa",
-    resumen: "Infraestructura como código y automatización de despliegues con IA",
-    descripcion: "La IA detecta anomalías antes de que sean incidencias y propone soluciones de escalado automáticamente. Despliegues sin downtime.",
-    objetivos: [
-      { icono: "📡", texto: "Resuelve incidencias hasta 3x más rápido con diagnóstico automático" },
-      { icono: "🔄", texto: "Despliegues continuos sin downtime ni intervención manual" },
+    "id": "devops",
+    "nombre": "DevOps",
+    "icon": "⚙️",
+    "color": "#a78bfa",
+    "resumen": "Dar apoyo al equipo que prepara despliegues y mantiene los servicios en funcionamiento.",
+    "objetivos": [
+      {
+        "icono": "✓",
+        "texto": "Reunir información para investigar fallos con menos pasos manuales."
+      },
+      {
+        "icono": "✓",
+        "texto": "Preparar cambios más fáciles de revisar y repetir."
+      }
     ],
-    herramientas: [
-      { nombre: "Ansible + IA", uso: "Playbooks generados automáticamente para configuración de servidores" },
-      { nombre: "Kubernetes + K8sGPT", uso: "Diagnóstico automático de errores en clústeres K8s" },
-      { nombre: "Datadog AI", uso: "Monitorización con detección de anomalías y alertas inteligentes" },
-    ],
-    ahorro: "Despliegues sin downtime y resolución de incidencias hasta 3x más rápida"
+    "casos": [
+      {
+        "nombre": "Investigar un despliegue fallido",
+        "uso": "Resumir los registros del proceso y proponer comprobaciones para encontrar por qué una versión no se ha desplegado."
+      },
+      {
+        "nombre": "Preparar una configuración repetible",
+        "uso": "Ayudar a escribir y revisar los archivos que configuran un entorno, probándolos antes de aplicarlos en producción."
+      },
+      {
+        "nombre": "Revisar diferencias entre entornos",
+        "uso": "Comparar configuraciones de pruebas y producción para señalar diferencias que el equipo deba comprobar."
+      },
+      {
+        "nombre": "Documentar cómo recuperar un servicio",
+        "uso": "Preparar una guía con comprobaciones, pasos de recuperación y vuelta atrás a partir de procedimientos validados."
+      }
+    ]
   },
   {
-    id: "sistemas",
-    nombre: "Sistemas",
-    icon: "🖥️",
-    color: "#c084fc",
-    resumen: "Administración de sistemas con documentación automática y seguridad IA",
-    descripcion: "Cada cambio en un servidor queda documentado automáticamente. La seguridad se monitoriza en tiempo real con Wazuh y las automatizaciones reducen las tareas repetitivas.",
-    objetivos: [
-      { icono: "🛡️", texto: "Detección de amenazas en tiempo real con cumplimiento ENS automático" },
-      { icono: "📝", texto: "Cada cambio en producción genera documentación automática en la wiki" },
+    "id": "sistemas",
+    "nombre": "Sistemas",
+    "icon": "🖥️",
+    "color": "#c084fc",
+    "resumen": "Ayudar a resolver incidencias, mantener documentación y preparar tareas de administración.",
+    "objetivos": [
+      {
+        "icono": "✓",
+        "texto": "Reducir el tiempo de recopilar información antes de actuar."
+      },
+      {
+        "icono": "✓",
+        "texto": "Hacer que el conocimiento técnico sea más fácil de consultar y compartir."
+      }
     ],
-    herramientas: [
-      { nombre: "Wazuh", uso: "SIEM open-source: detección de amenazas y cumplimiento ENS" },
-      { nombre: "Ansible + LLM", uso: "Automatiza tareas repetitivas de administración por lenguaje natural" },
-      { nombre: "Netdata", uso: "Monitorización en tiempo real de servidores con IA predictiva" },
-    ],
-    ahorro: "Documenta cambios automáticamente y reduce incidencias por errores humanos"
-  },
+    "casos": [
+      {
+        "nombre": "Investigar una incidencia",
+        "uso": "Reunir los registros y cambios recientes de un servidor, resumir qué ha ocurrido y proponer comprobaciones. El técnico decide qué acciones ejecutar."
+      },
+      {
+        "nombre": "Documentar una intervención",
+        "uso": "A partir del ticket y las acciones registradas, preparar un borrador para la wiki: qué falló, cómo se resolvió y qué conviene revisar."
+      },
+      {
+        "nombre": "Preparar altas y bajas",
+        "uso": "Convertir una solicitud en una lista de cuentas, permisos y equipos que revisar. Las acciones se ejecutan con la aprobación del responsable."
+      },
+      {
+        "nombre": "Entender y priorizar alertas",
+        "uso": "Resumir las alertas de las herramientas de monitorización y seguridad, relacionarlas con los equipos afectados y ayudar al técnico a investigar."
+      }
+    ]
+  }
 ];
 ---
 
@@ -252,7 +388,7 @@ const departamentos = [
         <h2 class="text-3xl md:text-4xl font-bold mb-3" style="color: #e2e8f0;">
           ¿Qué IA puede usar cada departamento?
         </h2>
-        <p style="color: #a4b2c8; font-size: 1.05rem; max-width: 480px; margin: 0 auto;">Selecciona un departamento para ver las herramientas y el ahorro estimado</p>
+        <p style="color: #a4b2c8; font-size: 1.05rem; max-width: 480px; margin: 0 auto;">Selecciona un departamento y descubre ejemplos de tareas que podemos mejorar con tu equipo.</p>
       </div>
 
       <div class="ci-department-picker" role="group" aria-label="Seleccionar departamento">
@@ -278,11 +414,11 @@ const departamentos = [
           </svg>
         </div>
 
-        <!-- Info Panel — solo herramientas -->
+        <!-- Panel de beneficios y casos de uso -->
         <div id="info-panel" style="flex: 1; min-width: 300px; max-width: 480px; position: sticky; top: 24px;">
           <div id="panel-default" style="background: #1a1d27; border: 1px solid #2a2d3a; border-radius: 16px; padding: 32px; text-align: center;">
             <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.4;">👆</div>
-            <p style="color: #a4b2c8; font-size: 1rem;">Haz clic en cualquier departamento del diagrama para ver las herramientas de IA recomendadas</p>
+            <p style="color: #a4b2c8; font-size: 1rem;">Selecciona un departamento para descubrir casos de uso en su trabajo diario.</p>
           </div>
           <div id="panel-active" style="display: none; background: #1a1d27; border-radius: 16px; overflow: hidden; min-height: 560px;">
             <div id="panel-header" style="padding: 20px 24px; display: flex; align-items: center; gap: 12px;">
@@ -298,12 +434,12 @@ const departamentos = [
               <div id="panel-objetivos" style="display: flex; flex-direction: column; gap: 6px;"></div>
             </div>
             <div style="padding: 0 24px;">
-              <p style="font-size: 0.75rem; font-weight: 600; color: #4f7cff; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; margin-top: 12px;">Herramientas que utilizamos</p>
-              <div id="panel-tools" style="display: flex; flex-direction: column; gap: 8px;"></div>
+              <p style="font-size: 0.75rem; font-weight: 600; color: #4f7cff; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; margin-top: 12px;">Ejemplos en el día a día</p>
+              <div id="panel-tools" class="ci-use-cases" style="display: flex; flex-direction: column; gap: 8px;"></div>
             </div>
             <div style="padding: 0 24px 24px; margin-top: 16px;">
               <a href="/presupuesto?plan=Consultoria-IA" style="display: block; text-align: center; background: linear-gradient(135deg, #4f7cff, #7c3aed); color: #ffffff; border-radius: 10px; padding: 12px; font-size: 0.9rem; font-weight: 600; text-decoration: none;">
-                Quiero implementar esto →
+                Quiero explorar estos casos →
               </a>
             </div>
           </div>
@@ -640,7 +776,7 @@ const departamentos = [
     }
 
     panelTools.innerHTML = '';
-    dep.herramientas.forEach(h => {
+    dep.casos.forEach(h => {
       const item = document.createElement('div');
       item.style.cssText = `background: rgba(255,255,255,0.04); border-radius: 8px; padding: 10px 12px; border-left: 3px solid ${dep.color};`;
       item.innerHTML = `
@@ -670,18 +806,11 @@ const departamentos = [
   let ccStarted = false;
   function ccInit() {
     if (ccStarted) return; ccStarted = true;
-    selectDep('desarrollo');
+    selectDep('sistemas');
 
-    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) return;
-
-    const ids = departamentos.map(d => d.id);
-    function ccNext() {
-      if (userSelected) return; // fijado por el usuario, no rotar
-      const i = ids.indexOf(activeId);
-      selectDep(ids[(i + 1) % ids.length]);
-    }
-    autoTimer = setInterval(ccNext, 10000);
+    userSelected = true;
+    stopCountdown();
+    removePulse();
   }
   document.addEventListener('DOMContentLoaded', ccInit);
   if (document.readyState === 'complete' || document.readyState === 'interactive') { ccInit(); }
