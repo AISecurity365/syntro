@@ -1,0 +1,77 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import { isBlogDraft } from '../../lib/blog-drafts.mjs';
+if (!import.meta.env.DEV && isBlogDraft(Astro.url.pathname)) return new Response(null, { status: 404 });
+if (isBlogDraft(Astro.url.pathname)) Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+const faqSchema = [
+  {question:'¿Cada cuánto hay que formar a los empleados en ciberseguridad?',answer:'No proponemos una frecuencia universal. Incluye una base al incorporarse, refuerzos según el riesgo y revisión cuando cambien herramientas, funciones o amenazas. El calendario del artículo es un ejemplo operativo, no un plazo legal.'},
+  {question:'¿Basta con medir quién termina el curso?',answer:'No. La finalización mide participación. Conviene comprobar también si las personas saben reportar, verificar peticiones sospechosas y aplicar el procedimiento a un caso práctico.'},
+  {question:'¿Hay materiales gratuitos para empezar?',answer:'Sí. INCIBE publica un kit de concienciación para empresas. Puedes usar sus recursos como punto de partida y adaptarlos a tus canales, responsables y procedimientos.'},
+  {question:'¿La formación sustituye al antivirus o a la autenticación multifactor?',answer:'No. La formación complementa los controles técnicos. Necesitas también gestionar accesos, mantener equipos, proteger el correo y probar la recuperación de datos según tu contexto.'},
+  {question:'¿Dónde consultar formación para el equipo?',answer:'Misión Aprender, empresa asociada a AI Security, ofrece formación en ciberseguridad e IA para empleados. Consulta su oferta y acuerda contenidos, seguimiento y entregables antes de contratar.'},
+];
+---
+<BlogLayout title="Ciberseguridad: plan de formación para empresas"
+  description="Plan de concienciación en ciberseguridad para empresas: qué enseñar, cómo organizar sesiones y qué medir. Ejemplo de 90 días y registro para empleados."
+  publishDate="2026-09-26" author="AI Security" readTime="6 min"
+  tags={['Ciberseguridad', 'Concienciación', 'Formación', 'Empresas']}
+  canonical="https://aisecurity.es/blog/plan-concienciacion-ciberseguridad-empresas" faqSchema={faqSchema}>
+  {isBlogDraft(Astro.url.pathname) && <p><strong>Borrador para revisión editorial · Solo visible en desarrollo.</strong></p>}
+  <p><strong>Un plan de concienciación en ciberseguridad debe enseñar qué hacer ante situaciones reales y comprobar que el equipo sabe actuar.</strong> Un vídeo y un test pueden formar parte del plan, pero no sustituyen un canal de aviso, un responsable y un procedimiento que se pueda ejecutar sin improvisar.</p>
+  <p>Esta guía propone un itinerario de 90 días para comenzar. Es un ejemplo propio, adaptable al tamaño y riesgo de la empresa, no una obligación legal ni una promesa de reducir incidentes en un porcentaje concreto.</p>
+
+  <h2>Empieza por las decisiones que pueden causar un incidente</h2>
+  <p>Pregunta a administración, ventas y soporte qué mensajes reciben y qué pueden aprobar. Selecciona después tres situaciones que realmente aparezcan en el trabajo. Así evitas un curso genérico sobre amenazas que el equipo nunca encuentra.</p>
+  <div style="overflow-x:auto;"><table>
+    <thead><tr><th>Situación</th><th>Conducta que practicar</th><th>Apoyo de la empresa</th></tr></thead>
+    <tbody>
+      <tr><td>Un proveedor cambia la cuenta bancaria por correo.</td><td>Verificar el cambio por un canal conocido, fuera del mensaje recibido.</td><td>Procedimiento de validación y autorización del pago.</td></tr>
+      <tr><td>Aparece una petición de acceso inesperada.</td><td>No aprobarla y avisar a IT.</td><td>Canal de reporte visible y revisión de la cuenta.</td></tr>
+      <tr><td>Se solicita compartir una carpeta con un externo.</td><td>Revisar destinatario, permisos y documentos incluidos.</td><td>Reglas de acceso y herramientas autorizadas.</td></tr>
+      <tr><td>Un asistente de IA pide documentos de clientes.</td><td>Comprobar si se permite introducir esos datos.</td><td>Instrucciones de uso y alternativas para trabajar sin datos sensibles.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Para repasar la base técnica con la plantilla, puedes usar nuestra <a href="/blog/ciberseguridad-basica-empleados-guia-completa">guía de ciberseguridad para empleados</a>. El plan de esta página trata de organizar esa formación y mantenerla.</p>
+
+  <h2>Ejemplo de plan de concienciación en 90 días</h2>
+  <p>La duración de cada sesión debe encajar con el turno y la función. La siguiente secuencia es una propuesta, no un calendario obligatorio:</p>
+  <ol>
+    <li><strong>Días 1–15: preparar.</strong> Nombra un responsable, identifica grupos y publica cómo reportar. Haz un ejercicio inicial con un mensaje ficticio.</li>
+    <li><strong>Días 16–30: correo y suplantación.</strong> Practica una solicitud urgente, un adjunto y un cambio de cuenta. Comprueba que el reporte llega a la persona adecuada.</li>
+    <li><strong>Días 31–45: cuentas y accesos.</strong> Revisa el gestor de contraseñas, la autenticación multifactor y cómo actuar ante una aprobación inesperada.</li>
+    <li><strong>Días 46–60: documentos y trabajo remoto.</strong> Simula compartir un archivo y perder un dispositivo. La práctica termina cuando la persona identifica el siguiente paso.</li>
+    <li><strong>Días 61–75: IA en el trabajo.</strong> Practica con datos ficticios, respuestas inventadas y contenido que requiere revisión humana.</li>
+    <li><strong>Días 76–90: revisar.</strong> Repite los casos que causaron dudas, documenta ajustes y prepara la formación para nuevas incorporaciones.</li>
+  </ol>
+  <p>Como alternativa gratuita de partida, el <a href="https://www.incibe.es/empresas/formacion/kit-concienciacion">kit de concienciación de INCIBE</a> reúne recursos para organizar acciones con empleados. Adaptar un recurso significa añadir vuestros canales de reporte y reglas de trabajo; no basta con reenviar un enlace y dar la tarea por terminada.</p>
+
+  <h2>Cómo medir sin convertir el programa en una competición</h2>
+  <p>Un porcentaje de aprobados no cuenta toda la historia. Si nadie reporta porque teme una reprimenda, una puntuación alta puede convivir con un proceso de respuesta que no funciona. Recomendamos revisar estas señales:</p>
+  <ul>
+    <li><strong>Cobertura:</strong> personas con formación asignada y realizada, separando altas recientes y ausencias.</li>
+    <li><strong>Respuesta práctica:</strong> quién identifica el canal y completa el procedimiento en un caso de prueba.</li>
+    <li><strong>Tiempo de comunicación:</strong> cuánto se tarda en avisar desde que se detecta una situación sospechosa.</li>
+    <li><strong>Dudas recurrentes:</strong> qué instrucciones se entienden mal y deben reescribirse.</li>
+    <li><strong>Seguimiento:</strong> acciones pendientes, responsable y fecha de revisión.</li>
+  </ul>
+  <p><strong>Ejemplo ficticio:</strong> 18 de 20 personas completan el módulo de correo, pero solo 9 saben dónde reenviar un mensaje sospechoso. El siguiente paso no es repetir todo el curso: es hacer accesible el canal de reporte y practicar su uso. Compara resultados entre ejercicios equivalentes, no campañas con dificultad distinta.</p>
+
+  <h2>Qué registrar y cuándo tiene sentido una plataforma</h2>
+  <p>Registra grupo, contenido y versión, fecha, participación, ejercicio realizado y acción de refuerzo. Limita el acceso a los datos personales y define para qué se usan y cuánto tiempo se conservan. Evita clasificaciones públicas que señalen a quienes se equivocan.</p>
+  <p>Una hoja de cálculo puede ser suficiente si hay pocas personas y un responsable que la mantiene. Una plataforma resulta útil cuando necesitas asignar itinerarios por puesto, incorporar empleados a mitad de ciclo o consolidar informes. Antes de contratar, pide una demostración de esos flujos y comprueba qué datos puedes exportar.</p>
+  <p>Para la formación contamos con <a href="https://misionaprender.es">Misión Aprender, empresa asociada a AI Security</a>, dedicada a ciberseguridad e IA para empleados. Define con su equipo el alcance y las necesidades de seguimiento. La compra de formación no equivale por sí misma a una certificación de seguridad.</p>
+
+  <h2>Concienciación en seguridad y alfabetización en IA</h2>
+  <p>Comparten situaciones, pero persiguen objetivos distintos. Detectar una suplantación o proteger una contraseña es parte de la seguridad. Contrastar una respuesta generada, entender las limitaciones de una herramienta y saber cuándo necesita supervisión forman parte del uso informado de IA.</p>
+  <p>Puedes coordinar ambos itinerarios sin tratar un test de phishing como prueba de alfabetización en IA. La guía sobre <a href="/blog/articulo-4-ai-act-alfabetizacion-ia">el artículo 4 del AI Act</a> explica esa diferencia y propone campos para documentar las acciones.</p>
+
+  <h2>La formación necesita controles que la acompañen</h2>
+  <p>Una persona puede reconocer un mensaje sospechoso y aun así equivocarse otro día. El programa debe convivir con permisos adecuados, protección del correo, mantenimiento, autenticación multifactor y recuperación de datos. Revisa también la <a href="/ciberseguridad">protección técnica de tu empresa</a> para que un error individual no abra todas las puertas.</p>
+  <h2>Preguntas frecuentes sobre formación en ciberseguridad</h2>
+  {faqSchema.map(({question, answer}) => <details><summary>{question}</summary><p>{answer}</p></details>)}
+  <div style="margin:2.5rem 0;padding:1.5rem;border:1px solid rgba(167,139,250,.25);background:rgba(139,92,246,.06);border-radius:12px;">
+    <h3>Organiza la formación de tu equipo con Misión Aprender</h3>
+    <p>Consulta contenidos de ciberseguridad e IA y acuerda cómo dar seguimiento a las personas, las sesiones y las necesidades de refuerzo.</p>
+    <a href="https://misionaprender.es" style="display:inline-block;padding:.8rem 1rem;border-radius:8px;background:#4f46e5;color:white;">Consultar formación para empresas →</a>
+  </div>
+</BlogLayout>

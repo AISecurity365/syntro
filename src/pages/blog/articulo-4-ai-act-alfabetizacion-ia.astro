@@ -1,0 +1,87 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import { isBlogDraft } from '../../lib/blog-drafts.mjs';
+if (!import.meta.env.DEV && isBlogDraft(Astro.url.pathname)) return new Response(null, { status: 404 });
+if (isBlogDraft(Astro.url.pathname)) Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+const norma = 'https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:02024R1689-20260727';
+const preguntas = 'https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers';
+const faqSchema = [
+  { question: '¿Desde cuándo se aplica el artículo 4 del AI Act?', answer: 'Desde el 2 de febrero de 2025. La Comisión sitúa el inicio de su supervisión por las autoridades nacionales en el 2 de agosto de 2026. La modificación del Digital Omnibus mantiene la obligación de adoptar medidas de alfabetización.' },
+  { question: '¿Es obligatorio comprar un curso certificado de IA?', answer: 'No. La Comisión no exige un certificado específico. La empresa debe adoptar medidas adecuadas a las personas, los sistemas y su contexto de uso; contratar un curso es una opción, no la única vía.' },
+  { question: '¿Cuántas horas de formación exige el artículo 4?', answer: 'El artículo 4 no fija un número universal de horas. Conviene definir la formación por funciones y riesgos, con ejercicios relacionados con las herramientas que realmente utiliza el equipo.' },
+  { question: '¿Basta con un Excel para registrar la formación?', answer: 'Puede servir si tiene responsable, datos actualizados y evidencias localizables. Una plataforma facilita la gestión de grupos y recordatorios, pero no es un requisito del artículo 4 ni garantiza por sí sola el cumplimiento.' },
+  { question: '¿El aviso de un chatbot sustituye la formación del equipo?', answer: 'No. El artículo 50 regula obligaciones de transparencia en determinados sistemas. El artículo 4 aborda la alfabetización de las personas que operan o usan IA en nombre de la organización.' },
+];
+---
+<BlogLayout title="Artículo 4 del AI Act: alfabetización en IA"
+  description="Artículo 4 del AI Act: qué exige sobre alfabetización en IA, a quién afecta y cómo organizar la formación. Incluye una plantilla de registro para empresas."
+  publishDate="2026-09-26" author="AI Security" readTime="7 min"
+  tags={['AI Act', 'Alfabetización en IA', 'Formación', 'Empresas']}
+  canonical="https://aisecurity.es/blog/articulo-4-ai-act-alfabetizacion-ia" faqSchema={faqSchema}>
+  {isBlogDraft(Astro.url.pathname) && <p><strong>Borrador para revisión editorial · Solo visible en desarrollo.</strong></p>}
+  <p><strong>El artículo 4 del AI Act exige adoptar medidas de alfabetización en IA para las personas que utilizan u operan esos sistemas en nombre de la empresa.</strong> No se resuelve colocando un aviso en un chatbot ni comprando un diploma: hay que relacionar las medidas con las tareas, las herramientas y los riesgos reales del equipo.</p>
+  <div slot="review">
+    <p style="margin:0;color:#a78bfa;font-size:.8rem;">Revisión normativa</p>
+    <time datetime="2026-09-26" style="display:block;margin-top:.5rem;color:#e2e8f0;">26 de septiembre de 2026</time>
+    <p style="font-size:.8rem;color:#94a3b8;line-height:1.6;">Texto consolidado de EUR-Lex y preguntas oficiales de la Comisión. Los ejemplos y plantillas son recomendaciones de AI Security.</p>
+  </div>
+
+  <h2>¿Qué cambió con el Digital Omnibus?</h2>
+  <p>La redacción consolidada mantiene a proveedores y responsables del despliegue como sujetos obligados. Pide medidas que apoyen la alfabetización, teniendo en cuenta experiencia, conocimientos, formación, contexto de uso y personas afectadas. Aclara que no se exige garantizar un nivel específico en cada individuo. La obligación continúa; cambia la formulación sobre el resultado exigible. <a href={norma}>Artículo 4 en EUR-Lex</a>.</p>
+  <p>El calendario también importa: la obligación se aplica desde el <strong>2 de febrero de 2025</strong>; las autoridades nacionales comienzan su supervisión el <strong>2 de agosto de 2026</strong>, según la <a href={preguntas}>explicación oficial de la Comisión</a>. Conviene distinguir esas fechas de las correspondientes a otros bloques del Reglamento.</p>
+
+  <h2>Artículo 4 y artículo 50: dos trabajos diferentes</h2>
+  <div style="overflow-x:auto;"><table>
+    <thead><tr><th>Situación</th><th>Trabajo de alfabetización</th><th>Trabajo de transparencia</th></tr></thead>
+    <tbody>
+      <tr><td>Un chatbot responde a clientes</td><td>El equipo aprende a revisar respuestas y gestionar errores.</td><td>Se evalúa e implementa la información al usuario que corresponda.</td></tr>
+      <tr><td>Marketing utiliza IA generativa</td><td>Aprende a verificar contenido y manejar información de terceros.</td><td>Se revisan las obligaciones aplicables al contenido concreto.</td></tr>
+      <tr><td>Administración prepara borradores con IA</td><td>Aprende qué datos puede introducir y qué debe comprobar.</td><td>No se presume que todos los borradores requieran la misma etiqueta.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Estos son ejemplos de planificación, no una clasificación jurídica automática. Si tu caso es un asistente público, consulta también <a href="/blog/chatbots-ia-obligacion-legal-avisar-articulo-50">qué aviso mostrar en un chatbot con IA</a>. Un aviso correcto no enseña al equipo a detectar una respuesta inventada.</p>
+
+  <h2>¿Hace falta un curso, una política escrita o un certificado?</h2>
+  <p>La Comisión indica que no se requiere un certificado específico y contempla un registro interno de formación u otras iniciativas de orientación. No prescribe un curso único para todas las empresas. <a href={preguntas}>Preguntas oficiales sobre documentación y formación</a>.</p>
+  <p><strong>Nuestra recomendación es combinar instrucciones de uso, práctica y seguimiento.</strong> Una política escrita facilita comunicar lo permitido; un registro ayuda a localizar evidencias. No los presentamos como una lista cerrada que el artículo 4 imponga literalmente, ni como una garantía suficiente de cumplimiento.</p>
+  <p>Por ejemplo, una sesión sobre cómo redactar prompts puede mejorar la productividad, pero dejar sin resolver lo importante para atención al cliente: qué hacer cuando el asistente inventa una condición comercial, muestra datos de otro expediente o recomienda una acción que nadie ha autorizado.</p>
+
+  <h2>Un plan por puestos, no el mismo vídeo para toda la plantilla</h2>
+  <p>Este itinerario es una propuesta de AI Security. Adáptalo a tu inventario de herramientas y a las responsabilidades de cada persona.</p>
+  <div style="overflow-x:auto;"><table>
+    <thead><tr><th>Equipo</th><th>Ejercicio práctico</th><th>Qué comprobar</th></tr></thead>
+    <tbody>
+      <tr><td>Administración</td><td>Preparar un resumen con documentos ficticios.</td><td>Distingue datos públicos, internos y datos que no debe subir.</td></tr>
+      <tr><td>Atención al cliente</td><td>Revisar una respuesta con una condición comercial inventada.</td><td>Contrasta la fuente y sabe cuándo escalar a una persona.</td></tr>
+      <tr><td>Marketing</td><td>Revisar una pieza generada antes de publicarla.</td><td>Comprueba hechos, derechos y necesidades de transparencia.</td></tr>
+      <tr><td>Dirección</td><td>Evaluar un proyecto que utiliza datos de clientes.</td><td>Identifica responsables, límites, controles y criterios para detenerlo.</td></tr>
+      <tr><td>IT y responsables de producto</td><td>Probar permisos y una respuesta incorrecta en un entorno de prueba.</td><td>Puede documentar el fallo y corregir el flujo sin exponer datos reales.</td></tr>
+    </tbody>
+  </table></div>
+  <p>No hace falta convertir a todo el equipo en desarrollador. Sí resulta útil que cada puesto reconozca los errores que puede introducir en su trabajo y tenga una persona a la que consultar.</p>
+
+  <h2>Plantilla para registrar medidas y seguimiento</h2>
+  <p>Puedes copiar estos campos a una hoja de cálculo o a tu plataforma de formación. Son una propuesta de organización, no un formulario oficial:</p>
+  <ul>
+    <li><strong>Persona o grupo:</strong> identificador y función, evitando datos personales innecesarios.</li>
+    <li><strong>Sistema y tarea:</strong> herramienta utilizada y proceso en el que interviene.</li>
+    <li><strong>Riesgo trabajado:</strong> por ejemplo, exposición de datos o información inventada.</li>
+    <li><strong>Acción y versión:</strong> sesión, guía o ejercicio, junto con el material utilizado.</li>
+    <li><strong>Fecha y participación:</strong> quién participó y qué quedó pendiente.</li>
+    <li><strong>Seguimiento:</strong> dudas, apoyo adicional, responsable y próxima revisión.</li>
+  </ul>
+  <p><strong>Ejemplo ficticio:</strong> el grupo de atención al cliente revisa cinco respuestas del asistente usando expedientes inventados. En dos casos no detecta que falta una fuente. El responsable añade una comprobación al procedimiento, repite el ejercicio y registra la corrección. Esa información resulta más útil para mejorar el proceso que guardar únicamente un diploma.</p>
+
+  <h2>Cómo mantenerlo cuando cambian las personas o la herramienta</h2>
+  <p>Una hoja de cálculo puede funcionar en un equipo pequeño si alguien la mantiene. Empieza a resultar incómoda cuando hay altas, cambios de puesto o varias versiones de un curso. Antes de sustituirla, identifica qué falla: asignación, recordatorios, evidencias o informes.</p>
+  <p>Como pauta operativa, revisa el itinerario al incorporar personal, cambiar de herramienta, ampliar el uso a nuevos datos o detectar un incidente. La periodicidad debe responder al contexto; no inventamos una renovación anual universal exigida por el artículo 4.</p>
+  <p><a href="https://misionaprender.es">Misión Aprender</a>, empresa asociada a AI Security, ofrece formación en ciberseguridad e inteligencia artificial para empleados. Puedes valorar con su equipo el itinerario, el seguimiento y los informes que necesitas. La formación apoya las medidas de la empresa; no sustituye su evaluación de riesgos ni acredita automáticamente el cumplimiento del AI Act.</p>
+
+  <h2>Preguntas frecuentes sobre alfabetización en IA</h2>
+  {faqSchema.map(({question, answer}) => <details><summary>{question}</summary><p>{answer}</p></details>)}
+  <div style="margin:2.5rem 0;padding:1.5rem;border:1px solid rgba(167,139,250,.25);background:rgba(139,92,246,.06);border-radius:12px;">
+    <h3>Formación de IA relacionada con el trabajo de tu equipo</h3>
+    <p>Consulta a Misión Aprender qué contenidos y seguimiento encajan con las herramientas que utilizáis y los perfiles de vuestra plantilla.</p>
+    <a href="https://misionaprender.es" style="display:inline-block;padding:.8rem 1rem;border-radius:8px;background:#4f46e5;color:white;">Ver formación en Misión Aprender →</a>
+  </div>
+</BlogLayout>

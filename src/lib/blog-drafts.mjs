@@ -1,5 +1,7 @@
 // Retirar un slug solo después de la revisión editorial para publicarlo.
 export const blogDrafts = [
+  'articulo-4-ai-act-alfabetizacion-ia',
+  'plan-concienciacion-ciberseguridad-empresas',
   'preparar-proyecto-ia-pyme-costes-retorno',
 ];
 
