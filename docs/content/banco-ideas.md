@@ -23,7 +23,7 @@
 
 | Fecha | Título | Pilar | Dónde se publicó | Enlaces |
 |-------|--------|-------|------------------|---------|
-| — | — | — | — | — |
+| 2026-09-26 | Plan IA360 y Bono IA: guía de ayudas para empresas | P1 | Blog | [Artículo](https://aisecurity.es/blog/plan-ia360-bono-ia-empresas) |
 
 ---
 

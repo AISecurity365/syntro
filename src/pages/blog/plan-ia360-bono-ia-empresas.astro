@@ -29,8 +29,11 @@ const faqSchema = [
   canonical="https://aisecurity.es/blog/plan-ia360-bono-ia-empresas" faqSchema={faqSchema}>
   {isBlogDraft(Astro.url.pathname) && <p><strong>Borrador para revisión editorial · Solo visible en desarrollo.</strong></p>}
   <p><strong>IA360 es un plan nacional para impulsar la inteligencia artificial. Incluye un futuro Bono IA dirigido a pymes y autónomos, pero no equivale a una ayuda que ya pueda solicitarse.</strong> El Gobierno lo presentó el 21 de septiembre de 2026. Esta guía separa el anuncio de las condiciones que todavía deben concretarse. <a href={anuncio}>Presentación oficial de La Moncloa</a>.</p>
-  <div style="background:rgba(139,92,246,0.07);border-left:3px solid #a78bfa;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 8px 8px 0;">
-    <p style="margin:0;color:#e2e8f0;"><strong>Revisión: 26 de septiembre de 2026.</strong> Hemos consultado el documento oficial y buscado la convocatoria en fuentes administrativas. No hemos localizado una convocatoria general abierta. No ofrecemos reservas de fondos ni garantizamos una subvención.</p>
+  <div slot="review">
+    <p style="margin:0 0 .5rem;font-size:.75rem;color:#a78bfa;">Última revisión</p>
+    <time datetime="2026-09-26" style="display:block;font-size:.95rem;font-weight:600;color:#e2e8f0;">26 de septiembre de 2026</time>
+    <p style="margin:.85rem 0 0;font-size:.8rem;line-height:1.65;color:#94a3b8;">Documento oficial y fuentes administrativas consultados. A esta fecha, no hemos localizado una convocatoria general abierta.</p>
+    <p style="margin:.65rem 0 0;font-size:.75rem;line-height:1.6;color:#94a3b8;">No ofrecemos reservas de fondos ni garantizamos una subvención.</p>
   </div>
   <h2>¿Qué es el Plan IA360 y dónde está el documento oficial?</h2>
   <p>La presentación del Gobierno reúne cuatro grandes objetivos: capacidad tecnológica, adopción y talento, gobernanza y seguridad, y un acuerdo social sobre la transformación del trabajo. Por eso aparecen iniciativas de infraestructura, educación y supervisión junto a las ayudas empresariales. <a href={anuncio}>Alcance del anuncio oficial</a>.</p>
@@ -75,7 +78,7 @@ const faqSchema = [
   </ul>
   <h2>Cómo prepararse sin depender de una subvención</h2>
   <p>Empieza por un proceso repetitivo y medible: localizar documentación, clasificar solicitudes o registrar llamadas. Anota cuánto tarda el equipo, cuántos errores hay y qué datos necesita. Después decide si un piloto pequeño tiene sentido con recursos propios.</p>
-  <p>En nuestra <a href="/consultoria-ia">consultoría de IA para procesos de empresa</a> partimos de ese problema operativo. Una ayuda futura puede cambiar la financiación, pero no sustituye el análisis de utilidad. Hemos preparado una <a href="/blog/preparar-proyecto-ia-pyme-costes-retorno">guía con costes, retorno y una plantilla de proyecto</a> para hacer esa evaluación.</p>
+  <p>En nuestra <a href="/consultoria-ia">consultoría de IA para procesos de empresa</a> partimos de ese problema operativo. Una ayuda futura puede cambiar la financiación, pero no sustituye el análisis de utilidad.</p>
   <h2>Preguntas frecuentes sobre IA360 y el Bono IA</h2>
   <p>Las respuestas reflejan lo comprobado en la fecha de revisión. Para la referencia autonómica, consulta el <a href="https://sede.xunta.gal/es/detalle-procedemento?codtram=IG408M">procedimiento oficial IA360 de Galicia</a>; es diferente del anuncio nacional.</p>
   <div class="faq-accordion">
