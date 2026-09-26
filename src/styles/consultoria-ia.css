@@ -61,6 +61,17 @@
 .consulting-page .ci-use-cases>div { padding:14px 16px !important; }
 .consulting-page .ci-use-cases>div>div:first-child { font-size:15px !important; margin-bottom:6px !important; }
 .consulting-page .ci-use-cases>div>div:last-child { font-size:14px !important; line-height:1.65; color:#b7c5d9 !important; }
+.ci-more-cases summary { color:#bfd8ff; font-size:13px; cursor:pointer; padding:12px 0; }
+.ci-more-cases summary:focus-visible { outline:2px solid #a3caff; outline-offset:3px; }
+.ci-more-cases>div { margin-top:6px; padding:14px 16px !important; }
+.ci-more-cases>div>div:first-child { font-size:15px !important; margin-bottom:6px !important; }
+.ci-more-cases>div>div:last-child { font-size:14px !important; line-height:1.65; color:#b7c5d9 !important; }
+.ci-custom-case { padding:48px 0; background:#15243a; border-block:1px solid #354663; }
+.ci-custom-case-inner { display:flex; align-items:center; gap:48px; justify-content:space-between; }
+.consulting-page .ci-custom-case h2 { color:#eef4ff; font-size:clamp(24px,3vw,32px); line-height:1.25; letter-spacing:-.025em; margin:0 0 16px; }
+.consulting-page .ci-custom-case p:not(.ci-eyebrow) { color:#b6c6dc; font-size:15px; line-height:1.75; max-width:65ch; margin:0; }
+.ci-custom-case .ci-primary { flex-shrink:0; }
+@media(max-width:900px) { .ci-custom-case-inner { flex-direction:column; align-items:flex-start; gap:24px; } }
 .consulting-page>div:last-child>p { max-width:none; }
 .consulting-page .ci-faq { background:#101a29 !important; }
 .ci-faq>.max-w-3xl { max-width:940px; }

@@ -450,6 +450,13 @@ const departamentos = [
   </section>
 
 
+<section class="ci-custom-case" aria-labelledby="ci-custom-title">
+    <div class="ci-shell ci-custom-case-inner">
+      <div><p class="ci-eyebrow">Tu caso también cuenta</p><h2 id="ci-custom-title">¿Se podría automatizar esto en mi empresa?</h2><p>Cuéntanos qué tarea os quita tiempo, cómo la hacéis y qué programas utilizáis. Valoramos si tiene sentido automatizarla, qué información haría falta y dónde debe intervenir una persona.</p></div>
+      <a class="ci-primary" href="/presupuesto?plan=consultoria-ia">Consultar si mi idea es posible <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+
   <!-- CIUDADES COMUNITAT VALENCIANA -->
   <!-- FAQ -->
   <section class="ci-faq" style="background: linear-gradient(135deg, #0a0d1a 0%, #0f1628 100%); padding: 80px 0; border-top: 1px solid rgba(255,255,255,0.06);">
@@ -776,14 +783,27 @@ const departamentos = [
     }
 
     panelTools.innerHTML = '';
-    dep.casos.forEach(h => {
+    dep.casos.forEach((h, index) => {
       const item = document.createElement('div');
       item.style.cssText = `background: rgba(255,255,255,0.04); border-radius: 8px; padding: 10px 12px; border-left: 3px solid ${dep.color};`;
       item.innerHTML = `
         <div style="font-size: 0.85rem; font-weight: 600; color: #e2e8f0; margin-bottom: 2px;">${h.nombre}</div>
         <div style="font-size: 0.78rem; color: #a4b2c8;">${h.uso}</div>
       `;
-      panelTools.appendChild(item);
+      if (index < 3) {
+        panelTools.appendChild(item);
+      } else {
+        let more = panelTools.querySelector('details');
+        if (!more) {
+          more = document.createElement('details');
+          more.className = 'ci-more-cases';
+          const summary = document.createElement('summary');
+          summary.textContent = 'Ver más casos';
+          more.appendChild(summary);
+          panelTools.appendChild(more);
+        }
+        more.appendChild(item);
+      }
     });
 
     // Efectos de auto-rotación: anillo + pulso en nodo activo

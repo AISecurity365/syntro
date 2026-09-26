@@ -1,8 +1,8 @@
 ---
 const steps = [
-  { label: "Entender", title: "Tu equipo.", accent: "El punto de partida.", detail: "Escuchamos a quienes conocen los procesos, los clientes y el trabajo diario.", color: "#a5dfff" },
-  { label: "Conectar", title: "Tus procesos.", accent: "Nuevas posibilidades.", detail: "Conectamos conocimiento, herramientas y tareas alrededor de un caso de uso concreto.", color: "#bdaaff" },
-  { label: "Aplicar", title: "La IA.", accent: "En vuestro día a día.", detail: "Probamos, formamos al equipo y ajustamos la solución con su experiencia.", color: "#9af1d8" }
+  { label: "Entender", title: "Tu empresa.", accent: "Su contexto.", detail: "El agente necesita conocer cómo trabajáis: clientes, contratos y criterios para atender una solicitud.", color: "#a5dfff" },
+  { label: "Conectar", title: "Tus sistemas.", accent: "Conectados.", detail: "Conectamos el correo, el CRM y las herramientas de soporte, con los permisos necesarios.", color: "#bdaaff" },
+  { label: "Aplicar", title: "Un agente.", accent: "La tarea en marcha.", detail: "Llega una solicitud. El agente consulta el contexto, la clasifica y prepara su registro y asignación.", color: "#9af1d8" }
 ];
 // Original toroidal sculpture: projected wire curves, rendered without a 3D library.
 function project(u: number, v: number) {
@@ -23,9 +23,9 @@ function curve(value: number, meridian: boolean) {
   }).join(" ") + "Z";
 }
 ---
-<div class="ci-art" data-consulting-art style="--art-accent:#a5dfff">
-  <div class="ci-art-top"><span>DE LOS PROCESOS A LA PRÁCTICA</span><span aria-hidden="true">↗</span></div>
-  <div class="ci-art-heading"><h2><span data-art-title>Tu equipo.</span><br/><span data-art-accent>El punto de partida.</span></h2></div>
+<div class="ci-art" data-consulting-art data-stage="0" data-playing="false" style="--art-accent:#a5dfff">
+  <div class="ci-art-top"><span>DE LOS PROCESOS A LA PRÁCTICA</span><button type="button" data-art-play aria-label="Reproducir animación">▶ Reproducir</button></div>
+  <div class="ci-art-heading"><h2><span data-art-title>{steps[0].title}</span><br/><span data-art-accent>{steps[0].accent}</span></h2></div>
   <div class="ci-art-scene" aria-hidden="true">
     <div class="ci-art-halo"></div>
     <svg viewBox="0 0 500 320" fill="none" class="ci-art-sculpture">
@@ -36,51 +36,143 @@ function curve(value: number, meridian: boolean) {
         <filter id="ci-sculpture-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
       </defs>
       <ellipse cx="250" cy="285" rx="115" ry="9" fill="#799dff" opacity=".18" filter="url(#ci-sculpture-glow)"/>
+      <g class="ci-orbit-motion">
       <g stroke="url(#ci-sculpture-light)" stroke-width="2.5" opacity=".25" filter="url(#ci-sculpture-glow)">
         {Array.from({length:12},(_,i)=><path d={curve(i/12*Math.PI*2,true)}/>)}
       </g>
+      <path class="ci-orbit-tracer" d={curve(.8,false)} stroke="#dcf6ff" stroke-width="2" stroke-dasharray="15 70"/>
       <g stroke="url(#ci-sculpture-light)">
         {Array.from({length:44},(_,i)=><path d={curve(i/44*Math.PI*2,true)} stroke-width={i%4===0 ? "1.25" : ".65"} opacity={i%4===0 ? ".95" : ".5"}/>)}
         {Array.from({length:20},(_,i)=><path d={curve(i/20*Math.PI*2,false)} stroke-width=".75" opacity=".55"/>)}
       </g>
+      </g>
+      <g class="ci-system-links" stroke="var(--art-accent)" stroke-width="1.5" stroke-dasharray="6 8">
+        <path d="M30 160H116L184 164"/><path d="M319 164H390L465 80"/><path d="M316 178H397L465 250"/>
+      </g>
       <path d="M32 236H104L143 205M468 85H395L360 121" stroke="#9ab9db" stroke-width=".7" opacity=".65"/>
       <circle cx="143" cy="205" r="3" fill="#c9e7ff"/><circle cx="360" cy="121" r="3" fill="#c9e7ff"/>
     </svg>
-    <span class="ci-art-label ci-art-label-left">CONTEXTO HUMANO</span>
-    <span class="ci-art-label ci-art-label-right">INTELIGENCIA ARTIFICIAL</span>
-    <span class="ci-art-center">+</span>
+    <span class="ci-art-label ci-art-label-left" data-art-left>CLIENTES · REGLAS</span>
+    <span class="ci-art-label ci-art-label-right" data-art-right>CONTEXTO DE EMPRESA</span>
+    <span class="ci-art-center" data-art-symbol>+</span>
+    <span class="ci-system-node ci-system-mail">Correo</span>
+    <span class="ci-system-node ci-system-crm">CRM</span>
+    <span class="ci-system-node ci-system-ticket">Soporte</span>
+  </div>
+  <div class="ci-task" aria-label="Simulación de una solicitud de soporte">
+    <div class="ci-task-top"><span>EJEMPLO ILUSTRATIVO</span><span data-task-status>01 / Contexto</span></div>
+    <div class="ci-task-row"><span class="ci-task-icon" data-task-icon aria-hidden="true">≡</span><div><strong data-task-title>Conocer al cliente</strong><p data-task-text>Contrato y reglas de atención</p></div></div>
+    <div class="ci-task-track" aria-hidden="true"><span></span></div>
   </div>
   <div class="ci-art-bottom">
     <div class="ci-art-steps" role="group" aria-label="Etapas de la consultoría">
       {steps.map((step,i)=><button type="button" data-art-step data-title={step.title} data-accent={step.accent} data-detail={step.detail} data-color={step.color} aria-pressed={i===0 ? "true" : "false"} aria-controls="ci-art-detail"><span>0{i+1}</span>{step.label}</button>)}
     </div>
-    <p id="ci-art-detail" aria-live="polite">{steps[0].detail}</p>
-    <span class="ci-art-footnote">PERSONAS + PROCESOS + TECNOLOGÍA</span>
+    <p id="ci-art-detail" aria-live="off">{steps[0].detail}</p>
+    <span class="ci-art-footnote">CON PERMISOS Y REGLAS DEFINIDOS POR TU EQUIPO</span>
   </div>
 </div>
 <script>
   const art = document.querySelector<HTMLElement>('[data-consulting-art]');
-  art?.querySelectorAll<HTMLButtonElement>('[data-art-step]').forEach(button => {
-    button.addEventListener('click', () => {
-      art.querySelectorAll('[data-art-step]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
-      art.querySelector('[data-art-title]')!.textContent = button.dataset.title!;
-      art.querySelector('[data-art-accent]')!.textContent = button.dataset.accent!;
-      art.querySelector('#ci-art-detail')!.textContent = button.dataset.detail!;
-      art.style.setProperty('--art-accent', button.dataset.color!);
+  if (art) {
+    const buttons = [...art.querySelectorAll<HTMLButtonElement>('[data-art-step]')];
+    const play = art.querySelector<HTMLButtonElement>('[data-art-play]')!;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const scenes = [
+      {status:'01 / Contexto', title:'Conocer al cliente', text:'Contrato y reglas de atención', icon:'≡', left:'CLIENTES · REGLAS', right:'CONTEXTO DE EMPRESA', symbol:'+'},
+      {status:'02 / Conexión', title:'Correo + CRM + soporte', text:'Información disponible para el agente', icon:'⇄', left:'SISTEMAS CONECTADOS', right:'ACCESOS DEFINIDOS', symbol:'↔'},
+      {status:'03 / En curso', title:'Nueva solicitud recibida', text:'Consultando contexto y asignando responsable…', icon:'↗', left:'CONTEXTO + SISTEMAS', right:'AGENTE EN ACCIÓN', symbol:'✦'},
+      {status:'✓ Completada', title:'Ticket creado y asignado', text:'La tarea se ha realizado automáticamente.', icon:'✓', left:'CONTEXTO + SISTEMAS', right:'TAREA COMPLETADA', symbol:'✓'}
+    ];
+    let stage = 0;
+    let paused = reduceMotion.matches;
+    let visible = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const setText = (selector: string, text: string) => { art.querySelector(selector)!.textContent = text; };
+    function render(manual = false) {
+      const step = buttons[Math.min(stage, 2)];
+      const scene = scenes[stage];
+      art.dataset.stage = String(stage);
+      buttons.forEach(button => button.setAttribute('aria-pressed', String(button === step)));
+      art.querySelector('#ci-art-detail')!.setAttribute('aria-live', manual ? 'polite' : 'off');
+      setText('[data-art-title]', stage === 3 ? 'Y la tarea…' : step.dataset.title!);
+      setText('[data-art-accent]', stage === 3 ? 'Ya está hecha.' : step.dataset.accent!);
+      setText('#ci-art-detail', stage === 3 ? 'En este ejemplo, la solicitud queda registrada y asignada sin copiar datos a mano. Los casos fuera de las reglas pasan al equipo.' : step.dataset.detail!);
+      art.style.setProperty('--art-accent', step.dataset.color!);
+      setText('[data-task-status]', scene.status);
+      setText('[data-task-title]', scene.title);
+      setText('[data-task-text]', scene.text);
+      setText('[data-task-icon]', scene.icon);
+      setText('[data-art-left]', scene.left);
+      setText('[data-art-right]', scene.right);
+      setText('[data-art-symbol]', scene.symbol);
+    }
+    function schedule() {
+      clearTimeout(timer);
+      const running = !paused && visible && !document.hidden;
+      art.dataset.playing = String(running);
+      play.textContent = paused ? '▶ Reproducir' : 'Ⅱ Pausar';
+      play.setAttribute('aria-label', paused ? 'Reproducir animación' : 'Pausar animación');
+      if (running) timer = setTimeout(() => { stage = (stage + 1) % scenes.length; render(); schedule(); }, stage === 3 ? 6000 : 5000);
+    }
+    buttons.forEach((button, index) => button.addEventListener('click', () => {
+      paused = true; stage = index; render(true); schedule();
+    }));
+    play.addEventListener('click', () => { paused = !paused; schedule(); });
+    reduceMotion.addEventListener('change', () => { paused = reduceMotion.matches; schedule(); });
+    document.addEventListener('visibilitychange', schedule);
+    const observer = new IntersectionObserver(entries => {
+      visible = entries[0].isIntersecting;
+      schedule();
     });
-  });
+    observer.observe(art);
+    render();
+    schedule();
+    document.addEventListener('astro:before-swap', () => {
+      clearTimeout(timer); observer.disconnect(); document.removeEventListener('visibilitychange', schedule);
+    }, {once:true});
+  }
 </script>
 <style>
   .ci-art { position:relative; isolation:isolate; border:1px solid #38415c; border-radius:22px; overflow:hidden; background:radial-gradient(ellipse at 72% 20%,#202340 0,transparent 65%),#0a101e; box-shadow:0 28px 100px #0005,inset 0 1px 0 #c5d6ff16; }
   .ci-art::before { content:""; position:absolute; inset:0; z-index:-1; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.2' filter='url(%23n)'/%3E%3C/svg%3E"); opacity:.13; pointer-events:none; }
   .ci-art-top { display:flex; justify-content:space-between; padding:23px 26px 0; color:#b0bcd3; font:9px/1.5 monospace; letter-spacing:.14em; }
-  .ci-art-top>span:last-child { font-size:20px; line-height:1; color:#bdcee9; }
+  [data-art-play] { border:1px solid #485574; border-radius:20px; padding:5px 9px; background:#172238; color:#dce9ff; font-size:10px; line-height:1.2; letter-spacing:0; cursor:pointer; white-space:nowrap; }
+  .ci-art button:focus-visible { outline:2px solid #a5dfff; outline-offset:4px; }
   .ci-art-heading { padding:25px 26px 0; }
   .ci-art-heading h2 { color:#eff4ff; font-size:clamp(26px,2.8vw,38px); font-weight:500; letter-spacing:-.045em; line-height:1.12; margin:0; min-height:86px; }
   [data-art-accent] { color:var(--art-accent); transition:color .4s; }
   .ci-art-scene { position:relative; margin:-7px 0 -4px; }
   .ci-art-sculpture { display:block; width:100%; height:auto; filter:drop-shadow(0 0 12px #7aaaff25); transition:transform .7s; }
-  .ci-art:hover .ci-art-sculpture { transform:translateY(-4px) rotate(-3deg); }
+  .ci-orbit-motion { transform-origin:250px 165px; animation:ci-orbit 9s ease-in-out infinite; }
+  .ci-orbit-tracer { animation:ci-flow 5s linear infinite; }
+  .ci-system-links { opacity:0; transition:opacity .7s; animation:ci-flow 3s linear infinite; }
+  .ci-system-node { position:absolute; padding:6px 9px; border:1px solid #697298; border-radius:7px; background:#172238; color:#e0e8ff; font-size:10px; opacity:0; transform:translateY(8px); transition:opacity .6s,transform .6s; }
+  .ci-system-mail { left:3%; top:44%; }
+  .ci-system-crm { right:4%; top:30%; }
+  .ci-system-ticket { right:4%; top:70%; }
+  .ci-art:not([data-stage="0"]) .ci-system-links { opacity:.75; }
+  .ci-art:not([data-stage="0"]) .ci-system-node { opacity:1; transform:translateY(0); }
+  .ci-art[data-stage="2"] .ci-orbit-motion { animation-duration:4s; }
+  .ci-art[data-stage="3"] .ci-art-center { color:#9af1d8; }
+  .ci-art[data-playing="false"] * { animation-play-state:paused; }
+  @keyframes ci-orbit { 0%,100% { transform:translateY(4px) rotate(-12deg) scale(.94); } 50% { transform:translateY(-8px) rotate(18deg) scale(1.04); } }
+  @keyframes ci-flow { to { stroke-dashoffset:-170; } }
+  @keyframes ci-complete { from { box-shadow:0 0 0 12px #9af1d830; } to { box-shadow:0 0 0 0 #9af1d800; } }
+  .ci-task { margin:0 26px 20px; padding:13px 15px 0; border:1px solid #3b4862; border-radius:12px; background:#152136; overflow:hidden; transition:border-color .5s,background .5s; }
+  .ci-task-top { display:flex; justify-content:space-between; gap:8px; color:#b5c4dc; font:9px/1.5 monospace; }
+  [data-task-status] { color:var(--art-accent); }
+  .ci-task-row { display:flex; align-items:center; gap:12px; padding:12px 0 14px; min-height:72px; }
+  .ci-task-icon { display:grid; place-items:center; width:32px; height:32px; flex-shrink:0; border-radius:9px; background:#bdaaff18; color:var(--art-accent); font-size:21px; }
+  .ci-task-row strong { display:block; color:#edf4ff; font-size:13px; }
+  .ci-task-row p { margin:4px 0 0; color:#b5c4dc; font-size:11px; line-height:1.5; min-height:33px; }
+  .ci-task-track { height:3px; margin:0 -15px; background:#26344c; }
+  .ci-task-track span { display:block; height:100%; width:15%; background:var(--art-accent); transition:width 1.2s ease; }
+  .ci-art[data-stage="1"] .ci-task-track span { width:40%; }
+  .ci-art[data-stage="2"] .ci-task-track span { width:70%; }
+  .ci-art[data-stage="3"] .ci-task-track span { width:100%; }
+  .ci-art[data-stage="3"] .ci-task { border-color:#64b8a0; background:#17302f; }
+  .ci-art[data-stage="3"] .ci-task-icon { animation:ci-complete .8s ease-out; background:#9af1d822; }
   .ci-art-halo { position:absolute; width:50%; height:60%; left:25%; top:22%; background:radial-gradient(ellipse,#596ee835,transparent 70%); filter:blur(18px); }
   .ci-art-label { position:absolute; color:#c5d2e9; font:8px/1.4 monospace; letter-spacing:.09em; }
   .ci-art-label-left { left:6.5%; top:77%; }
@@ -98,10 +190,12 @@ function curve(value: number, meridian: boolean) {
     .ci-art-heading h2 { font-size:29px; min-height:68px; }
     .ci-art-top { font-size:8px; padding:20px 20px 0; }
     .ci-art-heading { padding:22px 20px 0; }
+    .ci-task { margin:0 20px 18px; }
+    .ci-art-top { align-items:center; gap:10px; }
     .ci-art-bottom { padding:0 20px 22px; }
     .ci-art-steps button { font-size:11px; gap:6px; }
     .ci-art-label { font-size:7px; }
     .ci-art-bottom #ci-art-detail { min-height:86px; }
   }
-  @media(prefers-reduced-motion:reduce) { .ci-art *, .ci-art:hover .ci-art-sculpture { transition:none; transform:none; } .ci-art-center { transform:translate(-50%,-50%); } }
+  @media(prefers-reduced-motion:reduce) { .ci-art * { animation:none; transition:none; } }
 </style>
