@@ -183,7 +183,7 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
       })} />
     )}
   </head>
-  <body class="flex flex-col min-h-svh">
+  <body class="blog-page flex flex-col min-h-svh">
     <Navigation />
 
     <main class="grow">
@@ -815,6 +815,7 @@ const enAltUrl = new URL(localizePath(canonicalPath, "en"), Astro.site).href;
   .blog-content-grid {
     display: block;
   }
+  html:has(body.blog-page), body.blog-page { overflow-x:clip; }
 
   .blog-reading-shell { max-width:1152px; margin-inline:auto; padding-inline:24px; }
   .blog-cover { margin:0; min-width:0; }
