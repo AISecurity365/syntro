@@ -1,200 +1,226 @@
----
-const steps = [
-  { title: 'Documentar y conectar', description: 'El contexto de tu empresa y sus sistemas, preparados para trabajar juntos.', nodes: [
-    ['◎', 'Tu equipo', 'Recogemos cómo trabaja el equipo y qué necesita resolver.'],
-    ['≡', 'Procesos', 'Documentamos las tareas y cómo se hacen hoy.'],
-    ['♧', 'Clientes y criterios', 'Definimos cómo identificar al cliente y las reglas del negocio.'],
-    ['▤', 'Conocimiento', 'Centralizamos documentos, procedimientos y respuestas útiles.'],
-    ['⌘', 'Sistemas', 'Identificamos el ERP, correo y aplicaciones que usáis.'],
-    ['⊞', 'Accesos', 'Conectamos los datos y acciones necesarios con permisos concretos.']
-  ], result: 'Contexto y herramientas listos.' },
-  { title: 'Configurar y educar al agente', description: 'Le enseñamos qué hacer y cómo usar solo lo que necesita.', nodes: [
-    ['✦', 'Agente IA', 'Creamos un agente con una tarea y un alcance definidos.'],
-    ['≡', 'Instrucciones', 'Le explicamos los pasos, criterios y límites de su trabajo.'],
-    ['▤', 'Contexto adecuado', 'Le damos el conocimiento relevante para esa tarea.'],
-    ['⌘', 'Herramientas justas', 'Configuramos cómo consultar y actuar en los sistemas necesarios.'],
-    ['◇', 'Cuándo preguntar', 'Definimos qué puede hacer solo y qué requiere aprobación.'],
-    ['✓', 'Pruebas con el equipo', 'Probamos casos con vuestro equipo y ajustamos el comportamiento.']
-  ], result: 'Preparado para una tarea concreta.' },
-  { title: 'Realizar la tarea', description: 'La petición recorre el flujo hasta convertirse en un resultado.', nodes: [
-    ['↘', 'Petición', 'Llega una solicitud de un cliente o del equipo.'],
-    ['◎', 'Entender el contexto', 'El agente identifica qué se necesita y a quién corresponde.'],
-    ['⌕', 'Consultar sistemas', 'Busca la información en las herramientas autorizadas.'],
-    ['✦', 'Preparar la acción', 'Prepara la respuesta o la operación con los datos encontrados.'],
-    ['◇', 'Aplicar las reglas', 'Pide aprobación cuando corresponde o continúa automáticamente.'],
-    ['✓', 'Tarea completada', 'Ejecuta la acción y entrega el resultado en tus sistemas.']
-  ], result: 'Trabajo realizado con tus reglas.' },
-];
----
-<div class="workflow" data-workflow data-playing="false">
-  <div class="workflow-head">
-    <div><p class="eyebrow">DE LOS PROCESOS A LA PRÁCTICA</p><h2>Primero, tu empresa.<br/><span>Después, un agente que sabe trabajar en ella.</span></h2></div>
-    <button type="button" class="play" data-workflow-play>Pausar recorrido</button>
+<section class="workflow" data-workflow data-phase="0" data-playing="false" data-apps="false" aria-labelledby="workflow-title">
+  <div class="workflow-head"><div><p class="eyebrow">DE LOS PROCESOS A LA PRÁCTICA</p><h2 id="workflow-title">Tu empresa aporta la base.<br/><span>El agente la convierte en trabajo hecho.</span></h2></div><button class="control" type="button" data-play>Pausar recorrido</button></div>
+  <div class="step-tabs" role="group" aria-label="Pasos del recorrido">
+    <button type="button" data-step="0" aria-pressed="true"><small>PASO 1</small>Documentar la empresa</button>
+    <button type="button" data-step="1" aria-pressed="false"><small>PASO 2</small>Preparar al agente</button>
+    <button type="button" data-step="2" aria-pressed="false"><small>PASO 3</small>Realizar la tarea</button>
   </div>
-  <div class="steps" role="group" aria-label="Los tres pasos de implantación">
-    {steps.map((step, i) => <fieldset class="step" data-step-group={i}>
-      <legend><button type="button" data-step={i} aria-pressed={i === 0 ? 'true' : 'false'}>PASO {i + 1}</button></legend>
-      <h3 class="step-title">{step.title}</h3>
-      <p class="step-description">{step.description}</p>
-      <div class="node-list">
-        {step.nodes.map(([icon, label, detail], n) => <button type="button" class="mini-node" data-node={i * 6 + n} data-detail={detail} aria-pressed="false" style={`--node-column:${[1,2,2,1,1,2][n]};--node-row:${Math.floor(n/2)+1}`}>
-          <span class="mini-icon" aria-hidden="true">{icon}</span><strong>{label}</strong><span class="mini-order">0{n+1}</span>
-          {n < 5 && <span class:list={['node-edge', n === 1 || n === 3 ? 'edge-down' : n === 2 ? 'edge-left' : 'edge-right']} aria-hidden="true"><i></i></span>}
-        </button>)}
+  <div class="map" aria-label="El equipo documenta contexto y sistemas; el agente aprende a utilizarlos con su ayuda.">
+    <div class="foundation-frame"><span>PASO 1 · LA BASE DE TU EMPRESA</span></div>
+    <svg class="wires" viewBox="0 0 1000 380" preserveAspectRatio="none" fill="none" aria-hidden="true">
+      <path data-edge="document" d="M210 190H240Q260 190 260 170V100Q260 80 285 80H330"/>
+      <path data-edge="systems" d="M210 190H240Q260 190 260 210V280Q260 300 285 300H330"/>
+      <path data-edge="learn" d="M530 80H590Q620 80 620 110V160Q620 190 650 190H730"/>
+      <path data-edge="tools" d="M530 300H590Q620 300 620 270V220Q620 190 650 190H730"/>
+      <path data-edge="team" d="M110 140V35Q110 15 140 15H800Q830 15 830 45V140"/>
+      <path data-edge="ask" d="M730 190H650Q620 190 620 160V110Q620 80 590 80H530"/>
+      <path data-edge="use" d="M730 190H650Q620 190 620 220V270Q620 300 590 300H530"/>
+      <path class="flow-particle" data-flow pathLength="100" d="M210 190H240Q260 190 260 170V100Q260 80 285 80H330"/>
+    </svg>
+    <svg class="wires mobile-wires" viewBox="0 0 1000 500" preserveAspectRatio="none" fill="none" aria-hidden="true"><path data-edge="document" d="M500 125V145Q500 165 480 165H235Q215 165 215 185V190"/><path data-edge="systems" d="M500 125V145Q500 165 520 165H765Q785 165 785 185V190"/><path data-edge="learn" d="M215 280V310Q215 330 245 330H470Q500 330 500 350V355"/><path data-edge="tools" d="M785 280V310Q785 330 755 330H530Q500 330 500 350V355"/><path data-edge="team" d="M750 75H940Q960 75 960 95V380Q960 400 940 400H825"/><path data-edge="ask" d="M500 355V350Q500 330 470 330H245Q215 330 215 310V280"/><path data-edge="use" d="M500 355V350Q500 330 530 330H755Q785 330 785 310V280"/><path class="flow-particle" data-flow pathLength="100" d="M500 125V145Q500 165 480 165H235Q215 165 215 185V190"/></svg>
+    <div class="node company" data-node="company"><span class="symbol" aria-hidden="true">◎</span><strong>Tu empresa y tu equipo</strong><p>Documentan cómo trabajáis.</p></div>
+    <div class="node context" data-node="context"><span class="symbol" aria-hidden="true">▤</span><strong>Contexto</strong><p>Conocimiento y reglas de la empresa.</p></div>
+    <div class="node systems" data-node="systems"><span class="symbol" aria-hidden="true">⌘</span><strong>Sistemas que usáis</strong><p data-systems-note>Herramientas y accesos necesarios.</p>
+      <div class="apps" hidden>
+        <span class="app" data-app="erp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 4 16 4 16 0V5M4 12c0 4 16 4 16 0"/></svg>ERP</span>
+        <span class="app" data-app="gmail"><svg viewBox="0 0 32 24" aria-hidden="true"><path fill="#4285f4" d="M0 4h5v20H0z"/><path fill="#34a853" d="M27 4h5v20h-5z"/><path fill="#ea4335" d="M0 0h5l11 9L27 0h5v7L16 19 0 7z"/><path fill="#fbbc04" d="m27 0 5 4v3l-5 4z"/></svg>Gmail</span>
       </div>
-      <p class="step-result">{step.result}</p>
-      {i < 2 && <span class="connector" aria-hidden="true"><span></span>→</span>}
-    </fieldset>)}
+    </div>
+    <div class="node agent" data-node="agent"><span class="symbol" aria-hidden="true">✦</span><strong>Agente IA</strong><p>Lee el contexto, usa las herramientas y mejora con tu equipo.</p></div>
   </div>
-  <div class="journey-caption" aria-live="off"><span data-journey-count>PASO 1 · 01 / 06</span><p data-journey-text>Recogemos cómo trabaja el equipo y qué necesita resolver.</p><button class="play" type="button" data-journey-next>Siguiente nodo →</button></div>
-  <div class="case-toggle-row">
-    <p>Del concepto a una situación del día a día.</p>
-    <button type="button" class="case-toggle" aria-expanded="false" aria-controls="invoice-example">¿Cómo sería esto con un caso real? <span aria-hidden="true">↗</span></button>
+  <div class="narration" aria-live="off"><span data-count>01 / 08</span><div><strong data-action>Tu equipo documenta el contexto.</strong><p data-explanation>Cómo trabajáis, qué necesita cada cliente y qué criterios seguís.</p></div><button type="button" class="control" data-next>Siguiente →</button></div>
+  <div class="invoice-preview" data-invoice-preview hidden>
+    <div class="mail-preview">
+      <div class="mail-heading"><span data-mail-status>GMAIL · RECIBIDO</span><span data-resolution hidden>✓ RESUELTO</span></div>
+      <p class="mail-address" data-mail-address>De: Lucía Martín · Empresa Ejemplo</p>
+      <strong data-mail-subject>Asunto: ¿Me enviáis mi factura de 30 €?</strong>
+      <p class="mail-body" data-mail-body>Hola, soy Lucía Martín. Necesito la factura de mi compra de 30 €. ¿Me la podéis enviar por aquí? Gracias.</p>
+      <div class="mail-attachment" data-mail-attachment hidden><span aria-hidden="true">▤</span><div><strong>Factura_F-2026-0842.pdf</strong><small>Adjunto · 30,00 €</small></div><span data-attachment-status>Preparado</span></div>
+    </div>
+    <div class="data-preview">
+      <span class="data-label" data-data-label>DATOS QUE RECIBE EL AGENTE</span>
+      <p data-data-text>Petición recibida de Lucía Martín. El agente necesita identificar su factura.</p>
+      <div class="pdf-preview" data-pdf-preview hidden>
+        <div><span>PDF · FACTURA</span><strong>F-2026-0842</strong></div>
+        <p>Cliente: Lucía Martín<br/>Empresa Ejemplo</p>
+        <div class="pdf-total"><span>Total</span><strong>30,00 €</strong></div>
+        <small>Documento simulado</small>
+      </div>
+    </div>
   </div>
-  <section id="invoice-example" class="invoice-example" hidden aria-labelledby="invoice-title">
-    <div class="case-heading"><div><p class="eyebrow">EJEMPLO ILUSTRATIVO · DATOS FICTICIOS</p><h3 id="invoice-title">«Hola, ¿me podéis enviar mi factura?»</h3><p>Así podría resolverlo un agente conectado al ERP y a Gmail de tu empresa.</p></div><button type="button" class="play" data-case-restart>Reiniciar ejemplo ↺</button></div>
-    <div class="case-context"><strong>Lo que hemos preparado antes</strong><span>Cómo identificar al cliente y localizar su factura · Acceso de consulta al ERP · Permisos de Gmail · Aprobación humana antes de enviar.</span></div>
-    <ol class="invoice-nodes">
-      <li data-case-node="0"><span class="app-icon gmail" aria-hidden="true"><svg viewBox="0 0 32 24"><path fill="#4285f4" d="M0 5h5v19H0z"/><path fill="#34a853" d="M27 5h5v19h-5z"/><path fill="#ea4335" d="M0 0h5l11 9L27 0h5v7L16 19 0 7z"/><path fill="#fbbc04" d="m27 0 5 4v3l-5 4z"/></svg></span><strong>1. Gmail</strong><span>Llega la petición del cliente.</span></li>
-      <li data-case-node="1"><span class="app-icon erp" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="16" cy="7" rx="11" ry="4"/><path d="M5 7v18c0 5 22 5 22 0V7M5 16c0 5 22 5 22 0"/></svg></span><strong>2. ERP</strong><span>El agente consulta la factura.</span></li>
-      <li data-case-node="2"><span class="app-icon human" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="16" cy="9" r="5"/><path d="M5 29v-3a11 11 0 0 1 22 0v3"/></svg></span><strong>3. Tu equipo</strong><span>Revisa y aprueba la respuesta.</span></li>
-      <li data-case-node="3"><span class="app-icon gmail" aria-hidden="true"><svg viewBox="0 0 32 24"><path fill="#4285f4" d="M0 5h5v19H0z"/><path fill="#34a853" d="M27 5h5v19h-5z"/><path fill="#ea4335" d="M0 0h5l11 9L27 0h5v7L16 19 0 7z"/><path fill="#fbbc04" d="m27 0 5 4v3l-5 4z"/></svg></span><strong>4. Gmail</strong><span>Envía la factura al cliente.</span></li>
-    </ol>
-    <div class="case-detail" aria-live="polite"><span data-case-count>01 / 04</span><div><strong data-case-title>El agente lee la petición en Gmail</strong><p data-case-text>«Hola, soy Marta de Empresa Ejemplo. ¿Podéis enviarme la factura de agosto?» Identifica al cliente siguiendo las reglas documentadas.</p></div></div>
-    <div class="case-footer"><p>En este ejemplo se pide aprobación. También podemos configurar tareas automáticas. Si falta información o no se puede verificar el cliente, el agente consulta al equipo.</p><button type="button" class="case-next" data-case-next>Siguiente: consultar el ERP →</button></div>
-  </section>
-</div>
+  <div class="case-row"><button type="button" class="case-button" data-case aria-pressed="false">¿Cómo sería con una petición de factura? ↗</button><p data-mode>Un mismo agente, con tu contexto y tus herramientas.</p></div>
+</section>
 <script>
   const root = document.querySelector<HTMLElement>('[data-workflow]');
   if (root) {
     const steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
-    const nodes = [...root.querySelectorAll<HTMLButtonElement>('[data-node]')];
-    const groups = [...root.querySelectorAll<HTMLElement>('[data-step-group]')];
-    const play = root.querySelector<HTMLButtonElement>('[data-workflow-play]')!;
-    const toggle = root.querySelector<HTMLButtonElement>('.case-toggle')!;
-    const example = root.querySelector<HTMLElement>('#invoice-example')!;
-    const next = root.querySelector<HTMLButtonElement>('[data-case-next]')!;
+    const play = root.querySelector<HTMLButtonElement>('[data-play]')!;
+    const caseButton = root.querySelector<HTMLButtonElement>('[data-case]')!;
     const motion = matchMedia('(prefers-reduced-motion: reduce)');
-    let paused = motion.matches, visible = false, nodeIndex = 0, caseStep = 0;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const cases = [
-      ['El agente lee la petición en Gmail', '«Hola, soy Marta de Empresa Ejemplo. ¿Podéis enviarme la factura de agosto?» Identifica al cliente siguiendo las reglas documentadas.', 'Siguiente: consultar el ERP →'],
-      ['Consulta el ERP con el contexto del cliente', 'Localiza la ficha de Empresa Ejemplo, comprueba que la factura corresponde a ese cliente y recupera el PDF F-2026-0842. Solo consulta los datos necesarios.', 'Siguiente: revisar la respuesta →'],
-      ['Prepara el correo y pide aprobación', '«Hola, Marta. Te adjunto vuestra factura de agosto. Un saludo.» El equipo comprueba el destinatario, el texto y el PDF antes de autorizar el envío.', 'Simular aprobación y envío →'],
-      ['Factura enviada desde Gmail', 'Con la aprobación recibida, el agente envía el correo con la factura adjunta. La petición queda atendida sin buscar y copiar datos manualmente entre aplicaciones.', 'Volver a ver el ejemplo ↺'],
+    // One directed connection per scene. The same four nodes tell the whole story.
+    const scenes = [
+      {step:0, edge:'document', from:'company', to:'context', title:'Tu equipo documenta el contexto.', text:'Cómo trabajáis, qué necesita cada cliente y qué criterios seguís.', app:''},
+      {step:0, edge:'systems', from:'company', to:'systems', title:'Tu equipo documenta los sistemas y da acceso.', text:'Qué herramientas utilizáis y qué información o acciones necesita el agente.', app:''},
+      {step:1, edge:'learn', from:'context', to:'agent', title:'El agente aprende a trabajar con vuestro contexto.', text:'Le damos instrucciones basadas en el conocimiento y las reglas de la empresa.', app:''},
+      {step:1, edge:'tools', from:'systems', to:'agent', title:'El agente aprende a usar las herramientas necesarias.', text:'Configuramos cómo consultar y actuar, con los permisos justos para su tarea.', app:''},
+      {step:1, edge:'team', from:'company', to:'agent', title:'El equipo prueba, corrige y mejora al agente.', text:'Ajustamos sus instrucciones con vuestro feedback y decidimos cuándo debe pedir ayuda.', app:''},
+      {step:2, edge:'ask', from:'agent', to:'context', title:'Llega una tarea: el agente consulta el contexto.', text:'Entiende qué necesita el cliente y qué reglas debe seguir antes de actuar.', app:''},
+      {step:2, edge:'use', from:'agent', to:'systems', title:'El agente busca la información en el ERP.', text:'Consulta los datos que necesita para resolver la petición.', app:'erp'},
+      {step:2, edge:'use', from:'agent', to:'systems', title:'El agente utiliza Gmail para responder.', text:'Con aprobación humana o automáticamente, según las reglas acordadas. Tarea completada.', app:'gmail'},
     ];
-    function renderCase() {
-      root!.querySelectorAll<HTMLElement>('[data-case-node]').forEach((node, i) => { node.dataset.active = String(i === caseStep); node.dataset.done = String(i < caseStep); });
-      root!.querySelector('[data-case-count]')!.textContent = `0${caseStep + 1} / 04`;
-      root!.querySelector('[data-case-title]')!.textContent = cases[caseStep][0];
-      root!.querySelector('[data-case-text]')!.textContent = cases[caseStep][1];
-      next.textContent = cases[caseStep][2];
+    const invoice = [
+      {step:2, edge:'tools', from:'systems', to:'agent', title:'Gmail entrega la petición al agente.', text:'Lucía Martín pide la factura de su compra de 30 €. El agente lee el correo.', app:'gmail'},
+      {step:2, edge:'learn', from:'context', to:'agent', title:'El contexto aporta los criterios para identificar a Lucía.', text:'El agente recibe las reglas de facturación y comprueba la identidad del cliente antes de consultar sus datos.', app:''},
+      {step:2, edge:'use', from:'agent', to:'systems', title:'El agente solicita la factura al ERP.', text:'Busca la compra de 30 € vinculada a Lucía Martín, de Empresa Ejemplo.', app:'erp'},
+      {step:2, edge:'tools', from:'systems', to:'agent', title:'El ERP devuelve los datos y el PDF al agente.', text:'Factura F-2026-0842 · Lucía Martín · Total: 30,00 €. El agente recibe el documento que debe adjuntar.', app:'erp'},
+      {step:2, edge:'use', from:'agent', to:'systems', title:'El agente redacta el correo en Gmail.', text:'Prepara una respuesta personalizada y adjunta el PDF de la factura. Todavía no se ha enviado.', app:'gmail'},
+      {step:2, edge:'team', from:'company', to:'agent', title:'El equipo aprueba el correo y el adjunto.', text:'En esta simulación, una persona revisa destinatario, importe y documento, y autoriza el envío.', app:''},
+      {step:2, edge:'use', from:'agent', to:'systems', title:'El agente envía el correo con la factura.', text:'Gmail envía a Lucía la respuesta aprobada con Factura_F-2026-0842.pdf adjunta.', app:'gmail'},
+      {step:2, edge:'tools', from:'systems', to:'agent', title:'Resuelto: Lucía recibe su factura de 30 €.', text:'Gmail confirma el envío. Lucía tiene el PDF y el agente da por atendida la petición.', app:'gmail'},
+    ];
+    let index = 0, example = false, paused = motion.matches, visible = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    function render(manual = false) {
+      const list = example ? invoice : scenes;
+      const scene = list[index];
+      root!.dataset.phase = String(scene.step);
+      root!.dataset.resolved = String(example && index === invoice.length - 1);
+      root!.dataset.apps = String(example || scene.step === 2);
+      root!.querySelector<HTMLElement>('.apps')!.hidden = !(example || scene.step === 2);
+      root!.querySelector<HTMLElement>('[data-systems-note]')!.hidden = example || scene.step === 2;
+      steps.forEach((button, i) => button.setAttribute('aria-pressed', String(i === scene.step)));
+      root!.querySelectorAll<HTMLElement>('[data-node]').forEach(node => { node.dataset.active = String(node.dataset.node === scene.to); node.dataset.source = String(node.dataset.node === scene.from); });
+      root!.querySelectorAll<HTMLElement>('[data-app]').forEach(app => { app.dataset.active = String(app.dataset.app === scene.app); });
+      root!.querySelectorAll('.wires').forEach(svg => svg.querySelector('[data-flow]')!.setAttribute('d', svg.querySelector(`[data-edge="${scene.edge}"]`)!.getAttribute('d')!));
+      root!.querySelector('.narration')!.setAttribute('aria-live', manual ? 'polite' : 'off');
+      root!.querySelector('[data-count]')!.textContent = `${String(index + 1).padStart(2, '0')} / ${String(list.length).padStart(2, '0')}`;
+      root!.querySelector('[data-action]')!.textContent = scene.title;
+      root!.querySelector('[data-explanation]')!.textContent = scene.text;
+      root!.querySelector('[data-next]')!.textContent = index === list.length - 1 ? 'Volver al inicio ↺' : 'Siguiente →';
+      caseButton.setAttribute('aria-pressed', String(example));
+      caseButton.textContent = example ? 'Volver al recorrido general ↺' : '¿Cómo sería con una petición de factura? ↗';
+      root!.querySelector('[data-mode]')!.textContent = example ? 'Simulación con datos ficticios · Avanza para ver cada acción.' : 'Un mismo agente, con tu contexto y tus herramientas.';
+      root!.querySelector<HTMLElement>('[data-invoice-preview]')!.hidden = !example;
+      if (example) {
+        const reply = index >= 4, sent = index >= 6, resolved = index === 7;
+        const setText = (selector: string, value: string) => { root!.querySelector(selector)!.textContent = value; };
+        setText('[data-mail-status]', resolved ? 'GMAIL · RECIBIDO POR LUCÍA' : sent ? 'GMAIL · ENVIADO' : reply ? 'GMAIL · BORRADOR DEL AGENTE' : 'GMAIL · PETICIÓN DEL CLIENTE');
+        setText('[data-mail-address]', reply ? 'Para: Lucía Martín · Empresa Ejemplo' : 'De: Lucía Martín · Empresa Ejemplo');
+        setText('[data-mail-subject]', reply ? 'Asunto: Tu factura F-2026-0842 · 30,00 €' : 'Asunto: ¿Me enviáis mi factura de 30 €?');
+        setText('[data-mail-body]', reply ? 'Hola, Lucía:\n\nTe adjunto la factura F-2026-0842 correspondiente a tu compra, por un total de 30,00 €.\n\nSi necesitas cualquier otra cosa, estamos a tu disposición.\n\nUn saludo,\nEl equipo de atención al cliente' : 'Hola, soy Lucía Martín. Necesito la factura de mi compra de 30 €. ¿Me la podéis enviar por aquí? Gracias.');
+        root!.querySelector<HTMLElement>('[data-resolution]')!.hidden = !resolved;
+        root!.querySelector<HTMLElement>('[data-mail-attachment]')!.hidden = !reply;
+        root!.querySelector<HTMLElement>('[data-pdf-preview]')!.hidden = index < 3;
+        setText('[data-attachment-status]', sent ? 'Enviado ✓' : 'Adjunto listo');
+        setText('[data-data-label]', index >= 3 ? 'ERP → AGENTE · DOCUMENTO RECUPERADO' : 'DATOS QUE RECIBE EL AGENTE');
+        setText('[data-data-text]', ['Petición recibida de Lucía Martín. El agente necesita identificar su factura.', 'Contexto: criterios de identificación, reglas de facturación y aprobación antes del envío.', 'Consulta al ERP: cliente verificado + compra de 30 €. Esperando el documento.', 'El ERP devuelve el número de factura, el cliente, el importe y el archivo PDF.', 'El agente usa los datos del ERP para redactar el correo y adjunta el PDF recibido.', 'Aprobación recibida del equipo. El correo está listo para enviarse.', 'Correo y PDF enviados a Lucía a través de Gmail.', '✓ Petición resuelta. Lucía ha recibido su factura de 30,00 €.'][index]);
+      }
     }
     function schedule() {
       clearTimeout(timer);
       const running = !paused && visible && !document.hidden;
       root!.dataset.playing = String(running);
       play.textContent = paused ? 'Reproducir recorrido' : 'Pausar recorrido';
-      const step = Math.floor(nodeIndex / 6);
-      steps.forEach((button, i) => button.setAttribute('aria-pressed', String(i === step)));
-      groups.forEach((group, i) => { group.dataset.active = String(i === step); group.dataset.exit = String(i === step && nodeIndex % 6 === 5); });
-      nodes.forEach((node, i) => { node.setAttribute('aria-pressed', String(i === nodeIndex)); node.dataset.done = String(i < nodeIndex); });
-      root!.querySelector('[data-journey-count]')!.textContent = `PASO ${step + 1} · 0${nodeIndex % 6 + 1} / 06`;
-      root!.querySelector('[data-journey-text]')!.textContent = nodes[nodeIndex].dataset.detail!;
-      if (running) timer = setTimeout(() => { nodeIndex = (nodeIndex + 1) % nodes.length; schedule(); }, 2600);
+      if (running) timer = setTimeout(() => {
+        const count = (example ? invoice : scenes).length;
+        if (index === count - 1) paused = true;
+        else index++;
+        render(); schedule();
+      }, 4500);
     }
-    steps.forEach((button, i) => button.addEventListener('click', () => { nodeIndex = i * 6; paused = true; schedule(); }));
-    nodes.forEach((node, i) => node.addEventListener('click', () => { nodeIndex = i; paused = true; schedule(); }));
-    root.querySelector('[data-journey-next]')!.addEventListener('click', () => { nodeIndex = (nodeIndex + 1) % nodes.length; paused = true; schedule(); });
-    play.addEventListener('click', () => { paused = !paused; schedule(); });
-    toggle.addEventListener('click', () => {
-      const open = toggle.getAttribute('aria-expanded') !== 'true';
-      toggle.setAttribute('aria-expanded', String(open)); example.hidden = !open;
-      if (open) { paused = true; caseStep = 0; renderCase(); schedule(); }
-    });
-    next.addEventListener('click', () => { caseStep = (caseStep + 1) % cases.length; renderCase(); });
-    root.querySelector('[data-case-restart]')!.addEventListener('click', () => { caseStep = 0; renderCase(); });
+    root.querySelector('[data-next]')!.addEventListener('click', () => { index = (index + 1) % (example ? invoice : scenes).length; paused = true; render(true); schedule(); });
+    steps.forEach((button, i) => button.addEventListener('click', () => { example = false; index = [0,2,5][i]; paused = true; render(true); schedule(); }));
+    play.addEventListener('click', () => { if (paused && index === (example ? invoice : scenes).length - 1) index = 0; paused = !paused; render(); schedule(); });
+    caseButton.addEventListener('click', () => { example = !example; index = 0; paused = motion.matches; render(true); schedule(); });
     const onMotion = () => { paused = motion.matches; schedule(); };
     motion.addEventListener('change', onMotion);
     document.addEventListener('visibilitychange', schedule);
     const observer = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; schedule(); });
-    observer.observe(root); renderCase(); schedule();
-    document.addEventListener('astro:before-swap', () => { clearTimeout(timer); observer.disconnect(); motion.removeEventListener('change', onMotion); document.removeEventListener('visibilitychange', schedule); }, { once: true });
+    observer.observe(root); render(); schedule();
+    document.addEventListener('astro:before-swap', () => { clearTimeout(timer); observer.disconnect(); motion.removeEventListener('change', onMotion); document.removeEventListener('visibilitychange', schedule); }, {once:true});
   }
 </script>
 <style>
-  .workflow { padding:38px; border:1px solid #3e5271; border-radius:24px; background:radial-gradient(ellipse at 50% 0,#21314c,transparent 65%),#101a2b; }
-  .workflow-head,.case-heading { display:flex; justify-content:space-between; align-items:start; gap:24px; }
-  .workflow .eyebrow { color:#a9c9f2; font:10px/1.6 monospace; letter-spacing:.12em; margin:0 0 15px; }
-  .workflow h2 { margin:0; font-size:clamp(27px,3vw,40px); line-height:1.2; letter-spacing:-.035em; color:#f0f6ff; }
+  .workflow { padding:32px; border:1px solid #3e5271; border-radius:24px; background:radial-gradient(ellipse at 60% 0,#21314c,transparent 70%),#101a2b; }
+  .workflow-head { display:flex; justify-content:space-between; align-items:start; gap:24px; }
+  .workflow .eyebrow { color:#a9c9f2; font:10px/1.6 monospace; letter-spacing:.12em; margin:0 0 12px; }
+  .workflow h2 { margin:0; color:#f0f6ff; font-size:clamp(25px,3vw,36px); line-height:1.2; letter-spacing:-.03em; }
   h2 span { color:#a9c9f2; }
-  .play { padding:10px 14px; border:1px solid #657b9a; border-radius:20px; background:#16253a; color:#dceaff; font-size:12px; white-space:nowrap; cursor:pointer; }
-  button:focus-visible { outline:2px solid #b3ddff; outline-offset:5px; }
-  .steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:40px; margin:38px 0; }
-  .step { position:relative; min-width:0; margin:0; border:1px dashed #526987; border-radius:16px; padding:20px; color:#e9f2ff; background:#101e31; transition:border-color .4s,background .4s; }
-  .step[data-active="true"] { border:1px solid #a5dfff; background:#182c46; }
-  legend { padding:0 8px; }
-  legend button { font:12px monospace; letter-spacing:.12em; color:#b1d8ff; background:#182c46; border:1px solid #577798; border-radius:7px; padding:9px 13px; cursor:pointer; }
-  .workflow .step-title { font-size:19px; line-height:1.35; min-height:52px; margin:4px 0 10px; }
-  .workflow .step-description { color:#bacbe1; font-size:12px; line-height:1.7; min-height:62px; margin:0 0 24px; }
-  .node-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(3,100px); gap:28px 24px; }
-  .mini-node { grid-column:var(--node-column); grid-row:var(--node-row); position:relative; display:flex; flex-direction:column; align-items:start; justify-content:center; gap:8px; padding:12px; border:1px solid #4a6383; border-radius:10px; background:#101b2d; color:#dceaff; text-align:left; cursor:pointer; transition:background .3s,border-color .3s,transform .3s,box-shadow .3s; }
-  .mini-icon { font-size:22px; color:#a5cfff; line-height:1; }
-  .mini-node strong { font-size:11px; line-height:1.4; font-weight:500; }
-  .mini-order { position:absolute; top:10px; right:10px; font:9px monospace; color:#9eb4cf; }
-  .mini-node[data-done="true"] { border-color:#538779; }
-  .mini-node[aria-pressed="true"] { background:#294e75; border-color:#bbebff; transform:translateY(-3px); box-shadow:0 0 0 4px #a5dfff12,0 8px 22px #0003; }
-  .mini-node[aria-pressed="true"] .mini-icon { animation:node-pulse 1.3s ease-in-out infinite; color:#fff; }
-  .node-edge { position:absolute; pointer-events:none; background:#526d91; }
-  .edge-right { left:100%; top:50%; width:24px; height:1px; }
-  .edge-left { right:100%; top:50%; width:24px; height:1px; }
-  .edge-down { left:50%; top:100%; height:28px; width:1px; }
-  .node-edge i { display:none; position:absolute; width:6px; height:6px; border-radius:50%; background:#cef1ff; box-shadow:0 0 9px #b8e9ff; }
-  .mini-node[aria-pressed="true"] .node-edge i { display:block; animation:node-right 1.3s linear infinite; }
-  .mini-node[aria-pressed="true"] .edge-left i { animation-name:node-left; }
-  .mini-node[aria-pressed="true"] .edge-down i { animation-name:node-down; }
-  @keyframes node-right { from { left:0; top:-3px; opacity:0; } 20% { opacity:1; } to { left:100%; top:-3px; opacity:0; } }
-  @keyframes node-left { from { right:0; top:-3px; opacity:0; } 20% { opacity:1; } to { right:100%; top:-3px; opacity:0; } }
-  @keyframes node-down { from { top:0; left:-3px; opacity:0; } 20% { opacity:1; } to { top:100%; left:-3px; opacity:0; } }
-  .workflow .step-result { color:#b2e9d7; font-size:12px; line-height:1.6; margin:22px 0 0; }
-  .journey-caption { display:flex; align-items:center; gap:24px; padding:20px; margin:0 0 28px; border:1px solid #536e93; border-radius:12px; background:#1b304b; }
-  [data-journey-count] { color:#bce7ff; font:11px monospace; white-space:nowrap; }
-  .journey-caption p { flex:1; min-height:48px; }
-  .connector { position:absolute; left:100%; top:50%; width:40px; color:#a5dfff; text-align:right; font-size:19px; }
-  .connector::before { content:""; position:absolute; height:1px; background:#678dbb; left:0; right:0; top:50%; }
-  .connector>span { position:absolute; width:7px; height:7px; border-radius:50%; top:calc(50% - 3px); background:#c5e7ff; opacity:0; }
-  .step[data-exit="true"] .connector>span { animation:travel 2s linear infinite; }
-  .invoice-nodes li[data-active="true"]:not(:last-child)::after { animation:case-travel 1.8s linear infinite; color:#d2edff; }
-  @keyframes case-travel { from { transform:translateX(-5px); opacity:.25; } to { transform:translateX(5px); opacity:1; } }
-  .workflow[data-playing="false"] .steps * { animation-play-state:paused; }
-  @keyframes travel { from { left:0; opacity:0; } 25% { opacity:1; } to { left:90%; opacity:0; } }
-  @keyframes node-pulse { 50% { transform:translateY(-4px); box-shadow:0 0 0 7px #a5dfff0b; } }
-  .case-toggle-row { display:flex; justify-content:space-between; align-items:center; gap:20px; padding-top:24px; border-top:1px solid #3c516e; }
-  .workflow p { color:#b8cae2; font-size:14px; line-height:1.7; margin:0; }
-  .case-toggle,.case-next { border:1px solid #82aeec; border-radius:9px; padding:14px 18px; background:#285399; color:#fff; font-size:14px; font-weight:600; cursor:pointer; }
-  .case-toggle span { margin-left:14px; }
-  .invoice-example { margin-top:30px; padding-top:30px; border-top:1px solid #3c516e; }
-  .invoice-example[hidden] { display:none; }
-  .workflow h3 { color:#f0f6ff; font-size:25px; line-height:1.3; margin:0 0 12px; }
-  .case-context { display:flex; gap:20px; padding:18px; margin:24px 0 30px; background:#1b2b43; border-radius:10px; font-size:13px; line-height:1.7; color:#bdd0e9; }
-  .case-context strong { flex-shrink:0; color:#e3efff; }
-  .invoice-nodes { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:32px; padding:0; margin:0 0 28px; list-style:none; }
-  .invoice-nodes li { position:relative; border:1px solid #455d7c; background:#122137; border-radius:12px; padding:18px; transition:border-color .3s,background .3s; }
-  .invoice-nodes li:not(:last-child)::after { content:'→'; position:absolute; left:100%; width:32px; text-align:center; top:42px; color:#8eb9ec; }
-  .invoice-nodes li[data-active="true"] { border-color:#b6ddff; background:#243e60; }
-  .invoice-nodes li[data-done="true"] { border-color:#75c7ab; }
-  .app-icon { display:grid; place-items:center; width:48px; height:48px; background:#213752; border-radius:12px; color:#b9d7ff; margin-bottom:14px; }
-  .app-icon svg { width:28px; height:28px; }
-  .gmail { background:#fff; }
-  .invoice-nodes strong { display:block; color:#edf5ff; font-size:15px; margin-bottom:6px; }
-  .invoice-nodes li>span:last-child { color:#bed0e7; font-size:12px; line-height:1.6; }
-  .case-detail { display:flex; gap:24px; padding:24px; border:1px solid #5c7ba3; border-radius:12px; background:#1b304b; min-height:145px; }
-  [data-case-count] { color:#b3dcff; font:13px monospace; white-space:nowrap; }
-  [data-case-title] { display:block; color:#f0f6ff; font-size:18px; margin-bottom:10px; }
-  .case-footer { display:flex; justify-content:space-between; align-items:center; gap:30px; margin-top:22px; }
-  .case-footer p { font-size:12px; max-width:65ch; }
-  .case-next { flex-shrink:0; }
-  @media(max-width:1000px) { .workflow { padding:25px; } .steps { gap:24px; } .step { padding:18px; } .connector { width:24px; } .step-title { font-size:18px; } .case-toggle-row,.case-footer { align-items:start; flex-direction:column; } .case-context { flex-direction:column; gap:6px; } }
-  @media(max-width:700px) { .workflow { padding:22px 18px; } .workflow-head,.case-heading { flex-direction:column; } .steps { grid-template-columns:1fr; gap:30px; } .step-title,.step-result { min-height:0; } .journey-caption { flex-direction:column; align-items:start; gap:12px; } .workflow .step-description { min-height:0; } .connector { left:50%; top:100%; height:30px; width:1px; font-size:0; } .connector::before { height:30px; width:1px; top:0; } .connector>span { display:none; } .invoice-nodes { grid-template-columns:1fr 1fr; gap:12px; } .invoice-nodes li { padding:14px; } .invoice-nodes li::after { display:none; } .case-detail { flex-direction:column; gap:12px; padding:18px; } .case-next,.case-toggle { width:100%; } }
+  .control { padding:10px 14px; border:1px solid #657b9a; border-radius:20px; background:#16253a; color:#dceaff; font-size:12px; white-space:nowrap; cursor:pointer; }
+  button:focus-visible { outline:2px solid #b3ddff; outline-offset:4px; }
+  .step-tabs { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:28px 0 22px; }
+  .step-tabs button { padding:13px 15px; text-align:left; border:1px solid #405875; border-radius:9px; background:#132238; color:#c5d7ef; font-size:14px; cursor:pointer; }
+  .step-tabs small { display:block; font:10px monospace; margin-bottom:6px; color:#a5cfff; }
+  .step-tabs [aria-pressed="true"] { border-color:#a5dfff; background:#244361; color:#fff; }
+  .map { position:relative; height:380px; margin:0 0 20px; }
+  .foundation-frame { position:absolute; left:0; top:0; width:57%; height:100%; border:1px dashed #546e8d; border-radius:16px; }
+  .foundation-frame>span { position:absolute; bottom:10px; left:16px; font:9px monospace; letter-spacing:.07em; color:#a5bddb; }
+  [data-phase="0"] .foundation-frame { border-color:#8db9e8; background:#88baff05; }
+  .wires { position:absolute; inset:0; width:100%; height:100%; }
+  .mobile-wires { display:none; }
+  .wires path { stroke:#47607d; stroke-width:1.3; }
+  .wires [data-edge="ask"],.wires [data-edge="use"] { stroke:none; }
+  .wires [data-edge="team"] { stroke-dasharray:3 6; stroke:#536885; }
+  .wires .flow-particle { stroke:#bbebff; stroke-width:3.5; stroke-linecap:round; stroke-dasharray:9 91; animation:flow 2s linear infinite; }
+  @keyframes flow { from { stroke-dashoffset:100; } to { stroke-dashoffset:0; } }
+  .node { position:absolute; width:20%; min-height:112px; padding:16px; transform:translateY(-50%); border:1px solid #5b7392; border-radius:12px; background:#14243a; transition:background .4s,border-color .4s,box-shadow .4s; }
+  .company { left:1%; top:50%; }
+  .context { left:33%; top:21.05%; }
+  .systems { left:33%; top:78.95%; }
+  .agent { left:73%; top:50%; width:23%; }
+  .symbol { display:block; font-size:24px; line-height:1; color:#b4d7ff; margin-bottom:10px; }
+  .node strong { display:block; font-size:15px; color:#eff6ff; line-height:1.35; }
+  .workflow .node p { margin:7px 0 0; color:#b6c8df; font-size:12px; line-height:1.5; }
+  .node[data-source="true"] { border-color:#91c8ee; }
+  .node[data-active="true"] { border-color:#b1e5ff; background:#264969; box-shadow:0 0 0 5px #a5dfff0a,0 8px 30px #0003; }
+  .node[data-active="true"] .symbol { animation:pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 50% { transform:translateY(-3px); color:#fff; } }
+  [data-playing="false"] .map * { animation-play-state:paused; }
+  .apps { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  .apps[hidden],[data-systems-note][hidden] { display:none; }
+  .app { display:flex; align-items:center; gap:5px; padding:6px; border:1px solid #587594; border-radius:7px; font-size:10px; color:#d9ebff; background:#14243a; }
+  .app svg { width:20px; height:20px; }
+  .app[data-active="true"] { border-color:#a3efd4; background:#255246; color:#fff; }
+  .narration { display:flex; gap:20px; align-items:center; border-top:1px solid #425978; padding:22px 0; min-height:125px; }
+  [data-count] { color:#a5dfff; font:12px monospace; white-space:nowrap; }
+  .narration>div { flex:1; }
+  [data-action] { display:block; color:#eaf5ff; font-size:18px; line-height:1.35; }
+  .workflow [data-explanation] { margin:7px 0 0; color:#b9cce4; font-size:13px; line-height:1.6; }
+  .case-row { display:flex; align-items:center; justify-content:space-between; gap:22px; border-top:1px solid #344962; padding-top:20px; }
+  .invoice-preview { display:grid; grid-template-columns:1.35fr 1fr; gap:20px; margin:0 0 24px; }
+  .invoice-preview [hidden],.invoice-preview[hidden] { display:none; }
+  .mail-preview,.data-preview { min-width:0; border:1px solid #4b6587; border-radius:12px; padding:22px; background:#14243a; }
+  .mail-heading { display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px; margin-bottom:18px; color:#b4d4ff; font:10px/1.6 monospace; }
+  [data-resolution] { color:#a5f2ce; background:#1f4b3c; padding:4px 8px; border-radius:6px; font-weight:bold; }
+  .workflow .mail-address { font-size:12px; color:#afc6e1; margin:0 0 12px; }
+  [data-mail-subject] { color:#f1f6ff; font-size:15px; }
+  .workflow .mail-body { white-space:pre-line; color:#d4e3f5; font-size:14px; line-height:1.75; margin:18px 0; }
+  .mail-attachment { display:flex; align-items:center; gap:12px; padding:13px; border:1px solid #5d7c9d; border-radius:8px; color:#d9edff; background:#213954; }
+  .mail-attachment>span:first-child { font-size:26px; }
+  .mail-attachment strong { font-size:12px; overflow-wrap:anywhere; }
+  .mail-attachment small { display:block; margin-top:5px; color:#b7cfe9; font-size:11px; }
+  [data-attachment-status] { margin-left:auto; font-size:10px; color:#a5f2ce; }
+  .data-label { color:#a9caff; font:10px/1.7 monospace; }
+  .workflow [data-data-text] { color:#bdd2e9; font-size:13px; line-height:1.7; margin:12px 0 18px; }
+  .pdf-preview { background:#eaf1f8; color:#1b3048; padding:20px; border-radius:5px; box-shadow:0 8px 20px #0003; }
+  .pdf-preview>div:first-child { display:flex; flex-direction:column; gap:8px; font-size:12px; }
+  .workflow .pdf-preview p { color:#334b64; font-size:12px; line-height:1.8; margin:20px 0; }
+  .pdf-total { display:flex; justify-content:space-between; align-items:center; border-top:1px solid #b2c3d4; padding-top:15px; font-size:13px; }
+  .pdf-total strong { font-size:24px; color:#16324f; }
+  .pdf-preview small { display:block; margin-top:18px; color:#4a627b; font-size:10px; }
+  [data-resolved="true"] .mail-preview { border-color:#82d9b6; background:#142c2c; }
+  @media(max-width:700px) { .invoice-preview { grid-template-columns:1fr; } .mail-preview,.data-preview { padding:16px; } .mail-attachment { flex-wrap:wrap; } }
+  .case-button { padding:13px 16px; border:1px solid #7ca5e0; border-radius:9px; background:#285399; color:#fff; font-size:13px; cursor:pointer; }
+  .workflow [data-mode] { color:#a8bfdc; font-size:11px; line-height:1.6; margin:0; }
+  @media(max-width:900px) { .workflow { padding:24px; } .node { padding:12px; } .node strong { font-size:13px; } .node p { font-size:11px; } .case-row { align-items:start; flex-direction:column; } }
+  @media(max-width:600px) {
+    .workflow { padding:20px 14px; } .workflow-head { flex-direction:column; gap:18px; }
+    .step-tabs { gap:6px; } .step-tabs button { font-size:11px; padding:10px 7px; } .step-tabs small { font-size:8px; }
+    .map { height:500px; } .wires { display:none; } .mobile-wires { display:block; } .node { padding:12px; min-height:100px; } .node strong { font-size:13px; } .workflow .node p { font-size:11px; } .symbol { font-size:20px; }
+    .company { width:50%; left:25%; top:15%; } .context { left:0; width:43%; top:45%; } .systems { left:57%; width:43%; top:45%; } .agent { left:17.5%; width:65%; top:80%; }
+    .foundation-frame { width:100%; height:64%; } .foundation-frame>span { left:8px; font-size:7px; }
+    .apps { gap:4px; margin-top:7px; } .app { font-size:9px; padding:3px; } .app svg { width:14px; height:14px; }
+    .narration { display:grid; grid-template-columns:1fr auto; gap:12px; } .narration>div { grid-column:1/-1; grid-row:2; } .narration .control { grid-column:2; grid-row:1; } [data-action] { font-size:16px; }
+  }
   @media(prefers-reduced-motion:reduce) { .workflow * { animation:none !important; transition:none !important; } }
 </style>
