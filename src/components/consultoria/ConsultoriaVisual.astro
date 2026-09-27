@@ -32,6 +32,8 @@
     <div class="node client" data-node="client"><span class="symbol" aria-hidden="true">♙</span><small>CLIENTE</small><strong>Lucía Martín</strong><p data-client-state>Envía una consulta y recibe su respuesta.</p><span class="client-received" hidden data-client-received>✓ Correo + PDF recibidos<br/><strong>≈ 10 min ahorrados</strong><small>Al equipo · Estimación de este ejemplo</small></span></div>
     <span class="transfer-marker" data-transfer-marker aria-hidden="true">✉</span>
     <div class="transfer" data-transfer>
+      <div class="gmail-heading"><svg viewBox="0 0 32 24" aria-hidden="true"><path fill="#4285f4" d="M0 4h5v20H0z"/><path fill="#34a853" d="M27 4h5v20h-5z"/><path fill="#ea4335" d="M0 0h5l11 9L27 0h5v7L16 19 0 7z"/><path fill="#fbbc04" d="m27 0 5 4v3l-5 4z"/></svg><span>Gmail</span><small data-mail-label>Correo</small></div>
+      <div class="gmail-person"><span class="gmail-avatar" aria-hidden="true">L</span><span data-mail-person>Lucía Martín</span></div>
       <span class="transfer-route" data-transfer-route></span>
       <strong data-transfer-title></strong>
       <p data-transfer-body></p>
@@ -84,7 +86,7 @@
       {kind:'mail', title:'✎ Borrador para Lucía', body:'Hola, Lucía: te adjunto la factura F-2026-0842 de tu compra de 30 €. Un saludo, el equipo de atención al cliente.'},
       {kind:'approval', title:'✓ Envío aprobado', body:'El equipo ha revisado el destinatario, el importe y el PDF. Ya puedes enviarlo.'},
       {kind:'mail', title:'✉ Enviar a Lucía Martín', body:'Hola, Lucía: aquí tienes tu factura de 30 €. Si necesitas algo más, estamos a tu disposición.'},
-      {kind:'mail', title:'✉ Tu factura F-2026-0842', body:'Para: Lucía Martín. Hola, Lucía: te adjunto la factura de tu compra de 30 €. Si necesitas algo más, estamos a tu disposición. Un saludo, el equipo de atención al cliente.'},
+      {kind:'mail', title:'✉ Tu factura F-2026-0842', body:'Hola, Lucía:\n\nTe adjunto tu factura de 30 €. Si necesitas algo más, estamos a tu disposición.\n\nUn saludo, tu equipo de atención.'},
     ];
     const map = root.querySelector<HTMLElement>('.map')!;
     const transfer = root.querySelector<HTMLElement>('[data-transfer]')!;
@@ -112,7 +114,7 @@
       transfer.style.setProperty('--tether-length', Math.max(0, y - top - h) + 'px');
       transfer.dataset.arrived = String(progress === 1);
       root!.querySelector<HTMLElement>('[data-client-received]')!.hidden = !(example && index === invoice.length - 1 && progress === 1);
-      transfer.querySelector('[data-transfer-status]')!.textContent = progress === 1 ? (example && index === invoice.length - 1 ? '✓ RESUELTO · Correo y PDF recibidos' : '✓ Recibido') : 'En camino →';
+      transfer.querySelector('[data-transfer-status]')!.textContent = progress === 1 ? (example && index === invoice.length - 1 ? '✓ RESUELTO · ≈ 10 min ahorrados al equipo (estimación)' : '✓ Recibido') : 'En camino →';
     }
     function animate(now: number) {
       if (lastTime && elapsed < duration && visible && !document.hidden && (!paused || manualTravel)) {
@@ -144,6 +146,10 @@
       const payload = example ? payloads[index] : {title:scene.title, body:scene.text, kind:'note'};
       const names: Record<string,string> = {company:'Tu equipo', context:'Contexto', systems:scene.app === 'erp' ? 'ERP' : scene.app === 'gmail' ? 'Gmail' : 'Sistemas', agent:'Agente IA', client:'Lucía Martín'};
       transfer.dataset.kind = payload.kind;
+      const incomingMail = example && index <= 1;
+      transfer.querySelector('[data-mail-person]')!.textContent = incomingMail ? 'De: Lucía Martín · Para: tu empresa' : 'De: tu empresa · Para: Lucía Martín';
+      transfer.querySelector('[data-mail-label]')!.textContent = incomingMail ? 'Recibidos' : index >= 9 ? 'Enviados' : 'Borrador';
+      transfer.querySelector('.gmail-avatar')!.textContent = incomingMail ? 'L' : 'AI';
       root!.querySelector<HTMLElement>('[data-transfer-marker]')!.textContent = payload.kind === 'pdf' ? 'PDF' : payload.kind === 'mail' ? '✉' : '▤';
       transfer.querySelector('[data-transfer-route]')!.textContent = names[scene.from] + ' → ' + names[scene.to];
       transfer.querySelector('[data-transfer-title]')!.textContent = payload.title;
@@ -242,6 +248,19 @@
   .transfer-marker[hidden] { display:none; }
   .transfer { position:absolute; z-index:3; width:220px; padding:14px; border:1px solid #9ddcff; border-radius:12px; background:#203e59; box-shadow:0 12px 35px #0006; pointer-events:none; }
   .transfer::after { content:''; position:absolute; top:100%; left:var(--tether-x,50%); width:1px; height:var(--tether-length,75px); background:linear-gradient(#9ddcff,#9ddcff30); }
+  .gmail-heading,.gmail-person { display:none; }
+  .transfer[data-kind="mail"] { width:270px; padding:0 16px 14px; background:#fff; border-color:#d7dce2; color:#202124; border-radius:12px; box-shadow:0 12px 36px #0005; }
+  [data-kind="mail"] .gmail-heading { display:flex; align-items:center; gap:7px; margin:0 -16px 12px; padding:11px 14px; background:#f6f8fc; border-bottom:1px solid #e4e7ec; border-radius:12px 12px 0 0; color:#5f6368; font-size:16px; }
+  .gmail-heading svg { width:23px; height:18px; }
+  [data-kind="mail"] .gmail-heading small { margin:0 0 0 auto; color:#5f6368; font:10px sans-serif; }
+  [data-kind="mail"] .gmail-person { display:flex; align-items:center; gap:8px; color:#5f6368; font:10px/1.5 sans-serif; margin-bottom:10px; }
+  .gmail-avatar { display:grid; place-items:center; flex-shrink:0; width:25px; height:25px; border-radius:50%; background:#d3e3fd; color:#174ea6; font-size:10px; }
+  [data-kind="mail"] .transfer-route { color:#5f6368; font-size:9px; margin-bottom:6px; }
+  .transfer[data-kind="mail"] strong { color:#202124; font-size:14px; }
+  .workflow .transfer[data-kind="mail"] p { color:#3c4043; font:12px/1.65 sans-serif; margin:12px 0; white-space:pre-line; }
+  [data-kind="mail"] .transfer-file { border:1px solid #dadce0; border-radius:7px; background:#f6f8fc; color:#3c4043; padding:8px; font:10px/1.5 sans-serif; }
+  [data-kind="mail"] [data-transfer-status] { color:#137333; font:10px/1.5 sans-serif; }
+  @media(max-width:600px) { .transfer[data-kind="mail"] { width:210px; padding:0 12px 12px; } [data-kind="mail"] .gmail-heading { margin:0 -12px 10px; } .workflow .transfer[data-kind="mail"] p { font-size:11px; } }
   .transfer-route { display:block; font:10px/1.5 monospace; color:#b6e4ff; margin-bottom:8px; }
   .transfer strong { display:block; color:#fff; font-size:14px; line-height:1.4; }
   .workflow .transfer p { color:#dceaff; font-size:12px; line-height:1.6; margin:8px 0; }
