@@ -29,7 +29,8 @@
       </div>
     </div>
     <div class="client-zone" aria-hidden="true"><span>FUERA DE TU EMPRESA</span></div>
-    <div class="node client" data-node="client"><span class="symbol" aria-hidden="true">♙</span><small>CLIENTE</small><strong>Lucía Martín</strong><p data-client-state>Envía una consulta y recibe su respuesta.</p><span class="client-received" hidden data-client-received>✓ Correo + PDF recibidos</span></div>
+    <div class="node client" data-node="client"><span class="symbol" aria-hidden="true">♙</span><small>CLIENTE</small><strong>Lucía Martín</strong><p data-client-state>Envía una consulta y recibe su respuesta.</p><span class="client-received" hidden data-client-received>✓ Correo + PDF recibidos<br/><strong>≈ 10 min ahorrados</strong><small>Al equipo · Estimación de este ejemplo</small></span></div>
+    <span class="transfer-marker" data-transfer-marker aria-hidden="true">✉</span>
     <div class="transfer" data-transfer>
       <span class="transfer-route" data-transfer-route></span>
       <strong data-transfer-title></strong>
@@ -40,14 +41,13 @@
     <div class="node agent" data-node="agent"><span class="symbol" aria-hidden="true">✦</span><strong>Agente IA</strong><p>Lee el contexto, usa las herramientas y mejora con tu equipo.</p></div>
   </div>
   <div class="narration" aria-live="off"><span data-count>01 / 08</span><div><strong data-action>Tu equipo documenta el contexto.</strong><p data-explanation>Cómo trabajáis, qué necesita cada cliente y qué criterios seguís.</p></div><button type="button" class="control" data-next>Siguiente →</button></div>
-  <div class="case-row"><button type="button" class="case-button" data-case aria-pressed="false">¿Cómo sería con una petición de factura? ↗</button><p data-mode>Un mismo agente, con tu contexto y tus herramientas.</p></div>
+  <div class="case-row"><p data-mode>Ejemplo completo · La factura de Lucía · Datos ficticios.</p></div>
 </section>
 <script>
   const root = document.querySelector<HTMLElement>('[data-workflow]');
   if (root) {
     const steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
     const play = root.querySelector<HTMLButtonElement>('[data-play]')!;
-    const caseButton = root.querySelector<HTMLButtonElement>('[data-case]')!;
     const motion = matchMedia('(prefers-reduced-motion: reduce)');
     // One directed connection per scene, including the external client.
     const scenes = [
@@ -63,6 +63,7 @@
     const invoice = [
       {step:2, edge:'incoming', from:'client', to:'systems', title:'Lucía envía su consulta por correo.', text:'Su petición llega a Gmail con un identificador ficticio para buscar su ficha de cliente.', app:'gmail'},
       {step:2, edge:'tools', from:'systems', to:'agent', title:'Gmail entrega la petición al agente.', text:'Lucía Martín pide la factura de su compra de 30 €. El agente lee el correo.', app:'gmail'},
+      {step:2, edge:'ask', from:'agent', to:'context', title:'El agente consulta las reglas de facturación.', text:'Pregunta qué datos debe contrastar y cuándo necesita la aprobación del equipo.', app:''},
       {step:2, edge:'learn', from:'context', to:'agent', title:'El contexto aporta los criterios para identificar a Lucía.', text:'El agente recibe las reglas de facturación y comprueba la identidad del cliente antes de consultar sus datos.', app:''},
       {step:2, edge:'use', from:'agent', to:'systems', title:'El agente pasa el DNI al ERP para validar al cliente.', text:'DNI de demostración: 00000000-X. El ERP contrasta la ficha y la compra de 30 €. El DNI por sí solo no autoriza el envío.', app:'erp'},
       {step:2, edge:'tools', from:'systems', to:'agent', title:'El ERP devuelve la validación del cliente.', text:'Coinciden la ficha de Lucía, el correo registrado y la compra. La simulación permite recuperar su factura.', app:'erp'},
@@ -70,11 +71,12 @@
       {step:2, edge:'use', from:'agent', to:'systems', title:'El agente redacta el correo en Gmail.', text:'Prepara una respuesta personalizada y adjunta el PDF de la factura. Todavía no se ha enviado.', app:'gmail'},
       {step:2, edge:'team', from:'company', to:'agent', title:'El equipo aprueba el correo y el adjunto.', text:'En esta simulación, una persona revisa destinatario, importe y documento, y autoriza el envío.', app:''},
       {step:2, edge:'use', from:'agent', to:'systems', title:'El agente envía el correo con la factura.', text:'Gmail envía a Lucía la respuesta aprobada con Factura_F-2026-0842.pdf adjunta.', app:'gmail'},
-      {step:2, edge:'delivery', from:'systems', to:'client', title:'Resuelto: Lucía recibe su factura de 30 €.', text:'Gmail confirma el envío. Lucía tiene el PDF y el agente da por atendida la petición.', app:'gmail'},
+      {step:2, edge:'delivery', from:'systems', to:'client', title:'Gmail entrega el correo redactado a Lucía.', text:'La respuesta y el PDF viajan hasta el cliente. Al llegar, la petición queda resuelta.', app:'gmail'},
     ];
     const payloads = [
       {kind:'mail', title:'✉ Consulta de Lucía', body:'«¿Me enviáis mi factura de 30 €? Mi DNI es 00000000-X». Datos ficticios para esta demo.'},
       {kind:'mail', title:'✉ ¿Me enviáis mi factura?', body:'Lucía Martín: «Necesito la factura de mi compra de 30 €. Gracias.»'},
+      {kind:'query', title:'⌕ Consultar el contexto', body:'¿Cómo valido al cliente y qué reglas sigo para enviar su factura?'},
       {kind:'note', title:'▤ Reglas de la empresa', body:'Verificar al cliente. Consultar su compra. Pedir aprobación antes de enviar.'},
       {kind:'query', title:'⌕ Validar cliente en ERP', body:'DNI: 00000000-X (ficticio). Contrastar ficha, correo registrado y compra de 30 €.'},
       {kind:'note', title:'✓ Cliente validado', body:'Ficha de Lucía localizada. Correo y compra coinciden. Factura vinculada: F-2026-0842.'},
@@ -82,7 +84,7 @@
       {kind:'mail', title:'✎ Borrador para Lucía', body:'Hola, Lucía: te adjunto la factura F-2026-0842 de tu compra de 30 €. Un saludo, el equipo de atención al cliente.'},
       {kind:'approval', title:'✓ Envío aprobado', body:'El equipo ha revisado el destinatario, el importe y el PDF. Ya puedes enviarlo.'},
       {kind:'mail', title:'✉ Enviar a Lucía Martín', body:'Hola, Lucía: aquí tienes tu factura de 30 €. Si necesitas algo más, estamos a tu disposición.'},
-      {kind:'resolved', title:'✓ RESUELTO', body:'Gmail confirma el envío del correo y el PDF a Lucía. Petición atendida.'},
+      {kind:'mail', title:'✉ Tu factura F-2026-0842', body:'Para: Lucía Martín. Hola, Lucía: te adjunto la factura de tu compra de 30 €. Si necesitas algo más, estamos a tu disposición. Un saludo, el equipo de atención al cliente.'},
     ];
     const map = root.querySelector<HTMLElement>('.map')!;
     const transfer = root.querySelector<HTMLElement>('[data-transfer]')!;
@@ -97,12 +99,20 @@
       const x = point.x / box.width * map.clientWidth;
       const y = point.y / box.height * map.clientHeight;
       const w = transfer.offsetWidth, h = transfer.offsetHeight;
-      transfer.style.left = Math.max(0, Math.min(map.clientWidth - w, x - w / 2)) + 'px';
-      transfer.style.top = Math.max(0, Math.min(map.clientHeight - h, y - h - 85)) + 'px';
-      root!.style.setProperty('--flow-offset', String(100 - progress * 100));
+      const left = Math.max(0, Math.min(map.clientWidth - w, x - w / 2));
+      const top = Math.max(0, Math.min(map.clientHeight - h, y - h - 85));
+      transfer.style.left = left + 'px';
+      transfer.style.top = top + 'px';
+      // The marker stays exactly on the SVG path, even when its readable card reaches a map edge.
+      const marker = root!.querySelector<HTMLElement>('[data-transfer-marker]')!;
+      marker.style.left = x + 'px';
+      marker.style.top = y + 'px';
+      marker.hidden = progress === 1;
+      transfer.style.setProperty('--tether-x', (x - left) + 'px');
+      transfer.style.setProperty('--tether-length', Math.max(0, y - top - h) + 'px');
       transfer.dataset.arrived = String(progress === 1);
       root!.querySelector<HTMLElement>('[data-client-received]')!.hidden = !(example && index === invoice.length - 1 && progress === 1);
-      transfer.querySelector('[data-transfer-status]')!.textContent = progress === 1 ? '✓ Recibido' : 'En camino →';
+      transfer.querySelector('[data-transfer-status]')!.textContent = progress === 1 ? (example && index === invoice.length - 1 ? '✓ RESUELTO · Correo y PDF recibidos' : '✓ Recibido') : 'En camino →';
     }
     function animate(now: number) {
       if (lastTime && elapsed < duration && visible && !document.hidden && (!paused || manualTravel)) {
@@ -112,7 +122,7 @@
       lastTime = now;
       frame = requestAnimationFrame(animate);
     }
-    let index = 0, example = false, paused = motion.matches, visible = false;
+    let index = 0, example = true, paused = motion.matches, visible = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
     function render(manual = false) {
       const list = example ? invoice : scenes;
@@ -130,16 +140,15 @@
       root!.querySelector('[data-action]')!.textContent = scene.title;
       root!.querySelector('[data-explanation]')!.textContent = scene.text;
       root!.querySelector('[data-next]')!.textContent = index === list.length - 1 ? 'Volver al inicio ↺' : 'Siguiente →';
-      caseButton.setAttribute('aria-pressed', String(example));
-      caseButton.textContent = example ? 'Volver al recorrido general ↺' : '¿Cómo sería con una petición de factura? ↗';
       root!.querySelector('[data-mode]')!.textContent = example ? 'Simulación con datos ficticios · Avanza para ver cada acción.' : 'Un mismo agente, con tu contexto y tus herramientas.';
       const payload = example ? payloads[index] : {title:scene.title, body:scene.text, kind:'note'};
       const names: Record<string,string> = {company:'Tu equipo', context:'Contexto', systems:scene.app === 'erp' ? 'ERP' : scene.app === 'gmail' ? 'Gmail' : 'Sistemas', agent:'Agente IA', client:'Lucía Martín'};
       transfer.dataset.kind = payload.kind;
+      root!.querySelector<HTMLElement>('[data-transfer-marker]')!.textContent = payload.kind === 'pdf' ? 'PDF' : payload.kind === 'mail' ? '✉' : '▤';
       transfer.querySelector('[data-transfer-route]')!.textContent = names[scene.from] + ' → ' + names[scene.to];
       transfer.querySelector('[data-transfer-title]')!.textContent = payload.title;
       transfer.querySelector('[data-transfer-body]')!.textContent = payload.body;
-      transfer.querySelector<HTMLElement>('[data-transfer-file]')!.hidden = !(example && [5,6,8,9].includes(index));
+      transfer.querySelector<HTMLElement>('[data-transfer-file]')!.hidden = !(example && [6,7,9,10].includes(index));
       elapsed = motion.matches ? duration : 0;
       manualTravel = manual;
       lastTime = 0;
@@ -159,9 +168,8 @@
       }, 7000);
     }
     root.querySelector('[data-next]')!.addEventListener('click', () => { index = (index + 1) % (example ? invoice : scenes).length; paused = true; render(true); schedule(); });
-    steps.forEach((button, i) => button.addEventListener('click', () => { example = false; index = [0,2,5][i]; paused = true; render(true); schedule(); }));
+    steps.forEach((button, i) => button.addEventListener('click', () => { example = i === 2; index = [0,2,0][i]; paused = true; render(true); schedule(); }));
     play.addEventListener('click', () => { if (paused && index === (example ? invoice : scenes).length - 1) { index = 0; render(); } paused = !paused; manualTravel = false; schedule(); });
-    caseButton.addEventListener('click', () => { example = !example; index = 0; paused = motion.matches; render(true); schedule(); });
     const onMotion = () => { paused = motion.matches; if (motion.matches) elapsed = duration; schedule(); };
     motion.addEventListener('change', onMotion);
     document.addEventListener('visibilitychange', schedule);
@@ -193,9 +201,9 @@
   .wires [data-edge="ask"],.wires [data-edge="use"] { stroke:none; }
   .wires [data-edge="incoming"] { stroke-dasharray:4 5; } .wires [data-edge="delivery"] { stroke:none; }
   .wires [data-edge="team"] { stroke-dasharray:3 6; stroke:#536885; }
-  .wires .flow-particle { stroke:#bbebff; stroke-width:3.5; stroke-linecap:round; stroke-dasharray:3 97; stroke-dashoffset:var(--flow-offset,100); }
+  .wires .flow-particle { stroke:#bbebff; stroke-width:2; stroke-linecap:round; opacity:.7; }
   .node { position:absolute; width:19%; min-height:112px; padding:16px; transform:translateY(-50%); border:1px solid #5b7392; border-radius:12px; background:#14243a; transition:background .4s,border-color .4s,box-shadow .4s; }
-  .company { left:1%; top:50%; width:15%; --node-bg:#392b22; --node-accent:#f2b879; }
+  .company { left:1%; top:50%; width:15%; --node-bg:#21365a; --node-accent:#9bbfff; }
   .context { left:25%; top:21.05%; --node-bg:#153b3e; --node-accent:#74ded5; }
   .systems { left:25%; top:78.95%; --node-bg:#173547; --node-accent:#83ccec; }
   .agent { left:57%; top:50%; width:19%; --node-bg:#362650; --node-accent:#cfadff; }
@@ -208,6 +216,8 @@
   .documents { display:flex; flex-wrap:wrap; gap:5px; margin-top:10px; }
   .documents span { padding:4px 5px; border:1px solid #63a7a4; border-radius:4px; color:#c9fff3; font:9px monospace; }
   .client-received { display:block; margin-top:12px; font-size:11px; line-height:1.5; color:#a7f4cf; }
+  .client-received strong { margin-top:10px; color:#a7f4cf; font-size:17px; }
+  .client .client-received small { color:#b9dacc; font:10px/1.5 sans-serif; margin:5px 0 0; }
   .client-received[hidden] { display:none; }
   .symbol { display:block; font-size:24px; line-height:1; color:#b4d7ff; margin-bottom:10px; }
   .node strong { display:block; font-size:15px; color:#eff6ff; line-height:1.35; }
@@ -228,8 +238,10 @@
   [data-action] { display:block; color:#eaf5ff; font-size:18px; line-height:1.35; }
   .workflow [data-explanation] { margin:7px 0 0; color:#b9cce4; font-size:13px; line-height:1.6; }
   .case-row { display:flex; align-items:center; justify-content:space-between; gap:22px; border-top:1px solid #344962; padding-top:20px; }
+  .transfer-marker { position:absolute; z-index:4; display:grid; place-items:center; width:28px; height:28px; transform:translate(-50%,-50%); border:1px solid #dcf4ff; border-radius:8px; background:#365c87; color:white; font:10px monospace; box-shadow:0 0 15px #9ddcff55; pointer-events:none; }
+  .transfer-marker[hidden] { display:none; }
   .transfer { position:absolute; z-index:3; width:220px; padding:14px; border:1px solid #9ddcff; border-radius:12px; background:#203e59; box-shadow:0 12px 35px #0006; pointer-events:none; }
-  .transfer::after { content:''; position:absolute; bottom:-75px; left:50%; width:1px; height:75px; background:linear-gradient(#9ddcff,#9ddcff30); }
+  .transfer::after { content:''; position:absolute; top:100%; left:var(--tether-x,50%); width:1px; height:var(--tether-length,75px); background:linear-gradient(#9ddcff,#9ddcff30); }
   .transfer-route { display:block; font:10px/1.5 monospace; color:#b6e4ff; margin-bottom:8px; }
   .transfer strong { display:block; color:#fff; font-size:14px; line-height:1.4; }
   .workflow .transfer p { color:#dceaff; font-size:12px; line-height:1.6; margin:8px 0; }
@@ -240,7 +252,6 @@
   .transfer[data-kind="pdf"] strong,.workflow .transfer[data-kind="pdf"] p,.transfer[data-kind="pdf"] small,.transfer[data-kind="pdf"] .transfer-route { color:#17334d; }
   .transfer[data-kind="resolved"],.transfer[data-kind="approval"] { background:#174838; border-color:#93edc4; }
   .transfer[data-arrived="true"] { box-shadow:0 0 0 4px #a5dfff12,0 12px 35px #0004; }
-  .case-button { padding:13px 16px; border:1px solid #7ca5e0; border-radius:9px; background:#285399; color:#fff; font-size:13px; cursor:pointer; }
   .workflow [data-mode] { color:#a8bfdc; font-size:11px; line-height:1.6; margin:0; }
   @media(max-width:900px) { .workflow { padding:24px; } .node { padding:12px; } .node strong { font-size:13px; } .node p { font-size:11px; } .case-row { align-items:start; flex-direction:column; } }
   @media(max-width:600px) {
