@@ -26,28 +26,16 @@
         <span class="app" data-app="gmail"><svg viewBox="0 0 32 24" aria-hidden="true"><path fill="#4285f4" d="M0 4h5v20H0z"/><path fill="#34a853" d="M27 4h5v20h-5z"/><path fill="#ea4335" d="M0 0h5l11 9L27 0h5v7L16 19 0 7z"/><path fill="#fbbc04" d="m27 0 5 4v3l-5 4z"/></svg>Gmail</span>
       </div>
     </div>
+    <div class="transfer" data-transfer>
+      <span class="transfer-route" data-transfer-route></span>
+      <strong data-transfer-title></strong>
+      <p data-transfer-body></p>
+      <span class="transfer-file" data-transfer-file hidden>▤ Factura_F-2026-0842.pdf · 30,00 €</span>
+      <small data-transfer-status>En camino →</small>
+    </div>
     <div class="node agent" data-node="agent"><span class="symbol" aria-hidden="true">✦</span><strong>Agente IA</strong><p>Lee el contexto, usa las herramientas y mejora con tu equipo.</p></div>
   </div>
   <div class="narration" aria-live="off"><span data-count>01 / 08</span><div><strong data-action>Tu equipo documenta el contexto.</strong><p data-explanation>Cómo trabajáis, qué necesita cada cliente y qué criterios seguís.</p></div><button type="button" class="control" data-next>Siguiente →</button></div>
-  <div class="invoice-preview" data-invoice-preview hidden>
-    <div class="mail-preview">
-      <div class="mail-heading"><span data-mail-status>GMAIL · RECIBIDO</span><span data-resolution hidden>✓ RESUELTO</span></div>
-      <p class="mail-address" data-mail-address>De: Lucía Martín · Empresa Ejemplo</p>
-      <strong data-mail-subject>Asunto: ¿Me enviáis mi factura de 30 €?</strong>
-      <p class="mail-body" data-mail-body>Hola, soy Lucía Martín. Necesito la factura de mi compra de 30 €. ¿Me la podéis enviar por aquí? Gracias.</p>
-      <div class="mail-attachment" data-mail-attachment hidden><span aria-hidden="true">▤</span><div><strong>Factura_F-2026-0842.pdf</strong><small>Adjunto · 30,00 €</small></div><span data-attachment-status>Preparado</span></div>
-    </div>
-    <div class="data-preview">
-      <span class="data-label" data-data-label>DATOS QUE RECIBE EL AGENTE</span>
-      <p data-data-text>Petición recibida de Lucía Martín. El agente necesita identificar su factura.</p>
-      <div class="pdf-preview" data-pdf-preview hidden>
-        <div><span>PDF · FACTURA</span><strong>F-2026-0842</strong></div>
-        <p>Cliente: Lucía Martín<br/>Empresa Ejemplo</p>
-        <div class="pdf-total"><span>Total</span><strong>30,00 €</strong></div>
-        <small>Documento simulado</small>
-      </div>
-    </div>
-  </div>
   <div class="case-row"><button type="button" class="case-button" data-case aria-pressed="false">¿Cómo sería con una petición de factura? ↗</button><p data-mode>Un mismo agente, con tu contexto y tus herramientas.</p></div>
 </section>
 <script>
@@ -78,6 +66,43 @@
       {step:2, edge:'use', from:'agent', to:'systems', title:'El agente envía el correo con la factura.', text:'Gmail envía a Lucía la respuesta aprobada con Factura_F-2026-0842.pdf adjunta.', app:'gmail'},
       {step:2, edge:'tools', from:'systems', to:'agent', title:'Resuelto: Lucía recibe su factura de 30 €.', text:'Gmail confirma el envío. Lucía tiene el PDF y el agente da por atendida la petición.', app:'gmail'},
     ];
+    const payloads = [
+      {kind:'mail', title:'✉ ¿Me enviáis mi factura?', body:'Lucía Martín: «Necesito la factura de mi compra de 30 €. Gracias.»'},
+      {kind:'note', title:'▤ Reglas de la empresa', body:'Verificar al cliente. Consultar su compra. Pedir aprobación antes de enviar.'},
+      {kind:'query', title:'⌕ Buscar factura', body:'Cliente: Lucía Martín · Empresa Ejemplo. Compra: 30,00 €.'},
+      {kind:'pdf', title:'PDF · F-2026-0842', body:'Lucía Martín · Empresa Ejemplo. Total: 30,00 €. Documento recuperado.'},
+      {kind:'mail', title:'✎ Borrador para Lucía', body:'Hola, Lucía: te adjunto la factura F-2026-0842 de tu compra de 30 €. Un saludo, el equipo de atención al cliente.'},
+      {kind:'approval', title:'✓ Envío aprobado', body:'El equipo ha revisado el destinatario, el importe y el PDF. Ya puedes enviarlo.'},
+      {kind:'mail', title:'✉ Enviar a Lucía Martín', body:'Hola, Lucía: aquí tienes tu factura de 30 €. Si necesitas algo más, estamos a tu disposición.'},
+      {kind:'resolved', title:'✓ RESUELTO', body:'Gmail confirma el envío del correo y el PDF a Lucía. Petición atendida.'},
+    ];
+    const map = root.querySelector<HTMLElement>('.map')!;
+    const transfer = root.querySelector<HTMLElement>('[data-transfer]')!;
+    const duration = 3200;
+    let elapsed = 0, lastTime = 0, frame = 0, manualTravel = false;
+    function positionTransfer() {
+      const svg = [...root!.querySelectorAll<SVGSVGElement>('.wires')].find(el => el.getBoundingClientRect().width > 0)!;
+      const path = svg.querySelector<SVGPathElement>('[data-flow]')!;
+      const progress = Math.min(elapsed / duration, 1);
+      const point = path.getPointAtLength(path.getTotalLength() * progress);
+      const box = svg.viewBox.baseVal;
+      const x = point.x / box.width * map.clientWidth;
+      const y = point.y / box.height * map.clientHeight;
+      const w = transfer.offsetWidth, h = transfer.offsetHeight;
+      transfer.style.left = Math.max(0, Math.min(map.clientWidth - w, x - w / 2)) + 'px';
+      transfer.style.top = Math.max(0, Math.min(map.clientHeight - h, y - h - 85)) + 'px';
+      root!.style.setProperty('--flow-offset', String(100 - progress * 100));
+      transfer.dataset.arrived = String(progress === 1);
+      transfer.querySelector('[data-transfer-status]')!.textContent = progress === 1 ? '✓ Recibido' : 'En camino →';
+    }
+    function animate(now: number) {
+      if (lastTime && elapsed < duration && visible && !document.hidden && (!paused || manualTravel)) {
+        elapsed = Math.min(duration, elapsed + now - lastTime);
+        positionTransfer();
+      }
+      lastTime = now;
+      frame = requestAnimationFrame(animate);
+    }
     let index = 0, example = false, paused = motion.matches, visible = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
     function render(manual = false) {
@@ -100,22 +125,19 @@
       caseButton.setAttribute('aria-pressed', String(example));
       caseButton.textContent = example ? 'Volver al recorrido general ↺' : '¿Cómo sería con una petición de factura? ↗';
       root!.querySelector('[data-mode]')!.textContent = example ? 'Simulación con datos ficticios · Avanza para ver cada acción.' : 'Un mismo agente, con tu contexto y tus herramientas.';
-      root!.querySelector<HTMLElement>('[data-invoice-preview]')!.hidden = !example;
-      if (example) {
-        const reply = index >= 4, sent = index >= 6, resolved = index === 7;
-        const setText = (selector: string, value: string) => { root!.querySelector(selector)!.textContent = value; };
-        setText('[data-mail-status]', resolved ? 'GMAIL · RECIBIDO POR LUCÍA' : sent ? 'GMAIL · ENVIADO' : reply ? 'GMAIL · BORRADOR DEL AGENTE' : 'GMAIL · PETICIÓN DEL CLIENTE');
-        setText('[data-mail-address]', reply ? 'Para: Lucía Martín · Empresa Ejemplo' : 'De: Lucía Martín · Empresa Ejemplo');
-        setText('[data-mail-subject]', reply ? 'Asunto: Tu factura F-2026-0842 · 30,00 €' : 'Asunto: ¿Me enviáis mi factura de 30 €?');
-        setText('[data-mail-body]', reply ? 'Hola, Lucía:\n\nTe adjunto la factura F-2026-0842 correspondiente a tu compra, por un total de 30,00 €.\n\nSi necesitas cualquier otra cosa, estamos a tu disposición.\n\nUn saludo,\nEl equipo de atención al cliente' : 'Hola, soy Lucía Martín. Necesito la factura de mi compra de 30 €. ¿Me la podéis enviar por aquí? Gracias.');
-        root!.querySelector<HTMLElement>('[data-resolution]')!.hidden = !resolved;
-        root!.querySelector<HTMLElement>('[data-mail-attachment]')!.hidden = !reply;
-        root!.querySelector<HTMLElement>('[data-pdf-preview]')!.hidden = index < 3;
-        setText('[data-attachment-status]', sent ? 'Enviado ✓' : 'Adjunto listo');
-        setText('[data-data-label]', index >= 3 ? 'ERP → AGENTE · DOCUMENTO RECUPERADO' : 'DATOS QUE RECIBE EL AGENTE');
-        setText('[data-data-text]', ['Petición recibida de Lucía Martín. El agente necesita identificar su factura.', 'Contexto: criterios de identificación, reglas de facturación y aprobación antes del envío.', 'Consulta al ERP: cliente verificado + compra de 30 €. Esperando el documento.', 'El ERP devuelve el número de factura, el cliente, el importe y el archivo PDF.', 'El agente usa los datos del ERP para redactar el correo y adjunta el PDF recibido.', 'Aprobación recibida del equipo. El correo está listo para enviarse.', 'Correo y PDF enviados a Lucía a través de Gmail.', '✓ Petición resuelta. Lucía ha recibido su factura de 30,00 €.'][index]);
-      }
+      const payload = example ? payloads[index] : {title:scene.title, body:scene.text, kind:'note'};
+      const names: Record<string,string> = {company:'Tu equipo', context:'Contexto', systems:scene.app === 'erp' ? 'ERP' : scene.app === 'gmail' ? 'Gmail' : 'Sistemas', agent:'Agente IA'};
+      transfer.dataset.kind = payload.kind;
+      transfer.querySelector('[data-transfer-route]')!.textContent = names[scene.from] + ' → ' + names[scene.to];
+      transfer.querySelector('[data-transfer-title]')!.textContent = payload.title;
+      transfer.querySelector('[data-transfer-body]')!.textContent = payload.body;
+      transfer.querySelector<HTMLElement>('[data-transfer-file]')!.hidden = !(example && [3,4,6,7].includes(index));
+      elapsed = motion.matches ? duration : 0;
+      manualTravel = manual;
+      lastTime = 0;
+      positionTransfer();
     }
+
     function schedule() {
       clearTimeout(timer);
       const running = !paused && visible && !document.hidden;
@@ -124,20 +146,21 @@
       if (running) timer = setTimeout(() => {
         const count = (example ? invoice : scenes).length;
         if (index === count - 1) paused = true;
-        else index++;
-        render(); schedule();
-      }, 4500);
+        else { index++; render(); }
+        schedule();
+      }, 7000);
     }
     root.querySelector('[data-next]')!.addEventListener('click', () => { index = (index + 1) % (example ? invoice : scenes).length; paused = true; render(true); schedule(); });
     steps.forEach((button, i) => button.addEventListener('click', () => { example = false; index = [0,2,5][i]; paused = true; render(true); schedule(); }));
-    play.addEventListener('click', () => { if (paused && index === (example ? invoice : scenes).length - 1) index = 0; paused = !paused; render(); schedule(); });
+    play.addEventListener('click', () => { if (paused && index === (example ? invoice : scenes).length - 1) { index = 0; render(); } paused = !paused; manualTravel = false; schedule(); });
     caseButton.addEventListener('click', () => { example = !example; index = 0; paused = motion.matches; render(true); schedule(); });
-    const onMotion = () => { paused = motion.matches; schedule(); };
+    const onMotion = () => { paused = motion.matches; if (motion.matches) elapsed = duration; schedule(); };
     motion.addEventListener('change', onMotion);
     document.addEventListener('visibilitychange', schedule);
     const observer = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; schedule(); });
-    observer.observe(root); render(); schedule();
-    document.addEventListener('astro:before-swap', () => { clearTimeout(timer); observer.disconnect(); motion.removeEventListener('change', onMotion); document.removeEventListener('visibilitychange', schedule); }, {once:true});
+    const resize = new ResizeObserver(positionTransfer); resize.observe(map);
+    observer.observe(root); render(); schedule(); frame = requestAnimationFrame(animate);
+    document.addEventListener('astro:before-swap', () => { clearTimeout(timer); cancelAnimationFrame(frame); observer.disconnect(); resize.disconnect(); motion.removeEventListener('change', onMotion); document.removeEventListener('visibilitychange', schedule); }, {once:true});
   }
 </script>
 <style>
@@ -152,7 +175,7 @@
   .step-tabs button { padding:13px 15px; text-align:left; border:1px solid #405875; border-radius:9px; background:#132238; color:#c5d7ef; font-size:14px; cursor:pointer; }
   .step-tabs small { display:block; font:10px monospace; margin-bottom:6px; color:#a5cfff; }
   .step-tabs [aria-pressed="true"] { border-color:#a5dfff; background:#244361; color:#fff; }
-  .map { position:relative; height:380px; margin:0 0 20px; }
+  .map { position:relative; height:520px; margin:0 0 20px; }
   .foundation-frame { position:absolute; left:0; top:0; width:57%; height:100%; border:1px dashed #546e8d; border-radius:16px; }
   .foundation-frame>span { position:absolute; bottom:10px; left:16px; font:9px monospace; letter-spacing:.07em; color:#a5bddb; }
   [data-phase="0"] .foundation-frame { border-color:#8db9e8; background:#88baff05; }
@@ -161,8 +184,7 @@
   .wires path { stroke:#47607d; stroke-width:1.3; }
   .wires [data-edge="ask"],.wires [data-edge="use"] { stroke:none; }
   .wires [data-edge="team"] { stroke-dasharray:3 6; stroke:#536885; }
-  .wires .flow-particle { stroke:#bbebff; stroke-width:3.5; stroke-linecap:round; stroke-dasharray:9 91; animation:flow 2s linear infinite; }
-  @keyframes flow { from { stroke-dashoffset:100; } to { stroke-dashoffset:0; } }
+  .wires .flow-particle { stroke:#bbebff; stroke-width:3.5; stroke-linecap:round; stroke-dasharray:3 97; stroke-dashoffset:var(--flow-offset,100); }
   .node { position:absolute; width:20%; min-height:112px; padding:16px; transform:translateY(-50%); border:1px solid #5b7392; border-radius:12px; background:#14243a; transition:background .4s,border-color .4s,box-shadow .4s; }
   .company { left:1%; top:50%; }
   .context { left:33%; top:21.05%; }
@@ -187,36 +209,25 @@
   [data-action] { display:block; color:#eaf5ff; font-size:18px; line-height:1.35; }
   .workflow [data-explanation] { margin:7px 0 0; color:#b9cce4; font-size:13px; line-height:1.6; }
   .case-row { display:flex; align-items:center; justify-content:space-between; gap:22px; border-top:1px solid #344962; padding-top:20px; }
-  .invoice-preview { display:grid; grid-template-columns:1.35fr 1fr; gap:20px; margin:0 0 24px; }
-  .invoice-preview [hidden],.invoice-preview[hidden] { display:none; }
-  .mail-preview,.data-preview { min-width:0; border:1px solid #4b6587; border-radius:12px; padding:22px; background:#14243a; }
-  .mail-heading { display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px; margin-bottom:18px; color:#b4d4ff; font:10px/1.6 monospace; }
-  [data-resolution] { color:#a5f2ce; background:#1f4b3c; padding:4px 8px; border-radius:6px; font-weight:bold; }
-  .workflow .mail-address { font-size:12px; color:#afc6e1; margin:0 0 12px; }
-  [data-mail-subject] { color:#f1f6ff; font-size:15px; }
-  .workflow .mail-body { white-space:pre-line; color:#d4e3f5; font-size:14px; line-height:1.75; margin:18px 0; }
-  .mail-attachment { display:flex; align-items:center; gap:12px; padding:13px; border:1px solid #5d7c9d; border-radius:8px; color:#d9edff; background:#213954; }
-  .mail-attachment>span:first-child { font-size:26px; }
-  .mail-attachment strong { font-size:12px; overflow-wrap:anywhere; }
-  .mail-attachment small { display:block; margin-top:5px; color:#b7cfe9; font-size:11px; }
-  [data-attachment-status] { margin-left:auto; font-size:10px; color:#a5f2ce; }
-  .data-label { color:#a9caff; font:10px/1.7 monospace; }
-  .workflow [data-data-text] { color:#bdd2e9; font-size:13px; line-height:1.7; margin:12px 0 18px; }
-  .pdf-preview { background:#eaf1f8; color:#1b3048; padding:20px; border-radius:5px; box-shadow:0 8px 20px #0003; }
-  .pdf-preview>div:first-child { display:flex; flex-direction:column; gap:8px; font-size:12px; }
-  .workflow .pdf-preview p { color:#334b64; font-size:12px; line-height:1.8; margin:20px 0; }
-  .pdf-total { display:flex; justify-content:space-between; align-items:center; border-top:1px solid #b2c3d4; padding-top:15px; font-size:13px; }
-  .pdf-total strong { font-size:24px; color:#16324f; }
-  .pdf-preview small { display:block; margin-top:18px; color:#4a627b; font-size:10px; }
-  [data-resolved="true"] .mail-preview { border-color:#82d9b6; background:#142c2c; }
-  @media(max-width:700px) { .invoice-preview { grid-template-columns:1fr; } .mail-preview,.data-preview { padding:16px; } .mail-attachment { flex-wrap:wrap; } }
+  .transfer { position:absolute; z-index:3; width:220px; padding:14px; border:1px solid #9ddcff; border-radius:12px; background:#203e59; box-shadow:0 12px 35px #0006; pointer-events:none; }
+  .transfer::after { content:''; position:absolute; bottom:-75px; left:50%; width:1px; height:75px; background:linear-gradient(#9ddcff,#9ddcff30); }
+  .transfer-route { display:block; font:10px/1.5 monospace; color:#b6e4ff; margin-bottom:8px; }
+  .transfer strong { display:block; color:#fff; font-size:14px; line-height:1.4; }
+  .workflow .transfer p { color:#dceaff; font-size:12px; line-height:1.6; margin:8px 0; }
+  .transfer small { display:block; color:#b6e4ff; font:10px/1.5 monospace; margin-top:9px; }
+  .transfer-file { display:block; font-size:10px; line-height:1.6; border-top:1px solid #ffffff30; padding-top:8px; overflow-wrap:anywhere; }
+  .transfer-file[hidden] { display:none; }
+  .transfer[data-kind="pdf"] { background:#f0f6fc; border-radius:3px 18px 3px 3px; color:#17334d; }
+  .transfer[data-kind="pdf"] strong,.workflow .transfer[data-kind="pdf"] p,.transfer[data-kind="pdf"] small,.transfer[data-kind="pdf"] .transfer-route { color:#17334d; }
+  .transfer[data-kind="resolved"],.transfer[data-kind="approval"] { background:#174838; border-color:#93edc4; }
+  .transfer[data-arrived="true"] { box-shadow:0 0 0 4px #a5dfff12,0 12px 35px #0004; }
   .case-button { padding:13px 16px; border:1px solid #7ca5e0; border-radius:9px; background:#285399; color:#fff; font-size:13px; cursor:pointer; }
   .workflow [data-mode] { color:#a8bfdc; font-size:11px; line-height:1.6; margin:0; }
   @media(max-width:900px) { .workflow { padding:24px; } .node { padding:12px; } .node strong { font-size:13px; } .node p { font-size:11px; } .case-row { align-items:start; flex-direction:column; } }
   @media(max-width:600px) {
     .workflow { padding:20px 14px; } .workflow-head { flex-direction:column; gap:18px; }
     .step-tabs { gap:6px; } .step-tabs button { font-size:11px; padding:10px 7px; } .step-tabs small { font-size:8px; }
-    .map { height:500px; } .wires { display:none; } .mobile-wires { display:block; } .node { padding:12px; min-height:100px; } .node strong { font-size:13px; } .workflow .node p { font-size:11px; } .symbol { font-size:20px; }
+    .map { height:660px; } .transfer { width:180px; padding:10px; } .transfer strong { font-size:12px; } .workflow .transfer p { font-size:11px; } .wires { display:none; } .mobile-wires { display:block; } .node { padding:12px; min-height:100px; } .node strong { font-size:13px; } .workflow .node p { font-size:11px; } .symbol { font-size:20px; }
     .company { width:50%; left:25%; top:15%; } .context { left:0; width:43%; top:45%; } .systems { left:57%; width:43%; top:45%; } .agent { left:17.5%; width:65%; top:80%; }
     .foundation-frame { width:100%; height:64%; } .foundation-frame>span { left:8px; font-size:7px; }
     .apps { gap:4px; margin-top:7px; } .app { font-size:9px; padding:3px; } .app svg { width:14px; height:14px; }
