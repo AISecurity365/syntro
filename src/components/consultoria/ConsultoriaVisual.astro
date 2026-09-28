@@ -1,5 +1,10 @@
 <section class="workflow" data-workflow data-phase="0" data-playing="false" data-apps="false" aria-labelledby="workflow-title">
   <div class="workflow-head"><div><p class="eyebrow">DE LOS PROCESOS A LA PRÁCTICA</p><h2 id="workflow-title">Tu empresa aporta la base.<br/><span>El agente la convierte en trabajo hecho.</span></h2></div><button class="control" type="button" data-play>Pausar recorrido</button></div>
+  <div class="example-tabs" role="group" aria-label="Elegir un ejemplo">
+    <button type="button" data-example="invoice" aria-pressed="true">✉ Mi factura</button>
+    <button type="button" data-example="support" aria-pressed="false">▣ Cita con el técnico</button>
+    <button type="button" data-example="server" aria-pressed="false">⌘ Recuperar una web</button>
+  </div>
   <div class="step-tabs" role="group" aria-label="Pasos del recorrido">
     <button type="button" data-step="0" aria-pressed="true"><small>PASO 1</small>Documentar la empresa</button>
     <button type="button" data-step="1" aria-pressed="false"><small>PASO 2</small>Preparar al agente</button>
@@ -15,15 +20,17 @@
       <path data-edge="team" d="M85 140V35Q85 15 115 15H635Q665 15 665 45V140"/>
       <path data-edge="ask" d="M570 190H530Q500 190 500 160V110Q500 80 480 80H440"/>
       <path data-edge="use" d="M570 190H530Q500 190 500 220V270Q500 300 480 300H440"/>
+      <path data-edge="report" d="M665 140V45Q665 15 635 15H115Q85 15 85 35V140"/>
       <path data-edge="incoming" d="M910 245V335Q910 360 885 360H475Q455 360 455 340V320Q455 300 440 300"/>
       <path data-edge="delivery" d="M440 300Q455 300 455 320V340Q455 360 475 360H885Q910 360 910 335V245"/>
       <path class="flow-particle" data-flow pathLength="100" d="M210 190H240Q260 190 260 170V100Q260 80 285 80H330"/>
     </svg>
-    <svg class="wires mobile-wires" viewBox="0 0 1000 650" preserveAspectRatio="none" fill="none" aria-hidden="true"><path data-edge="document" d="M500 125V145Q500 165 480 165H235Q215 165 215 185V190"/><path data-edge="systems" d="M500 125V145Q500 165 520 165H765Q785 165 785 185V190"/><path data-edge="learn" d="M215 280V310Q215 330 245 330H470Q500 330 500 350V355"/><path data-edge="tools" d="M785 280V310Q785 330 755 330H530Q500 330 500 350V355"/><path data-edge="team" d="M750 75H940Q960 75 960 95V380Q960 400 940 400H825"/><path data-edge="ask" d="M500 355V350Q500 330 470 330H245Q215 330 215 310V280"/><path data-edge="use" d="M500 355V350Q500 330 530 330H755Q785 330 785 310V280"/><path data-edge="incoming" d="M800 535H920Q950 535 950 505V310Q950 280 920 280H785"/><path data-edge="delivery" d="M785 280H920Q950 280 950 310V505Q950 535 920 535H800"/><path class="flow-particle" data-flow pathLength="100" d="M500 125V145Q500 165 480 165H235Q215 165 215 185V190"/></svg>
+    <svg class="wires mobile-wires" viewBox="0 0 1000 650" preserveAspectRatio="none" fill="none" aria-hidden="true"><path data-edge="document" d="M500 125V145Q500 165 480 165H235Q215 165 215 185V190"/><path data-edge="systems" d="M500 125V145Q500 165 520 165H765Q785 165 785 185V190"/><path data-edge="learn" d="M215 280V310Q215 330 245 330H470Q500 330 500 350V355"/><path data-edge="tools" d="M785 280V310Q785 330 755 330H530Q500 330 500 350V355"/><path data-edge="team" d="M750 75H940Q960 75 960 95V380Q960 400 940 400H825"/><path data-edge="ask" d="M500 355V350Q500 330 470 330H245Q215 330 215 310V280"/><path data-edge="use" d="M500 355V350Q500 330 530 330H755Q785 330 785 310V280"/><path data-edge="report" d="M825 400H940Q960 400 960 380V95Q960 75 940 75H750"/><path data-edge="incoming" d="M800 535H920Q950 535 950 505V310Q950 280 920 280H785"/><path data-edge="delivery" d="M785 280H920Q950 280 950 310V505Q950 535 920 535H800"/><path class="flow-particle" data-flow pathLength="100" d="M500 125V145Q500 165 480 165H235Q215 165 215 185V190"/></svg>
     <div class="node company" data-node="company"><span class="symbol" aria-hidden="true">◎</span><strong>Tu empresa y tu equipo</strong><p>Documentan cómo trabajáis.</p></div>
     <div class="node context" data-node="context"><span class="symbol" aria-hidden="true">▤</span><strong>Contexto</strong><p>Conocimiento y reglas de la empresa.</p><div class="documents"><span>▤ PDF</span><span>▧ Guías</span><span>▤ Procesos</span></div></div>
     <div class="node systems" data-node="systems"><span class="symbol" aria-hidden="true">⌘</span><strong>Sistemas que usáis</strong><p data-systems-note>Herramientas y accesos necesarios.</p>
       <div class="apps">
+        <span class="app" data-app="crm">▤ CRM</span><span class="app" data-app="calendar">▦ Calendar</span><span class="app" data-app="ticket">▣ Tickets</span><span class="app" data-app="wazuh">◈ Wazuh</span><span class="app" data-app="server">⌘ Servidor</span><span class="app" data-app="monitor">◉ Monitor</span>
         <span class="app" data-app="erp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 4 16 4 16 0V5M4 12c0 4 16 4 16 0"/></svg>ERP</span>
         <span class="app" data-app="gmail"><svg viewBox="0 0 32 24" aria-hidden="true"><path fill="#4285f4" d="M0 4h5v20H0z"/><path fill="#34a853" d="M27 4h5v20h-5z"/><path fill="#ea4335" d="M0 0h5l11 9L27 0h5v7L16 19 0 7z"/><path fill="#fbbc04" d="m27 0 5 4v3l-5 4z"/></svg>Gmail</span>
       </div>
@@ -88,6 +95,42 @@
       {kind:'mail', title:'✉ Enviar a Lucía Martín', body:'Hola, Lucía: aquí tienes tu factura de 30 €. Si necesitas algo más, estamos a tu disposición.'},
       {kind:'mail', title:'✉ Tu factura F-2026-0842', body:'Hola, Lucía:\n\nTe adjunto tu factura de 30 €. Si necesitas algo más, estamos a tu disposición.\n\nUn saludo, tu equipo de atención.'},
     ];
+    type ExtraStep = {step:number; edge:string; from:string; to:string; title:string; text:string; app:string; kind:string};
+    const makeStep = (edge:string, from:string, to:string, app:string, kind:string, title:string, text:string): ExtraStep => ({step:2,edge,from,to,app,kind,title,text});
+    const support = [
+      makeStep('incoming','client','systems','gmail','mail','No puedo entrar en facturación','Hola, soy Carlos Vega. No puedo acceder al programa de facturación. ¿Podéis ayudarme?'),
+      makeStep('tools','systems','agent','gmail','mail','Petición recibida de Carlos','El agente recibe el correo y recoge el problema: acceso al programa de facturación.'),
+      makeStep('ask','agent','context','','query','Consultar el procedimiento de soporte','¿Qué comprobaciones debo hacer y cómo se deriva este problema a un técnico?'),
+      makeStep('learn','context','agent','','note','Procedimiento de acceso','Comprobar el mensaje de error y el estado del servicio. No solicitar contraseñas. Si persiste, concertar asistencia.'),
+      makeStep('use','agent','systems','crm','query','Comprobar el servicio contratado','Buscar a Carlos Vega y verificar que su empresa tiene soporte para el programa de facturación.'),
+      makeStep('tools','systems','agent','crm','note','Contrato de soporte activo','El CRM confirma la cobertura. El acceso sigue fallando tras las comprobaciones iniciales.'),
+      makeStep('use','agent','systems','ticket','ticket','Crear ticket SOP-1042','Problema: acceso rechazado. Servicio disponible; incidencia de acceso pendiente de diagnóstico. Cliente y contrato vinculados.'),
+      makeStep('use','agent','systems','calendar','calendar','Consultar la agenda del técnico','Calendar devuelve dos huecos: mañana a las 10:00 o a las 12:30.'),
+      makeStep('delivery','systems','client','gmail','mail','¿Qué horario te viene bien?','Hola, Carlos: podemos revisar el acceso mañana a las 10:00 o a las 12:30. Responde con el horario que prefieras.'),
+      makeStep('incoming','client','systems','gmail','mail','Carlos elige las 10:00','Gracias, mañana a las 10:00 me viene bien.'),
+      makeStep('tools','systems','agent','gmail','mail','El agente recibe el horario elegido','Carlos confirma mañana a las 10:00. El agente prepara la reserva.'),
+      makeStep('use','agent','systems','calendar','calendar','Reservar la cita','Recomprobar disponibilidad y reservar mañana a las 10:00. Vincular el evento al ticket SOP-1042.'),
+      makeStep('delivery','systems','client','gmail','mail','Tu cita está confirmada','Hola, Carlos: te esperamos mañana a las 10:00 para revisar el acceso. Referencia: SOP-1042. El técnico ya dispone del contexto.'),
+      makeStep('report','agent','company','ticket','ticket','Ticket entregado al técnico','SOP-1042 · Carlos Vega · Mañana, 10:00. Incluye contrato, problema y comprobaciones. Cita confirmada; avería pendiente de resolver.'),
+    ];
+    const serverCase = [
+      makeStep('incoming','client','systems','wazuh','alert','La monitorización detecta una web caída','La comprobación HTTP falla. Wazuh recoge en el servidor el error «No space left on device».'),
+      makeStep('tools','systems','agent','wazuh','alert','Wazuh avisa al agente','Servidor web-01 · Disco al 100 %. Los logs de la aplicación han crecido unos 80 GB en dos horas.'),
+      makeStep('ask','agent','context','','query','Consultar el procedimiento de Sistemas','¿Qué logs se pueden limpiar, qué evidencias conservar y quién autoriza la intervención?'),
+      makeStep('learn','context','agent','','note','Intervención con aprobación','Conservar las evidencias requeridas. Actuar solo sobre los logs de la aplicación autorizados, sin borrar registros de seguridad de Wazuh.'),
+      makeStep('use','agent','systems','server','terminal','Conectar y comprobar el servidor','El agente revisa espacio, tamaño y ritmo de crecimiento de logs, archivos abiertos y estado del servicio. Todavía no modifica nada.'),
+      makeStep('tools','systems','agent','server','terminal','Causa localizada','Los logs de la aplicación ocupan 80 GB y han agotado el disco. La web no puede escribir sus archivos temporales.'),
+      makeStep('report','agent','company','','proposal','Propuesta para Sistemas','Conservar evidencias y limpiar los logs autorizados. Aplicar rotación y retención con un máximo total de 10 GB, comprobación frecuente y alerta de crecimiento.'),
+      makeStep('team','company','agent','','approval','Sistemas aprueba la propuesta','La responsable autoriza la limpieza y el límite de 10 GB para esos logs. Queda registrada la aprobación.'),
+      makeStep('use','agent','systems','server','terminal','Aplicar la corrección autorizada','El agente vuelve al servidor, libera el espacio de los logs aprobados y activa la política de rotación y retención de 10 GB.'),
+      makeStep('tools','systems','agent','server','terminal','Espacio recuperado y política aplicada','La comprobación confirma espacio disponible, logs por debajo del límite y escritura del servicio restaurada.'),
+      makeStep('use','agent','systems','monitor','query','Comprobar la recuperación','Volver a probar la web, revisar errores y comprobar que la política limita los logs. Registrar la intervención y revisar la causa del crecimiento.'),
+      makeStep('tools','systems','agent','monitor','note','La web vuelve a responder','HTTP 200 · Disco con espacio · Política de logs activa. La monitorización confirma la recuperación.'),
+      makeStep('delivery','systems','client','monitor','resolved','Web recuperada','El servicio vuelve a estar disponible. Limpieza y retención aplicadas con aprobación de Sistemas; intervención documentada.'),
+    ];
+    let selectedCase: 'invoice' | 'support' | 'server' = 'invoice';
+    const currentSteps = () => selectedCase === 'invoice' ? invoice : selectedCase === 'support' ? support : serverCase;
+    const resultText = () => selectedCase === 'invoice' ? '✓ RESUELTO · ≈ 10 min ahorrados al equipo (estimación)' : selectedCase === 'support' ? '✓ Cita confirmada · Ticket entregado al técnico' : '✓ Web recuperada · Límite de logs: 10 GB';
     const map = root.querySelector<HTMLElement>('.map')!;
     const transfer = root.querySelector<HTMLElement>('[data-transfer]')!;
     const duration = 3200;
@@ -113,8 +156,11 @@
       transfer.style.setProperty('--tether-x', (x - left) + 'px');
       transfer.style.setProperty('--tether-length', Math.max(0, y - top - h) + 'px');
       transfer.dataset.arrived = String(progress === 1);
-      root!.querySelector<HTMLElement>('[data-client-received]')!.hidden = !(example && index === invoice.length - 1 && progress === 1);
-      transfer.querySelector('[data-transfer-status]')!.textContent = progress === 1 ? (example && index === invoice.length - 1 ? '✓ RESUELTO · ≈ 10 min ahorrados al equipo (estimación)' : '✓ Recibido') : 'En camino →';
+      if (example && index === currentSteps().length - 1 && progress === 1) {
+        root!.querySelector('[data-client-state]')!.textContent = selectedCase === 'server' ? 'La web vuelve a responder: HTTP 200.' : selectedCase === 'support' ? 'Cita: mañana a las 10:00.' : 'Factura recibida: 30,00 €.';
+      }
+      root!.querySelector<HTMLElement>('[data-client-received]')!.hidden = !(example && index === currentSteps().length - 1 && progress === 1);
+      transfer.querySelector('[data-transfer-status]')!.textContent = progress === 1 ? (example && index === currentSteps().length - 1 ? resultText() : '✓ Recibido') : 'En camino →';
     }
     function animate(now: number) {
       if (lastTime && elapsed < duration && visible && !document.hidden && (!paused || manualTravel)) {
@@ -127,11 +173,23 @@
     let index = 0, example = true, paused = motion.matches, visible = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
     function render(manual = false) {
-      const list = example ? invoice : scenes;
+      const list = example ? currentSteps() : scenes;
       const scene = list[index];
       root!.dataset.phase = String(scene.step);
-      root!.dataset.resolved = String(example && index === invoice.length - 1);
-      root!.querySelector<HTMLElement>('[data-client-state]')!.textContent = example ? 'Consulta: mi factura de 30 €.' : 'Envía una consulta y recibe su respuesta.';
+      root!.dataset.resolved = String(example && index === currentSteps().length - 1);
+      const person = selectedCase === 'support' ? 'Carlos Vega' : selectedCase === 'server' ? 'Web de la empresa' : 'Lucía Martín';
+      root!.querySelector('.client>strong')!.textContent = person;
+      root!.querySelector('.client>small')!.textContent = selectedCase === 'server' ? 'SERVICIO MONITORIZADO' : 'CLIENTE';
+      root!.querySelector('.client-zone>span')!.textContent = selectedCase === 'server' ? 'DISPONIBILIDAD DE LA WEB' : 'FUERA DE TU EMPRESA';
+      root!.querySelector('.company>strong')!.textContent = selectedCase === 'server' ? 'Responsable de Sistemas' : selectedCase === 'support' ? 'Tu equipo técnico' : 'Tu empresa y tu equipo';
+      root!.querySelector<HTMLElement>('[data-client-state]')!.textContent = selectedCase === 'server' ? 'La web no responde.' : selectedCase === 'support' ? 'No puedo entrar en facturación.' : 'Consulta: mi factura de 30 €.';
+      const result = root!.querySelector<HTMLElement>('[data-client-received]')!;
+      result.textContent = selectedCase === 'invoice' ? '✓ Correo + PDF recibidos · ≈ 10 min ahorrados al equipo (estimación)' : resultText();
+      root!.querySelector<HTMLElement>('[data-systems-note]')!.hidden = selectedCase !== 'invoice';
+      const apps = selectedCase === 'invoice' ? ['erp','gmail'] : selectedCase === 'support' ? ['crm','calendar','ticket','gmail'] : ['wazuh','server','monitor'];
+      root!.querySelectorAll<HTMLElement>('[data-app]').forEach(app => app.hidden = !apps.includes(app.dataset.app!));
+      root!.querySelectorAll('[data-example]').forEach(button => button.setAttribute('aria-pressed', String(button.getAttribute('data-example') === selectedCase)));
+
       root!.querySelector<HTMLElement>('[data-client-received]')!.hidden = true;
       steps.forEach((button, i) => button.setAttribute('aria-pressed', String(i === scene.step)));
       root!.querySelectorAll<HTMLElement>('[data-node]').forEach(node => { node.dataset.active = String(node.dataset.node === scene.to); node.dataset.source = String(node.dataset.node === scene.from); });
@@ -143,18 +201,18 @@
       root!.querySelector('[data-explanation]')!.textContent = scene.text;
       root!.querySelector('[data-next]')!.textContent = index === list.length - 1 ? 'Volver al inicio ↺' : 'Siguiente →';
       root!.querySelector('[data-mode]')!.textContent = example ? 'Simulación con datos ficticios · Avanza para ver cada acción.' : 'Un mismo agente, con tu contexto y tus herramientas.';
-      const payload = example ? payloads[index] : {title:scene.title, body:scene.text, kind:'note'};
-      const names: Record<string,string> = {company:'Tu equipo', context:'Contexto', systems:scene.app === 'erp' ? 'ERP' : scene.app === 'gmail' ? 'Gmail' : 'Sistemas', agent:'Agente IA', client:'Lucía Martín'};
+      const payload = example && selectedCase === 'invoice' ? payloads[index] : {title:scene.title, body:scene.text, kind:example ? (scene as ExtraStep).kind : 'note'};
+      const names: Record<string,string> = {company:'Tu equipo', context:'Contexto', systems:({erp:'ERP',gmail:'Gmail',crm:'CRM',calendar:'Calendar',ticket:'Tickets',wazuh:'Wazuh',server:'Servidor',monitor:'Monitorización'} as Record<string,string>)[scene.app] || 'Sistemas', agent:'Agente IA', client:person};
       transfer.dataset.kind = payload.kind;
-      const incomingMail = example && index <= 1;
-      transfer.querySelector('[data-mail-person]')!.textContent = incomingMail ? 'De: Lucía Martín · Para: tu empresa' : 'De: tu empresa · Para: Lucía Martín';
-      transfer.querySelector('[data-mail-label]')!.textContent = incomingMail ? 'Recibidos' : index >= 9 ? 'Enviados' : 'Borrador';
-      transfer.querySelector('.gmail-avatar')!.textContent = incomingMail ? 'L' : 'AI';
+      const incomingMail = scene.from === 'client' || (scene.to === 'agent' && scene.app === 'gmail');
+      transfer.querySelector('[data-mail-person]')!.textContent = incomingMail ? 'De: ' + person + ' · Para: tu empresa' : 'De: tu empresa · Para: ' + person;
+      transfer.querySelector('[data-mail-label]')!.textContent = incomingMail ? 'Recibidos' : scene.to === 'client' ? 'Enviados' : 'Borrador';
+      transfer.querySelector('.gmail-avatar')!.textContent = incomingMail ? person[0] : 'AI';
       root!.querySelector<HTMLElement>('[data-transfer-marker]')!.textContent = payload.kind === 'pdf' ? 'PDF' : payload.kind === 'mail' ? '✉' : '▤';
       transfer.querySelector('[data-transfer-route]')!.textContent = names[scene.from] + ' → ' + names[scene.to];
       transfer.querySelector('[data-transfer-title]')!.textContent = payload.title;
       transfer.querySelector('[data-transfer-body]')!.textContent = payload.body;
-      transfer.querySelector<HTMLElement>('[data-transfer-file]')!.hidden = !(example && [6,7,9,10].includes(index));
+      transfer.querySelector<HTMLElement>('[data-transfer-file]')!.hidden = !(example && selectedCase === 'invoice' && [6,7,9,10].includes(index));
       elapsed = motion.matches ? duration : 0;
       manualTravel = manual;
       lastTime = 0;
@@ -167,15 +225,19 @@
       root!.dataset.playing = String(running);
       play.textContent = paused ? 'Reproducir recorrido' : 'Pausar recorrido';
       if (running) timer = setTimeout(() => {
-        const count = (example ? invoice : scenes).length;
+        const count = (example ? currentSteps() : scenes).length;
         if (index === count - 1) paused = true;
         else { index++; render(); }
         schedule();
       }, 7000);
     }
-    root.querySelector('[data-next]')!.addEventListener('click', () => { index = (index + 1) % (example ? invoice : scenes).length; paused = true; render(true); schedule(); });
+    root.querySelector('[data-next]')!.addEventListener('click', () => { index = (index + 1) % (example ? currentSteps() : scenes).length; paused = true; render(true); schedule(); });
     steps.forEach((button, i) => button.addEventListener('click', () => { example = i === 2; index = [0,2,0][i]; paused = true; render(true); schedule(); }));
-    play.addEventListener('click', () => { if (paused && index === (example ? invoice : scenes).length - 1) { index = 0; render(); } paused = !paused; manualTravel = false; schedule(); });
+    play.addEventListener('click', () => { if (paused && index === (example ? currentSteps() : scenes).length - 1) { index = 0; render(); } paused = !paused; manualTravel = false; schedule(); });
+    root.querySelectorAll<HTMLButtonElement>('[data-example]').forEach(button => button.addEventListener('click', () => {
+      selectedCase = button.dataset.example as typeof selectedCase;
+      example = true; index = 0; paused = motion.matches; render(true); schedule();
+    }));
     const onMotion = () => { paused = motion.matches; if (motion.matches) elapsed = duration; schedule(); };
     motion.addEventListener('change', onMotion);
     document.addEventListener('visibilitychange', schedule);
@@ -193,6 +255,14 @@
   h2 span { color:#a9c9f2; }
   .control { padding:10px 14px; border:1px solid #657b9a; border-radius:20px; background:#16253a; color:#dceaff; font-size:12px; white-space:nowrap; cursor:pointer; }
   button:focus-visible { outline:2px solid #b3ddff; outline-offset:4px; }
+  .example-tabs { display:flex; flex-wrap:wrap; gap:10px; margin-top:24px; }
+  .example-tabs button { padding:12px 16px; border:1px solid #657b9a; border-radius:9px; background:#16253a; color:#dceaff; font-size:13px; cursor:pointer; }
+  .example-tabs [aria-pressed="true"] { background:#244361; border-color:#a5dfff; color:white; }
+  .app[hidden] { display:none; }
+  @media(max-width:900px) { .workflow .apps { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px; } .apps .app { font-size:9px; padding:4px 2px; gap:3px; } .apps .app svg { width:14px; height:14px; } }
+  .transfer[data-kind="alert"],.transfer[data-kind="proposal"] { background:#3b304c; border-color:#d5b6ed; }
+  .transfer[data-kind="terminal"] { background:#101c2b; border-color:#80cdb7; font-family:monospace; }
+  .transfer[data-kind="calendar"],.transfer[data-kind="ticket"] { background:#213b57; border-color:#9dcaff; }
   .step-tabs { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:28px 0 22px; }
   .step-tabs button { padding:13px 15px; text-align:left; border:1px solid #405875; border-radius:9px; background:#132238; color:#c5d7ef; font-size:14px; cursor:pointer; }
   .step-tabs small { display:block; font:10px monospace; margin-bottom:6px; color:#a5cfff; }
