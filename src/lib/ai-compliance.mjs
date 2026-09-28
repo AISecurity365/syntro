@@ -68,3 +68,30 @@ export function assess(a) {
     gdprNote:personal?'Revisa artículos 5, 6, 9 cuando proceda, 13–22, 28, 32, 35 y 44 y siguientes. El resultado no acredita cumplimiento.':'El RGPD puede seguir aplicando a cuentas, metadatos o salidas identificables. Seudonimizar o borrar un nombre no garantiza anonimato.',
   };
 }
+
+// Plain-language presentation of the existing assessment; not a second legal score.
+export function conclusion(a) {
+  const r=assess(a);
+  const specialist=r.aiStatus==='Revisión especializada' || a.data==='sensitive';
+  const unresolved=r.pending.length>0 || r.priority.length>0;
+  const actions={
+    inventory:'Anota para qué usáis esta IA y quién se responsabiliza de su uso.',
+    training:'Forma y orienta al equipo sobre esta IA y guarda constancia de las medidas.',
+    human:'Define quién revisa las respuestas y qué hacer si la IA se equivoca.',
+    security:'Revisa permisos, datos guardados y conexiones con correo o archivos.',
+    notice:'Comprueba si debéis avisar de que se está interactuando con una IA y añade el aviso cuando corresponda.',
+    labels:'Revisa qué contenido generado con IA necesita marcado o una indicación visible.',
+    basis:'Documenta para qué necesitas los datos personales y con qué base puedes tratarlos.',
+    contract:'Comprueba el contrato de tratamiento de datos y los terceros que intervienen.',
+    rights:'Informa a las personas y prepara cómo atender sus derechos sobre sus datos.',
+    transfers:'Comprueba dónde se procesan los datos y las garantías si salen del EEE.',
+    impact:'Determina si necesitas una evaluación de impacto antes de tratar los datos.',
+    special:'Valida las condiciones adicionales para utilizar datos sensibles.',
+    decisions:'Revisa las garantías antes de automatizar decisiones importantes sobre personas.',
+  };
+  return {
+    title:specialist?'Este uso necesita una revisión especializada':unresolved?'Todavía tienes puntos por resolver':'Has marcado todas las medidas del test',
+    explanation:specialist?'Por el uso o los datos indicados, este test no puede validar el caso. Revisa sus condiciones antes de ponerlo en marcha o ampliarlo.':unresolved?'Con tus respuestas no podemos confirmar el cumplimiento. Los puntos siguientes están sin comprobar o pendientes; esto no significa que todos sean infracciones.':'No quedan casillas pendientes. Ahora contrasta lo declarado con contratos, configuración y evidencias: este resultado no certifica el cumplimiento.',
+    actions:[...r.priority,...r.pending.map(c=>actions[c.id])],
+  };
+}

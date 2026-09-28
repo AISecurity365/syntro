@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {assess,controlsFor,providers} from '../../src/lib/ai-compliance.mjs';
+import {assess,controlsFor,providers,conclusion} from '../../src/lib/ai-compliance.mjs';
 const base={provider:'chatgpt',plan:'3',use:'internal',data:'personal',controls:[]};
 test('business plan never grants legal compliance',()=>{
  const a={...base,controls:controlsFor(base).map(c=>c.id)};
@@ -28,4 +28,13 @@ test('questions vary with use and data',()=>{
 test('all provider plans produce reviewable results',()=>{
  for(const [provider,p] of Object.entries(providers)) for(let plan=0;plan<p.plans.length;plan++)assert.ok(assess({...base,provider,plan}).provider.name);
  assert.throws(()=>assess({...base,provider:'invalid'}));
+});
+
+test('plain conclusion keeps uncertainty and sensitive cases visible',()=>{
+ assert.equal(conclusion(base).title,'Todavía tienes puntos por resolver');
+ assert.ok(conclusion(base).actions.some(a=>a.startsWith('Forma y orienta')));
+ const complete={...base,controls:controlsFor(base).map(c=>c.id)};
+ assert.equal(conclusion(complete).title,'Has marcado todas las medidas del test');
+ assert.match(conclusion(complete).explanation,/no certifica/);
+ assert.equal(conclusion({...complete,data:'sensitive'}).title,'Este uso necesita una revisión especializada');
 });

@@ -10,7 +10,7 @@
   <noscript>Activa JavaScript para usar el cuestionario. Debajo tienes los criterios y fuentes para revisar tu caso sin el test.</noscript>
 </section>
 <script>
-  import {providers, uses, dataTypes, controlsFor, assess, reviewed} from '../../lib/ai-compliance.mjs';
+  import {providers, uses, dataTypes, controlsFor, assess, conclusion, reviewed} from '../../lib/ai-compliance.mjs';
   const root=document.getElementById('ai-check')!;
   const form=root.querySelector('form')!;
   const screen=root.querySelector('#quiz-screen')!;
@@ -39,11 +39,25 @@
     if(step===2){title='¿Para qué utilizáis cada IA?';body='<p class="quiz-hint">Marca uno o varios usos por herramienta.</p>'+selected.map(id=>`<fieldset class="quiz-tool"><legend>${esc(providers[id].name)}</legend>${options('uses-'+id,Object.entries(uses),entries[id].uses,true)}</fieldset>`).join('');}
     if(step===3){title='¿Qué datos trata cada herramienta?';body='<p class="quiz-hint">Incluye prompts, adjuntos, correo y conectores. Para cada IA, elige el tipo más sensible entre todos sus usos seleccionados.</p>'+selected.map(id=>`<fieldset class="quiz-tool"><legend>${esc(providers[id].name)}</legend>${options('data-'+id,Object.entries(dataTypes),entries[id].data)}</fieldset>`).join('');}
     if(step===4){title='¿Qué habéis comprobado de verdad?';body='<p class="quiz-hint">Marca solo medidas verificadas para todos los usos seleccionados de esa herramienta. Lo que no sepas quedará pendiente.</p>'+selected.map(id=>`<fieldset class="quiz-tool"><legend>${esc(providers[id].name)}</legend>${toolControls(id).map(c=>`<label class="quiz-option"><input type="checkbox" name="controls-${id}" value="${c.id}" ${entries[id].controls.includes(c.id)?'checked':''}><span><small>${c.area}</small>${esc(c.label)}</span></label>`).join('')}</fieldset>`).join('');}
-    if(step===5){title='Tu mapa de revisión';body=cases().map(answers=>{const r=assess(answers);return `<section class="quiz-tool"><p class="quiz-hint">${esc(r.provider.name)} · ${esc(r.plan.label)}<br>${esc(uses[answers.use])} · ${esc(dataTypes[answers.data])}</p><div class="quiz-results"><div><h4>AI Act</h4><strong>${esc(r.aiStatus)}</strong><p>La clasificación depende del uso y de vuestro papel. No hemos comprobado evidencias ni todos los requisitos sectoriales.</p></div><div><h4>RGPD</h4><strong>${esc(r.gdprStatus)}</strong><p>${esc(r.gdprNote)}</p></div></div><p><strong>Orientación, no certificado de cumplimiento.</strong> Las respuestas son declaraciones tuyas; no verificamos contratos, configuraciones ni documentos.</p>${r.priority.length?'<h4>Qué revisar primero</h4><ul>'+r.priority.map(p=>`<li>${esc(p)}</li>`).join('')+'</ul>':''}<h4>Tu lista de trabajo</h4>${r.pending.length?'<ul>'+r.pending.map(p=>`<li><strong>${p.area}:</strong> ${esc(p.label)}</li>`).join('')+'</ul>':'<p>Has declarado todos los controles preguntados. El siguiente paso es contrastarlos con evidencias y revisar requisitos no cubiertos por este test.</p>'}<p class="quiz-hint">${esc(r.provider.note)} <a href="${r.provider.url}" target="_blank" rel="noopener noreferrer">Ver fuente del proveedor ↗</a></p><p class="quiz-hint">Fuentes revisadas: ${reviewed}. Las condiciones pueden cambiar.</p></section>`;}).join('')+`<div class="quiz-nav"><button type="button" id="quiz-download">Descargar resumen</button><button type="button" id="quiz-reset">Evaluar otro uso</button></div><p><a href="/presupuesto?plan=Revision-IA-Act-RGPD">Solicitar revisión de mi caso →</a></p>`;}
+    if(step===5){
+      title='Tu resultado y próximos pasos';
+      body='<p class="quiz-hint">Lee el resultado de cada herramienta y uso. Empieza por los casos que necesitan revisión especializada.</p>'+cases().map(answers=>{
+        const r=assess(answers), c=conclusion(answers);
+        return `<section class="quiz-tool"><h3>${esc(r.provider.name)} · ${esc(r.plan.label)}</h3><p class="quiz-hint">${esc(uses[answers.use])}</p>
+          <div class="quiz-conclusion"><strong>${esc(c.title)}</strong><p>${esc(c.explanation)}</p></div>
+          <h4>${c.actions.length?'Empieza por aquí':'Tu siguiente paso'}</h4>
+          ${c.actions.length?'<ol>'+c.actions.slice(0,3).map(p=>`<li>${esc(p)}</li>`).join('')+'</ol>':'<p>Reúne las evidencias de las medidas que has marcado y comprueba que cubren este uso concreto.</p>'}
+          <details><summary>Ver revisión completa${c.actions.length>3?' · '+(c.actions.length-3)+' acciones más':''}</summary>
+            ${c.actions.length>3?'<h4>Después, continúa con estas medidas</h4><ul>'+c.actions.slice(3).map(p=>`<li>${esc(p)}</li>`).join('')+'</ul>':''}
+            <div class="quiz-results"><div><h4>AI Act</h4><strong>${esc(r.aiStatus)}</strong></div><div><h4>RGPD</h4><strong>${esc(r.gdprStatus)}</strong><p>${esc(r.gdprNote)}</p></div></div>
+            <p class="quiz-hint">${esc(r.provider.note)} <a href="${r.provider.url}" target="_blank" rel="noopener noreferrer">Fuente del proveedor ↗</a></p>
+          </details></section>`;
+      }).join('')+`<p class="quiz-hint">Orientación basada en tus respuestas, no una auditoría ni un certificado. Fuentes revisadas: ${reviewed}.</p><div class="quiz-nav"><button type="button" id="quiz-download">Descargar mi lista de acciones</button><button type="button" id="quiz-reset">Evaluar otro uso</button></div><p><a href="/presupuesto?plan=Revision-IA-Act-RGPD">Quiero ayuda para resolver estos puntos →</a></p>`;
+    }
     screen.innerHTML=`<fieldset><legend tabindex="-1">${title}</legend><div class="quiz-options">${body}</div></fieldset>`;
     if(focus)(screen.querySelector('legend') as HTMLElement).focus({preventScroll:true});
     root.querySelector('#quiz-reset')?.addEventListener('click',()=>{selected=[];entries={};step=0;render(true);});
-    root.querySelector('#quiz-download')?.addEventListener('click',()=>{const text=cases().map(answers=>{const result=assess(answers);return ['ORIENTACIÓN DE USO DE IA — NO CERTIFICA CUMPLIMIENTO',`Revisión de fuentes: ${reviewed}`,result.provider.name,result.plan.label,uses[answers.use],dataTypes[answers.data],`AI Act: ${result.aiStatus}`,`RGPD: ${result.gdprStatus}`,result.gdprNote,...result.priority,...result.pending.map(p=>`${p.area}: ${p.label}`),result.provider.url].join('\n\n');}).join('\n\n──────────\n\n');const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='revision-uso-ia.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+    root.querySelector('#quiz-download')?.addEventListener('click',()=>{const text=cases().map(answers=>{const result=assess(answers), c=conclusion(answers);return ['ORIENTACIÓN DE USO DE IA — NO CERTIFICA CUMPLIMIENTO',`Revisión de fuentes: ${reviewed}`,result.provider.name,result.plan.label,uses[answers.use],dataTypes[answers.data],c.title,c.explanation,...c.actions,`AI Act: ${result.aiStatus}`,`RGPD: ${result.gdprStatus}`,result.gdprNote,result.provider.url].join('\n\n');}).join('\n\n──────────\n\n');const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='revision-uso-ia.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
   }
   function save(){
     const fd=new FormData(form);
@@ -85,6 +99,9 @@
   #ai-check #quiz-next{background:#5140a0;margin-left:auto}
   #ai-check [hidden]{display:none!important}
   #ai-check :focus-visible{outline:3px solid #c4b5fd;outline-offset:4px}
+  #ai-check .quiz-conclusion{padding:1.2rem;background:#282440;border-left:3px solid #a78bfa;border-radius:8px}
+  #ai-check .quiz-conclusion>strong{font-size:1.25rem;color:white}
+  #ai-check summary{cursor:pointer;color:#c4b5fd;padding:1rem 0}
   #ai-check .quiz-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
   #ai-check .quiz-results>div{padding:1rem;border:1px solid #686084;border-radius:10px}
   #ai-check h4{margin:.6rem 0;color:#c4b5fd}
