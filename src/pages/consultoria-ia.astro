@@ -405,11 +405,11 @@ const departamentos = [
             <circle id="cc-ring" cx="280" cy="280" r="72" fill="none" stroke="#4f7cff" stroke-width="3" stroke-dasharray="452 452" stroke-linecap="round" transform="rotate(-90 280 280)" style="opacity:0;"/>
             <g id="lines"></g>
             <g id="center-node">
-              <circle cx="280" cy="280" r="62" fill="#1a1d27" stroke="#4f7cff" stroke-width="2"/>
-              <circle cx="280" cy="280" r="56" fill="#0f1628" stroke="#4f7cff" stroke-width="1" opacity="0.5"/>
+              <circle cx="280" cy="280" r="62" fill="#14243a" stroke="#4f7cff" stroke-width="2"/>
+              <circle cx="280" cy="280" r="56" fill="#192a42" stroke="#4f7cff" stroke-width="1" opacity="0.5"/>
               <text x="280" y="272" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="700">Tu</text>
               <text x="280" y="290" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="700">Empresa</text>
-              <text x="280" y="308" text-anchor="middle" fill="#4f7cff" font-size="10">+ IA</text>
+              <text x="280" y="308" text-anchor="middle" fill="#a9c9f2" font-size="10">+ IA</text>
             </g>
             <g id="nodes"></g>
           </svg>
@@ -417,11 +417,11 @@ const departamentos = [
 
         <!-- Panel de beneficios y casos de uso -->
         <div id="info-panel" style="flex: 1; min-width: 300px; max-width: 480px; position: sticky; top: 24px;">
-          <div id="panel-default" style="background: #1a1d27; border: 1px solid #2a2d3a; border-radius: 16px; padding: 32px; text-align: center;">
+          <div id="panel-default" style="background: #14243a; border: 1px solid #2a2d3a; border-radius: 16px; padding: 32px; text-align: center;">
             <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.4;">👆</div>
             <p style="color: #a4b2c8; font-size: 1rem;">Selecciona un departamento para descubrir casos de uso en su trabajo diario.</p>
           </div>
-          <div id="panel-active" style="display: none; background: #1a1d27; border-radius: 16px; overflow: hidden; min-height: 560px;">
+          <div id="panel-active" style="display: none; background: #14243a; border-radius: 16px; overflow: hidden; min-height: 560px;">
             <div id="panel-header" style="padding: 20px 24px; display: flex; align-items: center; gap: 12px;">
               <span id="panel-icon" style="font-size: 28px;"></span>
               <div>
@@ -485,25 +485,16 @@ const departamentos = [
   </section>
 
   <!-- CTA FINAL -->
-  <section class="ci-closing" style="background: linear-gradient(135deg, #0f1628 0%, #1a0a2e 50%, #0a0d1a 100%); padding: 80px 0; position: relative; overflow: hidden;">
-    <div class="absolute inset-0 pointer-events-none opacity-30" style="background-image: radial-gradient(circle at 50% 50%, rgba(79,124,255,0.3), transparent 60%);"></div>
-    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-6" style="background: rgba(79,124,255,0.15); border: 1px solid rgba(79,124,255,0.3); color: #7da4ff;">
-        <span>🎯</span> Primera consulta gratuita
-      </div>
-      <h2 class="text-3xl md:text-4xl font-bold mb-4" style="color: #fff;">¿Listo para ver qué IA puede hacer por tu empresa?</h2>
-      <p class="text-lg mb-8" style="color: #94a3b8; line-height: 1.7;">Sin compromiso. Te decimos honestamente qué tiene sentido implementar en tu caso y qué retorno puedes esperar.</p>
-      <div class="flex flex-wrap gap-4 justify-center">
-        <a href="/presupuesto?plan=Consultoria-IA"
-          class="inline-flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-lg transition-all"
-          style="background: linear-gradient(135deg, #4f7cff, #7c3aed); color: #ffffff;">
-          Solicitar consulta gratuita →
-        </a>
-        <a href="/reunion"
-          class="inline-flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-lg transition-all"
-          style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); color: #cbd5e1;">
-          Reservar reunión
-        </a>
+  <section class="ci-closing">
+    <div class="ci-shell">
+      <div class="ci-closing-card">
+        <p class="ci-eyebrow"><span aria-hidden="true"></span>Primera consulta gratuita</p>
+        <h2>¿Listo para ver qué IA puede hacer por tu empresa?</h2>
+        <p class="ci-closing-copy">Sin compromiso. Te decimos honestamente qué tiene sentido implementar en tu caso y qué retorno puedes esperar.</p>
+        <div class="ci-actions">
+          <a href="/presupuesto?plan=Consultoria-IA" class="ci-primary">Solicitar consulta gratuita →</a>
+          <a href="/reunion" class="ci-secondary">Reservar reunión</a>
+        </div>
       </div>
     </div>
   </section>
@@ -608,7 +599,7 @@ const departamentos = [
 
     const bg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     bg.setAttribute('cx', pos.x); bg.setAttribute('cy', pos.y); bg.setAttribute('r', NODE_RADIUS);
-    bg.setAttribute('fill', '#1a1d27'); bg.setAttribute('stroke', dep.color);
+    bg.setAttribute('fill', '#14243a'); bg.setAttribute('stroke', dep.color);
     bg.setAttribute('stroke-width', '1.5'); bg.setAttribute('opacity', '0.8');
     bg.id = `bg-${dep.id}`;
 
@@ -627,7 +618,7 @@ const departamentos = [
       t1.textContent = words[0];
       const t2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       t2.setAttribute('x', pos.x); t2.setAttribute('y', pos.y + 22);
-      t2.setAttribute('text-anchor', 'middle'); t2.setAttribute('fill', '#4f7cff');
+      t2.setAttribute('text-anchor', 'middle'); t2.setAttribute('fill', '#a9c9f2');
       t2.setAttribute('font-size', '8'); t2.setAttribute('font-weight', '600');
       t2.textContent = '& ' + words[1];
       g.appendChild(bg); g.appendChild(icon); g.appendChild(t1); g.appendChild(t2);
@@ -745,10 +736,10 @@ const departamentos = [
       if (g) {
         g.classList.toggle('cc-active', on);
         g.style.opacity = on ? '1' : '0.75';
-        g.style.filter  = on ? `drop-shadow(0 0 12px ${dep.color})` : 'none';
+        g.style.filter = 'none';
       }
       if (bg) {
-        bg.setAttribute('fill', on ? dep.color + '40' : '#1a1d27');
+        bg.setAttribute('fill', on ? '#244361' : '#14243a');
         bg.setAttribute('stroke-width', on ? '3.5' : '1.5');
         bg.setAttribute('opacity', '1');
       }

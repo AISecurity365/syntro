@@ -63,11 +63,11 @@
       {step:2, edge:'use', from:'agent', to:'systems', title:'El agente utiliza Gmail para responder.', text:'Con aprobación humana o automáticamente, según las reglas acordadas. Tarea completada.', app:'gmail'},
     ];
     const invoice = [
-      {step:2, edge:'incoming', from:'client', to:'systems', title:'Lucía envía su consulta por correo.', text:'Su petición llega a Gmail con un identificador ficticio para buscar su ficha de cliente.', app:'gmail'},
+      {step:2, edge:'incoming', from:'client', to:'systems', title:'Lucía envía su consulta por correo.', text:'Su petición llega a Gmail con su DNI para buscar su ficha de cliente.', app:'gmail'},
       {step:2, edge:'tools', from:'systems', to:'agent', title:'Gmail entrega la petición al agente.', text:'Lucía Martín pide la factura de su compra de 30 €. El agente lee el correo.', app:'gmail'},
       {step:2, edge:'ask', from:'agent', to:'context', title:'El agente consulta las reglas de facturación.', text:'Pregunta qué datos debe contrastar y cuándo necesita la aprobación del equipo.', app:''},
       {step:2, edge:'learn', from:'context', to:'agent', title:'El contexto aporta los criterios para identificar a Lucía.', text:'El agente recibe las reglas de facturación y comprueba la identidad del cliente antes de consultar sus datos.', app:''},
-      {step:2, edge:'use', from:'agent', to:'systems', title:'El agente pasa el DNI al ERP para validar al cliente.', text:'DNI de demostración: 00000000-X. El ERP contrasta la ficha y la compra de 30 €. El DNI por sí solo no autoriza el envío.', app:'erp'},
+      {step:2, edge:'use', from:'agent', to:'systems', title:'El agente pasa el DNI al ERP para validar al cliente.', text:'DNI: 48271639K. El ERP contrasta la ficha y la compra de 30 €. El DNI por sí solo no autoriza el envío.', app:'erp'},
       {step:2, edge:'tools', from:'systems', to:'agent', title:'El ERP devuelve la validación del cliente.', text:'Coinciden la ficha de Lucía, el correo registrado y la compra. La simulación permite recuperar su factura.', app:'erp'},
       {step:2, edge:'tools', from:'systems', to:'agent', title:'El ERP devuelve los datos y el PDF al agente.', text:'Factura F-2026-0842 · Lucía Martín · Total: 30,00 €. El agente recibe el documento que debe adjuntar.', app:'erp'},
       {step:2, edge:'use', from:'agent', to:'systems', title:'El agente redacta el correo en Gmail.', text:'Prepara una respuesta personalizada y adjunta el PDF de la factura. Todavía no se ha enviado.', app:'gmail'},
@@ -76,11 +76,11 @@
       {step:2, edge:'delivery', from:'systems', to:'client', title:'Gmail entrega el correo redactado a Lucía.', text:'La respuesta y el PDF viajan hasta el cliente. Al llegar, la petición queda resuelta.', app:'gmail'},
     ];
     const payloads = [
-      {kind:'mail', title:'✉ Consulta de Lucía', body:'«¿Me enviáis mi factura de 30 €? Mi DNI es 00000000-X». Datos ficticios para esta demo.'},
+      {kind:'mail', title:'✉ Consulta de Lucía', body:'«¿Me enviáis mi factura de 30 €? Mi DNI es 48271639K».'},
       {kind:'mail', title:'✉ ¿Me enviáis mi factura?', body:'Lucía Martín: «Necesito la factura de mi compra de 30 €. Gracias.»'},
       {kind:'query', title:'⌕ Consultar el contexto', body:'¿Cómo valido al cliente y qué reglas sigo para enviar su factura?'},
       {kind:'note', title:'▤ Reglas de la empresa', body:'Verificar al cliente. Consultar su compra. Pedir aprobación antes de enviar.'},
-      {kind:'query', title:'⌕ Validar cliente en ERP', body:'DNI: 00000000-X (ficticio). Contrastar ficha, correo registrado y compra de 30 €.'},
+      {kind:'query', title:'⌕ Validar cliente en ERP', body:'DNI: 48271639K. Contrastar ficha, correo registrado y compra de 30 €.'},
       {kind:'note', title:'✓ Cliente validado', body:'Ficha de Lucía localizada. Correo y compra coinciden. Factura vinculada: F-2026-0842.'},
       {kind:'pdf', title:'PDF · F-2026-0842', body:'Lucía Martín · Empresa Ejemplo. Total: 30,00 €. Documento recuperado.'},
       {kind:'mail', title:'✎ Borrador para Lucía', body:'Hola, Lucía: te adjunto la factura F-2026-0842 de tu compra de 30 €. Un saludo, el equipo de atención al cliente.'},

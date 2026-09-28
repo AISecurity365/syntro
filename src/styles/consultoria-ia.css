@@ -79,9 +79,9 @@
 .consulting-page .faq-btn { padding:24px 0 !important; }
 .consulting-page .faq-body { padding:0 0 24px !important; }
 .consulting-page .faq-body p { border:0 !important; color:#b6c4d7 !important; font-size:15px !important; }
-.consulting-page .ci-closing { background:radial-gradient(ellipse at 50% 100%,#1a3556,transparent 75%),#090f1b !important; padding:90px 24px !important; }
+.consulting-page .ci-closing { background:#090f1b; padding:80px 0; }
 .ci-closing p { margin-left:auto; margin-right:auto; }
-.consulting-page .ci-closing a:first-child, .consulting-page #panel-active a { background:linear-gradient(120deg,#235dc8,#354ac4) !important; border:1px solid #678fec; }
+.consulting-page #panel-active a { background:linear-gradient(120deg,#235dc8,#354ac4) !important; border:1px solid #678fec; }
 .consulting-page :is(a,button):focus-visible { outline:2px solid #a3caff; outline-offset:5px; }
 @media(min-width:1450px) { .consulting-page .ci-hero { padding-top:100px; } }
 @media(max-width:900px) {
@@ -124,3 +124,24 @@
 .consulting-page .ci-intro .ci-eyebrow,.ci-intro .ci-actions { justify-content:center; }
 .consulting-page .ci-intro .ci-lead { max-width:65ch; margin:0 auto 28px; }
 .ci-workflow-section { padding:35px 0 80px; background:#090f1b; }
+
+/* Match the department explorer and closing invitation to the workflow palette. */
+.consulting-page .ci-departments h2,.consulting-page .ci-closing h2 { color:#edf3fd !important; font-size:clamp(28px,3.3vw,43px); font-weight:550; letter-spacing:-.04em; line-height:1.2; }
+.consulting-page .ci-departments h2+p { color:#b6c6dc !important; line-height:1.75; }
+.ci-department-picker button { background:#14243a; border-color:#405875; color:#c5d7ef; border-radius:9px; transition:background .2s,border-color .2s; }
+.ci-department-picker button:hover { background:#203650; border-color:#91b6e5; }
+.ci-department-picker button[aria-pressed="true"] { background:#244361; border-color:#a5dfff; }
+.consulting-page #panel-active { background:linear-gradient(145deg,#1c2d45,#101d30) !important; border-color:#486082 !important; box-shadow:0 16px 40px #0002; }
+.consulting-page #panel-header { background:#203650 !important; border-bottom-color:#486082 !important; }
+.consulting-page #panel-title { color:#dceaff !important; }
+.consulting-page #panel-resumen { color:#b6c6dc !important; line-height:1.6; }
+.consulting-page #panel-objetivos>div { background:#192e46 !important; border-color:#405875 !important; }
+.consulting-page .ci-use-cases>div,.consulting-page .ci-more-cases>div { background:#14243a !important; border-left-color:#91b6e5 !important; }
+.ci-closing-card { padding:clamp(28px,5vw,64px); border:1px solid #3e5271; border-radius:24px; background:radial-gradient(ellipse at 60% 0,#21314c,transparent 70%),#101a2b; text-align:center; }
+.consulting-page .ci-closing-card .ci-eyebrow { justify-content:center; margin:0 0 22px; }
+.consulting-page .ci-closing h2 { max-width:760px; margin:0 auto 20px; }
+.consulting-page .ci-closing-copy { max-width:62ch; margin:0 auto 30px; color:#b6c6dc; font-size:16px; line-height:1.75; }
+.ci-closing .ci-actions { justify-content:center; gap:14px; }
+.consulting-page .ci-secondary { display:inline-flex; align-items:center; justify-content:center; padding:15px 20px; border:1px solid #657b9a; border-radius:8px; background:#16253a; color:#dceaff; font-size:14px; font-weight:600; text-decoration:none; }
+.ci-secondary:hover { background:#203650; border-color:#a5dfff; }
+@media(max-width:680px) { .consulting-page .ci-closing { padding:55px 0; } .ci-closing .ci-actions>a { width:100%; justify-content:center; } }
