@@ -72,7 +72,7 @@
 
           <!-- Calendar Grid -->
           <div class="grid grid-cols-7 gap-1 mb-6" id="calendar-grid"></div>
-          <p style="color:#b5d9c9;font-size:12px;line-height:1.6;margin:0 0 20px;">Verde: días con agenda abierta. Comprobamos las horas libres al seleccionar un día.</p>
+          <p style="color:#a4b8d1;font-size:12px;line-height:1.6;margin:0 0 20px;">Agenda de lunes a viernes. Selecciona un día habilitado para consultar las horas libres.</p>
 
           <!-- Time Slots -->
           <div class="pt-5" style="border-top:1px solid rgba(59,130,246,0.15);">
@@ -242,11 +242,11 @@
 </section>
 
 <style>
-  :global(#calendar-grid button[data-available="true"]) { background:#143e32 !important; border:1px solid #4b987c !important; color:#b5f3d6 !important; }
-  :global(#calendar-grid button[data-available="true"]:hover) { background:#20573f !important; }
-  :global(#calendar-grid button[data-selected="true"]) { background:#236648 !important; border-color:#a3efca !important; outline:2px solid #a3efca; outline-offset:1px; }
-  :global(#time-slots-grid button) { background:#143e32 !important; border-color:#4b987c !important; color:#b5f3d6 !important; }
-  :global(#time-slots-grid button[aria-pressed="true"]) { background:#236648 !important; border-color:#a3efca !important; outline:2px solid #a3efca; }
+  :global(#calendar-grid button[data-available="true"]) { background:#14243a !important; border:1px solid #405875 !important; color:#dceaff !important; }
+  :global(#calendar-grid button[data-available="true"]:hover) { background:#203650 !important; }
+  :global(#calendar-grid button[data-selected="true"]) { background:#244361 !important; border-color:#91b6e5 !important; outline:2px solid #91b6e5; outline-offset:1px; }
+  :global(#time-slots-grid button) { background:#14243a !important; border-color:#405875 !important; color:#dceaff !important; }
+  :global(#time-slots-grid button[aria-pressed="true"]) { background:#244361 !important; border-color:#91b6e5 !important; outline:2px solid #91b6e5; }
   /* Placeholder color en inputs oscuros */
   input::placeholder, textarea::placeholder {
     color: rgba(240,246,255,0.25);

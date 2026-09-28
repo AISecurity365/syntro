@@ -1,4 +1,5 @@
 import { google } from 'googleapis';
+import { randomUUID } from 'node:crypto';
 import { meetingSlots } from './meeting-schedule';
 
 /**
@@ -25,7 +26,23 @@ const AVAILABLE_SLOTS = [
 /**
  * Initialize Google Calendar client with Service Account
  */
+function usesPersonalCalendar(): boolean {
+  return Boolean(import.meta.env.GOOGLE_OAUTH_REFRESH_TOKEN);
+}
+
+function getCalendarId(): string | undefined {
+  return usesPersonalCalendar() ? 'primary' : import.meta.env.GOOGLE_CALENDAR_ID;
+}
+
 function getCalendarClient() {
+  if (usesPersonalCalendar()) {
+    const clientId = import.meta.env.GOOGLE_OAUTH_CLIENT_ID;
+    const clientSecret = import.meta.env.GOOGLE_OAUTH_CLIENT_SECRET;
+    if (!clientId || !clientSecret) throw new Error('Missing Google OAuth client configuration');
+    const auth = new google.auth.OAuth2(clientId, clientSecret);
+    auth.setCredentials({ refresh_token: import.meta.env.GOOGLE_OAUTH_REFRESH_TOKEN });
+    return google.calendar({ version: 'v3', auth });
+  }
   const serviceAccountEmail = import.meta.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   const privateKey = import.meta.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
 
@@ -45,6 +62,22 @@ function getCalendarClient() {
   return google.calendar({ version: 'v3', auth });
 }
 
+// Interpret a wall-clock time in Madrid regardless of the server's timezone.
+function madridTime(dateKey: string, time: string): Date {
+  const wallTime = Date.parse(`${dateKey}T${time}:00Z`);
+  let instant = wallTime;
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: TIMEZONE, year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23',
+  });
+  for (let i = 0; i < 2; i++) {
+    const parts = Object.fromEntries(formatter.formatToParts(new Date(instant)).map(p => [p.type, p.value]));
+    const represented = Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day), Number(parts.hour), Number(parts.minute), Number(parts.second));
+    instant += wallTime - represented;
+  }
+  return new Date(instant);
+}
+
 /**
  * Get available time slots for a specific date
  */
@@ -53,7 +86,7 @@ export async function getAvailableSlots(date: Date): Promise<string[]> {
   const scheduledSlots = meetingSlots(dateKey);
   if (!scheduledSlots.length) return [];
   const calendar = getCalendarClient();
-  const calendarId = import.meta.env.GOOGLE_CALENDAR_ID;
+  const calendarId = getCalendarId();
 
   console.log('[Google Calendar] Calendar ID:', calendarId);
 
@@ -61,13 +94,10 @@ export async function getAvailableSlots(date: Date): Promise<string[]> {
     throw new Error('Missing GOOGLE_CALENDAR_ID environment variable');
   }
 
-  // Set time to start of day in Madrid timezone
-  const startOfDay = new Date(date);
-  startOfDay.setHours(0, 0, 0, 0);
-
-  // Set time to end of day
-  const endOfDay = new Date(date);
-  endOfDay.setHours(23, 59, 59, 999);
+  const startOfDay = madridTime(dateKey, '00:00');
+  const nextDay = new Date(dateKey + 'T12:00:00Z');
+  nextDay.setUTCDate(nextDay.getUTCDate() + 1);
+  const endOfDay = madridTime(nextDay.toISOString().slice(0, 10), '00:00');
 
   try {
     // Get all events for the day
@@ -87,20 +117,17 @@ export async function getAvailableSlots(date: Date): Promise<string[]> {
 
     for (const start of scheduledSlots) {
       const slot = { start, end: `${String(Number(start.slice(0, 2)) + 2).padStart(2, '0')}:00` };
-      const [startHour, startMinute] = slot.start.split(':').map(Number);
-      const slotStart = new Date(date);
-      slotStart.setHours(startHour, startMinute, 0, 0);
-
-      const [endHour, endMinute] = slot.end.split(':').map(Number);
-      const slotEnd = new Date(date);
-      slotEnd.setHours(endHour, endMinute, 0, 0);
+      const slotStart = madridTime(dateKey, slot.start);
+      const slotEnd = madridTime(dateKey, slot.end);
 
       // Check if slot overlaps with any existing event
       const isOccupied = events.some(event => {
-        if (!event.start?.dateTime || !event.end?.dateTime) return false;
-
-        const eventStart = new Date(event.start.dateTime);
-        const eventEnd = new Date(event.end.dateTime);
+        if (event.status === 'cancelled' || event.transparency === 'transparent') return false;
+        const start = event.start?.dateTime || event.start?.date;
+        const end = event.end?.dateTime || event.end?.date;
+        if (!start || !end) return false;
+        const eventStart = event.start?.dateTime ? new Date(start) : madridTime(start, '00:00');
+        const eventEnd = event.end?.dateTime ? new Date(end) : madridTime(end, '00:00');
 
         return (
           (slotStart >= eventStart && slotStart < eventEnd) ||
@@ -132,11 +159,11 @@ export async function createCalendarEvent(data: {
   date: Date;
   timeSlot: string; // Format: "HH:MM"
   message?: string;
-}): Promise<{ eventId: string; meetLink?: string }> {
+}): Promise<{ eventId: string; meetLink?: string; organizerEmail?: string }> {
   console.log('[Google Calendar] Creating event for:', data.name, 'on', data.date, 'at', data.timeSlot);
 
   const calendar = getCalendarClient();
-  const calendarId = import.meta.env.GOOGLE_CALENDAR_ID;
+  const calendarId = getCalendarId();
 
   console.log('[Google Calendar] Using Calendar ID:', calendarId);
 
@@ -147,10 +174,10 @@ export async function createCalendarEvent(data: {
   // Parse time slot
   const [hours, minutes] = data.timeSlot.split(':').map(Number);
   const startTime = new Date(data.date);
-  startTime.setHours(hours, minutes, 0, 0);
+  startTime.setUTCHours(hours, minutes, 0, 0);
 
   const endTime = new Date(startTime);
-  endTime.setMinutes(endTime.getMinutes() + MEETING_DURATION_MINUTES);
+  endTime.setUTCMinutes(endTime.getUTCMinutes() + MEETING_DURATION_MINUTES);
 
   // Build event description
   const descriptionParts = [
@@ -169,22 +196,29 @@ export async function createCalendarEvent(data: {
       summary: `Reunión: ${data.name}${data.company ? ` - ${data.company}` : ''}`,
     });
 
-    const event = await calendar.events.insert({
+    let event = await calendar.events.insert({
       calendarId,
+      ...(usesPersonalCalendar() ? { conferenceDataVersion: 1, sendUpdates: 'all' } : {}),
       requestBody: {
         summary: `Reunión: ${data.name}${data.company ? ` - ${data.company}` : ''}`,
         description: descriptionParts.join('\n'),
         start: {
-          dateTime: startTime.toISOString(),
+          dateTime: startTime.toISOString().slice(0, 19),
           timeZone: TIMEZONE,
         },
         end: {
-          dateTime: endTime.toISOString(),
+          dateTime: endTime.toISOString().slice(0, 19),
           timeZone: TIMEZONE,
         },
-        // Note: Google Meet auto-generation removed due to Service Account limitations
-        // Service Accounts cannot create Google Meet conferences without Domain-Wide Delegation
-        // The calendar owner can manually add a Meet link from Google Calendar after the event is created
+        ...(usesPersonalCalendar() ? {
+          attendees: data.email ? [{ email: data.email, displayName: data.name }] : [],
+          conferenceData: {
+            createRequest: {
+              requestId: randomUUID(),
+              conferenceSolutionKey: { type: 'hangoutsMeet' },
+            },
+          },
+        } : {}),
         reminders: {
           useDefault: false,
           overrides: [
@@ -195,6 +229,18 @@ export async function createCalendarEvent(data: {
       },
     });
 
+    // Meet provisioning is asynchronous. Never recreate an already inserted event.
+    if (usesPersonalCalendar() && event.data.id) {
+      for (let attempt = 0; attempt < 3 && event.data.conferenceData?.createRequest?.status?.statusCode === 'pending'; attempt++) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        try {
+          event = await calendar.events.get({ calendarId, eventId: event.data.id! });
+        } catch {
+          break; // Google still delivers the invitation; keep the existing event.
+        }
+      }
+    }
+
     console.log('[Google Calendar] Event created successfully!', {
       eventId: event.data.id,
       meetLink: event.data.hangoutLink,
@@ -202,7 +248,8 @@ export async function createCalendarEvent(data: {
 
     return {
       eventId: event.data.id!,
-      meetLink: event.data.hangoutLink,
+      meetLink: event.data.hangoutLink || event.data.conferenceData?.entryPoints?.find(entry => entry.entryPointType === 'video')?.uri || undefined,
+      organizerEmail: usesPersonalCalendar() ? event.data.organizer?.email || undefined : undefined,
     };
   } catch (error) {
     console.error('[Google Calendar] ERROR creating event:', error);

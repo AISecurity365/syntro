@@ -127,7 +127,7 @@ export const POST: APIRoute = async ({ request }) => {
         };
 
     // Create Google Calendar event if date and time are selected
-    let calendarEvent: { eventId: string; meetLink?: string } | null = null;
+    let calendarEvent: { eventId: string; meetLink?: string; organizerEmail?: string } | null = null;
     let meetingDate: Date | null = null;
 
     if (selectedDate && selectedTime) {
@@ -436,7 +436,7 @@ Fecha: ${new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid' })}
     // Enviar notificación al admin
     await resend.emails.send({
       from: 'AI Security <info@aisecurity.es>',
-      to: 'info@aisecurity.es',
+      to: [...new Set(['info@aisecurity.es', ...(calendarEvent?.organizerEmail ? [calendarEvent.organizerEmail] : [])])],
       replyTo: email || undefined,
       subject: `${lang === 'en' ? '🌐 [EN] ' : ''}Nueva solicitud de consulta - ${nombre || email}${empresa ? ` (${empresa})` : ''}`,
       html: adminEmailHtml,

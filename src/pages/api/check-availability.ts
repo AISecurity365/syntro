@@ -39,7 +39,7 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Get available slots from Google Calendar (weekends enabled)
+    // Get scheduled weekday slots, filtered by Google Calendar
     const availableSlots = await getAvailableSlots(requestedDate);
 
     return new Response(
