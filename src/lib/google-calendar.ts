@@ -1,4 +1,5 @@
 import { google } from 'googleapis';
+import { meetingSlots } from './meeting-schedule';
 
 /**
  * Google Calendar Service Account Configuration
@@ -48,6 +49,9 @@ function getCalendarClient() {
  * Get available time slots for a specific date
  */
 export async function getAvailableSlots(date: Date): Promise<string[]> {
+  const dateKey = date.toISOString().slice(0, 10);
+  const scheduledSlots = meetingSlots(dateKey);
+  if (!scheduledSlots.length) return [];
   const calendar = getCalendarClient();
   const calendarId = import.meta.env.GOOGLE_CALENDAR_ID;
 
@@ -81,7 +85,8 @@ export async function getAvailableSlots(date: Date): Promise<string[]> {
     // Check which slots are available
     const availableSlots: string[] = [];
 
-    for (const slot of AVAILABLE_SLOTS) {
+    for (const start of scheduledSlots) {
+      const slot = { start, end: `${String(Number(start.slice(0, 2)) + 2).padStart(2, '0')}:00` };
       const [startHour, startMinute] = slot.start.split(':').map(Number);
       const slotStart = new Date(date);
       slotStart.setHours(startHour, startMinute, 0, 0);
@@ -245,6 +250,6 @@ export function formatDate(date: Date): string {
 /**
  * Validate if a time slot is in the available slots
  */
-export function isValidTimeSlot(timeSlot: string): boolean {
-  return AVAILABLE_SLOTS.some(slot => slot.start === timeSlot);
+export function isValidTimeSlot(timeSlot: string, dateKey?: string): boolean {
+  return dateKey ? meetingSlots(dateKey).includes(timeSlot) : AVAILABLE_SLOTS.some(slot => slot.start === timeSlot);
 }

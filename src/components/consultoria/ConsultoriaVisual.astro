@@ -1,9 +1,10 @@
 <section class="workflow" data-workflow data-phase="0" data-playing="false" data-apps="false" aria-labelledby="workflow-title">
   <div class="workflow-head"><div><p class="eyebrow">DE LOS PROCESOS A LA PRÁCTICA</p><h2 id="workflow-title">Tu empresa aporta la base.<br/><span>El agente la convierte en trabajo hecho.</span></h2></div><button class="control" type="button" data-play>Pausar recorrido</button></div>
+  <p class="demo-label">DEMOS DISPONIBLES · ELIGE UN CASO</p>
   <div class="example-tabs" role="group" aria-label="Elegir un ejemplo">
-    <button type="button" data-example="invoice" aria-pressed="true">✉ Mi factura</button>
-    <button type="button" data-example="support" aria-pressed="false">▣ Cita con el técnico</button>
-    <button type="button" data-example="server" aria-pressed="false">⌘ Recuperar una web</button>
+    <button type="button" data-example="invoice" aria-pressed="true"><small>DEMO 01</small>✉ Mi factura</button>
+    <button type="button" data-example="server" aria-pressed="false"><small>DEMO 02</small>⌘ Recuperar una web</button>
+    <button type="button" data-example="support" aria-pressed="false"><small>DEMO 03</small>▣ Cita con el técnico</button>
   </div>
   <div class="step-tabs" role="group" aria-label="Pasos del recorrido">
     <button type="button" data-step="0" aria-pressed="true"><small>PASO 1</small>Documentar la empresa</button>
@@ -255,9 +256,12 @@
   h2 span { color:#a9c9f2; }
   .control { padding:10px 14px; border:1px solid #657b9a; border-radius:20px; background:#16253a; color:#dceaff; font-size:12px; white-space:nowrap; cursor:pointer; }
   button:focus-visible { outline:2px solid #b3ddff; outline-offset:4px; }
-  .example-tabs { display:flex; flex-wrap:wrap; gap:10px; margin-top:24px; }
-  .example-tabs button { padding:12px 16px; border:1px solid #657b9a; border-radius:9px; background:#16253a; color:#dceaff; font-size:13px; cursor:pointer; }
+  .workflow .demo-label { margin:24px 0 10px; color:#b6cce8; font:10px/1.6 monospace; letter-spacing:.1em; }
+  .example-tabs small { display:block; font:9px/1.5 monospace; margin-bottom:7px; color:#a9c9f2; }
+  .example-tabs { display:flex; flex-wrap:wrap; gap:10px; margin-top:0; }
+  .example-tabs button { flex:1 1 180px; text-align:left; padding:15px 18px; border:1px solid #657b9a; border-radius:12px; background:#16253a; color:#dceaff; font-size:13px; cursor:pointer; }
   .example-tabs [aria-pressed="true"] { background:#244361; border-color:#a5dfff; color:white; }
+  .example-tabs button:hover { filter:brightness(1.15); }
   .app[hidden] { display:none; }
   @media(max-width:900px) { .workflow .apps { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px; } .apps .app { font-size:9px; padding:4px 2px; gap:3px; } .apps .app svg { width:14px; height:14px; } }
   .transfer[data-kind="alert"],.transfer[data-kind="proposal"] { background:#3b304c; border-color:#d5b6ed; }

@@ -72,6 +72,7 @@
 
           <!-- Calendar Grid -->
           <div class="grid grid-cols-7 gap-1 mb-6" id="calendar-grid"></div>
+          <p style="color:#b5d9c9;font-size:12px;line-height:1.6;margin:0 0 20px;">Green: days open for meetings. Times are checked against the calendar when you select a day.</p>
 
           <!-- Time Slots -->
           <div class="pt-5" style="border-top:1px solid rgba(59,130,246,0.15);">
@@ -241,6 +242,11 @@
 </section>
 
 <style>
+  :global(#calendar-grid button[data-available="true"]) { background:#143e32 !important; border:1px solid #4b987c !important; color:#b5f3d6 !important; }
+  :global(#calendar-grid button[data-available="true"]:hover) { background:#20573f !important; }
+  :global(#calendar-grid button[data-selected="true"]) { background:#236648 !important; border-color:#a3efca !important; outline:2px solid #a3efca; outline-offset:1px; }
+  :global(#time-slots-grid button) { background:#143e32 !important; border-color:#4b987c !important; color:#b5f3d6 !important; }
+  :global(#time-slots-grid button[aria-pressed="true"]) { background:#236648 !important; border-color:#a3efca !important; outline:2px solid #a3efca; }
   /* Placeholder color en inputs oscuros */
   input::placeholder, textarea::placeholder {
     color: rgba(240,246,255,0.25);
@@ -248,6 +254,7 @@
 </style>
 
 <script>
+  import { meetingSlots, localDateKey } from "../../lib/meeting-schedule";
   document.addEventListener('DOMContentLoaded', () => {
     const calendarGrid = document.getElementById('calendar-grid') as HTMLDivElement;
     const calendarMonth = document.getElementById('calendar-month') as HTMLHeadingElement;
@@ -277,6 +284,7 @@
     let currentYear = new Date().getFullYear();
     let selectedDate: Date | null = null;
     let selectedTime: string | null = null;
+    let availabilityRequest = 0;
 
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                         'July', 'August', 'September', 'October', 'November', 'December'];
@@ -306,7 +314,8 @@
         dayButton.type = 'button';
         dayButton.textContent = day.toString();
 
-        const isPast = date < minDate; // hoy y días anteriores quedan deshabilitados
+        const hasSchedule = meetingSlots(localDateKey(date)).length > 0;
+        const isPast = date < minDate || !hasSchedule; // hoy y días anteriores quedan deshabilitados
         const isToday = date.getTime() === today.getTime();
         const isSelected = selectedDate && date.getTime() === selectedDate.getTime();
 
@@ -315,6 +324,10 @@
           font-weight:600;transition:all 0.15s;width:100%;
         `;
 
+        dayButton.dataset.available = String(!isPast);
+        dayButton.dataset.selected = String(Boolean(isSelected));
+        dayButton.setAttribute('aria-pressed', String(Boolean(isSelected)));
+        dayButton.setAttribute('aria-label', localDateKey(date));
         if (isPast) {
           dayButton.style.color = 'rgba(240,246,255,0.2)';
           dayButton.style.cursor = 'not-allowed';
@@ -350,10 +363,11 @@
     }
 
     async function selectDay(date: Date) {
+      const requestId = ++availabilityRequest;
       selectedDate = date;
       selectedTime = null;
       selectedTimeInput.value = '';
-      selectedDateInput.value = date.toISOString().split('T')[0];
+      selectedDateInput.value = localDateKey(date);
 
       generateCalendar();
 
@@ -368,10 +382,11 @@
         const response = await fetch('/api/check-availability', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ date: date.toISOString().split('T')[0] }),
+          body: JSON.stringify({ date: localDateKey(date) }),
         });
 
         const data = await response.json();
+        if (requestId !== availabilityRequest) return;
         timeSlotsSpinner.classList.add('hidden');
 
         if (!response.ok || data.availableSlots.length === 0) {
@@ -384,6 +399,7 @@
           const button = document.createElement('button');
           button.type = 'button';
           button.textContent = slot;
+          button.setAttribute('aria-pressed', 'false');
           button.style.cssText = `
             padding:10px 8px;border-radius:10px;font-size:0.8rem;font-weight:600;
             transition:all 0.15s;
@@ -409,6 +425,7 @@
 
         timeSlotsGrid.classList.remove('hidden');
       } catch (error) {
+        if (requestId !== availabilityRequest) return;
         console.error('Error fetching slots:', error);
         timeSlotsSpinner.classList.add('hidden');
         timeSlotsError.classList.remove('hidden');
@@ -419,12 +436,14 @@
     function selectTimeSlot(time: string, button: HTMLButtonElement) {
       timeSlotsGrid.querySelectorAll('button').forEach((btn: Element) => {
         const b = btn as HTMLButtonElement;
+        b.setAttribute('aria-pressed', 'false');
         b.style.borderColor = 'rgba(59,130,246,0.2)';
         b.style.background = 'rgba(255,255,255,0.04)';
         b.style.color = 'rgba(240,246,255,0.75)';
         b.style.boxShadow = 'none';
       });
 
+      button.setAttribute('aria-pressed', 'true');
       button.style.borderColor = '#2563eb';
       button.style.background = 'rgba(37,99,235,0.2)';
       button.style.color = '#93c5fd';

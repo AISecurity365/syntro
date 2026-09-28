@@ -32,7 +32,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Validate date and time if provided
     if (selectedDate && selectedTime) {
-      if (!isValidTimeSlot(selectedTime)) {
+      if (!isValidTimeSlot(selectedTime, selectedDate)) {
         return new Response(
           JSON.stringify({ error: lang === 'en' ? 'Selected time slot is not valid' : 'Horario seleccionado no válido' }),
           { status: 400, headers: { 'Content-Type': 'application/json' } }

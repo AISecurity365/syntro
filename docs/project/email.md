@@ -51,3 +51,8 @@ Los scripts de SEO/GA4 también usan Resend:
 ## 4. Ideas de automatización — Consultoría IA
 
 Formulario integrado en `/consultoria-ia`: `ConsultoriaIdeaForm.astro`. Solicita solo correo e idea (10–5000 caracteres), sin redirección. Usa `/api/send-contact` con `plan: consultoria-ia`; envía a `info@aisecurity.es` con reply-to del visitante y guarda el lead con el plan y origen del formulario. Comprueba el error de Resend antes de confirmar éxito. El cliente limita la espera a 15 segundos y conserva los campos si no puede confirmar el envío.
+
+
+## Agenda de reuniones (28-sep-2026)
+
+`src/lib/meeting-schedule.ts` define una oferta estable por fecha (YYYY-MM-DD), compartida por los calendarios ES/EN y la validación del servidor. La mayoría de días tienen cuatro franjas: dos por la mañana (09/11 o 10/12) y dos por la tarde (15/17 o 16/18). Un día cerrado no admite reservas. Google Calendar filtra las franjas ocupadas al seleccionar el día; el verde indica agenda abierta, no disponibilidad ya verificada. Los formularios envían la fecha local sin conversión UTC para evitar cambiar de día.
