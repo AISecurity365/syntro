@@ -95,3 +95,22 @@ export function conclusion(a) {
     actions:[...r.priority,...r.pending.map(c=>actions[c.id])],
   };
 }
+
+export function simpleChecks(controls) {
+  const groups=[
+    {id:'team',label:'¿El equipo sabe usar esta IA con seguridad?',hint:'Habéis dado formación u orientación sobre sus riesgos y guardáis constancia.',ids:['training']},
+    {id:'rules',label:'¿Tenéis reglas claras para usarla?',hint:'Hay un responsable, revisión humana y un procedimiento ante errores. Si hay chatbots o contenido público, habéis revisado los avisos de IA necesarios.',ids:['inventory','human','notice','labels','decisions']},
+    {id:'settings',label:'¿Habéis revisado su configuración?',hint:'Permisos, datos guardados, borrado, entrenamiento y conexiones con otras aplicaciones.',ids:['security']},
+    {id:'privacy',label:'¿Habéis revisado la protección de los datos personales?',hint:'Finalidad y base jurídica, contrato, información y derechos, transferencias y evaluación de impacto cuando corresponda. También las condiciones adicionales para datos sensibles.',ids:['basis','contract','rights','transfers','impact','special']},
+  ];
+  return groups.map(g=>({...g,controls:controls.filter(c=>g.ids.includes(c.id))})).filter(g=>g.controls.length);
+}
+export function progressSummary(a) {
+  const groups=simpleChecks(controlsFor(a));
+  const confirmed=groups.filter(g=>g.controls.every(c=>(a.controls||[]).includes(c.id))).length;
+  const specialist=['consequential','emotions','other'].includes(a.use)||a.data==='sensitive';
+  const r=assess(a);
+  return {confirmed,total:groups.length,percent:Math.round(100*confirmed/groups.length),
+    tone:specialist?'review':confirmed===groups.length&&!r.priority.length?'declared':'pending',
+    label:specialist?'Revisión especializada':confirmed===groups.length&&!r.priority.length?'Bloques declarados completos':'Comprobaciones pendientes'};
+}

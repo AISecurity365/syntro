@@ -60,6 +60,8 @@ Acceso directo via MCP (`mcp__supabase__*`) o REST con `SUPABASE_SERVICE_ROLE_KE
 
 El borrador `/blog/cumple-mi-empresa-ley-ia-test` usa `AIComplianceQuiz.astro` y reglas deterministas en `src/lib/ai-compliance.mjs`. Permite varias herramientas y finalidades, con plan, datos y controles por herramienta y resultados por combinación; las respuestas permanecen en memoria del navegador y el resumen se descarga localmente. No enviar respuestas a analítica ni a APIs.
 
+La interfaz agrupa los controles en 3–4 bloques por herramienta. El porcentaje cuenta bloques declarados completos, nunca cumplimiento legal; los casos sensibles conservan el aviso de revisión incluso al 100 %.
+
 Nunca presentar una suscripción o casillas marcadas como acreditación de cumplimiento. Separar AI Act y RGPD, mantener las salidas de revisión especializada para usos sensibles y revisar las fuentes oficiales cuando cambien contratos o normativa. Pruebas: `node --test scripts/tests/ai-compliance.test.mjs`. La publicación se controla desde `src/lib/blog-drafts.mjs`.
 
 - **API**: DeepSeek via `/api/chat` (endpoint propio)

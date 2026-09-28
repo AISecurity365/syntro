@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {assess,controlsFor,providers,conclusion} from '../../src/lib/ai-compliance.mjs';
+import {assess,controlsFor,providers,conclusion,simpleChecks,progressSummary} from '../../src/lib/ai-compliance.mjs';
 const base={provider:'chatgpt',plan:'3',use:'internal',data:'personal',controls:[]};
 test('business plan never grants legal compliance',()=>{
  const a={...base,controls:controlsFor(base).map(c=>c.id)};
@@ -37,4 +37,19 @@ test('plain conclusion keeps uncertainty and sensitive cases visible',()=>{
  assert.equal(conclusion(complete).title,'Has marcado todas las medidas del test');
  assert.match(conclusion(complete).explanation,/no certifica/);
  assert.equal(conclusion({...complete,data:'sensitive'}).title,'Este uso necesita una revisión especializada');
+});
+
+test('simplified blocks cover every applicable control without losing obligations',()=>{
+ for(const use of ['internal','chatbot','content','consequential','emotions','other'])for(const data of ['none','personal','sensitive','unknown']){
+ const controls=controlsFor({...base,use,data}), groups=simpleChecks(controls);
+ assert.ok(groups.length>=3 && groups.length<=4);
+ assert.deepEqual(groups.flatMap(g=>g.controls.map(c=>c.id)).sort(),controls.map(c=>c.id).sort());
+ }
+});
+test('percentage counts complete blocks and never clears specialist review',()=>{
+ assert.equal(progressSummary(base).percent,0);
+ assert.equal(progressSummary({...base,controls:['training','security']}).percent,50);
+ const a={...base,use:'consequential'};a.controls=controlsFor(a).map(c=>c.id);
+ assert.equal(progressSummary(a).percent,100);
+ assert.equal(progressSummary(a).tone,'review');
 });
