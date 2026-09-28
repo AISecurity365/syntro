@@ -7,7 +7,7 @@ if(isBlogDraft(Astro.url.pathname)) Astro.response.headers.set('X-Robots-Tag','n
 const faqSchema=[
  {question:'¿Pagar ChatGPT, Claude o Gemini significa cumplir el RGPD?',answer:'No. El plan puede cambiar las condiciones y controles disponibles, pero la empresa debe revisar finalidad, datos, base jurídica, roles contractuales, seguridad, derechos y transferencias. Un plan individual de pago no equivale a un contrato empresarial.'},
  {question:'¿Este test certifica que mi empresa cumple el AI Act?',answer:'No. Es una orientación sobre un uso concreto basada en respuestas declaradas. No verifica documentos ni cubre todos los sectores, obligaciones o prácticas prohibidas. Los casos sensibles requieren una revisión especializada.'},
- {question:'¿Qué ocurre si utilizo varias IA?',answer:'Repite el cuestionario para cada combinación de herramienta, plan y uso. Dos equipos con la misma herramienta pueden tener riesgos y obligaciones diferentes.'},
+ {question:'¿Qué ocurre si utilizo varias IA?',answer:'Selecciona varias herramientas e indica el plan y los usos de cada una. El resultado separa cada combinación. Dos equipos con la misma herramienta pueden tener riesgos y obligaciones diferentes.'},
  {question:'¿Se guardan las respuestas del cuestionario?',answer:'El cuestionario procesa las respuestas en el navegador, sin enviarlas mediante el formulario ni guardarlas al recargar. Puedes descargar voluntariamente un resumen en tu dispositivo. La web mantiene su política general de privacidad y analítica.'},
  {question:'¿Un modelo local o europeo cumple automáticamente?',answer:'No. También hay que revisar los datos tratados, accesos, copias, registros, conexiones y obligaciones de la organización. El origen del proveedor o el alojamiento local no bastan para acreditar cumplimiento.'},
 ];
@@ -18,11 +18,11 @@ const faqSchema=[
  tags={['AI Act','RGPD','Inteligencia Artificial','Empresas']}
  canonical="https://aisecurity.es/blog/cumple-mi-empresa-ley-ia-test" faqSchema={faqSchema}>
  {isBlogDraft(Astro.url.pathname)&&<p><strong>Borrador interactivo para revisión · Solo visible en desarrollo.</strong></p>}
- <p><strong>La marca de la IA no determina si tu empresa cumple la ley.</strong> Importan el servicio contratado, para qué lo utilizas, qué datos recibe y cómo lo gestionas. Responde sobre un uso concreto para obtener una lista de comprobaciones separada para el AI Act y el RGPD.</p>
+ <p><strong>La marca de la IA no determina si tu empresa cumple la ley.</strong> Importan el servicio contratado, para qué lo utilizas, qué datos recibe y cómo lo gestionas. Selecciona tus herramientas y sus usos para obtener una lista de comprobaciones separada para el AI Act y el RGPD.</p>
  <AIComplianceQuiz />
  <h2>Cómo interpretar tu resultado</h2>
  <p>El cuestionario no asigna un porcentaje de cumplimiento. «Medidas declaradas» significa que has marcado los controles preguntados, no que se hayan auditado. «Pendiente» incluye tanto una medida que falta como una que no puedes confirmar. «Revisión especializada» señala usos cuya clasificación requiere más información.</p>
- <p>No cargues contratos, datos de clientes ni expedientes en este test. Si utilizas varias herramientas, repite la evaluación por cada plan y finalidad. Un resultado para redactar textos internos no sirve para seleccionar candidatos o responder automáticamente a pacientes.</p>
+ <p>No cargues contratos, datos de clientes ni expedientes en este test. Puedes seleccionar varias herramientas y finalidades; el test mantiene separados sus resultados. Un resultado para redactar textos internos no sirve para seleccionar candidatos o responder automáticamente a pacientes.</p>
  <h2>Por qué preguntamos por el plan y el servicio</h2>
  <p>Las condiciones de una cuenta personal, un espacio empresarial y una API pueden ser distintas. Además, una aplicación que utiliza el modelo de un proveedor puede añadir otros encargados, almacenamiento o integraciones. Revisa el contrato que realmente utilizas, no una promesa comercial de otro producto de la misma marca.</p>
  <ul>
