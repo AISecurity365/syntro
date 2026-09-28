@@ -1,0 +1,44 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import AIComplianceQuiz from '../../components/blog/AIComplianceQuiz.astro';
+import { isBlogDraft } from '../../lib/blog-drafts.mjs';
+if (!import.meta.env.DEV && isBlogDraft(Astro.url.pathname)) return new Response(null,{status:404});
+if(isBlogDraft(Astro.url.pathname)) Astro.response.headers.set('X-Robots-Tag','noindex, nofollow');
+const faqSchema=[
+ {question:'¿Pagar ChatGPT, Claude o Gemini significa cumplir el RGPD?',answer:'No. El plan puede cambiar las condiciones y controles disponibles, pero la empresa debe revisar finalidad, datos, base jurídica, roles contractuales, seguridad, derechos y transferencias. Un plan individual de pago no equivale a un contrato empresarial.'},
+ {question:'¿Este test certifica que mi empresa cumple el AI Act?',answer:'No. Es una orientación sobre un uso concreto basada en respuestas declaradas. No verifica documentos ni cubre todos los sectores, obligaciones o prácticas prohibidas. Los casos sensibles requieren una revisión especializada.'},
+ {question:'¿Qué ocurre si utilizo varias IA?',answer:'Repite el cuestionario para cada combinación de herramienta, plan y uso. Dos equipos con la misma herramienta pueden tener riesgos y obligaciones diferentes.'},
+ {question:'¿Se guardan las respuestas del cuestionario?',answer:'El cuestionario procesa las respuestas en el navegador, sin enviarlas mediante el formulario ni guardarlas al recargar. Puedes descargar voluntariamente un resumen en tu dispositivo. La web mantiene su política general de privacidad y analítica.'},
+ {question:'¿Un modelo local o europeo cumple automáticamente?',answer:'No. También hay que revisar los datos tratados, accesos, copias, registros, conexiones y obligaciones de la organización. El origen del proveedor o el alojamiento local no bastan para acreditar cumplimiento.'},
+];
+---
+<BlogLayout title="¿Cumple mi empresa la ley de IA? Test práctico"
+ description="Comprueba tu uso de ChatGPT, Claude, Gemini, Copilot o Mistral. Test interactivo sobre AI Act y RGPD con preguntas por plan, datos y acciones pendientes."
+ publishDate="2026-09-28" author="AI Security" readTime="5 min"
+ tags={['AI Act','RGPD','Inteligencia Artificial','Empresas']}
+ canonical="https://aisecurity.es/blog/cumple-mi-empresa-ley-ia-test" faqSchema={faqSchema}>
+ {isBlogDraft(Astro.url.pathname)&&<p><strong>Borrador interactivo para revisión · Solo visible en desarrollo.</strong></p>}
+ <p><strong>La marca de la IA no determina si tu empresa cumple la ley.</strong> Importan el servicio contratado, para qué lo utilizas, qué datos recibe y cómo lo gestionas. Responde sobre un uso concreto para obtener una lista de comprobaciones separada para el AI Act y el RGPD.</p>
+ <AIComplianceQuiz />
+ <h2>Cómo interpretar tu resultado</h2>
+ <p>El cuestionario no asigna un porcentaje de cumplimiento. «Medidas declaradas» significa que has marcado los controles preguntados, no que se hayan auditado. «Pendiente» incluye tanto una medida que falta como una que no puedes confirmar. «Revisión especializada» señala usos cuya clasificación requiere más información.</p>
+ <p>No cargues contratos, datos de clientes ni expedientes en este test. Si utilizas varias herramientas, repite la evaluación por cada plan y finalidad. Un resultado para redactar textos internos no sirve para seleccionar candidatos o responder automáticamente a pacientes.</p>
+ <h2>Por qué preguntamos por el plan y el servicio</h2>
+ <p>Las condiciones de una cuenta personal, un espacio empresarial y una API pueden ser distintas. Además, una aplicación que utiliza el modelo de un proveedor puede añadir otros encargados, almacenamiento o integraciones. Revisa el contrato que realmente utilizas, no una promesa comercial de otro producto de la misma marca.</p>
+ <ul>
+  <li><a href="https://openai.com/business-data/">OpenAI: datos de productos empresariales y API</a>. No entrenar por defecto no significa ausencia de almacenamiento ni cumplimiento automático.</li>
+  <li><a href="https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training">Claude: planes de consumo</a> y <a href="https://privacy.claude.com/en/articles/7996868-is-my-data-used-for-model-training">condiciones de productos comerciales</a>. Hay que distinguirlos y revisar las opciones de feedback.</li>
+  <li><a href="https://support.google.com/gemini/answer/13594961">Gemini Apps</a> y <a href="https://support.google.com/a/answer/15706919">Gemini en Workspace</a>. La cuenta, el servicio y la configuración importan.</li>
+  <li><a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/enterprise-data-protection">Microsoft Copilot: protección de datos empresarial</a>. Comprueba la sesión de trabajo y el alcance de las funciones utilizadas.</li>
+  <li><a href="https://help.mistral.ai/en/collections/712281-data-governance">Mistral: gobernanza de datos</a>. Revisa la modalidad contratada sin deducir cumplimiento del origen europeo del proveedor.</li>
+ </ul>
+ <h2>AI Act: formación, transparencia y clasificación del uso</h2>
+ <p>El cuestionario distingue los usos internos de la interacción con personas, la publicación de contenido sintético y los ámbitos sensibles. Estos últimos no se clasifican únicamente por su nombre: hay que analizar finalidad y función. El calendario de obligaciones también varía. <a href="https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai">Marco y calendario oficial del AI Act</a>.</p>
+ <p>Formar y orientar al equipo y revisar la transparencia son trabajos diferentes. Consulta las <a href="https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers">preguntas oficiales sobre alfabetización</a> y las <a href="https://digital-strategy.ec.europa.eu/en/faqs/transparency-obligations-under-article-50-ai-act">obligaciones del artículo 50</a>. Para un asistente público, tienes también nuestra guía sobre <a href="/blog/chatbots-ia-obligacion-legal-avisar-articulo-50">el aviso de IA en chatbots</a>.</p>
+ <h2>RGPD: la revisión sigue aunque la IA no entrene con tus datos</h2>
+ <p>El tratamiento de datos personales requiere revisar sus principios y base jurídica; si intervienen encargados, los contratos correspondientes; y también seguridad, derechos y transferencias. Datos sensibles, decisiones automatizadas significativas o tratamientos de alto riesgo necesitan análisis adicional. El cuestionario los deriva a revisión, sin resolverlos con un «sí» o «no». <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/spa">RGPD: artículos 5, 6, 9, 22, 28, 32, 35 y capítulo V</a>.</p>
+ <p>Quitar un nombre no siempre anonimiza un documento: puesto, fechas y circunstancias pueden identificar a alguien. Y un uso con ejemplos ficticios puede seguir generando datos de cuenta o metadatos personales.</p>
+ <h2>Preguntas frecuentes</h2>
+ {faqSchema.map(({question,answer})=><details><summary>{question}</summary><p>{answer}</p></details>)}
+ <p style="font-size:.85rem;color:#94a3b8;">Fuentes y reglas revisadas el 28 de septiembre de 2026. Herramienta orientativa: requiere revisión cuando cambien las condiciones o la normativa.</p>
+</BlogLayout>

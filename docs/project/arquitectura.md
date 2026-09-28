@@ -56,6 +56,12 @@ Acceso directo via MCP (`mcp__supabase__*`) o REST con `SUPABASE_SERVICE_ROLE_KE
 
 ## Chat / IA
 
+### Autodiagnóstico AI Act / RGPD (septiembre 2026)
+
+El borrador `/blog/cumple-mi-empresa-ley-ia-test` usa `AIComplianceQuiz.astro` y reglas deterministas en `src/lib/ai-compliance.mjs`. Evalúa una herramienta, plan y finalidad cada vez; las respuestas permanecen en memoria del navegador y el resumen se descarga localmente. No enviar respuestas a analítica ni a APIs.
+
+Nunca presentar una suscripción o casillas marcadas como acreditación de cumplimiento. Separar AI Act y RGPD, mantener las salidas de revisión especializada para usos sensibles y revisar las fuentes oficiales cuando cambien contratos o normativa. Pruebas: `node --test scripts/tests/ai-compliance.test.mjs`. La publicación se controla desde `src/lib/blog-drafts.mjs`.
+
 - **API**: DeepSeek via `/api/chat` (endpoint propio)
 - **Bot flotante**: `src/components/global/Mascot.astro` — contextual por página
 - **Hero chat**: `src/components/landing/AIHeroFloating.astro`
