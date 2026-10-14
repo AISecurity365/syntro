@@ -90,7 +90,7 @@ export const POST: APIRoute = async ({ request }) => {
         </td></tr>
       </table>`;
 
-    await resend.emails.send({
+    const { error: followUpError } = await resend.emails.send({
       from: 'AI Security Consulting <info@aisecurity.es>',
       to: email,
       reply_to: 'info@aisecurity.es',
@@ -101,6 +101,7 @@ export const POST: APIRoute = async ({ request }) => {
         .join('')}${firma}</div>`,
       text: `${paras.join('\n\n')}\n\n--\nAI Security Consulting\nCybersecurity · AI · ENS Compliance\ninfo@aisecurity.es\naisecurity.es`,
     });
+    if (followUpError) console.error('demo-wazuh follow-up falló:', followUpError);
 
     return new Response(
       JSON.stringify({ success: true }),
