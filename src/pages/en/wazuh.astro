@@ -1221,6 +1221,7 @@ const canonical = "https://aisecurity.es/en/wazuh";
       try {
         const fd = new FormData();
         fd.append('email', email);
+        fd.append('lang', 'en');
         const res = await fetch('/api/demo-wazuh', { method: 'POST', body: fd });
         if (res.ok) {
           form.style.display = 'none';

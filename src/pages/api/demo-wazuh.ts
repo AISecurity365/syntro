@@ -62,6 +62,46 @@ export const POST: APIRoute = async ({ request }) => {
       text: `Demo de Wazuh solicitada\n\nEmail: ${email}\nFecha: ${fecha}`,
     });
 
+    // Seguimiento automático al visitante, programado 10 min después del aviso
+    const en = data.get('lang')?.toString() === 'en';
+    const paras = en
+      ? [
+          'Hello,',
+          'Regarding your Wazuh demo request, we would like to understand the scope a little better so we can prepare a session focused on your real environment and show you everything it can do.',
+          'Could you briefly tell us what infrastructure you would like to connect (number of servers, endpoints, firewalls, antivirus, Microsoft 365, etc.)?',
+          'Also, if you already have an environment set up and want to go deeper into how it works, or if your goal is ENS compliance, any additional detail will be very helpful.',
+          'Kind regards,',
+        ]
+      : [
+          'Hola,',
+          'Sobre la solicitud de la demo de Wazuh, nos gustaría conocer un poco más el alcance para preparar una sesión enfocada en su entorno real y mostrarle todas sus posibilidades.',
+          '¿Podría detallarnos brevemente qué infraestructura querrían conectar (número de servidores, equipos, firewalls, antivirus, Microsoft 365, etc.)?',
+          'Asimismo, si ya cuentan con un entorno montado y desean profundizar en su funcionamiento, o si tienen como objetivo el cumplimiento del ENS, cualquier detalle adicional nos será de gran utilidad.',
+          'Un saludo,',
+        ];
+    const firma = `
+      <p style="margin:24px 0 0;color:#666;font-size:13px;">--</p>
+      <table role="presentation" style="margin-top:8px;border-left:3px solid #818cf8;padding-left:12px;font-family:Arial,sans-serif;">
+        <tr><td style="padding-left:12px;">
+          <div style="font-size:16px;color:#111;">AI Security Consulting</div>
+          <div style="font-size:12px;color:#333;margin-top:2px;">Cybersecurity · AI · ENS Compliance</div>
+          <div style="margin-top:10px;font-size:13px;"><a href="mailto:info@aisecurity.es" style="color:#1a56db;">info@aisecurity.es</a></div>
+          <div style="font-size:13px;color:#333;">aisecurity.es</div>
+        </td></tr>
+      </table>`;
+
+    await resend.emails.send({
+      from: 'AI Security Consulting <info@aisecurity.es>',
+      to: email,
+      reply_to: 'info@aisecurity.es',
+      subject: en ? 'Your Wazuh demo request' : 'Su solicitud de demo de Wazuh',
+      scheduledAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+      html: `<div style="font-family:Arial,sans-serif;font-size:14px;color:#111;line-height:1.5;">${paras
+        .map((p) => `<p style="margin:0 0 14px;">${p}</p>`)
+        .join('')}${firma}</div>`,
+      text: `${paras.join('\n\n')}\n\n--\nAI Security Consulting\nCybersecurity · AI · ENS Compliance\ninfo@aisecurity.es\naisecurity.es`,
+    });
+
     return new Response(
       JSON.stringify({ success: true }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
